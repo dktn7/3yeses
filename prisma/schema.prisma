@@ -1,0 +1,219 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String          @id @default(cuid())
+  email           String          @unique
+  password        String
+  role            Role            @default(TALENT)
+  name            String
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  emailVerified   DateTime?
+  
+  talentProfile   TalentProfile?
+  // clientProfile field removed
+  bookings        Booking[]
+  reviewsGiven    Review[]
+  likes           Like[]
+}
+
+model TalentProfile {
+  id              String          @id @default(cuid())
+  user            User            @relation(fields: [userId], references: [id])
+  userId          String          @unique
+  
+  roleDescription String?         // e.g., "Lead Actress"
+  bio             String?
+  location        String?
+  experience      Int
+  rating          Float           @default(0)
+  
+  // Detailed characteristics
+  gender          Gender?
+  ethnicity       String?
+  age             Int?
+  height          Int?            // in cm
+  bodyType        BodyType?
+  eyeColor        String?
+  hairColor       String?
+  
+  languages       String[]        @default([])
+  skills          String[]
+  
+  avatarUrl       String?
+  videoUrl        String?
+  
+  socialMedia     Json?           // [{ platform: "Instagram", url: "..." }]
+  portfolio       PortfolioItem[]
+  reviewsReceived Review[]
+  
+  viewCount       Int             @default(0)
+  likeCount       Int             @default(0)
+  likes           Like[]
+  isBeginner      Boolean         @default(false)
+  
+  // Profile visibility settings
+  profileSettings ProfileSettings?
+  
+  category        Category?       @relation(fields: [categoryId], references: [id])
+  categoryId      String?
+  subcategory     Subcategory?    @relation(fields: [subcategoryId], references: [id])
+  subcategoryId   String?
+}
+
+model ProfileSettings {
+  id                    String        @id @default(cuid())
+  talentProfile         TalentProfile @relation(fields: [talentProfileId], references: [id], onDelete: Cascade)
+  talentProfileId       String        @unique
+  
+  // Visibility settings
+  showViewCount         Boolean       @default(true)
+  showExperienceLevel   Boolean       @default(true)
+  showLocation          Boolean       @default(true)
+  showLanguages         Boolean       @default(true)
+  showRating            Boolean       @default(true)
+  showReviewCount       Boolean       @default(true)
+  showWorkHistory       Boolean       @default(true)
+  showSocialMedia       Boolean       @default(true)
+  showContactInfo       Boolean       @default(true)
+  
+  // Privacy settings
+  profileVisibility     ProfileVisibility @default(PUBLIC)
+  searchable            Boolean       @default(true)
+  allowDirectContact    Boolean       @default(true)
+  showOnlineStatus      Boolean       @default(false)
+  
+  updatedAt             DateTime      @updatedAt
+  createdAt             DateTime      @default(now())
+}
+
+enum ProfileVisibility {
+  PUBLIC
+  PRIVATE
+  CONTACTS_ONLY
+}
+
+// ClientProfile model removed
+
+model Category {
+  id              String          @id @default(cuid())
+  name            String          @unique
+  description     String?
+  icon            String?
+  subcategories   Subcategory[]
+  talentProfiles  TalentProfile[]
+}
+
+model Subcategory {
+  id              String          @id @default(cuid())
+  name            String
+  description     String?
+  talentCount     Int             @default(0)
+  
+  category        Category        @relation(fields: [categoryId], references: [id])
+  categoryId      String
+  
+  // subSubcategories field removed
+  talentProfiles  TalentProfile[]
+  
+  @@unique([categoryId, name])
+}
+
+// SubSubcategory model removed
+
+model PortfolioItem {
+  id              String            @id @default(cuid())
+  title           String
+  url             String
+  type            PortfolioItemType
+  
+  talentProfile   TalentProfile     @relation(fields: [talentProfileId], references: [id])
+  talentProfileId String
+}
+
+model Review {
+  id              String        @id @default(cuid())
+  rating          Int
+  comment         String?
+  
+  reviewer        User          @relation(fields: [reviewerId], references: [id])
+  reviewerId      String
+  
+  talentProfile   TalentProfile @relation(fields: [talentProfileId], references: [id])
+  talentProfileId String
+  
+  createdAt       DateTime      @default(now())
+}
+
+model Booking {
+  id              String        @id @default(cuid())
+  client          User          @relation(fields: [clientId], references: [id])
+  clientId        String
+  
+  talentId        String        // Not a direct relation to avoid circular dependencies with User
+  
+  bookingDate     DateTime
+  status          BookingStatus @default(PENDING)
+  details         String?
+  
+  createdAt       DateTime      @default(now())
+}
+
+model Like {
+  id            String        @id @default(cuid())
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  talentProfile TalentProfile @relation(fields: [talentProfileId], references: [id], onDelete: Cascade)
+  talentProfileId String
+  
+  createdAt     DateTime      @default(now())
+  
+  @@unique([userId, talentProfileId]) // Prevent duplicate likes
+}
+
+enum Role {
+  TALENT
+  CLIENT
+  ADMIN
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  NON_BINARY
+  PREFER_NOT_TO_SAY
+}
+
+enum BodyType {
+  SLIM
+  ATHLETIC
+  CURVY
+  PLUS_SIZE
+  MUSCULAR
+}
+
+enum PortfolioItemType {
+  IMAGE
+  VIDEO
+  AUDIO
+  DOCUMENT
+  LINK
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}

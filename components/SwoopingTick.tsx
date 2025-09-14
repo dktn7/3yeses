@@ -1,0 +1,45 @@
+import React from 'react';
+
+interface SwoopingTickProps {
+  readonly size?: number;
+  readonly className?: string;
+  readonly hovered?: boolean;
+}
+
+export default function SwoopingTick({ size = 48, className = '', hovered = false }: Readonly<SwoopingTickProps>) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 48 48"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+    >
+      {/* Outer Circle */}
+      <circle
+        cx="24"
+        cy="24"
+        r="22"
+        stroke="#3B82F6"
+        strokeWidth="4"
+        fill="transparent"
+        className={`transition-all duration-300 ${hovered ? 'stroke-blue-600' : 'stroke-blue-500'}`}
+      />
+      
+      {/* Swooping Check Mark */}
+      <path
+        d="M14 24L20 30L34 16"
+        stroke="#EF4444"
+        strokeWidth="5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+        className={`transition-all duration-300 ${hovered ? 'stroke-red-600' : 'stroke-red-500'}`}
+        style={{
+          filter: 'drop-shadow(0 1px 2px rgba(239, 68, 68, 0.3))'
+        }}
+      />
+    </svg>
+  );
+}

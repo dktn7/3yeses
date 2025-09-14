@@ -4,16 +4,31 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3001",
+    "dev:3002": "next dev -p 3002",
+    "check-server": "echo Checking for running Next.js servers... && netstat -ano | findstr :300",
+    "kill-servers": "echo Stopping all Node.js processes on ports 3001-3002... && for /f \"tokens=5\" %a in ('netstat -ano ^| findstr :300') do taskkill /F /PID %a 2>nul",
+    "dev:clean": "npm run kill-servers && npm run dev:3002",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
+    "@prisma/client": "^6.14.0",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/pg": "^8.15.5",
+    "bcryptjs": "^3.0.2",
+    "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.511.0",
-    "next": "15.1.8",
+    "next": "^15.4.4",
+    "next-intl": "^4.3.4",
+    "next-themes": "^0.4.6",
+    "pg": "^8.16.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-icons": "^5.5.0"
+    "react-icons": "^5.5.0",
+    "react-player": "^2.16.0",
+    "swr": "^2.3.4"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -21,9 +36,13 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "15.1.8",
+    "eslint-config-next": "^15.4.4",
     "postcss": "^8",
+    "prisma": "^6.14.0",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5"
-  }
+    "ts-node": "^10.9.2",
+    "typescript": "^5",
+    "zod": "^3.23.2"
+  },
+  "type": "module"
 }

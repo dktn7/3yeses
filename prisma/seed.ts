@@ -1,0 +1,322 @@
+const { PrismaClient } = require('@prisma/client');
+const bcrypt = require('bcryptjs');
+
+const prisma = new PrismaClient();
+
+async function main() {
+  try {
+    console.log(`Start seeding ...`);
+
+    // Clear existing data
+    console.log('Clearing existing data...');
+    await prisma.portfolioItem.deleteMany();
+    await prisma.review.deleteMany();
+    await prisma.booking.deleteMany();
+    await prisma.talentProfile.deleteMany();
+    await prisma.user.deleteMany();
+    await prisma.subcategory.deleteMany();
+    await prisma.category.deleteMany();
+    console.log('Existing data cleared.');
+
+    // Create a default admin user
+    console.log('Creating admin user...');
+    const adminPassword = 'AdminPassword123!';
+    const adminHashedPassword = await bcrypt.hash(adminPassword, 12);
+    await prisma.user.create({
+      data: {
+        email: 'admin@example.com',
+        name: 'Admin User',
+        password: adminHashedPassword,
+        role: 'ADMIN',
+        emailVerified: new Date(), // Pre-verify the admin user
+      },
+    });
+    console.log('Admin user created with email: admin@example.com and password: ${adminPassword}');
+    console.log('Please change this password in a production environment!');
+
+    // Create categories and subcategories
+    console.log('Creating categories and subcategories...');
+    const categories = [
+      { 
+        name: 'Voice Over & Dubbing', 
+        icon: '🎙️',
+        description: 'Professional voice acting and dubbing services',
+        subcategories: [
+          'Commercials', 
+          'E-learning', 
+          'Audiobooks', 
+          'Animation', 
+          'Video Games',
+          'Narration',
+          'IVR & Phone Systems'
+        ] 
+      },
+      { 
+        name: 'Translation & Localization', 
+        icon: '🌍',
+        description: 'Professional translation and localization services',
+        subcategories: [
+          'Document Translation', 
+          'Website Localization', 
+          'Software Localization', 
+          'Subtitling & Captioning',
+          'Technical Translation',
+          'Legal Translation',
+          'Medical Translation'
+        ] 
+      },
+      { 
+        name: 'Content Creation', 
+        icon: '✍️',
+        description: 'Creative writing and content development',
+        subcategories: [
+          'Blog & Article Writing', 
+          'Copywriting', 
+          'Social Media Content', 
+          'Video Scripting',
+          'Product Descriptions',
+          'Email Marketing',
+          'SEO Content'
+        ] 
+      },
+      { 
+        name: 'Music & Audio', 
+        icon: '🎵',
+        description: 'Music composition and audio production',
+        subcategories: [
+          'Pop Music', 
+          'Rock Music', 
+          'Jazz Music', 
+          'Classical Music',
+          'Hip Hop Music',
+          'Country Music',
+          'Electronic Music',
+          'R&B Music',
+          'Folk Music',
+          'Audio Production',
+          'Sound Design'
+        ] 
+      },
+      { 
+        name: 'Video Production', 
+        icon: '🎬',
+        description: 'Video creation and editing services',
+        subcategories: [
+          'Video Editing', 
+          'Motion Graphics', 
+          'Animation', 
+          'Promotional Videos',
+          'Explainer Videos',
+          'Social Media Videos',
+          'Documentary Production'
+        ] 
+      },
+      { 
+        name: 'Acting & Performance', 
+        icon: '🎭',
+        description: 'Professional acting and performance talent',
+        subcategories: [
+          'Theatre Acting',
+          'Film Acting',
+          'TV Acting',
+          'Voice Acting',
+          'Commercial Acting',
+          'Background Acting',
+          'Character Acting'
+        ] 
+      },
+      { 
+        name: 'Modeling', 
+        icon: '📸',
+        description: 'Professional modeling services',
+        subcategories: [
+          'Fashion Modeling', 
+          'Commercial Modeling', 
+          'Hand Modeling', 
+          'Fitness Modeling',
+          'Product Modeling',
+          'Lifestyle Modeling',
+          'Plus Size Modeling'
+        ] 
+      },
+      { 
+        name: 'Dancing & Choreography', 
+        icon: '💃',
+        description: 'Professional dance and choreography services',
+        subcategories: [
+          'Contemporary Dance', 
+          'Hip Hop', 
+          'Ballet', 
+          'Jazz Dance',
+          'Latin Dance',
+          'Choreography',
+          'Dance Instruction'
+        ] 
+      },
+      { 
+        name: 'Beauty & Wellness', 
+        icon: '💄',
+        description: 'Beauty, wellness and lifestyle services',
+        subcategories: [
+          'Makeup Artist', 
+          'Hair Styling', 
+          'Beauty Consulting', 
+          'Wellness Coaching',
+          'Fitness Training',
+          'Nutrition Consulting',
+          'Spa Services'
+        ] 
+      },
+      { 
+        name: 'Sports & Fitness', 
+        icon: '🏃',
+        description: 'Sports and fitness talent services',
+        subcategories: [
+          'Personal Training', 
+          'Sports Coaching', 
+          'Fitness Modeling', 
+          'Athletic Performance',
+          'Sports Commentary',
+          'Fitness Instruction',
+          'Sports Demonstration'
+        ] 
+      }
+    ];
+
+    for (const category of categories) {
+      const createdCategory = await prisma.category.create({
+        data: {
+          name: category.name,
+          icon: category.icon,
+          description: category.description,
+          subcategories: {
+            create: category.subcategories.map(name => ({ name })),
+          },
+        },
+      });
+      console.log(`Created category: ${createdCategory.name}`);
+    }
+
+    console.log('Categories and subcategories created.');
+
+    // Create sample users
+    console.log('Creating sample users...');
+    const sampleUserPassword = await bcrypt.hash('password123', 10);
+
+    // Create admin user
+    await prisma.user.create({
+      data: {
+        name: 'Admin User',
+        email: 'admin@3yeses.com',
+        password: sampleUserPassword,
+        role: 'ADMIN',
+        emailVerified: new Date()
+      }
+    });
+
+    // Create sample talent users
+    const voiceOverCategory = await prisma.category.findFirst({ where: { name: 'Voice Over & Dubbing' } });
+    const commercialsSubcat = await prisma.subcategory.findFirst({ where: { name: 'Commercials' } });
+
+    const talentUser1 = await prisma.user.create({
+      data: {
+        name: 'Sarah Johnson',
+        email: 'sarah@example.com',
+        password: sampleUserPassword,
+        role: 'TALENT',
+        emailVerified: new Date(),
+        talentProfile: {
+          create: {
+            roleDescription: 'Professional Voice Over Artist',
+            bio: 'Experienced voice over artist with 8+ years in commercials and e-learning. Warm, friendly tone perfect for brands targeting millennials.',
+            location: 'Los Angeles, CA',
+            experience: 8,
+            rating: 4.9,
+            languages: ['English', 'Spanish'],
+            skills: ['Commercial Voice Over', 'E-learning Narration', 'Character Voices', 'IVR Systems'],
+            categoryId: voiceOverCategory?.id,
+            subcategoryId: commercialsSubcat?.id,
+            avatarUrl: 'https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=400&h=400&fit=crop&crop=face',
+            viewCount: 247
+          }
+        }
+      }
+    });
+
+    const translationCategory = await prisma.category.findFirst({ where: { name: 'Translation & Localization' } });
+    const documentSubcat = await prisma.subcategory.findFirst({ where: { name: 'Document Translation' } });
+
+    const talentUser2 = await prisma.user.create({
+      data: {
+        name: 'Carlos Rodriguez',
+        email: 'carlos@example.com',
+        password: sampleUserPassword,
+        role: 'TALENT',
+        emailVerified: new Date(),
+        talentProfile: {
+          create: {
+            roleDescription: 'Certified Spanish-English Translator',
+            bio: 'Native bilingual translator specializing in legal and medical documents. 10+ years experience with perfect accuracy record.',
+            location: 'Madrid, Spain',
+            experience: 10,
+            rating: 4.9,
+            languages: ['Spanish', 'English', 'Portuguese'],
+            skills: ['Legal Translation', 'Medical Translation', 'Technical Documentation', 'Certified Translation'],
+            categoryId: translationCategory?.id,
+            subcategoryId: documentSubcat?.id,
+            avatarUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face',
+            viewCount: 189
+          }
+        }
+      }
+    });
+
+    console.log('Sample users created.');
+
+    // Skipping client users and bookings since clientProfile and clientId are removed from schema
+
+    // Create sample reviews
+    const adminUser = await prisma.user.findFirst({ where: { email: 'admin@example.com' } });
+    const talent1Profile = await prisma.talentProfile.findFirst({ where: { userId: talentUser1.id } });
+    const talent2Profile = await prisma.talentProfile.findFirst({ where: { userId: talentUser2.id } });
+
+    if (talent1Profile && adminUser) {
+      await prisma.review.create({
+        data: {
+          rating: 5,
+          comment: 'Outstanding work! Sarah delivered exactly what we needed with perfect timing and quality.',
+          reviewerId: adminUser.id,
+          talentProfileId: talent1Profile.id
+        }
+      });
+    }
+
+    if (talent2Profile && adminUser) {
+      await prisma.review.create({
+        data: {
+          rating: 5,
+          comment: 'Carlos is incredibly professional and accurate. Highly recommended for any translation work.',
+          reviewerId: adminUser.id,
+          talentProfileId: talent2Profile.id
+        }
+      });
+    }
+
+    console.log(`- Sample reviews`);
+
+    console.log('Database seeding completed successfully.');
+  } catch (error) {
+    console.error('Error during database seeding:', error);
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+main()
+  .catch(e => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });

@@ -1,0 +1,534 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { ArrowLeft, Upload, X, Play, Image as ImageIcon, Video, FileText, Check } from 'lucide-react';
+import Image from 'next/image';
+import ProgressTracker, { signupSteps } from '@/components/auth/ProgressTracker';
+
+interface UploadedFile {
+  id: string;
+  file: File;
+  type: 'image' | 'video' | 'document';
+  preview?: string;
+  uploading?: boolean;
+  error?: string;
+}
+
+const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+const ACCEPTED_VIDEO_TYPES = ['video/mp4', 'video/quicktime', 'video/x-msvideo'];
+const ACCEPTED_DOCUMENT_TYPES = ['application/pdf'];
+
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+const MAX_VIDEO_SIZE = 50 * 1024 * 1024; // 50MB
+
+export default function SignupStep3() {
+  const router = useRouter();
+  const [profilePhoto, setProfilePhoto] = useState<UploadedFile | null>(null);
+  const [demoReel, setDemoReel] = useState<UploadedFile | null>(null);
+  const [portfolioFiles, setPortfolioFiles] = useState<UploadedFile[]>([]);
+  const [resume, setResume] = useState<UploadedFile | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  interface StepData {
+    role: string;
+    [key: string]: unknown;
+  }
+
+  const [stepData, setStepData] = useState<StepData | null>(null);
+
+  // Load previous step data
+  useEffect(() => {
+    const savedProgress = localStorage.getItem('signup_progress');
+    if (savedProgress) {
+      const progress = JSON.parse(savedProgress);
+      if (progress.step >= 2) {
+        setStepData(progress.data);
+      } else {
+        router.push('/auth/signup/step-1');
+      }
+    } else {
+      router.push('/auth/signup/step-1');
+    }
+  }, [router]);
+
+  const generateFileId = () => Math.random().toString(36).substr(2, 9);
+
+  const validateFile = (file: File, type: 'image' | 'video' | 'document'): string | null => {
+    const maxSize = type === 'video' ? MAX_VIDEO_SIZE : MAX_FILE_SIZE;
+    
+    if (file.size > maxSize) {
+      return `File size must be less than ${maxSize / (1024 * 1024)}MB`;
+    }
+
+    const acceptedTypes = type === 'image' ? ACCEPTED_IMAGE_TYPES 
+                         : type === 'video' ? ACCEPTED_VIDEO_TYPES 
+                         : ACCEPTED_DOCUMENT_TYPES;
+
+    if (!acceptedTypes.includes(file.type)) {
+      return `Invalid file type. Accepted types: ${acceptedTypes.join(', ')}`;
+    }
+
+    return null;
+  };
+
+  const createFilePreview = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => resolve(e.target?.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const uploadFile = async (file: File, type: 'image' | 'video' | 'document'): Promise<UploadedFile> => {
+    const validation = validateFile(file, type);
+    if (validation) {
+      throw new Error(validation);
+    }
+
+    const uploadedFile: UploadedFile = {
+      id: generateFileId(),
+      file,
+      type,
+      uploading: true
+    };
+
+    // Create preview for images and videos
+    if (type === 'image' || type === 'video') {
+      try {
+        uploadedFile.preview = await createFilePreview(file);
+      } catch (error) {
+        console.error('Failed to create preview:', error);
+      }
+    }
+
+    // Simulate upload process
+    await new Promise(resolve => setTimeout(resolve, 1500));
+
+    uploadedFile.uploading = false;
+    return uploadedFile;
+  };
+
+  const handleProfilePhotoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    try {
+      setErrors({ ...errors, profilePhoto: '' });
+      const uploaded = await uploadFile(file, 'image');
+      setProfilePhoto(uploaded);
+    } catch (error) {
+      setErrors({ ...errors, profilePhoto: (error as Error).message });
+    }
+  };
+
+  const handleDemoReelUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    try {
+      setErrors({ ...errors, demoReel: '' });
+      const uploaded = await uploadFile(file, 'video');
+      setDemoReel(uploaded);
+    } catch (error) {
+      setErrors({ ...errors, demoReel: (error as Error).message });
+    }
+  };
+
+  const handlePortfolioUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files || []);
+    if (files.length === 0) return;
+
+    try {
+      setErrors({ ...errors, portfolio: '' });
+      
+      for (const file of files) {
+        const type = ACCEPTED_IMAGE_TYPES.includes(file.type) ? 'image' : 'video';
+        const uploaded = await uploadFile(file, type);
+        setPortfolioFiles(prev => [...prev, uploaded]);
+      }
+    } catch (error) {
+      setErrors({ ...errors, portfolio: (error as Error).message });
+    }
+  };
+
+  const handleResumeUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    try {
+      setErrors({ ...errors, resume: '' });
+      const uploaded = await uploadFile(file, 'document');
+      setResume(uploaded);
+    } catch (error) {
+      setErrors({ ...errors, resume: (error as Error).message });
+    }
+  };
+
+  const removeFile = (fileId: string, type: 'portfolio' | 'profilePhoto' | 'demoReel' | 'resume') => {
+    if (type === 'portfolio') {
+      setPortfolioFiles(prev => prev.filter(f => f.id !== fileId));
+    } else if (type === 'profilePhoto') {
+      setProfilePhoto(null);
+    } else if (type === 'demoReel') {
+      setDemoReel(null);
+    } else if (type === 'resume') {
+      setResume(null);
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+
+    if (!profilePhoto) {
+      newErrors.profilePhoto = 'Profile photo is required';
+    }
+
+    // Demo reel is optional but recommended for talent
+    if (stepData?.role === 'talent' && !demoReel && portfolioFiles.length === 0) {
+      newErrors.portfolio = 'Please upload either a demo reel or portfolio items to showcase your work';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!validateForm()) return;
+
+    setLoading(true);
+    
+    try {
+      // Simulate final account creation
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      // Clear signup progress
+      localStorage.removeItem('signup_progress');
+
+      // Redirect to success page or dashboard
+      router.push('/auth/signup/success');
+    } catch (error) {
+      console.error('Signup step 3 error:', error);
+      setErrors({ general: 'Something went wrong. Please try again.' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleBack = () => {
+    if (stepData?.role === 'talent') {
+      router.push('/auth/signup/step-2');
+    } else {
+      router.push('/auth/verify-email');
+    }
+  };
+
+  if (!stepData) {
+    return null;
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      {/* Header */}
+      <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 p-4">
+        <div className="max-w-7xl mx-auto flex items-center justify-center">
+          <Link href="/" className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-primary-blue dark:bg-accent-red flex items-center justify-center">
+              <span className="text-white font-bold text-sm">3Y</span>
+            </div>
+            <span className="text-xl font-bold text-primary-blue dark:text-accent-red">3YESES</span>
+          </Link>
+        </div>
+      </header>
+
+      <div className="flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+        <div className="sm:mx-auto sm:w-full sm:max-w-4xl">
+        {/* Progress Tracker */}
+        <ProgressTracker currentStep={3} steps={signupSteps} />
+
+        {/* Back Button */}
+        <div className="mb-6">
+          <button
+            onClick={handleBack}
+            className="inline-flex items-center text-sm text-gray-600 dark:text-gray-400 hover:text-primary-blue transition-colors"
+          >
+            <ArrowLeft className="h-4 w-4 mr-1" />
+            Back
+          </button>
+        </div>
+
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-extrabold text-gray-900 dark:text-white">
+            Upload Your Media
+          </h2>
+          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+            {stepData.role === 'talent' 
+              ? 'Showcase your talent with photos, videos, and portfolio items'
+              : 'Add a profile photo to complete your account'
+            }
+          </p>
+        </div>
+      </div>
+
+      <div className="sm:mx-auto sm:w-full sm:max-w-4xl">
+        <div className="bg-white dark:bg-gray-800 py-8 px-4 shadow sm:rounded-lg sm:px-10">
+          <form onSubmit={handleSubmit} className="space-y-8">
+            {errors.general && (
+              <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md p-4">
+                <p className="text-sm text-red-600 dark:text-red-400">{errors.general}</p>
+              </div>
+            )}
+
+            {/* Profile Photo */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">
+                Profile Photo *
+              </label>
+              
+              {!profilePhoto ? (
+                <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center hover:border-primary-blue transition-colors">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleProfilePhotoUpload}
+                    className="hidden"
+                    id="profile-photo"
+                  />
+                  <label htmlFor="profile-photo" className="cursor-pointer">
+                    <ImageIcon className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      <span className="font-medium text-primary-blue">Click to upload</span> your profile photo
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">PNG, JPG, WEBP up to 10MB</p>
+                  </label>
+                </div>
+              ) : (
+                <div className="relative inline-block">
+                  <Image
+                    src={profilePhoto.preview!}
+                    alt="Profile"
+                    width={128}
+                    height={128}
+                    className="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeFile(profilePhoto.id, 'profilePhoto')}
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                  {profilePhoto.uploading && (
+                    <div className="absolute inset-0 bg-black bg-opacity-50 rounded-full flex items-center justify-center">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+                    </div>
+                  )}
+                </div>
+              )}
+              {errors.profilePhoto && <p className="mt-2 text-sm text-red-600">{errors.profilePhoto}</p>}
+            </div>
+
+            {stepData.role === 'talent' && (
+              <>
+                {/* Demo Reel */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">
+                    Demo Reel (Optional)
+                  </label>
+                  
+                  {!demoReel ? (
+                    <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center hover:border-primary-blue transition-colors">
+                      <input
+                        type="file"
+                        accept="video/*"
+                        onChange={handleDemoReelUpload}
+                        className="hidden"
+                        id="demo-reel"
+                      />
+                      <label htmlFor="demo-reel" className="cursor-pointer">
+                        <Video className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          <span className="font-medium text-primary-blue">Upload your demo reel</span>
+                        </p>
+                        <p className="text-xs text-gray-500 mt-1">MP4, MOV, AVI up to 50MB</p>
+                      </label>
+                    </div>
+                  ) : (
+                    <div className="relative bg-gray-100 dark:bg-gray-700 rounded-lg p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center">
+                          <Play className="h-8 w-8 text-primary-blue mr-3" />
+                          <div>
+                            <p className="text-sm font-medium text-gray-900 dark:text-white">
+                              {demoReel.file.name}
+                            </p>
+                            <p className="text-xs text-gray-500">
+                              {(demoReel.file.size / (1024 * 1024)).toFixed(1)} MB
+                            </p>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => removeFile(demoReel.id, 'demoReel')}
+                          className="text-red-500 hover:text-red-700"
+                        >
+                          <X className="h-5 w-5" />
+                        </button>
+                      </div>
+                      {demoReel.uploading && (
+                        <div className="mt-2">
+                          <div className="bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                            <div className="bg-primary-blue h-2 rounded-full animate-pulse" style={{ width: '70%' }}></div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  {errors.demoReel && <p className="mt-2 text-sm text-red-600">{errors.demoReel}</p>}
+                </div>
+
+                {/* Portfolio Items */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">
+                    Portfolio Items (Optional)
+                  </label>
+                  
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+                    {portfolioFiles.map((file) => (
+                      <div key={file.id} className="relative group">
+                        {file.type === 'image' ? (
+                          <Image
+                            src={file.preview!}
+                            alt="Portfolio item"
+                            width={128}
+                            height={128}
+                            className="w-full h-32 object-cover rounded-lg"
+                          />
+                        ) : (
+                          <div className="w-full h-32 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center">
+                            <Video className="h-8 w-8 text-gray-400" />
+                          </div>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => removeFile(file.id, 'portfolio')}
+                          className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      </div>
+                    ))}
+                    
+                    {/* Add More Button */}
+                    <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg h-32 flex items-center justify-center hover:border-primary-blue transition-colors">
+                      <input
+                        type="file"
+                        accept="image/*,video/*"
+                        multiple
+                        onChange={handlePortfolioUpload}
+                        className="hidden"
+                        id="portfolio-items"
+                      />
+                      <label htmlFor="portfolio-items" className="cursor-pointer text-center">
+                        <Upload className="mx-auto h-8 w-8 text-gray-400 mb-2" />
+                        <p className="text-xs text-gray-500">Add more</p>
+                      </label>
+                    </div>
+                  </div>
+                  {errors.portfolio && <p className="mt-2 text-sm text-red-600">{errors.portfolio}</p>}
+                </div>
+
+                {/* Resume/CV */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">
+                    Resume/CV (Optional)
+                  </label>
+                  
+                  {!resume ? (
+                    <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center hover:border-primary-blue transition-colors">
+                      <input
+                        type="file"
+                        accept=".pdf"
+                        onChange={handleResumeUpload}
+                        className="hidden"
+                        id="resume"
+                      />
+                      <label htmlFor="resume" className="cursor-pointer">
+                        <FileText className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          <span className="font-medium text-primary-blue">Upload your resume</span>
+                        </p>
+                        <p className="text-xs text-gray-500 mt-1">PDF up to 10MB</p>
+                      </label>
+                    </div>
+                  ) : (
+                    <div className="bg-gray-100 dark:bg-gray-700 rounded-lg p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center">
+                          <FileText className="h-8 w-8 text-primary-blue mr-3" />
+                          <div>
+                            <p className="text-sm font-medium text-gray-900 dark:text-white">
+                              {resume.file.name}
+                            </p>
+                            <p className="text-xs text-gray-500">
+                              {(resume.file.size / (1024 * 1024)).toFixed(1)} MB
+                            </p>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => removeFile(resume.id, 'resume')}
+                          className="text-red-500 hover:text-red-700"
+                        >
+                          <X className="h-5 w-5" />
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                  {errors.resume && <p className="mt-2 text-sm text-red-600">{errors.resume}</p>}
+                </div>
+              </>
+            )}
+
+            {/* Submit Button */}
+            <div className="flex justify-between pt-8">
+              <button
+                type="button"
+                onClick={handleBack}
+                className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue transition-all duration-200"
+              >
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back
+              </button>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="inline-flex items-center px-6 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-gradient-to-r from-primary-blue to-primary-red hover:from-blue-700 hover:to-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+              >
+                {loading ? (
+                  <div className="flex items-center">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    Creating Account...
+                  </div>
+                ) : (
+                  <>
+                    Complete Registration
+                    <Check className="h-4 w-4 ml-2" />
+                  </>
+                )}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    </div>
+  );
+}
