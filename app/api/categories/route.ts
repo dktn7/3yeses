@@ -2,17 +2,30 @@
 // GET /api/categories - Get all categories with subcategories
 
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-import type { ApiResponse } from '@/types/api';
+import prisma from '@/lib/prisma';
+import type { ApiResponse } from '@/lib/api-types';
+import { getCachedCategories, warmCaches, serverCache } from '@/lib/cache-warmer';
 
-const prisma = new PrismaClient();
+// Force dynamic rendering since we use request.url
+export const dynamic = 'force-dynamic';
 
 // GET - Fetch all categories with subcategories
-export async function GET(request: Request): Promise<NextResponse<ApiResponse<unknown>>> {
+export async function GET(request: Request): Promise<Response> {
   try {
     const { searchParams } = new URL(request.url);
     const categoryId = searchParams.get('categoryId');
     const includeTalent = searchParams.get('includeTalent') === 'true';
+
+    // Check pre-warmed cache first (for all categories request)
+    if (!categoryId && !includeTalent) {
+      const cached = getCachedCategories();
+      if (cached) {
+        return NextResponse.json({
+          success: true,
+          data: cached,
+        });
+      }
+    }
 
     if (categoryId) {
       // Get specific category with its subcategories and talent
@@ -67,7 +80,15 @@ export async function GET(request: Request): Promise<NextResponse<ApiResponse<un
       });
     }
 
-    // Get all categories
+    // Get all categories - use centralized cache if available
+    const cached = getCachedCategories();
+    if (!categoryId && cached) {
+      return NextResponse.json({
+        success: true,
+        data: cached,
+      });
+    }
+
     const categories = await prisma.category.findMany({
       include: {
         subcategories: {
@@ -98,6 +119,12 @@ export async function GET(request: Request): Promise<NextResponse<ApiResponse<un
         description: sub.description,
       })),
     }));
+
+    // Update centralized cache if fetching all categories
+    if (!categoryId) {
+      serverCache.categories = formattedCategories;
+      serverCache.categoriesTimestamp = Date.now();
+    }
 
     return NextResponse.json({
       success: true,

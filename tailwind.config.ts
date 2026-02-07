@@ -28,9 +28,9 @@ export default {
           blue: '#3B82F6',
         },
         background: {
-          light: '#F8FAFC',
+          light: '#FFFFFF',
           white: '#FFFFFF',
-          dark: '#1E293B',
+          dark: '#111827',
         },
         text: {
           primary: '#1E293B',

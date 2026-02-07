@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
-import RangeSlider from "./RangeSlider";
+import RangeSlider from "./RangeSlider.tsx";
+import SkillMultiSelect from './SkillMultiSelect.tsx';
+import LocationAutocomplete from './LocationAutocomplete.tsx';
 
 interface AdvancedSearchPanelProps {
   isOpen: boolean;
@@ -158,13 +160,12 @@ export default function AdvancedSearchPanel({
         {/* Skills */}
         <div>
           <div className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">Skills</div>
-          <input
-            type="text"
-            value={skills}
-            onChange={(e) => setSkills(e.target.value)}
-            placeholder="Skills (comma separated)"
-            className="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white"
-          />
+          <SkillMultiSelect value={skills ? skills.split(',').map(s => s.trim()).filter(Boolean) : []} onChange={(vals) => setSkills(vals.join(', '))} placeholder="Add skill" />
+        </div>
+        {/* Location (autocomplete) */}
+        <div>
+          <div className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">Location</div>
+          <LocationAutocomplete value={''} onChange={() => {}} placeholder="City, State" />
         </div>
         {/* Languages */}
         <div>

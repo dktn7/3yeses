@@ -1,0 +1,544 @@
+{
+  "Navigation": {
+    "home": "ホーム",
+    "about": "会社概要",
+    "categories": "カテゴリ",
+    "contact": "お問い合わせ",
+    "news": "ニュース",
+    "resources": "リソース",
+    "successStories": "成功事例",
+    "pricingPlans": "料金プラン",
+    "legal": "法的情報",
+    "privacyPolicy": "プライバシーポリシー",
+    "termsOfService": "利用規約",
+    "dashboard": "ダッシュボード",
+    "profile": "プロフィール",
+    "settings": "設定",
+    "logout": "ログアウト",
+    "login": "ログイン",
+    "signup": "サインアップ"
+  },
+  "Footer": {
+    "aboutUs": "私たちについて",
+    "companyInfo": "エンターテインメント業界の才能と機会をつなぐ。",
+    "forTalent": "タレント向け",
+    "joinAsTalent": "タレントとして参加",
+    "talentDashboard": "タレントダッシュボード",
+    "browseCategories": "カテゴリを閲覧",
+    "pricingPlans": "料金プラン",
+    "howItWorks": "仕組み",
+    "successStories": "成功事例",
+    "contactUs": "お問い合わせ",
+    "email": "contact@3yeses.co.uk",
+    "phone": "+44 121 123 4567",
+    "location": "イギリス、バーミンガム",
+    "language": "言語",
+    "copyright": "© 2025 3YESES. 全著作権所有。",
+    "privacyPolicy": "プライバシーポリシー",
+    "termsOfService": "利用規約"
+  },
+  "Language": {
+    "english": "英語",
+    "french": "フランス語",
+    "german": "ドイツ語",
+    "spanish": "スペイン語",
+    "italian": "イタリア語",
+    "portuguese": "ポルトガル語",
+    "russian": "ロシア語",
+    "japanese": "日本語",
+    "chinese": "中国語",
+    "arabic": "アラビア語"
+  },
+  "Home": {
+    "tagline": "エンターテインメント業界の才能と機会をつなぐ。",
+    "welcome": {
+      "title": "3YESESへようこそ",
+      "description": "次のプロジェクトに最適な才能を見つけるか、エンターテインメント業界でエキサイティングな機会を発見してください。"
+    },
+    "forTalent": {
+      "title": "タレント向け",
+      "description": "あなたのスキルを披露し、次の大きなチャンスを見つけてください。",
+      "browse": "カテゴリを閲覧"
+    },
+    "whyChooseTitle": "なぜ選ぶのか",
+    "whyChooseSubtitle": "3YESES",
+    "whyChooseDescription": "エンターテインメント業界でクリエイティブな才能を見つけて繋がるための、あなたの理想的なプラットフォームとして3YESESを選ぶ理由をご覧ください。",
+    "readyToConnectTitle": "クリエイティブな才能と繋がる準備はできましたか？",
+    "readyToConnectDescription": "3YESESで機会を見つけているクリエイティブなプロフェッショナルの成長するコミュニティに参加してください。",
+    "features": {
+      "creativeDirectory": {
+        "title": "クリエイティブ才能ディレクトリ",
+        "description": "さまざまなカテゴリーや専門分野でクリエイティブなプロフェッショナルを探索し、繋がってください。",
+        "benefits": [
+          "簡単な才能発見",
+          "カテゴリ別検索",
+          "直接メッセージ",
+          "作品ポートフォリオ"
+        ]
+      },
+      "advancedSearch": {
+        "title": "高度検索とフィルター",
+        "description": "強力な検索とフィルタリング機能で完璧な才能を見つけてください。",
+        "benefits": [
+          "場所ベースの検索",
+          "スキルと経験のフィルター",
+          "カテゴリナビゲーション",
+          "詳細なプロフィール"
+        ]
+      },
+      "talentProfiles": {
+        "title": "才能プロフィール",
+        "description": "才能のスキル、経験、過去の作品を紹介する包括的なプロフィール。",
+        "benefits": [
+          "作品ポートフォリオ",
+          "経験履歴",
+          "スキル一覧",
+          "連絡先情報"
+        ]
+      },
+      "mobileOptimized": {
+        "title": "モバイル最適化",
+        "description": "完全にレスポンシブなデザインで、あらゆるデバイスからプラットフォームにアクセス。",
+        "benefits": [
+          "モバイルフレンドリーな界面",
+          "タッチ最適化ナビゲーション",
+          "レスポンシブレイアウト",
+          "クロスデバイス互換性"
+        ]
+      },
+      "growingCommunity": {
+        "title": "成長するコミュニティ",
+        "description": "クリエイティブなプロフェッショナルと業界関係者の拡大するネットワークに参加してください。",
+        "benefits": [
+          "多様な才能",
+          "業界ネットワーキング",
+          "クリエイティブな機会",
+          "コミュニティサポート"
+        ]
+      },
+      "alwaysAvailable": {
+        "title": "プラットフォーム24/7アクセス",
+        "description": "昼夜を問わず、必要な時に才能を検索し、繋がってください。",
+        "benefits": [
+          "常に利用可能",
+          "時間制限なし",
+          "柔軟なスケジューリング",
+          "グローバルアクセス"
+        ]
+      }
+    },
+    "headlines": {
+      "getCast": "今日あなたの次の役を手に入れよう",
+      "showcase": "あなたの才能を世界に示そう",
+      "connect": "業界のプロフェッショナルと繋がろう",
+      "build": "クリエイティブなポートフォリオを構築しよう",
+      "discover": "毎日新しい機会を発見しよう",
+      "join": "才能の革命に参加しよう",
+      "break": "あなたの次の大きなブレイクが待っています",
+      "passion": "情熱を成功に変えよう"
+    },
+    "mobileOptimized": "モバイル最適化",
+    "support247": "24/7サポート"
+  },
+  "News": {
+    "title": "業界ニュースとインサイト",
+    "loading": "最新のインサイトを読み込み中...",
+    "trendingTopics": "注目のトピック",
+    "noTrending": "現在トレンドのトピックはありません。",
+    "popularTags": "人気のタグ",
+    "clearTags": "タグをクリア",
+    "newsletter": {
+      "title": "最新情報を受け取る",
+      "description": "最新の業界インサイトとAI分析をメールでお届けします。",
+      "cta": "今すぐ購読"
+    },
+    "readMore": "続きを読む",
+    "readMoreAria": "{title} についてもっと読む",
+    "avatarAlt": "{author} のアバター",
+    "activeCategory": "カテゴリ: {category}",
+    "clearAll": "すべてクリア",
+    "pagination": {
+      "prev": "前へ",
+      "next": "次へ"
+    },
+    "empty": "現在のフィルターに一致する記事はありません。",
+    "sort": {
+      "trending": "トレンド",
+      "recent": "最新",
+      "popular": "人気",
+      "views": "閲覧数"
+    },
+    "categories": {
+      "all": "すべてのニュース",
+      "acting": "演技",
+      "music": "音楽",
+      "dance": "ダンス",
+      "crew": "制作",
+      "platform": "プラットフォーム"
+    }
+  },
+  "Auth": {
+    "signin": {
+      "title": "おかえりなさい",
+      "subtitle": "アカウントにログイン",
+      "email": "メールアドレス",
+      "emailPlaceholder": "your.email@example.com",
+      "password": "パスワード",
+      "passwordPlaceholder": "パスワードを入力してください",
+      "rememberMe": "ログイン状態を保持する",
+      "forgotPassword": "パスワードをお忘れですか？",
+      "submit": "ログイン",
+      "orContinueWith": "またはメールで続ける",
+      "continueWithGoogle": "Googleで続ける",
+      "continueWithFacebook": "Facebookで続ける",
+      "continueWithApple": "Appleで続ける",
+      "noAccount": "アカウントをお持ちでないですか？",
+      "signUpLink": "登録する",
+      "errors": {
+        "emailRequired": "メールアドレスは必須です",
+        "emailInvalid": "有効なメールアドレスを入力してください",
+        "passwordRequired": "パスワードは必須です",
+        "passwordTooShort": "パスワードは6文字以上にしてください",
+        "loginFailed": "メールアドレスまたはパスワードが正しくありません",
+        "serverError": "エラーが発生しました。もう一度お試しください"
+      },
+      "success": {
+        "loginSuccess": "ログインに成功しました！"
+      }
+    },
+    "signup": {
+      "title": "アカウントを作成",
+      "subtitle": "何千ものクリエイティブプロフェッショナルに参加",
+      "startButton": "旅を始める",
+      "alreadyHaveAccount": "すでにアカウントをお持ちですか？",
+      "signIn": "ログイン",
+      "back": "戻る",
+      "next": "次のステップ",
+      "submit": "登録を完了",
+      "step1Title": "アカウント情報",
+      "step1Description": "基本情報",
+      "step2Title": "あなたのプロフィール",
+      "step2Description": "専門情報",
+      "step3Title": "メディアをアップロード",
+      "step3Description": "ポートフォリオと動画",
+      "firstName": "名",
+      "firstNamePlaceholder": "太郎",
+      "lastName": "姓",
+      "lastNamePlaceholder": "山田",
+      "email": "メールアドレス",
+      "emailPlaceholder": "your.email@example.com",
+      "phone": "電話番号",
+      "phonePlaceholder": "+81 XX XXXX XXXX",
+      "password": "パスワード",
+      "passwordPlaceholder": "強力なパスワードを作成してください",
+      "confirmPassword": "パスワードを確認",
+      "confirmPasswordPlaceholder": "パスワードを再入力してください",
+      "category": "主要カテゴリー",
+      "categoryPlaceholder": "主要カテゴリーを選択してください",
+      "bio": "自己紹介",
+      "bioPlaceholder": "あなた自身と経験について教えてください...",
+      "location": "場所",
+      "locationPlaceholder": "都市、国",
+      "experience": "経験年数",
+      "experiencePlaceholder": "経験レベルを選択してください",
+      "skills": "スキル",
+      "skillsPlaceholder": "スキルを追加してください",
+      "dateOfBirth": "生年月日",
+      "dateOfBirthPlaceholder": "生年月日を選択してください",
+      "parentManagedAccount": "保護者管理アカウントが必要",
+      "parentManagedAccountTitle": "保護者管理アカウント",
+      "parentManagedAccountDescription": "13歳から17歳のユーザーの場合、保護者がこのアカウントを作成し管理する必要があります。",
+      "parentGuardianInfo": "保護者の情報",
+      "yourInformation": "あなたの情報",
+      "childTalentInfo": "お子様のタレント情報",
+      "accountSecurity": "アカウントセキュリティ",
+      "parentFirstName": "保護者の名",
+      "parentLastName": "保護者の姓",
+      "parentEmail": "保護者のメールアドレス",
+      "parentPhone": "保護者の電話番号",
+      "childFirstName": "お子様の名",
+      "childLastName": "お子様の姓",
+      "childDateOfBirth": "お子様の生年月日",
+      "parentalConsentText": "私は上記の子供の保護者/法定後見人であり、このアカウントの作成に同意することを確認します。",
+      "iAgreeToThe": "私は",
+      "termsAndConditions": "利用規約",
+      "and": "と",
+      "privacyPolicy": "プライバシーポリシー",
+      "gender": "性別",
+      "genderPlaceholder": "性別を選択してください",
+      "genderMale": "男性",
+      "genderFemale": "女性",
+      "genderNonBinary": "ノンバイナリー",
+      "genderPreferNotToSay": "回答しない",
+      "genderOther": "その他",
+      "genderOtherSpecify": "具体的に記入してください",
+      "ethnicity": "民族",
+      "ethnicityPlaceholder": "民族を選択してください",
+      "ethnicityWhite": "白人/コーカサス系",
+      "ethnicityBlack": "黒人/アフリカ系",
+      "ethnicityAsian": "アジア系",
+      "ethnicityHispanic": "ヒスパニック/ラテン系",
+      "ethnicityMiddleEastern": "中東系",
+      "ethnicityMixed": "混血/多民族",
+      "ethnicityNative": "ネイティブアメリカン",
+      "ethnicityPacific": "太平洋諸島系",
+      "ethnicityPreferNotToSay": "回答しない",
+      "ethnicityOther": "その他",
+      "ethnicityOtherSpecify": "具体的に記入してください",
+      "bodyType": "体型",
+      "bodyTypePlaceholder": "体型を選択してください",
+      "bodyTypeSlim": "スリム",
+      "bodyTypeAverage": "平均的",
+      "bodyTypeAthletic": "アスレチック",
+      "bodyTypeCurvy": "グラマラス",
+      "bodyTypePlusSize": "プラスサイズ",
+      "bodyTypeMuscular": "筋肉質",
+      "bodyTypePreferNotToSay": "回答したくない",
+      "languages": "言語",
+      "languagesPlaceholder": "話せる言語を追加してください",
+      "languageName": "言語",
+      "languageNamePlaceholder": "例：日本語、英語",
+      "proficiency": "習熟度",
+      "proficiencyNative": "ネイティブ",
+      "proficiencyFluent": "流暢",
+      "proficiencyIntermediate": "中級",
+      "proficiencyBasic": "基礎",
+      "addLanguage": "言語を追加",
+      "removeLanguage": "削除",
+      "disability": "障害/アクセシビリティ (任意)",
+      "disabilityDescription": "包括的なキャスティングの機会のために該当するオプションを選択してください",
+      "disabilityWheelchairUser": "車椅子ユーザー",
+      "disabilityMobilityImpairment": "移動障害",
+      "disabilityLimbDifferenceAmputation": "四肢の違い/切断",
+      "disabilityDeafHardOfHearing": "聴覚障害/難聴",
+      "disabilityBlindVisualImpairment": "視覚障害",
+      "disabilityNeurodivergent": "ニューロダイバージェント (自閉症、ADHD、ディスレクシアなど)",
+      "disabilitySpeechCommunicationDifference": "言語/コミュニケーションの違い",
+      "disabilityDwarfismShortStature": "小人症/低身長",
+      "disabilityFacialDifference": "顔の違い",
+      "disabilityChronicPainFatigue": "慢性疼痛/疲労",
+      "disabilityInvisibleDisability": "見えない障害 (てんかん、糖尿病など)",
+      "disabilityOther": "その他",
+      "disabilityOtherSpecify": "具体的に記入してください",
+      "disabilityNonePreferNotToSay": "なし / 回答したくない",
+      "optional": "任意",
+      "profilePhoto": "プロフィール写真",
+      "uploadPhoto": "写真をアップロード",
+      "removePhoto": "削除",
+      "portfolio": "ポートフォリオ画像",
+      "uploadPortfolio": "画像をアップロード（最大10枚）",
+      "videos": "デモ動画",
+      "videoUrl": "動画URL",
+      "videoUrlPlaceholder": "https://youtube.com/watch?v=...",
+      "addVideo": "動画を追加",
+      "removeVideo": "削除",
+      "errors": {
+        "firstNameRequired": "名は必須です",
+        "lastNameRequired": "姓は必須です",
+        "childFirstNameRequired": "お子様の名は必須です",
+        "childLastNameRequired": "お子様の姓は必須です",
+        "minimumAge13": "登録には13歳以上である必要があります",
+        "parentalConsentRequired": "保護者の同意が必要です",
+        "termsRequired": "利用規約に同意する必要があります",
+        "emailRequired": "メールアドレスは必須です",
+        "emailInvalid": "有効なメールアドレスを入力してください",
+        "emailTaken": "このメールアドレスは既に登録されています",
+        "phoneRequired": "電話番号は必須です",
+        "phoneInvalid": "有効な電話番号を入力してください",
+        "passwordRequired": "パスワードは必須です",
+        "passwordTooShort": "パスワードは8文字以上にしてください",
+        "passwordWeak": "パスワードは大文字、小文字、数字を含む必要があります",
+        "passwordMismatch": "パスワードが一致しません",
+        "confirmPasswordRequired": "パスワードを確認してください",
+        "categoryRequired": "カテゴリーを選択してください",
+        "bioRequired": "自己紹介を入力してください",
+        "locationRequired": "場所は必須です",
+        "serverError": "エラーが発生しました。もう一度お試しください"
+      },
+      "success": {
+        "accountCreated": "アカウントが正常に作成されました！",
+        "redirecting": "確認ページにリダイレクト中..."
+      }
+    },
+    "forgotPassword": {
+      "title": "パスワードをお忘れですか？",
+      "subtitle": "メールアドレスを入力すると、リセットリンクを送信します",
+      "email": "メールアドレス",
+      "emailPlaceholder": "your.email@example.com",
+      "submit": "リセットリンクを送信",
+      "errors": {
+        "emailRequired": "メールアドレスは必須です",
+        "emailInvalid": "有効なメールアドレスを入力してください",
+        "requestFailed": "メール送信に失敗しました",
+        "serverError": "エラーが発生しました。もう一度お試しください"
+      },
+      "success": {
+        "title": "メールを送信しました！",
+        "message": "このメールアドレスでアカウントが存在する場合、リセットリンクが送信されます。",
+        "checkSpam": "メールが見つからない場合は、迷惑メールフォルダを確認してください。"
+      }
+    },
+    "resetPassword": {
+      "title": "パスワードをリセット",
+      "subtitle": "新しいパスワードを入力してください",
+      "newPassword": "新しいパスワード",
+      "newPasswordPlaceholder": "新しいパスワードを入力してください",
+      "confirmPassword": "パスワードを確認",
+      "confirmPasswordPlaceholder": "新しいパスワードを再入力してください",
+      "passwordRequirements": "8文字以上で大文字、小文字、数字を含む",
+      "submit": "パスワードをリセット",
+      "errors": {
+        "passwordRequired": "パスワードは必須です",
+        "passwordTooShort": "パスワードは8文字以上にしてください",
+        "passwordWeak": "パスワードは大文字、小文字、数字を含む必要があります",
+        "confirmPasswordRequired": "パスワードを確認してください",
+        "passwordMismatch": "パスワードが一致しません",
+        "resetFailed": "パスワードのリセットに失敗しました",
+        "serverError": "エラーが発生しました。もう一度お試しください"
+      },
+      "success": {
+        "title": "パスワードがリセットされました！",
+        "message": "パスワードが正常にリセットされました。"
+      }
+    },
+    "verifyEmail": {
+      "title": "メールアドレスを確認",
+      "subtitle": "確認メールを送信しました",
+      "checking": "メールアドレスを確認中...",
+      "pending": {
+        "title": "メールアドレスを確認",
+        "message": "確認リンクをメールで送信しました。受信トレイを確認し、リンクをクリックしてアカウントを確認してください。"
+      },
+      "success": {
+        "title": "メールアドレスが正常に確認されました！",
+        "message": "メールアドレスが確認されました。続けることができます。",
+        "button": "プロフィール設定に進む"
+      },
+      "error": {
+        "title": "確認に失敗しました",
+        "message": "メールアドレスを確認できませんでした。もう一度お試しいただくか、新しい確認メールをリクエストしてください。"
+      },
+      "expired": {
+        "title": "確認リンクが期限切れです",
+        "message": "この確認リンクは期限切れです。新しいリンクをリクエストしてください。"
+      },
+      "resend": "メールを再送信",
+      "resending": "送信中...",
+      "resentSuccess": "確認メールを送信しました！",
+      "changeEmail": "メールアドレスを変更",
+      "checkSpam": "メールが見つからない場合は、迷惑メールフォルダを確認してください。",
+      "maxAttempts": "最大試行回数に達しました",
+      "cooldown": "{seconds}秒後に再送信",
+      "attemptsRemaining": "送信済みメール：{count}/3",
+      "needHelp": "お困りですか？サポートにお問い合わせください",
+      "backToLogin": "ログインに戻る"
+    },
+    "orDivider": "または",
+    "termsAgree": "登録することで、当社の",
+    "termsLink": "利用規約",
+    "privacyLink": "プライバシーポリシー",
+    "and": "と"
+  },
+  "Hub": {
+    "title": "メディアハブ",
+    "subtitle": "才能あるクリエイターの動画、画像、音声を発見する",
+    "search": {
+      "placeholder": "タイトル、タレント、説明で検索...",
+      "clear": "検索をクリア"
+    },
+    "categories": {
+      "title": "カテゴリー",
+      "all": "すべて",
+      "acting": "演技",
+      "music": "音楽",
+      "modeling": "モデリング",
+      "directing": "演出",
+      "writing": "執筆",
+      "photography": "写真撮影"
+    },
+    "type": {
+      "title": "タイプ:",
+      "all": "すべて",
+      "videos": "動画",
+      "audio": "音声",
+      "images": "画像"
+    },
+    "filters": {
+      "button": "フィルター",
+      "popularityTier": "人気度",
+      "viral": "バイラル",
+      "popular": "人気",
+      "rising": "上昇中",
+      "fresh": "新着",
+      "uploadDate": "アップロード日",
+      "allTime": "全期間",
+      "today": "今日",
+      "pastWeek": "過去1週間",
+      "pastMonth": "過去1ヶ月",
+      "pastYear": "過去1年",
+      "sortBy": "並べ替え",
+      "trending": "トレンド",
+      "newest": "最新",
+      "mostLiked": "人気",
+      "alphabetical": "A-Z",
+      "oldest": "Oldest First",
+      "mostViews": "Most Views",
+      "leastViews": "Least Views",
+      "mostLikes": "Most Likes",
+      "leastLikes": "Least Likes",
+      "zToA": "Z-A",
+      "clearAll": "すべてのフィルターをクリア",
+      "activeFilters": "アクティブなフィルター",
+      "search": "検索",
+      "category": "カテゴリー",
+      "type": "タイプ",
+      "sort": "並べ替え",
+      "showing": "表示中",
+      "results": "件",
+      "resultsPlural": "件"
+    },
+    "sections": {
+      "featuredCreators": "注目のクリエイター",
+      "discoverTopTalent": "プラットフォームのトップタレントを発見する",
+      "trendingNow": "今のトレンド",
+      "hotContent": "今人気のコンテンツ",
+      "mostViewed": "今最も視聴されているコンテンツ",
+      "featuredVideos": "注目の動画",
+      "video": "動画",
+      "videos": "動画",
+      "viewAllVideos": "すべての動画を見る →",
+      "featuredAudio": "注目の音声",
+      "audioTrack": "音声トラック",
+      "audioTracks": "音声トラック",
+      "viewAllAudio": "すべての音声を見る →",
+      "featuredImages": "注目の画像",
+      "image": "画像",
+      "images": "画像",
+      "viewAllImages": "すべての画像を見る →",
+      "latestUploads": "最新のアップロード",
+      "freshContent": "新着コンテンツ",
+      "mostPopular": "最も人気",
+      "lovedByCommunity": "コミュニティに愛されています"
+    },
+    "badges": {
+      "sponsored": "スポンサー",
+      "trending": "トレンド",
+      "hot": "人気",
+      "new": "新着",
+      "popular": "人気"
+    },
+    "pagination": {
+      "previous": "前へ",
+      "next": "次へ"
+    },
+    "empty": {
+      "title": "コンテンツが見つかりません",
+      "description": "フィルターを調整して、より多くの結果を表示してください"
+    }
+  },
+  "SearchResults": {
+    "noResultsTitle": "結果が見つかりません",
+    "noResultsDescription": "検索条件またはフィルターを調整してみてください",
+    "clearAllFilters": "すべてのフィルターをクリア"
+  }
+}

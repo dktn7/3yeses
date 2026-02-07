@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <rect width="1200" height="800" fill="#006c35"/>
+  <text x="600" y="400" font-family="Arial" font-size="150" fill="#fff" text-anchor="middle">لَا إِلٰهَ إِلَّا الله، مُحَمَّدٌ رَسُولُ الله</text>
+  <path d="M150,550 h900 l-75,50 h-750 z" fill="#fff"/>
+</svg>

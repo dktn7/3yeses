@@ -14,7 +14,7 @@ export interface User {
 interface AuthContextType {
   user: User | null;
   loading: boolean;
-  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  login: (email: string, password: string, rememberMe?: boolean) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
   signup: (userData: SignupData) => Promise<{ success: boolean; error?: string }>;
   updateUser: (userData: Partial<User>) => void;
@@ -70,6 +70,7 @@ export function AuthProvider({ children }: Readonly<{ children: ReactNode }>) {
               email: data.user.email,
               role: data.user.role === 'talent' ? 'talent' : 'client',
               profileComplete: data.user.profileComplete || false,
+              avatarUrl: data.user.avatarUrl || undefined,
             };
             setUser(userData);
           }
@@ -84,7 +85,7 @@ export function AuthProvider({ children }: Readonly<{ children: ReactNode }>) {
     initAuth();
   }, []);
 
-  const login = useCallback(async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
+  const login = useCallback(async (email: string, password: string, rememberMe: boolean = false): Promise<{ success: boolean; error?: string }> => {
     try {
       setLoading(true);
       
@@ -94,7 +95,7 @@ export function AuthProvider({ children }: Readonly<{ children: ReactNode }>) {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
-        body: JSON.stringify({ email, password, rememberMe: true }),
+        body: JSON.stringify({ email, password, rememberMe }),
       });
 
       const data = await response.json();

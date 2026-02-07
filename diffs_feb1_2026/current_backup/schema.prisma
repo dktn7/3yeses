@@ -1,0 +1,582 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String          @id @default(cuid())
+  email           String          @unique
+  password        String
+  role            Role            @default(TALENT)
+  name            String
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  emailVerified   DateTime?
+  
+  // Password reset fields
+  resetToken      String?
+  resetTokenExpiry DateTime?
+  
+  // Email verification fields
+  verificationToken String?
+  verificationTokenExpiry DateTime?
+  
+  // Parental consent fields (for users aged 13-15 with self-managed accounts)
+  parentalConsentRequired   Boolean?   @default(false)
+  parentalConsentPending    Boolean?   @default(false)
+  parentalConsentGiven      Boolean?   @default(false)
+  parentName                String?
+  parentEmail               String?
+  parentConsentToken        String?
+  parentConsentTokenExpiry  DateTime?
+  parentConsentedAt         DateTime?
+  
+  // User settings (stored as JSON)
+  settings        Json?
+  
+  talentProfile   TalentProfile?
+  bookings        Booking[]
+  reviewsGiven    Review[]
+  likes           Like[]
+  comments        Comment[]
+  commentLikes    CommentLike[]
+  
+  // Reports
+  reportsCreated  Report[]        @relation("ReportedBy")
+  reportsReceived Report[]        @relation("ReportedUser")
+  reportsHandled  Report[]        @relation("ReportHandler")
+  
+  // Analytics
+  profileViews    ProfileView[]
+  portfolioViews  PortfolioView[]
+}
+
+model TalentProfile {
+  id              String          @id @default(cuid())
+  user            User            @relation(fields: [userId], references: [id])
+  userId          String          @unique
+  
+  roleDescription String?         // e.g., "Lead Actress"
+  bio             String?
+  location        String?
+  experience      String?         // Changed to String for "Beginner (0-2 years)", etc.
+  rating          Float           @default(0)
+  
+  // Detailed characteristics
+  dateOfBirth     DateTime?       // Added for age calculation
+  gender          Gender?
+  genderOther     String?         // For custom gender specification
+  ethnicity       Ethnicity?
+  ethnicityOther  String?         // For custom ethnicity specification
+  age             Int?
+  height          Int?            // in cm
+  bodyType        BodyType?
+  eyeColor        String?
+  hairColor       String?
+  
+  languages       Language[]      // Changed to relation for proficiency levels
+  skills          String[]
+  featuredSkills  String[]        @default([]) // User-selected skills to display on card (max 4)
+  
+  // Disability/accessibility information (optional, for inclusive casting)
+  disabilities    String[]        @default([]) // Array of disability types
+  disabilityOther String?         // Custom disability specification
+  
+  avatarUrl       String?
+  bannerUrl       String?
+  videoUrl        String?
+  portfolioImages String[]        @default([]) // Array of image URLs
+  videoUrls       String[]        @default([]) // Array of video URLs (YouTube, Vimeo, etc.)
+  
+  socialMedia     Json?           // [{ platform: "Instagram", url: "..." }]
+  portfolio       PortfolioItem[]
+  workHistory     WorkHistory[]
+  reviewsReceived Review[]
+  comments        Comment[]
+  
+  viewCount       Int             @default(0)
+  likeCount       Int             @default(0)
+  likes           Like[]
+  isBeginner      Boolean         @default(false)
+  
+  // Profile completion
+  profileComplete Boolean         @default(false)
+  
+  // Profile visibility settings
+  profileSettings ProfileSettings?
+  
+  category        Category?       @relation(fields: [categoryId], references: [id])
+  categoryId      String?
+  subcategory     Subcategory?    @relation(fields: [subcategoryId], references: [id])
+  subcategoryId   String?
+  
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  
+  // Reports
+  reports         Report[]
+  
+  // Analytics
+  profileViews    ProfileView[]
+  searchAppearances SearchAppearance[]
+  profileStats    ProfileStats[]
+  
+  // Notifications
+  notifications   Notification[]
+
+  @@index([categoryId])
+  @@index([subcategoryId])
+  @@index([userId])
+  
+  // Performance indexes for search/filtering
+  @@index([gender])
+  @@index([ethnicity])
+  @@index([bodyType])
+  @@index([age])
+  @@index([height])
+  @@index([location])
+  @@index([rating])
+  @@index([viewCount])
+  @@index([createdAt])
+  @@index([skills])
+}
+
+model ProfileSettings {
+  id                    String        @id @default(cuid())
+  talentProfile         TalentProfile @relation(fields: [talentProfileId], references: [id], onDelete: Cascade)
+  talentProfileId       String        @unique
+  
+  // Visibility settings
+  showViewCount         Boolean       @default(true)
+  showExperienceLevel   Boolean       @default(true)
+  showLocation          Boolean       @default(true)
+  showLanguages         Boolean       @default(true)
+  showRating            Boolean       @default(true)
+  showReviewCount       Boolean       @default(true)
+  showWorkHistory       Boolean       @default(true)
+  showSocialMedia       Boolean       @default(true)
+  showContactInfo       Boolean       @default(true)
+  
+  // Privacy settings
+  profileVisibility     ProfileVisibility @default(PUBLIC)
+  searchable            Boolean       @default(true)
+  allowDirectContact    Boolean       @default(true)
+  showOnlineStatus      Boolean       @default(false)
+  
+  updatedAt             DateTime      @updatedAt
+  createdAt             DateTime      @default(now())
+}
+
+enum ProfileVisibility {
+  PUBLIC
+  PRIVATE
+  CONTACTS_ONLY
+}
+
+model Language {
+  id              String          @id @default(cuid())
+  name            String          // e.g., "English", "Spanish"
+  proficiency     Proficiency     // Native, Fluent, Intermediate, Basic
+  
+  talentProfile   TalentProfile   @relation(fields: [talentProfileId], references: [id], onDelete: Cascade)
+  talentProfileId String
+  
+  createdAt       DateTime        @default(now())
+  
+  @@unique([talentProfileId, name])
+}
+
+enum Proficiency {
+  NATIVE
+  FLUENT
+  INTERMEDIATE
+  BASIC
+}
+
+model Category {
+  id              String          @id @default(cuid())
+  name            String          @unique
+  description     String?
+  icon            String?
+  subcategories   Subcategory[]
+  talentProfiles  TalentProfile[]
+}
+
+model Subcategory {
+  id              String          @id @default(cuid())
+  name            String
+  description     String?
+  talentCount     Int             @default(0)
+  
+  category        Category        @relation(fields: [categoryId], references: [id])
+  categoryId      String
+  
+    // subSubcategories field removed
+  talentProfiles  TalentProfile[]
+  
+  @@unique([categoryId, name])
+}
+
+model WorkHistory {
+  id              String        @id @default(cuid())
+  title           String
+  company         String
+  startDate       DateTime
+  endDate         DateTime?     // Null means "Present"
+  isCurrent       Boolean       @default(false)
+  description     String?
+  
+  talentProfile   TalentProfile @relation(fields: [talentProfileId], references: [id], onDelete: Cascade)
+  talentProfileId String
+  
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+// SubSubcategory model removed
+model PortfolioItem {
+  id              String            @id @default(cuid())
+  title           String
+  url             String
+  type            PortfolioItemType
+  thumbnail       String?
+  likes           Int               @default(0)
+  description     String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt @default(now())
+  
+  talentProfile   TalentProfile     @relation(fields: [talentProfileId], references: [id])
+  talentProfileId String
+  
+  comments        Comment[]
+  reports         Report[]
+  views           PortfolioView[]
+
+  @@index([type])
+  @@index([talentProfileId])
+  @@index([createdAt])
+}
+
+model Review {
+  id              String        @id @default(cuid())
+  rating          Int
+  comment         String?
+  
+  reviewer        User          @relation(fields: [reviewerId], references: [id])
+  reviewerId      String
+  
+  talentProfile   TalentProfile @relation(fields: [talentProfileId], references: [id])
+  talentProfileId String
+  
+  createdAt       DateTime      @default(now())
+}
+
+model Booking {
+  id              String        @id @default(cuid())
+  client          User          @relation(fields: [clientId], references: [id])
+  clientId        String
+  
+  talentId        String        // Not a direct relation to avoid circular dependencies with User
+  
+  bookingDate     DateTime
+  status          BookingStatus @default(PENDING)
+  details         String?
+  
+  createdAt       DateTime      @default(now())
+}
+
+model Like {
+  id            String        @id @default(cuid())
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  talentProfile TalentProfile @relation(fields: [talentProfileId], references: [id], onDelete: Cascade)
+  talentProfileId String
+  
+  createdAt     DateTime      @default(now())
+  
+  @@unique([userId, talentProfileId]) // Prevent duplicate likes
+}
+
+enum Role {
+  TALENT
+  ADMIN
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  NON_BINARY
+  PREFER_NOT_TO_SAY
+  OTHER
+}
+
+enum Ethnicity {
+  WHITE_CAUCASIAN
+  BLACK_AFRICAN
+  ASIAN
+  HISPANIC_LATINO
+  MIDDLE_EASTERN
+  MIXED_MULTIRACIAL
+  NATIVE_AMERICAN
+  PACIFIC_ISLANDER
+  PREFER_NOT_TO_SAY
+  OTHER
+}
+
+enum BodyType {
+  SLIM
+  ATHLETIC
+  CURVY
+  PLUS_SIZE
+  MUSCULAR
+  AVERAGE
+  PREFER_NOT_TO_SAY
+}
+
+enum PortfolioItemType {
+  IMAGE
+  VIDEO
+  AUDIO
+  DOCUMENT
+  LINK
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
+
+enum CommentStatus {
+  APPROVED
+  PENDING
+  FLAGGED
+  REJECTED
+}
+
+// Notifications persisted for each talent profile
+model Notification {
+  id               String           @id @default(cuid())
+  talentProfile    TalentProfile    @relation(fields: [talentProfileId], references: [id], onDelete: Cascade)
+  talentProfileId  String
+  type             NotificationType
+  title            String
+  message          String
+  read             Boolean          @default(false)
+  dismissed        Boolean          @default(false)
+  metadata         Json?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  @@index([talentProfileId, createdAt])
+  @@index([talentProfileId, read, dismissed])
+}
+
+enum NotificationType {
+  PROFILE_VIEW
+  PROFILE_COMMENT
+  PROFILE_LIKE
+  MESSAGE
+  SYSTEM
+}
+
+model Comment {
+  id                String         @id @default(cuid())
+  content           String
+  status            CommentStatus  @default(APPROVED)
+  likesCount        Int            @default(0)
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  
+  user              User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId            String
+  
+  // Comment can be on a portfolio item (video) or on a profile
+  portfolioItem     PortfolioItem? @relation(fields: [portfolioItemId], references: [id], onDelete: Cascade)
+  portfolioItemId   String?
+  
+  talentProfile     TalentProfile? @relation(fields: [talentProfileId], references: [id], onDelete: Cascade)
+  talentProfileId   String?
+  
+  // Support for threaded comments (replies)
+  parentComment     Comment?       @relation("CommentReplies", fields: [parentCommentId], references: [id], onDelete: Cascade)
+  parentCommentId   String?
+  replies           Comment[]      @relation("CommentReplies")
+  
+  likes             CommentLike[]
+  reports           Report[]
+  
+  @@index([userId])
+  @@index([portfolioItemId])
+  @@index([talentProfileId])
+  @@index([parentCommentId])
+  @@index([status])
+}
+
+model CommentLike {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  
+  comment   Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  commentId String
+  
+  @@unique([userId, commentId])
+  @@index([userId])
+  @@index([commentId])
+}
+
+model Report {
+  id          String       @id @default(cuid())
+  type        ReportType
+  reason      String
+  description String?
+  status      ReportStatus @default(PENDING)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  
+  // Reporter
+  reporter    User         @relation("ReportedBy", fields: [reporterId], references: [id], onDelete: Cascade)
+  reporterId  String
+  
+  // Reported content (one of these will be set)
+  reportedUser        User?          @relation("ReportedUser", fields: [reportedUserId], references: [id], onDelete: Cascade)
+  reportedUserId      String?
+  
+  reportedProfile     TalentProfile? @relation(fields: [reportedProfileId], references: [id], onDelete: Cascade)
+  reportedProfileId   String?
+  
+  reportedComment     Comment?       @relation(fields: [reportedCommentId], references: [id], onDelete: Cascade)
+  reportedCommentId   String?
+  
+  reportedPortfolio   PortfolioItem? @relation(fields: [reportedPortfolioId], references: [id], onDelete: Cascade)
+  reportedPortfolioId String?
+  
+  // Admin who handled the report
+  handledBy     User?    @relation("ReportHandler", fields: [handledById], references: [id], onDelete: SetNull)
+  handledById   String?
+  handledAt     DateTime?
+  adminNotes    String?
+  
+  @@index([reporterId])
+  @@index([reportedUserId])
+  @@index([reportedProfileId])
+  @@index([reportedCommentId])
+  @@index([reportedPortfolioId])
+  @@index([status])
+  @@index([type])
+}
+
+enum ReportType {
+  SPAM
+  INAPPROPRIATE_CONTENT
+  HARASSMENT
+  FAKE_PROFILE
+  COPYRIGHT
+  OTHER
+}
+
+enum ReportStatus {
+  PENDING
+  REVIEWING
+  RESOLVED
+  DISMISSED
+}
+
+model ProfileView {
+  id              String        @id @default(cuid())
+  createdAt       DateTime      @default(now())
+  
+  // Viewer (null if anonymous)
+  viewer          User?         @relation(fields: [viewerId], references: [id], onDelete: SetNull)
+  viewerId        String?
+  
+  // Viewed profile
+  talentProfile   TalentProfile @relation(fields: [talentProfileId], references: [id], onDelete: Cascade)
+  talentProfileId String
+  
+  // Metadata
+  ipAddress       String?
+  userAgent       String?
+  referrer        String?
+  duration        Int?          // Time spent on profile in seconds
+  
+  @@index([talentProfileId])
+  @@index([viewerId])
+  @@index([createdAt])
+}
+
+model PortfolioView {
+  id              String        @id @default(cuid())
+  createdAt       DateTime      @default(now())
+  
+  // Viewer (null if anonymous)
+  viewer          User?         @relation(fields: [viewerId], references: [id], onDelete: SetNull)
+  viewerId        String?
+  
+  // Viewed portfolio item
+  portfolioItem   PortfolioItem @relation(fields: [portfolioItemId], references: [id], onDelete: Cascade)
+  portfolioItemId String
+  
+  // Metadata
+  duration        Int?          // Time spent viewing in seconds
+  completed       Boolean       @default(false) // For videos/audio
+  
+  @@index([portfolioItemId])
+  @@index([viewerId])
+  @@index([createdAt])
+}
+
+model SearchAppearance {
+  id              String        @id @default(cuid())
+  createdAt       DateTime      @default(now())
+  
+  // Search query
+  searchQuery     String
+  searchFilters   Json?         // Store filter criteria
+  
+  // Profile that appeared in results
+  talentProfile   TalentProfile @relation(fields: [talentProfileId], references: [id], onDelete: Cascade)
+  talentProfileId String
+  
+  // Position in search results
+  position        Int
+  clicked         Boolean       @default(false)
+  
+  @@index([talentProfileId])
+  @@index([createdAt])
+  @@index([searchQuery])
+}
+
+model ProfileStats {
+  id              String        @id @default(cuid())
+  date            DateTime      @db.Date
+  
+  // Profile
+  talentProfile   TalentProfile @relation(fields: [talentProfileId], references: [id], onDelete: Cascade)
+  talentProfileId String
+  
+  // Daily aggregated stats
+  views           Int           @default(0)
+  uniqueViews     Int           @default(0)
+  profileLikes    Int           @default(0)
+  portfolioViews  Int           @default(0)
+  searchImpressions Int         @default(0)
+  searchClicks    Int           @default(0)
+  comments        Int           @default(0)
+  
+  @@unique([talentProfileId, date])
+  @@index([talentProfileId])
+  @@index([date])
+}

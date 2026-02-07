@@ -59,7 +59,7 @@ export default function MessagesPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-background-light dark:bg-background-dark">
+    <div className="min-h-screen bg-white dark:bg-gray-900">
       {/* Header */}
       <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 p-4">
         <div className="max-w-7xl mx-auto flex items-center justify-center">

@@ -2,56 +2,54 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, List, Mail, Users, BookOpen, Shield, ChevronDown } from "lucide-react";
-import { FaFacebookF, FaTwitter, FaTiktok, FaMeta } from "react-icons/fa6";
-import { ModeToggle } from './ThemeToggle';
-import ProfileDropdown from './ProfileDropdown';
-import NotificationDropdown from './NotificationDropdown';
-import { useState, useEffect } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
+import { Home, List, Mail, BookOpen, Shield, ChevronDown, ChevronsLeft, ChevronsRight, Grid } from "lucide-react";
+import { useState, useEffect, useRef } from 'react';
+import ReactDOM from 'react-dom';
+import { Facebook, Instagram, Twitter } from 'lucide-react';
+import TikTokIcon from './icons/TikTokIcon';
+import Tooltip from './Tooltip';
+import { useTranslations } from 'next-intl';
 
-const navItems = [
-    { href: '/', icon: Home, label: 'Home' },
-    { href: '/categories', icon: List, label: 'Categories' },
-    { href: '/contact', icon: Mail, label: 'Contact Us' }
-];
-
-export default function Sidebar() {
+export default function Sidebar({ isCollapsed = false, setIsCollapsed }: { isCollapsed?: boolean, setIsCollapsed?: (isCollapsed: boolean) => void }) {
     const pathname = usePathname();
     const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-    const { user, loading } = useAuth();
+    const [popoverOpen, setPopoverOpen] = useState<string | null>(null);
+    const [popoverPosition, setPopoverPosition] = useState({ top: 0, left: 0 });
+    const popoverTimeout = useRef<NodeJS.Timeout | null>(null);
+    const dropdownRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+    const t = useTranslations('Navigation');
 
-    // Create dynamic dropdown items based on auth status
+    // Get current locale from pathname, handling both locale-based and auth routes
+    const pathSegments = pathname?.split('/').filter(Boolean) || [];
+    const validLocales = ['en-gb', 'fr-FR', 'de-DE', 'es-ES', 'it-IT', 'pt-PT', 'ru-RU', 'ja-JP', 'zh-CN', 'ar'];
+    const firstSegment = pathSegments[0] || 'en-gb';
+    // If first segment is not a valid locale (e.g., 'auth'), default to 'en-gb'
+    const locale = validLocales.includes(firstSegment) ? firstSegment : 'en-gb';
+
+    // Create nav items using translations with locale-aware links
+    const navItems = [
+        { href: `/${locale}`, icon: Home, label: t('home') },
+        { href: `/${locale}/about`, icon: BookOpen, label: t('about') },
+        { href: `/${locale}/categories`, icon: List, label: t('categories') },
+        { href: `/${locale}/hub`, icon: Grid, label: 'Hub' },
+        { href: `/${locale}/contact`, icon: Mail, label: t('contact') }
+    ];
+
+    // Create dynamic dropdown items based on auth status with locale-aware links
     const getDropdownItems = () => [
         {
-            icon: Users,
-            label: 'Services',
-            items: user ? 
-                // Authenticated users see dashboard links
-                [
-                    { href: '/dashboard/talent', label: 'Talent Dashboard' },
-                ] :
-                // Non-authenticated users see signup links
-                [
-                    { href: '/auth/login', label: 'Log In' },
-                    { href: '/auth/signup', label: 'Join as Talent' },
-                ]
-        },
-        {
             icon: BookOpen,
-            label: 'Resources',
+            label: t('resources'),
             items: [
-                { href: '/how-it-works', label: 'How It Works' },
-                { href: '/success-stories', label: 'Success Stories' },
-                { href: '/pricing', label: 'Pricing Plans' },
+                { href: `/${locale}/pricing`, label: t('pricingPlans') },
             ]
         },
         {
             icon: Shield,
-            label: 'Legal',
+            label: t('legal'),
             items: [
-                { href: '/privacy', label: 'Privacy Policy' },
-                { href: '/terms', label: 'Terms of Service' },
+                { href: `/${locale}/privacy`, label: t('privacyPolicy') },
+                { href: `/${locale}/terms`, label: t('termsOfService') },
             ]
         }
     ];
@@ -74,158 +72,144 @@ export default function Sidebar() {
         setOpenDropdown(null);
     }, [pathname]);
 
-    const toggleDropdown = (label: string) => {
-        setOpenDropdown(openDropdown === label ? null : label);
+    const handleDropdownClick = (label: string) => {
+        if (!isCollapsed) {
+            setOpenDropdown(openDropdown === label ? null : label);
+        }
+    };
+
+    const handleMouseEnter = (label: string) => {
+        if (isCollapsed) {
+            if (popoverTimeout.current) {
+                clearTimeout(popoverTimeout.current);
+            }
+            if (dropdownRefs.current[label]) {
+                const rect = dropdownRefs.current[label]!.getBoundingClientRect();
+                setPopoverPosition({
+                    top: rect.top + window.scrollY,
+                    left: rect.right + window.scrollX,
+                });
+            }
+            setPopoverOpen(label);
+        }
+    };
+
+    const handleMouseLeave = () => {
+        if (isCollapsed) {
+            popoverTimeout.current = setTimeout(() => {
+                setPopoverOpen(null);
+            }, 200); // A small delay to allow moving mouse into popover
+        }
     };
 
 
 
     return (
-        <aside className="w-60 bg-gray-200 dark:bg-gray-900 text-gray-800 dark:text-white hidden md:flex flex-col justify-between py-6 px-4 transition-colors duration-300 fixed top-0 left-0 h-screen z-40">
-            <nav className="space-y-6">
-                <Link href="/" className="block">
-                    <h1 className="text-2xl font-bold text-center text-blue-400 dark:text-red-400">3YESES</h1>
-                </Link>
-
-                {/* Profile and Notifications - Only show when logged in */}
-                {user && !loading && (
-                    <div className="flex items-center justify-center space-x-3 py-3 border-b border-gray-300 dark:border-gray-700">
-                        <NotificationDropdown />
-                        <ProfileDropdown 
-                            user={{
-                                id: user.id,
-                                name: user.name,
-                                email: user.email,
-                                role: (user.role === 'talent' ? 'TALENT' : 'ADMIN'),
-                                avatarUrl: user.avatarUrl
-                            }}
-                            onLogout={() => { /* sidebar doesn't manage user state directly */ }}
-                        />
-                    </div>
-                )}
-
-                <ul className="space-y-4 text-lg">
-                    {navItems.map(({ href, icon: Icon, label }) => (
-                        <li key={href}>
-                            <Link
-                                href={href}
-                                className={`flex items-center gap-3 rounded-md px-3 py-2 transition-colors ${
-                                    pathname === href
-                                        ? 'bg-blue-600/20 text-blue-600 dark:bg-red-500/20 dark:text-red-400 font-semibold'
-                                        : 'hover:bg-gray-300 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white'
-                                }`}
-                            >
-                                <Icon size={20} />
-                                <span>{label}</span>
-                            </Link>
-                        </li>
+        <aside className={`bg-gray-100 dark:bg-gray-800 border-r border-gray-300 dark:border-gray-700 text-gray-800 dark:text-white flex flex-col py-6 px-4 transition-all duration-300 fixed top-16 left-0 h-[calc(100vh-4rem)] z-50 overflow-y-auto ${isCollapsed ? 'w-20' : 'w-60'}`}>
+            <div className="flex items-center justify-end mb-6">
+           </div>
+            <nav className="space-y-6 flex-1">
+                <div className="space-y-2">
+                    {navItems.map((item) => (
+                        <Link
+                            key={item.href}
+                            href={item.href}
+                            className={`flex items-center space-x-2 py-2 px-4 rounded-md hover:bg-gray-300 dark:hover:bg-gray-800 transition-colors duration-200 ${pathname === item.href ? 'bg-gray-300 dark:bg-gray-800 font-semibold text-primary-blue dark:text-accent-red' : 'text-gray-800 dark:text-white'}`}
+                        >
+                            {isCollapsed ? (
+                                <Tooltip text={item.label}>
+                                    <item.icon className="h-5 w-5" />
+                                </Tooltip>
+                            ) : (
+                                <>
+                                    <item.icon className="h-5 w-5" />
+                                    <span>{item.label}</span>
+                                </>
+                            )}
+                        </Link>
                     ))}
-                    
-                    {/* Show auth-related items only when NOT logged in */}
-                    {!user && !loading && (
-                        <>
-                            <li>
-                                <Link
-                                    href="/auth/signin"
-                                    className="flex items-center gap-3 rounded-md px-3 py-2 transition-colors hover:bg-gray-300 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white"
-                                >
-                                    <Users size={20} />
-                                    <span>Sign In</span>
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href="/auth/signup"
-                                    className="flex items-center gap-3 rounded-md px-3 py-2 transition-colors bg-blue-600 text-white hover:bg-blue-700 dark:bg-red-500 dark:hover:bg-red-600"
-                                >
-                                    <Users size={20} />
-                                    <span>Join Now</span>
-                                </Link>
-                            </li>
-                        </>
-                    )}
-                    
-                    {/* Dropdown Menu Items */}
-                    {getDropdownItems().map(({ icon: Icon, label, items }) => (
-                        <li 
-                            key={label}
-                            className="relative"
+                </div>
+                <div className="space-y-2">
+                    {getDropdownItems().map((dropdown) => (
+                        <div
+                            key={dropdown.label}
+                            ref={el => { dropdownRefs.current[dropdown.label] = el; }}
+                            className="relative dropdown-item"
+                            onMouseEnter={() => handleMouseEnter(dropdown.label)}
+                            onMouseLeave={handleMouseLeave}
                         >
                             <button
-                                onClick={() => toggleDropdown(label)}
-                                className={`flex items-center justify-between w-full gap-3 rounded-md px-3 py-2 transition-colors ${
-                                    items.some(item => pathname === item.href)
-                                        ? 'bg-blue-600/20 text-blue-600 dark:bg-red-500/20 dark:text-red-400 font-semibold'
-                                        : 'hover:bg-gray-300 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white'
-                                }`}
+                                onClick={() => handleDropdownClick(dropdown.label)}
+                                className={`flex items-center justify-between w-full py-2 px-4 rounded-md hover:bg-gray-300 dark:hover:bg-gray-800 transition-colors duration-200 ${openDropdown === dropdown.label ? 'bg-gray-300 dark:bg-gray-800 font-semibold text-primary-blue dark:text-accent-red' : 'text-gray-800 dark:text-white'}`}
                             >
-                                <div className="flex items-center gap-3">
-                                    <Icon size={20} />
-                                    <span>{label}</span>
+                                <div className="flex items-center space-x-2">
+                                    <dropdown.icon className="h-5 w-5" />
+                                    {!isCollapsed && <span>{dropdown.label}</span>}
                                 </div>
-                                <ChevronDown 
-                                    size={16} 
-                                    className={`transition-transform duration-200 ${
-                                        openDropdown === label ? 'rotate-180' : ''
-                                    }`}
-                                />
+                                {!isCollapsed && <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${openDropdown === dropdown.label ? 'rotate-180' : ''}`} />}
                             </button>
-                            {/* Dropdown Content */}
-                            {openDropdown === label && (
-                                <ul className="mt-2 ml-6 space-y-2">
-                                    {items.map(({ href, label: itemLabel }) => (
-                                        <li key={itemLabel}>
-                                            <Link
-                                                href={href}
-                                                className={`block rounded-md px-3 py-2 text-sm transition-colors ${
-                                                    pathname === href
-                                                        ? 'bg-blue-600/20 text-blue-600 dark:bg-red-500/20 dark:text-red-400 font-semibold'
-                                                        : 'hover:bg-gray-300 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white'
-                                                }`}
-                                            >
-                                                {itemLabel}
-                                            </Link>
-                                        </li>
+                            {isCollapsed && popoverOpen === dropdown.label &&
+    ReactDOM.createPortal(
+        <div
+            className="absolute w-48 bg-gray-100 dark:bg-gray-800 rounded-md shadow-lg p-2 z-50 border border-gray-200 dark:border-gray-700"
+            style={{ top: `${popoverPosition.top}px`, left: `${popoverPosition.left}px` }}
+            onMouseEnter={() => handleMouseEnter(dropdown.label)}
+            onMouseLeave={handleMouseLeave}
+        >
+            <div className="font-bold text-sm text-gray-800 dark:text-white mb-2 px-2">{dropdown.label}</div>
+            {dropdown.items.map((item) => (
+                <Link
+                    key={item.label}
+                    href={item.href}
+                    className={`flex items-center space-x-2 py-2 px-4 rounded-md text-sm hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200 ${pathname === item.href ? 'bg-gray-300 dark:bg-gray-900 font-semibold text-primary-blue dark:text-accent-red' : 'text-gray-800 dark:text-white'}`}
+                >
+                    <span>{item.label}</span>
+                </Link>
+            ))}
+        </div>,
+        document.getElementById('tooltip-root')!
+    )}
+                            {!isCollapsed && openDropdown === dropdown.label && (
+                                <div className="ml-2 mt-1 space-y-1 p-2 rounded-md bg-gray-100 dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700">
+                                    {dropdown.items.map((item) => (
+                                        <Link
+                                            key={item.label}
+                                            href={item.href}
+                                            className={`block py-2 px-4 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200 ${pathname === item.href ? 'bg-gray-200 dark:bg-gray-700 font-semibold' : 'text-gray-800 dark:text-white'}`}
+                                        >
+                                            {item.label}
+                                        </Link>
                                     ))}
-                                </ul>
+                                </div>
                             )}
-                        </li>
+                        </div>
                     ))}
-                </ul>
-            </nav>
-
-            <div className="flex flex-col items-center space-y-4">
-                <ModeToggle />
-                <div className="flex flex-col items-center space-y-4 text-xl text-gray-500 dark:text-gray-400 pt-4">
-                    <button 
-                        type="button"
-                        className="hover:text-blue-600 dark:hover:text-blue-400 cursor-pointer transition-colors transform hover:scale-110"
-                        aria-label="Follow us on Facebook"
-                    >
-                        <FaFacebookF />
-                    </button>
-                    <button 
-                        type="button"
-                        className="hover:text-sky-500 dark:hover:text-sky-400 cursor-pointer transition-colors transform hover:scale-110"
-                        aria-label="Follow us on Twitter"
-                    >
-                        <FaTwitter />
-                    </button>
-                    <button 
-                        type="button"
-                        className="hover:text-pink-500 dark:hover:text-pink-400 cursor-pointer transition-colors transform hover:scale-110"
-                        aria-label="Follow us on TikTok"
-                    >
-                        <FaTiktok />
-                    </button>
-                    <button 
-                        type="button"
-                        className="hover:text-indigo-500 dark:hover:text-indigo-400 cursor-pointer transition-colors transform hover:scale-110"
-                        aria-label="Follow us on Meta"
-                    >
-                        <FaMeta />
-                    </button>
                 </div>
+            </nav>
+            <div className="mt-auto">
+                <div className={`mt-4 flex items-center justify-center ${isCollapsed ? 'flex-col space-y-4' : 'space-x-4'}`}>
+                    <a href="#" className="text-gray-600 hover:text-black dark:text-gray-400 dark:hover:text-white">
+                        <Twitter className="h-5 w-5" />
+                    </a>
+                    <a href="#" className="text-gray-600 hover:text-black dark:text-gray-400 dark:hover:text-white">
+                        <Facebook className="h-5 w-5" />
+                    </a>
+                    <a href="#" className="text-gray-600 hover:text-black dark:text-gray-400 dark:hover:text-white">
+                        <Instagram className="h-5 w-5" />
+                    </a>
+                    <a href="#" className="text-gray-600 hover:text-black dark:text-gray-400 dark:hover:text-white">
+                        <TikTokIcon className="h-5 w-5" />
+                    </a>
+                </div>
+            </div>
+            <div className="mt-auto pt-4 border-t border-gray-300 dark:border-gray-700">
+                    <button
+                    onClick={() => { if (typeof setIsCollapsed === 'function') setIsCollapsed(!isCollapsed); }}
+                    className="flex items-center justify-center w-full py-2 px-4 rounded-md text-gray-600 hover:bg-gray-300 dark:text-gray-400 dark:hover:bg-gray-700 transition-colors duration-200"
+                    aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+                >
+                    {isCollapsed ? <ChevronsRight size={20} /> : <ChevronsLeft size={20} />}
+                </button>
             </div>
         </aside>
     );

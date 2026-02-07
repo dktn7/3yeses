@@ -1,14 +1,29 @@
 {
+  "Navigation": {
+    "home": "Home",
+    "about": "About",
+    "categories": "Categories",
+    "contact": "Contact",
+    "resources": "Resources",
+    "pricingPlans": "Pricing Plans",
+    "legal": "Legal",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "dashboard": "Dashboard",
+    "profile": "Profile",
+    "settings": "Settings",
+    "logout": "Logout",
+    "login": "Login",
+    "signup": "Sign Up"
+  },
   "Footer": {
+    "aboutUs": "About Us",
     "companyInfo": "Connecting talent with opportunity in the entertainment industry.",
     "forTalent": "For Talent",
     "joinAsTalent": "Join as Talent",
     "talentDashboard": "Talent Dashboard",
     "browseCategories": "Browse Categories",
     "pricingPlans": "Pricing Plans",
-    "forClients": "For Clients",
-    "hireTalent": "Hire Talent",
-    "clientDashboard": "Client Dashboard",
     "howItWorks": "How It Works",
     "successStories": "Success Stories",
     "contactUs": "Contact Us",
@@ -19,5 +34,691 @@
     "copyright": "© 2025 3YESES. All rights reserved.",
     "privacyPolicy": "Privacy Policy",
     "termsOfService": "Terms of Service"
+  },
+  "Language": {
+    "english": "English",
+    "french": "French",
+    "arabic": "Arabic",
+    "german": "German",
+    "spanish": "Spanish",
+    "italian": "Italian",
+    "japanese": "Japanese",
+    "portuguese": "Portuguese",
+    "russian": "Russian",
+    "chinese": "Chinese"
+  },
+  "Home": {
+    "tagline": "Connecting talent with opportunity in the entertainment industry.",
+    "welcome": {
+      "title": "Welcome to 3YESES",
+      "description": "Find the perfect talent for your next project or discover exciting opportunities in the entertainment industry."
+    },
+    "forTalent": {
+      "title": "For Talent",
+      "description": "Showcase your skills and find your next big opportunity.",
+      "browse": "Browse Categories"
+    },
+    "expertTalent": "Expert Talent",
+    "expertTalentDescription": "Access to verified professionals with proven track records",
+    "verifiedTalent": "Verified Talent",
+    "verifiedTalentDesc": "All profiles are manually verified",
+    "qualityAssured": "Quality Assured",
+    "qualityAssuredDescription": "All talents are vetted and verified for your peace of mind",
+    "qualityAssuredDesc": "Top-tier talent for your projects",
+    "careerGrowth": "Career Growth",
+    "careerGrowthDescription": "Build lasting connections and advance your career",
+    "careerGrowthDesc": "Opportunities to advance your career",
+    "searchPlaceholder": "Search for talent, skills, or categories...",
+    "searchButton": "Search",
+    "allCategories": "All Categories",
+    "location": "Location",
+    "filters": "Filters",
+    "findYourNextJob": "Find Your Next Job",
+    "elevateYourCareer": "Elevate Your Career",
+    "joinNow": "Join Now",
+    "learnMore": "Learn More",
+    "activeTalent": "Active Talent",
+    "projectsPosted": "Projects Posted",
+    "successRate": "Success Rate",
+    "support": "24/7 Support",
+    "howItWorksTitle": "How It Works",
+    "howItWorksDescription": "Get started in 3 simple steps",
+    "createYourProfile": "Create Your Profile",
+    "createYourProfileDescription": "Showcase your skills and experience",
+    "showcaseYourWork": "Showcase Your Work",
+    "showcaseYourWorkDescription": "Upload your portfolio and demo reels",
+    "buildYourReputation": "Build Your Reputation",
+    "buildYourReputationDescription": "Get reviews and build your network",
+    "joinThousands": "Join thousands of talented professionals who trust 3YESES to connect them with their dream projects.",
+    "supportCreativeJourney": "From auditions to bookings, we're here to support your creative journey.",
+    "whyChooseTitle": "Why Choose",
+    "whyChooseSubtitle": "3YESES",
+    "whyChooseDescription": "Discover what makes 3YESES your go-to platform for finding and connecting with creative talent in the entertainment industry.",
+    "readyToConnectTitle": "Ready to Connect with Creative Talent?",
+    "readyToConnectDescription": "Join the growing community of creative professionals who find opportunities on 3YESES.",
+    "mobileOptimized": "Mobile Optimized",
+    "support247": "24/7 Support",
+    "headlines": {
+      "getCast": "Get cast in your next role today",
+      "showcase": "Showcase your talent to the world",
+      "connect": "Connect with industry professionals",
+      "build": "Build your creative portfolio",
+      "discover": "Discover new opportunities daily",
+      "join": "Join the talent revolution",
+      "break": "Your next big break awaits",
+      "passion": "Turn your passion into success"
+    },
+    "features": {
+      "creativeDirectory": {
+        "title": "Creative Talent Directory",
+        "description": "Browse and connect with creative professionals across various categories and specializations.",
+        "benefits": ["Easy talent discovery", "Category-based search", "Direct messaging", "Portfolio galleries"]
+      },
+      "advancedSearch": {
+        "title": "Advanced Search & Filters",
+        "description": "Find the perfect talent with powerful search and filtering capabilities.",
+        "benefits": ["Location-based search", "Skill and experience filters", "Category browsing", "Detailed profiles"]
+      },
+      "talentProfiles": {
+        "title": "Talent Profiles",
+        "description": "Comprehensive profiles showcasing talents' skills, experience, and previous work.",
+        "benefits": ["Portfolio galleries", "Experience history", "Skill listings", "Contact information"]
+      },
+      "mobileOptimized": {
+        "title": "Mobile Optimized",
+        "description": "Access the platform from any device with a fully responsive design.",
+        "benefits": ["Mobile-friendly interface", "Touch-optimized navigation", "Responsive layouts", "Cross-device compatibility"]
+      },
+      "growingCommunity": {
+        "title": "Growing Community",
+        "description": "Join an expanding network of creative professionals and industry connections.",
+        "benefits": ["Diverse talent pool", "Industry networking", "Creative opportunities", "Community support"]
+      },
+      "alwaysAvailable": {
+        "title": "24/7 Platform Access",
+        "description": "Search and connect with talent whenever you need, day or night.",
+        "benefits": ["Always available", "No time restrictions", "Flexible scheduling", "Global accessibility"]
+      }
+    }
+  },
+  "About": {
+    "hero": {
+      "title": {
+        "part1": "Connecting",
+        "talent": "Talent",
+        "part2": "with",
+        "opportunity": "Opportunity"
+      },
+      "description": "3YESES is the premier platform where creative professionals and opportunity creators come together to bring extraordinary projects to life.",
+      "trusted": "Trusted by thousands",
+      "leading": "Industry leading"
+    },
+    "stats": {
+      "title": "Our Impact in Numbers",
+      "talents": {
+        "label": "Active Talents",
+        "description": "Creative professionals showcasing their skills"
+      },
+      "clients": {
+        "label": "Happy Talents",
+        "description": "Creative professionals thriving on the platform"
+      },
+      "bookings": {
+        "label": "Successful Bookings",
+        "description": "Projects brought to life through our platform"
+      },
+      "categories": {
+        "label": "Creative Categories",
+        "description": "From acting to production and everything in between"
+      }
+    },
+    "story": {
+      "title": "Our Story",
+      "p1": "Born from the frustration of disconnected creative industries, 3YESES emerged as a revolutionary solution to bridge the gap between talent and opportunity. We recognized that the entertainment industry was ready for a digital transformation that would democratize access to opportunities and streamline the casting process.",
+      "p2": "Our founders, with decades of combined experience in entertainment production and talent management, envisioned a platform where creativity meets efficiency. Where actors, musicians, dancers, and production professionals could showcase their talents without geographical limitations, and where casting directors could discover the perfect talent for their projects.",
+      "p3": "Today, 3YESES stands as the most comprehensive talent platform in the industry, continuously evolving to meet the needs of modern creative professionals while maintaining the personal touch that makes great collaborations happen."
+    },
+    "journey": {
+      "title": "Our Journey",
+      "2023": {
+        "title": "Foundation & Launch",
+        "description": "3YESES launches with core categories: Acting, Music, and Dance. Initial beta testing with 500+ users."
+      },
+      "2024": {
+        "title1": "Major Expansion",
+        "description1": "Added Crew and Production categories. Launched mobile-responsive design and advanced search features.",
+        "title2": "AI Integration",
+        "description2": "Introduced AI-powered matching algorithms and content generation. Reached 2,000+ active users."
+      },
+      "2025": {
+        "title": "Platform Evolution",
+        "description": "Launch of social features, video hub, and community tools. Expanding internationally with multi-language support."
+      }
+    },
+    "mission": {
+      "title": "Our Mission",
+      "description": "To democratize the entertainment industry by providing equal opportunities for talent discovery, fostering meaningful connections between creative professionals and project creators, and building the most inclusive and efficient talent marketplace in the world."
+    },
+    "vision": {
+      "title": "Our Vision",
+      "description": "A world where every creative professional has the tools and platform they need to showcase their talents, connect with opportunities, and build successful careers in the entertainment industry, regardless of their background or location."
+    },
+    "values": {
+      "title": "Our Values",
+      "inclusivity": {
+        "title": "Inclusivity",
+        "description": "We believe every voice deserves to be heard and every talent deserves an opportunity."
+      },
+      "excellence": {
+        "title": "Excellence",
+        "description": "We maintain the highest standards in everything we do, from user experience to talent matching."
+      },
+      "community": {
+        "title": "Community",
+        "description": "We foster genuine connections and support networks that extend beyond individual projects."
+      }
+    },
+    "cta": {
+      "title": "Join the 3YESES Community",
+      "description": "Whether you're a talented creative professional or a project creator looking for the perfect talent, there's a place for you in our community.",
+      "joinAsTalent": "Join as Talent"
+    }
+  },
+  "Contact": {
+    "title": "Contact Details",
+    "placeholder": "This is a placeholder for contact details."
+  },
+  "Categories": {
+    "search": {
+      "placeholder": "Search categories, talents, or skills..."
+    },
+    "main": {
+      "title": "Browse Categories",
+      "description": "Discover talented professionals across various creative industries",
+      "searchPlaceholder": "Search categories, subcategories, or talents..."
+    },
+    "subcategories": {
+      "searchPlaceholder": "Search subcategories...",
+      "backToCategories": "Back to Categories"
+    },
+    "talents": {
+      "backTo": "Back to {categoryName}",
+      "filters": "Filters",
+      "reviews": "{count, plural, =0 {No reviews} =1 {# review} other {# reviews}}",
+      "experience": "{years}+ years exp"
+    },
+    "filters": {
+      "title": "Advanced Filters",
+      "gender": {
+        "label": "Gender",
+        "male": "Male",
+        "female": "Female",
+        "non-binary": "Non-binary",
+        "other": "Other"
+      },
+      "ethnicity": {
+        "label": "Ethnicity",
+        "white": "White",
+        "blackafrican": "Black/African",
+        "hispaniclatino": "Hispanic/Latino",
+        "asian": "Asian",
+        "middleeastern": "Middle Eastern",
+        "mixedrace": "Mixed Race",
+        "other": "Other"
+      },
+      "age": {
+        "label": "Age",
+        "selected": "Selected Age"
+      },
+      "bodyType": {
+        "label": "Body Type",
+        "slim": "Slim",
+        "average": "Average",
+        "athletic": "Athletic",
+        "curvy": "Curvy",
+        "plussize": "Plus Size",
+        "muscular": "Muscular"
+      },
+      "experience": {
+        "label": "Experience (Years)",
+        "minPlaceholder": "Min",
+        "maxPlaceholder": "Max"
+      },
+      "location": {
+        "label": "Location",
+        "placeholder": "City, Country"
+      },
+      "clearAll": "Clear All Filters"
+    },
+    "loading": "Loading talents...",
+    "retry": "Retry",
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "emptyState": {
+      "title": "No Talents Found",
+      "description": "No talents found for this category.",
+      "defaultCategory": "this category"
+    },
+    "errors": {
+      "failedToLoadTalents": "Failed to load talents."
+    }
+  },
+  "SignupPage": {
+    "title": "Talent Sign Up",
+    "subtitle": "Create your account and start your journey in 3 easy steps.",
+    "step1": "Account",
+    "step2": "Profile", 
+    "step3": "Upload",
+    "startSignup": "Start Talent Sign Up",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "submit": "Sign Up"
+  },
+  "LoginPage": {
+    "title": "Login",
+    "subtitle": "Welcome back! Please login to your account.",
+    "email": "Email",
+    "password": "Password",
+    "forgotPassword": "Forgot Password?",
+    "rememberMe": "Remember Me",
+    "submit": "Login",
+    "noAccount": "Don't have an account?",
+    "signUpLink": "Sign up here"
+  },
+  "Auth": {
+    "signin": {
+      "title": "Welcome Back",
+      "subtitle": "Sign in to your account to continue",
+      "email": "Email Address",
+      "emailPlaceholder": "your.email@example.com",
+      "password": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "rememberMe": "Remember me",
+      "forgotPassword": "Forgot password?",
+      "submit": "Sign In",
+      "signInButton": "Sign In",
+      "signingIn": "Signing in...",
+      "noAccount": "Don't have an account?",
+      "signUpLink": "Sign up here",
+      "orContinueWith": "or continue with email",
+      "continueWithGoogle": "Continue with Google",
+      "continueWithFacebook": "Continue with Facebook",
+      "continueWithApple": "Continue with Apple",
+      "googleSignIn": "Continue with Google",
+      "githubSignIn": "Continue with GitHub",
+      "errors": {
+        "emailRequired": "Email is required",
+        "emailInvalid": "Please enter a valid email address",
+        "passwordRequired": "Password is required",
+        "passwordTooShort": "Password must be at least 6 characters",
+        "loginFailed": "Invalid email or password",
+        "serverError": "Something went wrong. Please try again"
+      },
+      "success": {
+        "loginSuccess": "Successfully signed in! Redirecting..."
+      }
+    },
+    "signup": {
+      "title": "Create Your Account",
+      "subtitle": "Join thousands of creative professionals",
+      "startButton": "Start Your Journey",
+      "alreadyHaveAccount": "Already have an account?",
+      "signIn": "Sign in",
+      "back": "Back",
+      "next": "Next Step",
+      "submit": "Complete Signup",
+      "step1Title": "Account Information",
+      "step1Description": "Basic details",
+      "step2Title": "Your Profile",
+      "step2Description": "Professional info",
+      "step3Title": "Upload Media",
+      "step3Description": "Portfolio & videos",
+      "firstName": "First Name",
+      "firstNamePlaceholder": "John",
+      "lastName": "Last Name",
+      "lastNamePlaceholder": "Doe",
+      "email": "Email Address",
+      "emailPlaceholder": "your.email@example.com",
+      "phone": "Phone Number",
+      "phonePlaceholder": "+44 7XXX XXXXXX",
+      "password": "Password",
+      "passwordPlaceholder": "Create a strong password",
+      "confirmPassword": "Confirm Password",
+      "confirmPasswordPlaceholder": "Re-enter your password",
+      "category": "Primary Category",
+      "categoryPlaceholder": "Select your main category",
+      "bio": "Bio",
+      "bioPlaceholder": "Tell us about yourself and your experience...",
+      "location": "Location",
+      "locationPlaceholder": "City, Country",
+      "experience": "Years of Experience",
+      "experiencePlaceholder": "Select experience level",
+      "skills": "Skills",
+      "skillsPlaceholder": "Add your skills",
+      "dateOfBirth": "Date of Birth",
+      "dateOfBirthPlaceholder": "Select your date of birth",
+      "parentManagedAccount": "Parent-Managed Account Required",
+      "parentManagedAccountTitle": "Parent/Guardian-Managed Account",
+      "parentManagedAccountDescription": "For users aged 13-17, a parent or guardian must create and manage this account.",
+      "parentGuardianInfo": "Parent/Guardian Information",
+      "yourInformation": "Your Information",
+      "childTalentInfo": "Child's Talent Information",
+      "accountSecurity": "Account Security",
+      "parentFirstName": "Parent's First Name",
+      "parentLastName": "Parent's Last Name",
+      "parentEmail": "Parent's Email Address",
+      "parentPhone": "Parent's Phone Number",
+      "childFirstName": "Child's First Name",
+      "childLastName": "Child's Last Name",
+      "childDateOfBirth": "Child's Date of Birth",
+      "parentalConsentText": "I confirm that I am the parent/legal guardian of the child named above and consent to the creation of this account.",
+      "iAgreeToThe": "I agree to the",
+      "termsAndConditions": "Terms and Conditions",
+      "and": "and",
+      "privacyPolicy": "Privacy Policy",
+      "gender": "Gender",
+      "genderPlaceholder": "Select your gender",
+      "genderMale": "Male",
+      "genderFemale": "Female",
+      "genderNonBinary": "Non-binary",
+      "genderPreferNotToSay": "Prefer not to say",
+      "genderOther": "Other",
+      "genderOtherSpecify": "Please specify",
+      "ethnicity": "Ethnicity",
+      "ethnicityPlaceholder": "Select your ethnicity",
+      "ethnicityWhite": "White/Caucasian",
+      "ethnicityBlack": "Black/African",
+      "ethnicityAsian": "Asian",
+      "ethnicityHispanic": "Hispanic/Latino",
+      "ethnicityMiddleEastern": "Middle Eastern",
+      "ethnicityMixed": "Mixed/Multiracial",
+      "ethnicityNative": "Native American",
+      "ethnicityPacific": "Pacific Islander",
+      "ethnicityPreferNotToSay": "Prefer not to say",
+      "ethnicityOther": "Other",
+      "ethnicityOtherSpecify": "Please specify",
+      "bodyType": "Body Type",
+      "bodyTypePlaceholder": "Select your body type",
+      "bodyTypeSlim": "Slim",
+      "bodyTypeAverage": "Average",
+      "bodyTypeAthletic": "Athletic",
+      "bodyTypeCurvy": "Curvy",
+      "bodyTypePlusSize": "Plus Size",
+      "bodyTypeMuscular": "Muscular",
+      "bodyTypePreferNotToSay": "Prefer not to say",
+      "languages": "Languages",
+      "languagesPlaceholder": "Add languages you speak",
+      "languageName": "Language",
+      "languageNamePlaceholder": "e.g., English, Spanish",
+      "proficiency": "Proficiency",
+      "proficiencyNative": "Native",
+      "proficiencyFluent": "Fluent",
+      "proficiencyIntermediate": "Intermediate",
+      "proficiencyBasic": "Basic",
+      "addLanguage": "Add Language",
+      "removeLanguage": "Remove",
+      "disability": "Disability/Accessibility (Optional)",
+      "disabilityDescription": "Select any applicable options to help with inclusive casting opportunities",
+      "disabilityWheelchairUser": "Wheelchair User",
+      "disabilityMobilityImpairment": "Mobility Impairment",
+      "disabilityLimbDifferenceAmputation": "Limb Difference/Amputation",
+      "disabilityDeafHardOfHearing": "Deaf/Hard of Hearing",
+      "disabilityBlindVisualImpairment": "Blind/Visual Impairment",
+      "disabilityNeurodivergent": "Neurodivergent (Autism, ADHD, Dyslexia, etc.)",
+      "disabilitySpeechCommunicationDifference": "Speech/Communication Difference",
+      "disabilityDwarfismShortStature": "Dwarfism/Short Stature",
+      "disabilityFacialDifference": "Facial Difference",
+      "disabilityChronicPainFatigue": "Chronic Pain/Fatigue",
+      "disabilityInvisibleDisability": "Invisible Disability (Epilepsy, Diabetes, etc.)",
+      "disabilityOther": "Other",
+      "disabilityOtherSpecify": "Please specify",
+      "disabilityNonePreferNotToSay": "None / Prefer not to say",
+      "optional": "optional",
+      "profilePhoto": "Profile Photo",
+      "uploadPhoto": "Upload Photo",
+      "removePhoto": "Remove",
+      "portfolio": "Portfolio Images",
+      "uploadPortfolio": "Upload Images (Max 10)",
+      "videos": "Demo Videos",
+      "videoUrl": "Video URL",
+      "videoUrlPlaceholder": "https://youtube.com/watch?v=...",
+      "addVideo": "Add Video",
+      "removeVideo": "Remove",
+      "errors": {
+        "firstNameRequired": "First name is required",
+        "lastNameRequired": "Last name is required",
+        "childFirstNameRequired": "Child's first name is required",
+        "childLastNameRequired": "Child's last name is required",
+        "minimumAge13": "You must be at least 13 years old to register",
+        "parentalConsentRequired": "Parental consent is required",
+        "termsRequired": "You must accept the Terms and Conditions",
+        "emailRequired": "Email is required",
+        "emailInvalid": "Please enter a valid email address",
+        "emailTaken": "This email is already registered",
+        "phoneRequired": "Phone number is required",
+        "phoneInvalid": "Please enter a valid phone number",
+        "passwordRequired": "Password is required",
+        "passwordTooShort": "Password must be at least 8 characters",
+        "passwordWeak": "Password must meet all requirements above",
+        "passwordMismatch": "Passwords do not match",
+        "confirmPasswordRequired": "Please confirm your password",
+        "categoryRequired": "Please select a category",
+        "bioRequired": "Please tell us about yourself",
+        "locationRequired": "Location is required",
+        "serverError": "Something went wrong. Please try again"
+      },
+      "success": {
+        "accountCreated": "Account created successfully!",
+        "redirecting": "Redirecting to verification..."
+      }
+    },
+    "forgotPassword": {
+      "title": "Forgot Password?",
+      "subtitle": "Enter your email and we'll send you a reset link",
+      "email": "Email Address",
+      "emailPlaceholder": "your.email@example.com",
+      "submit": "Send Reset Link",
+      "sending": "Sending...",
+      "backToLogin": "Back to Login",
+      "errors": {
+        "emailRequired": "Email is required",
+        "emailInvalid": "Please enter a valid email address",
+        "emailNotFound": "No account found with this email",
+        "requestFailed": "Failed to send reset email",
+        "serverError": "Something went wrong. Please try again"
+      },
+      "success": {
+        "title": "Email Sent!",
+        "message": "If an account exists with this email, you will receive a password reset link.",
+        "checkSpam": "If you don't see the email, please check your spam folder."
+      },
+      "orContactSupport": "Or contact support",
+      "contactSupport": "Contact Support"
+    },
+    "resetPassword": {
+      "title": "Reset Password",
+      "subtitle": "Enter your new password",
+      "password": "New Password",
+      "passwordPlaceholder": "Enter new password",
+      "confirmPassword": "Confirm Password",
+      "confirmPasswordPlaceholder": "Re-enter new password",
+      "resetButton": "Reset Password",
+      "resetting": "Resetting...",
+      "success": "Password reset successful! Redirecting...",
+      "errors": {
+        "required": "This field is required",
+        "passwordMismatch": "Passwords do not match",
+        "weakPassword": "Password is too weak",
+        "invalidToken": "Invalid or expired reset link",
+        "serverError": "Something went wrong. Please try again"
+      }
+    },
+    "verifyEmail": {
+      "title": "Verify Your Email",
+      "subtitle": "We've sent a verification email to",
+      "checking": "Verifying your email...",
+      "success": {
+        "title": "Email Verified Successfully!",
+        "message": "Your email has been verified. You can now continue.",
+        "button": "Continue to Profile Setup"
+      },
+      "pending": {
+        "title": "Check Your Email",
+        "message": "We've sent a verification link to your email. Please check your inbox and click the link to verify your account."
+      },
+      "error": {
+        "title": "Verification Failed",
+        "message": "We couldn't verify your email. Please try again or request a new verification email."
+      },
+      "expired": {
+        "title": "Verification Link Expired",
+        "message": "This verification link has expired. Please request a new one."
+      },
+      "resend": "Resend Email",
+      "resending": "Sending...",
+      "resentSuccess": "Verification email sent!",
+      "changeEmail": "Change Email Address",
+      "checkSpam": "If you don't see the email, please check your spam folder.",
+      "maxAttempts": "Max attempts reached",
+      "cooldown": "Resend in {seconds}s",
+      "attemptsRemaining": "Emails sent: {count}/3",
+      "needHelp": "Need help? Contact support",
+      "backToLogin": "Back to Sign In"
+    }
+  },
+  "Pages": {
+    "pricing": {
+      "title": "Pricing Plans",
+      "subtitle": "Choose the plan that works best for you"
+    },
+    "privacy": {
+      "title": "Privacy Policy", 
+      "lastUpdated": "Last updated: {date}"
+    },
+    "terms": {
+      "title": "Terms of Service",
+      "lastUpdated": "Last updated: {date}"
+    },
+    "about": {
+      "title": "About 3YESES",
+      "subtitle": "Connecting talent with opportunity"
+    },
+    "contact": {
+      "title": "Contact Us",
+      "subtitle": "Get in touch with our team"
+    }
+  },
+  "Hub": {
+    "title": "Media Hub",
+    "subtitle": "Discover videos, images, and audio from talented creators",
+    "search": {
+      "placeholder": "Search by title, talent, or description...",
+      "clear": "Clear search"
+    },
+    "categories": {
+      "title": "Categories",
+      "all": "All",
+      "acting": "Acting",
+      "music": "Music",
+      "modeling": "Modeling",
+      "directing": "Directing",
+      "writing": "Writing",
+      "photography": "Photography"
+    },
+    "type": {
+      "title": "Type:",
+      "all": "All",
+      "videos": "Videos",
+      "audio": "Audio",
+      "images": "Images"
+    },
+    "filters": {
+      "button": "Filters",
+      "popularityTier": "Popularity Tier",
+      "viral": "Viral",
+      "popular": "Popular",
+      "rising": "Rising",
+      "fresh": "Fresh",
+      "uploadDate": "Upload Date",
+      "allTime": "All Time",
+      "today": "Today",
+      "pastWeek": "Past Week",
+      "pastMonth": "Past Month",
+      "pastYear": "Past Year",
+      "sortBy": "Sort By",
+      "trending": "Most Viewed",
+      "newest": "Newest",
+      "mostLiked": "Most Liked",
+      "alphabetical": "A-Z",
+      "reverseAlphabetical": "Z-A",
+      "oldest": "Oldest First",
+      "mostViews": "Most Views",
+      "leastViews": "Least Views",
+      "mostLikes": "Most Likes",
+      "leastLikes": "Least Likes",
+      "zToA": "Z-A",
+      "clearAll": "Clear All Filters",
+      "activeFilters": "Active Filters",
+      "search": "Search",
+      "category": "Category",
+      "type": "Type",
+      "sort": "Sort",
+      "showing": "Showing",
+      "results": "result",
+      "resultsPlural": "results"
+    },
+    "sections": {
+      "featuredCreators": "Featured Creators",
+      "discoverTopTalent": "Discover top talent on the platform",
+      "trendingNow": "Trending Now",
+      "hotContent": "Hot content right now",
+      "mostViewed": "Most viewed content right now",
+      "featuredVideos": "Featured Videos",
+      "video": "video",
+      "videos": "videos",
+      "viewAllVideos": "View All Videos →",
+      "featuredAudio": "Featured Audio",
+      "exploreAll": "Explore All Content",
+      "exploreMoreDescription": "There are {count} more items to discover in our full catalog.",
+      "audioTrack": "audio track",
+      "audioTracks": "audio tracks",
+      "viewAllAudio": "View All Audio →",
+      "featuredImages": "Featured Images",
+      "image": "image",
+      "images": "images",
+      "viewAllImages": "View All Images →",
+      "latestUploads": "Latest Uploads",
+      "freshContent": "Fresh content just added",
+      "mostPopular": "Most Popular",
+      "lovedByCommunity": "Loved by the community"
+    },
+    "badges": {
+      "sponsored": "Sponsored",
+      "trending": "Trending",
+      "hot": "Hot",
+      "new": "New",
+      "popular": "Popular"
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "empty": {
+      "title": "No content found",
+      "description": "Try adjusting your filters to see more results"
+    }
+  },
+  "SearchResults": {
+    "noResultsTitle": "No results found",
+    "noResultsDescription": "Try adjusting your search criteria or filters",
+    "clearAllFilters": "Clear all filters"
+  },
+  "Dashboard": {
+    "profileCompletion": {
+      "message": "A complete profile gets 3x more views from talented creators and professionals worldwide."
+    }
   }
 }

@@ -1,18 +1,23 @@
 'use client'
 
 import { useState, useEffect, useCallback, useMemo } from 'react'
-import { getCategoryData } from '@/lib/data'
-import { Search, MapPin, ChevronDown, Play, Users, Star, TrendingUp } from 'lucide-react'
+import dynamic from 'next/dynamic'
+import { getCategoryData } from '@/lib/data.ts'
+import { Search, MapPin, ChevronDown, Users, Star, TrendingUp, UserPlus, Image as LucideImage, BarChart3 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 
-import SwoopingTick from './SwoopingTick'
-import DynamicHeadline from './DynamicHeadline'
-import RangeSlider from './RangeSlider'
-import MultiSelect from './MultiSelect'
+import SwoopingTick from './SwoopingTick.tsx'
+import DynamicHeadline from './DynamicHeadline.tsx'
+import VideoHero from './VideoHero'
+import RangeSlider from './RangeSlider.tsx'
+import MultiSelect from './MultiSelect.tsx'
+import FeatureHighlights from './FeatureHighlights.tsx'
+import HeroSlideshow from './HeroSlideshow.tsx'
+import TalentFilterPanel, { TalentFilters, defaultFilters } from './TalentFilterPanel'
 
-export default function LandingClient() {
+export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: { t?: any; locale?: string }) {
   // State declarations
-  // ...existing code...
 
   // Map subcategory to gender (memoized)
   const subcategoryGenderMap = useMemo(() => ({
@@ -22,7 +27,6 @@ export default function LandingClient() {
     'child-actor': '', // No gender auto-select for child
   } as Record<string, string>), []);
 
-  // ...existing code...
   const ethnicityOptions = [
     { label: 'Asian', value: 'Asian' },
     { label: 'Black', value: 'Black' },
@@ -54,6 +58,30 @@ export default function LandingClient() {
     { label: 'Arabic', value: 'Arabic' },
     { label: 'Other', value: 'Other' },
   ];
+
+  const eyeColorOptions = [
+    { label: 'Amber', value: 'Amber' },
+    { label: 'Blue', value: 'Blue' },
+    { label: 'Brown', value: 'Brown' },
+    { label: 'Gray', value: 'Gray' },
+    { label: 'Green', value: 'Green' },
+    { label: 'Hazel', value: 'Hazel' },
+    { label: 'Red', value: 'Red' },
+    { label: 'Violet', value: 'Violet' },
+    { label: 'Other', value: 'Other' },
+  ];
+
+  const hairColorOptions = [
+    { label: 'Auburn', value: 'Auburn' },
+    { label: 'Black', value: 'Black' },
+    { label: 'Blonde', value: 'Blonde' },
+    { label: 'Brown', value: 'Brown' },
+    { label: 'Gray', value: 'Gray' },
+    { label: 'Red', value: 'Red' },
+    { label: 'White', value: 'White' },
+    { label: 'Other', value: 'Other' },
+  ];
+
   // const { user } = useAuth() // No longer needed here
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('')
@@ -66,6 +94,10 @@ export default function LandingClient() {
   const [maxAge, setMaxAge] = useState<number | ''>('')
   const [minExp, setMinExp] = useState<number | ''>('')
   const [maxExp, setMaxExp] = useState<number | ''>('')
+  const [minHeight, setMinHeight] = useState<number | ''>('')
+  const [maxHeight, setMaxHeight] = useState<number | ''>('')
+  const [eyeColor, setEyeColor] = useState<string>('')
+  const [hairColor, setHairColor] = useState<string>('')
   const [skills, setSkills] = useState<string>('')
   const [languages, setLanguages] = useState<string>('')
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
@@ -74,17 +106,39 @@ export default function LandingClient() {
   const [hoveredTick, setHoveredTick] = useState<number | null>(null)
   const router = useRouter()
 
+  // Unified filter state for TalentFilterPanel
+  const [advancedFilters, setAdvancedFilters] = useState<TalentFilters>(defaultFilters)
+
+  // Sync advancedFilters to individual states for compatibility
+  useEffect(() => {
+    setGender(advancedFilters.gender || [])
+    setBodyType(advancedFilters.bodyType || [])
+    setEthnicity(advancedFilters.ethnicity?.join(', ') || '')
+    setMinAge(advancedFilters.ageRange?.min !== 5 ? advancedFilters.ageRange?.min : '')
+    setMaxAge(advancedFilters.ageRange?.max !== 80 ? advancedFilters.ageRange?.max : '')
+    setMinHeight(advancedFilters.heightRange?.min !== 150 ? advancedFilters.heightRange?.min : '')
+    setMaxHeight(advancedFilters.heightRange?.max !== 200 ? advancedFilters.heightRange?.max : '')
+    setMinExp(advancedFilters.experience?.min !== 0 ? advancedFilters.experience?.min : '')
+    setMaxExp(advancedFilters.experience?.max !== 20 ? advancedFilters.experience?.max : '')
+    setEyeColor(advancedFilters.eyeColor?.join(', ') || '')
+    setHairColor(advancedFilters.hairColor?.join(', ') || '')
+    setSkills(advancedFilters.skills?.join(', ') || '')
+    setLanguages(advancedFilters.languages?.join(', ') || '')
+    setLocation(advancedFilters.location || '')
+  }, [advancedFilters])
+
   // Toggle helpers to reduce nesting in JSX
   const toggleGender = useCallback((g: string) => {
     setGender((prev) => (prev.includes(g) ? prev.filter((x) => x !== g) : [...prev, g]))
   }, [setGender])
-
 
   const removeGender = useCallback((g: string) => setGender((prev) => prev.filter((x) => x !== g)), [setGender])
   const removeBodyType = useCallback((bt: string) => setBodyType((prev) => prev.filter((x) => x !== bt)), [setBodyType])
   const clearEthnicity = useCallback(() => setEthnicity(''), [setEthnicity])
   const clearSkills = useCallback(() => setSkills(''), [setSkills])
   const clearLanguages = useCallback(() => setLanguages(''), [setLanguages])
+  const clearEyeColor = useCallback(() => setEyeColor(''), [setEyeColor])
+  const clearHairColor = useCallback(() => setHairColor(''), [setHairColor])
 
   const clearAllFilters = useCallback(() => {
     setGender([])
@@ -94,9 +148,13 @@ export default function LandingClient() {
     setMaxAge('')
     setMinExp('')
     setMaxExp('')
+    setMinHeight('')
+    setMaxHeight('')
+    setEyeColor('')
+    setHairColor('')
     setSkills('')
     setLanguages('')
-  }, [setGender, setBodyType, setEthnicity, setMinAge, setMaxAge, setMinExp, setMaxExp, setSkills, setLanguages])
+  }, [setGender, setBodyType, setEthnicity, setMinAge, setMaxAge, setMinExp, setMaxExp, setMinHeight, setMaxHeight, setEyeColor, setHairColor, setSkills, setLanguages])
 
   // Auto-select gender if gender-specific subcategory is chosen
   useEffect(() => {
@@ -117,21 +175,27 @@ export default function LandingClient() {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [setIsDropdownOpen])
 
-  // Use real categories from data
-  const realCategories = useMemo(() => getCategoryData(), [])
+  // Use real categories from API
+  const [realCategories, setRealCategories] = useState<any[]>([])
+  
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch('/api/categories')
+        const data = await res.json()
+        if (data.success) {
+          setRealCategories(data.data)
+        }
+      } catch (error) {
+        console.error('Failed to fetch categories:', error)
+        // Fallback to static data if API fails
+        setRealCategories(getCategoryData())
+      }
+    }
+    fetchCategories()
+  }, [])
 
   const selectedCatObj = useMemo(() => realCategories.find(cat => cat.id === selectedCategory), [realCategories, selectedCategory])
-
-  // Helper functions for display names
-  // const getFilterType = (category: string): string => {
-  //   if (category === 'professionals') return 'talent'
-  //   if (category === 'specializations') return 'categories'
-  //   if (category === 'skills') return 'features'
-  //   return 'talent'
-  // }
-
-  // Removed quick tabs; keeping only category dropdown and filters toggle.
-
 
   const buildSearchParams = useCallback(() => {
     const params = new URLSearchParams()
@@ -158,7 +222,7 @@ export default function LandingClient() {
 
     // Basic
     setParamText('q', searchTerm)
-  applyCategoryFilter(selectedCategory, selectedSubcategory)
+    applyCategoryFilter(selectedCategory, selectedSubcategory)
     setParamText('location', location)
 
     // Advanced
@@ -169,57 +233,71 @@ export default function LandingClient() {
     setParamNum('maxAge', maxAge)
     setParamNum('minExperience', minExp)
     setParamNum('maxExperience', maxExp)
+    setParamNum('minHeight', minHeight)
+    setParamNum('maxHeight', maxHeight)
+    if (eyeColor.trim()) setParamText('eyeColor', eyeColor.split(',').map((s) => s.trim()).filter(Boolean).join(','))
+    if (hairColor.trim()) setParamText('hairColor', hairColor.split(',').map((s) => s.trim()).filter(Boolean).join(','))
     if (skills.trim()) setParamText('skills', skills.split(',').map((s) => s.trim()).filter(Boolean).join(','))
     if (languages.trim()) setParamText('languages', languages.split(',').map((s) => s.trim()).filter(Boolean).join(','))
 
     return params
-  }, [searchTerm, selectedCategory, selectedSubcategory, location, gender, bodyType, ethnicity, minAge, maxAge, minExp, maxExp, skills, languages])
+  }, [searchTerm, selectedCategory, selectedSubcategory, location, gender, bodyType, ethnicity, minAge, maxAge, minExp, maxExp, minHeight, maxHeight, eyeColor, hairColor, skills, languages])
 
   const handleSearch = useCallback((e: React.FormEvent) => {
     e.preventDefault()
     const params = buildSearchParams()
-    router.push(`/search?${params.toString()}`)
-  }, [buildSearchParams, router])
+    router.push(`/${locale}/search-results?${params.toString()}`)
+  }, [buildSearchParams, router, locale])
 
   const hasAnyFilter = useMemo(() => Boolean(
-    gender.length || bodyType.length || ethnicity || minAge !== '' || maxAge !== '' || minExp !== '' || maxExp !== '' || skills || languages
-  ), [gender.length, bodyType.length, ethnicity, minAge, maxAge, minExp, maxExp, skills, languages])
+    gender.length || bodyType.length || ethnicity || minAge !== '' || maxAge !== '' || minExp !== '' || maxExp !== '' || minHeight !== '' || maxHeight !== '' || eyeColor || hairColor || skills || languages
+  ), [gender.length, bodyType.length, ethnicity, minAge, maxAge, minExp, maxExp, minHeight, maxHeight, eyeColor, hairColor, skills, languages])
 
   const chips = useMemo(() => {
-    const arr: { k: string; label: string; onRemove: () => void }[] = []
-    gender.forEach((g) => arr.push({ k: `gender:${g}`, label: `Gender: ${g}`, onRemove: removeGender.bind(null, g) }))
-    bodyType.forEach((bt) => arr.push({ k: `body:${bt}`, label: `Body: ${bt}`, onRemove: removeBodyType.bind(null, bt) }))
-    if (ethnicity) ethnicity.split(',').forEach((e) => arr.push({ k: `eth:${e.trim()}`, label: `Ethnicity: ${e.trim()}`, onRemove: clearEthnicity }))
-    if (minAge !== '') arr.push({ k: 'minAge', label: `MinAge: ${minAge}`, onRemove: () => setMinAge('') })
-    if (maxAge !== '') arr.push({ k: 'maxAge', label: `MaxAge: ${maxAge}`, onRemove: () => setMaxAge('') })
-    if (minExp !== '') arr.push({ k: 'minExp', label: `MinExp: ${minExp}`, onRemove: () => setMinExp('') })
-    if (maxExp !== '') arr.push({ k: 'maxExp', label: `MaxExp: ${maxExp}`, onRemove: () => setMaxExp('') })
-    if (skills) skills.split(',').forEach((s) => arr.push({ k: `skill:${s.trim()}`, label: `Skill: ${s.trim()}`, onRemove: clearSkills }))
-    if (languages) languages.split(',').forEach((l) => arr.push({ k: `lang:${l.trim()}`, label: `Lang: ${l.trim()}`, onRemove: clearLanguages }))
-    return arr
-  }, [gender, bodyType, ethnicity, minAge, maxAge, minExp, maxExp, skills, languages, removeGender, removeBodyType, clearEthnicity, clearSkills, clearLanguages, setMinAge, setMaxAge, setMinExp, setMaxExp])
-
-  const tickFeatures = useMemo(() => [
-    {
-      icon: <Users className="h-8 w-8" />,
-      title: "Expert Talent",
-      description: "Connect with verified professionals across all creative industries"
-    },
-    {
-      icon: <Star className="h-8 w-8" />,
-      title: "Quality Assured",
-      description: "All talent profiles are verified and reviewed for authenticity"
-    },
-    {
-      icon: <TrendingUp className="h-8 w-8" />,
-      title: "Career Growth",
-      description: "Tools and resources to help talent advance their careers"
+    const list: { label: string; onRemove: () => void; k: string }[] = []
+    if (selectedCategory) {
+      const catName = realCategories.find(c => c.id === selectedCategory)?.name || selectedCategory
+      list.push({ label: catName, onRemove: () => { setSelectedCategory(''); setSelectedSubcategory('') }, k: 'cat' })
     }
-  ], [])
+    if (selectedSubcategory && selectedCatObj) {
+      const subName = selectedCatObj.subcategories?.find((s: any) => s.id === selectedSubcategory)?.name || selectedSubcategory
+      list.push({ label: subName, onRemove: () => setSelectedSubcategory(''), k: 'sub' })
+    }
+    if (location) list.push({ label: location, onRemove: () => setLocation(''), k: 'loc' })
+    gender.forEach(g => list.push({ label: g, onRemove: () => removeGender(g), k: `g-${g}` }))
+    bodyType.forEach(b => list.push({ label: b, onRemove: () => removeBodyType(b), k: `bt-${b}` }))
+    if (ethnicity) list.push({ label: ethnicity, onRemove: clearEthnicity, k: 'eth' })
+    if (minAge !== '' || maxAge !== '') list.push({ label: `Age: ${minAge || 0}-${maxAge || 100}`, onRemove: () => { setMinAge(''); setMaxAge('') }, k: 'age' })
+    if (minHeight !== '' || maxHeight !== '') list.push({ label: `Height: ${minHeight || 100}-${maxHeight || 220}`, onRemove: () => { setMinHeight(''); setMaxHeight('') }, k: 'height' })
+    if (minExp !== '' || maxExp !== '') list.push({ label: `Exp: ${minExp || 0}-${maxExp || 50}+`, onRemove: () => { setMinExp(''); setMaxExp('') }, k: 'exp' })
+    if (eyeColor) list.push({ label: `Eyes: ${eyeColor}`, onRemove: clearEyeColor, k: 'eyes' })
+    if (hairColor) list.push({ label: `Hair: ${hairColor}`, onRemove: clearHairColor, k: 'hair' })
+    if (skills) list.push({ label: `Skills: ${skills}`, onRemove: clearSkills, k: 'skills' })
+    if (languages) list.push({ label: `Lang: ${languages}`, onRemove: clearLanguages, k: 'lang' })
+    return list
+  }, [selectedCategory, selectedSubcategory, location, gender, bodyType, ethnicity, minAge, maxAge, minHeight, maxHeight, minExp, maxExp, eyeColor, hairColor, skills, languages, realCategories, selectedCatObj, removeGender, removeBodyType, clearEthnicity, clearEyeColor, clearHairColor, clearSkills, clearLanguages])
 
+  const tickFeatures = [
+    {
+      icon: <Users className="w-6 h-6" />,
+      title: t('verifiedTalent') || 'Verified Talent',
+      description: t('verifiedTalentDesc') || 'All profiles are manually verified'
+    },
+    {
+      icon: <Star className="w-6 h-6" />,
+      title: t('qualityAssured') || 'Quality Assured',
+      description: t('qualityAssuredDesc') || 'Top-tier talent for your projects'
+    },
+    {
+      icon: <TrendingUp className="w-6 h-6" />,
+      title: t('careerGrowth') || 'Career Growth',
+      description: t('careerGrowthDesc') || 'Opportunities to advance your career'
+    }
+  ]
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300 relative overflow-hidden">
+      <main>
       {/* Background Elements - Optimized for Performance */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
         {/* Floating shapes - reduced opacity and blur for better performance, respect motion preferences */}
@@ -244,6 +322,9 @@ export default function LandingClient() {
             <h1 className="text-5xl md:text-7xl font-bold text-gray-900 dark:text-white mb-8 leading-tight">
               3<span className="text-primary-blue dark:text-accent-red">YES</span>ES
             </h1>
+
+            {/* Welcome video hero */}
+            <VideoHero url="/videos/Welcome.mp4" />
             
             {/* Animated Ticks Section - Now above the dynamic headline */}
             <div className="flex items-center justify-center space-x-6 mb-12">
@@ -280,7 +361,7 @@ export default function LandingClient() {
             <DynamicHeadline />
 
             <p className="text-xl md:text-2xl text-gray-700 dark:text-gray-300 mb-12 max-w-3xl mx-auto">
-              Connect with top talent and industry professionals. Find your perfect match for any creative project.
+              {t('tagline')}
             </p>
 
             {/* Advanced Search Form - streamlined */}
@@ -292,7 +373,7 @@ export default function LandingClient() {
                     <Search className="text-gray-400 h-5 w-5" />
                     <input
                       type="text"
-                      placeholder="Search for professionals, specializations, or skills..."
+                      placeholder={t('searchPlaceholder')}
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       className="flex-1 bg-transparent outline-none text-gray-900 dark:text-white placeholder-gray-500 text-lg"
@@ -302,7 +383,7 @@ export default function LandingClient() {
                     type="submit"
                     className="bg-primary-blue dark:bg-accent-red text-white px-6 py-3 rounded-md hover:bg-primary-blueHover dark:hover:bg-accent-red/80 transition-colors font-medium"
                   >
-                    Search
+                    {t('searchButton')}
                   </button>
                 </div>
 
@@ -320,7 +401,7 @@ export default function LandingClient() {
                         <span className={selectedCategory ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-400'}>
                           {selectedCategory
                             ? realCategories.find(cat => cat.id === selectedCategory)?.name || selectedCategory
-                            : 'All Categories'}
+                            : t('allCategories')}
                         </span>
                         <ChevronDown className={`h-5 w-5 transition-transform text-gray-600 dark:text-gray-300 ${isDropdownOpen ? 'rotate-180' : ''}`} />
                       </button>
@@ -332,7 +413,7 @@ export default function LandingClient() {
                               onClick={() => { setSelectedCategory(''); setSelectedSubcategory(''); setIsDropdownOpen(false) }}
                               className="w-full text-left px-4 py-2 hover:bg-primary-blue/10 dark:hover:bg-gray-700 text-gray-900 dark:text-white rounded-md text-sm font-medium"
                             >
-                              All Categories
+                              {t('allCategories')}
                             </button>
                             {realCategories.map((cat) => (
                               <button
@@ -357,7 +438,7 @@ export default function LandingClient() {
                           onChange={e => setSelectedSubcategory(e.target.value)}
                         >
                           <option value="">All {selectedCatObj.name}</option>
-                          {selectedCatObj.subcategories.map(sub => (
+                          {selectedCatObj.subcategories.map((sub: any) => (
                             <option key={sub.id} value={sub.id}>{sub.name}</option>
                           ))}
                         </select>
@@ -370,7 +451,7 @@ export default function LandingClient() {
                     <input
                       type="text"
                       list="city-suggestions"
-                      placeholder="City, State, Country"
+                      placeholder={t('location')}
                       value={location}
                       onChange={(e) => setLocation(e.target.value)}
                       className="w-full pl-12 pr-12 py-3 rounded-md border-0 bg-white/90 dark:bg-gray-800/90 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-primary-blue focus:outline-none"
@@ -420,140 +501,23 @@ export default function LandingClient() {
                       className="w-full md:w-auto px-4 py-3 rounded-md border border-primary-blue dark:border-accent-red bg-white/90 dark:bg-gray-800/90 text-primary-blue dark:text-accent-red hover:bg-primary-blue/10 dark:hover:bg-accent-red/10 flex items-center justify-center gap-2 font-semibold shadow"
                       aria-expanded={isFiltersOpen}
                     >
-                      <span>Filters</span>
+                      <span>{t('filters')}</span>
                       {chips.length > 0 && (
                         <span className="ml-1 inline-flex items-center justify-center min-w-6 h-6 text-xs rounded-full bg-primary-blue text-white px-2">{chips.length}</span>
                       )}
                     </button>
                   </div>
                 </div>
-                {/* Expanded advanced filters section (fix: ensure this renders after the search controls grid) */}
+                {/* Expanded advanced filters section */}
                 {isFiltersOpen && (
-                  <div className="w-full mt-4 bg-white dark:bg-gray-900 border border-primary-blue dark:border-accent-red rounded-xl shadow-xl p-6 transition-all duration-300 animate-fadeIn">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                      {/* Gender */}
-                      <div>
-                        <div className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">Gender</div>
-                        <div className="flex flex-wrap gap-2">
-                          {['male','female','non-binary','other'].map((g) => (
-                            <button
-                              key={g}
-                              type="button"
-                              onClick={() => toggleGender(g)}
-                              className={`px-4 py-2 rounded-md border text-sm transition-all duration-150 ${gender.includes(g)
-                                ? 'bg-primary-blue text-white border-primary-blue ring-2 ring-primary-blue'
-                                : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600'}`}
-                              aria-pressed={gender.includes(g)}
-                            >
-                              {g.charAt(0).toUpperCase() + g.slice(1)}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                      {/* Ethnicity */}
-                      <div>
-                        <MultiSelect
-                          options={ethnicityOptions}
-                          value={Array.isArray(ethnicity) ? ethnicity : (ethnicity ? ethnicity.split(',').map(s => s.trim()).filter(Boolean) : [])}
-                          onChange={vals => setEthnicity(vals.join(', '))}
-                          placeholder="Select or type ethnicity"
-                          allowCustom
-                          label="Ethnicity"
-                        />
-                      </div>
-                      {/* Age */}
-                      <div>
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">Age</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <RangeSlider
-                            min={0}
-                            max={100}
-                            values={[minAge === '' ? 0 : minAge, maxAge === '' ? 100 : maxAge]}
-                            onChange={([min, max]) => { setMinAge(min); setMaxAge(max); }}
-                          />
-                          <span className="text-xs">or</span>
-                          <input
-                            type="number"
-                            min="0"
-                            max="100"
-                            value={minAge === maxAge && minAge !== '' ? minAge : ''}
-                            onChange={e => {
-                              const val = e.target.value ? Number(e.target.value) : '';
-                              setMinAge(val); setMaxAge(val);
-                            }}
-                            placeholder="Specific Age"
-                            className="w-20 px-2 py-1 rounded border border-gray-300 dark:border-gray-700"
-                          />
-                        </div>
-                      </div>
-                      {/* Experience */}
-                      <div>
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">Experience (years)</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <RangeSlider
-                            min={0}
-                            max={50}
-                            values={[minExp === '' ? 0 : minExp, maxExp === '' ? 50 : maxExp]}
-                            onChange={([min, max]) => { setMinExp(min); setMaxExp(max); }}
-                          />
-                          <span className="text-xs">or</span>
-                          <input
-                            type="number"
-                            min="0"
-                            max="50"
-                            value={minExp === maxExp && minExp !== '' ? minExp : ''}
-                            onChange={e => {
-                              const val = e.target.value ? Number(e.target.value) : '';
-                              setMinExp(val); setMaxExp(val);
-                            }}
-                            placeholder="Specific Years"
-                            className="w-20 px-2 py-1 rounded border border-gray-300 dark:border-gray-700"
-                          />
-                        </div>
-                      </div>
-                      {/* Skills */}
-                      <div>
-                        <MultiSelect
-                          options={skillsOptions}
-                          value={Array.isArray(skills) ? skills : (skills ? skills.split(',').map(s => s.trim()).filter(Boolean) : [])}
-                          onChange={vals => setSkills(vals.join(', '))}
-                          placeholder="Select or type skills"
-                          allowCustom
-                          label="Skills"
-                        />
-                      </div>
-                      {/* Languages */}
-                      <div>
-                        <MultiSelect
-                          options={languageOptions}
-                          value={Array.isArray(languages) ? languages : (languages ? languages.split(',').map(s => s.trim()).filter(Boolean) : [])}
-                          onChange={vals => setLanguages(vals.join(', '))}
-                          placeholder="Select or type languages"
-                          allowCustom
-                          label="Languages"
-                        />
-                      </div>
-                    </div>
-                    <div className="flex justify-between items-center mt-8 gap-2">
-                      <button
-                        type="button"
-                        onClick={clearAllFilters}
-                        className="px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-700"
-                      >
-                        Clear All
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setIsFiltersOpen(false)}
-                        className="flex-1 px-4 py-2 rounded-md bg-primary-blue text-white text-sm font-semibold shadow hover:bg-primary-blueHover transition-all"
-                      >
-                        Apply Filters
-                      </button>
-                    </div>
+                  <div className="w-full mt-4">
+                    <TalentFilterPanel
+                      filters={advancedFilters}
+                      onFiltersChange={setAdvancedFilters}
+                      onClose={() => setIsFiltersOpen(false)}
+                      onApply={() => setIsFiltersOpen(false)}
+                      showHeader={true}
+                    />
                   </div>
                 )}
 
@@ -574,7 +538,7 @@ export default function LandingClient() {
                       onClick={clearAllFilters}
                       className="text-xs underline text-primary-blue dark:text-accent-red"
                     >
-                      Clear all
+                      {t('clearAll')}
                     </button>
                   )}
                 </div>
@@ -587,44 +551,29 @@ export default function LandingClient() {
       {/* Welcome Video Section - Backstage Inspired */}
       <div className="relative py-24 bg-gradient-to-r from-primary-blue/8 to-primary-red/8 dark:from-primary-blue/20 dark:to-primary-red/20 backdrop-blur-sm z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="text-gray-900 dark:text-white">
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
-                Find your next job and{' '}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center pt-12" >
+            <div className="text-gray-900 dark:text-white flex flex-col justify-start h-full min-h-[320px] pl-2 md:pl-6 lg:pl-8 mt-12">
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6 pl-2 md:pl-4 lg:pl-8">
+                {t('findYourNextJob')}{' '}
                 <span className="block text-transparent bg-clip-text bg-gradient-to-r from-primary-blue to-accent-blue dark:from-accent-red dark:to-primary-red">
-                  elevate your career
+                  {t('elevateYourCareer')}
                 </span>
               </h2>
               <p className="text-xl text-gray-700 dark:text-gray-300 mb-8 leading-relaxed">
-                Join thousands of talented professionals who trust 3YESES to connect them with their dream projects. 
-                From auditions to bookings, we&apos;re here to support your creative journey.
+                {t('joinThousands')}{' '}
+                {t('supportCreativeJourney')}
               </p>
               <div className="flex flex-wrap gap-4">
                 <button className="bg-gradient-to-r from-primary-blue to-accent-blue dark:from-accent-red dark:to-primary-red hover:from-primary-blueHover hover:to-primary-blue dark:hover:from-primary-red dark:hover:to-accent-red text-white font-semibold py-3 px-8 rounded-xl transition-all duration-300 transform hover:scale-105">
-                  Join Now
+                  {t('joinNow')}
                 </button>
                 <button className="border-2 border-primary-blue/50 dark:border-accent-red/50 hover:border-primary-blue dark:hover:border-accent-red text-gray-800 dark:text-white font-semibold py-3 px-8 rounded-xl transition-all duration-300 hover:bg-primary-blue/10 dark:hover:bg-accent-red/10">
-                  Learn More
+                  {t('learnMore')}
                 </button>
               </div>
             </div>
             
-            <div className="relative">
-              <div className="relative group cursor-pointer">
-                <div className="bg-gradient-to-br from-primary-blue/20 to-primary-red/20 rounded-2xl p-8 backdrop-blur-sm border border-primary-blue/20">
-                  <div className="aspect-video bg-black/50 rounded-xl flex items-center justify-center relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary-blue/30 to-primary-red/30"></div>
-                    <button className="relative z-10 bg-primary-blue/80 dark:bg-accent-red/80 hover:bg-primary-blue dark:hover:bg-accent-red backdrop-blur-sm rounded-full p-6 transition-all duration-300 transform hover:scale-110 group-hover:scale-125">
-                      <Play className="h-8 w-8 text-white ml-1" />
-                    </button>
-                  </div>
-                  <div className="mt-6 text-center">
-                    <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Watch How It Works</h3>
-                    <p className="text-gray-700 dark:text-gray-300">See how 3YESES connects talent with opportunities</p>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <HeroSlideshow />
           </div>
         </div>
       </div>
@@ -635,19 +584,19 @@ export default function LandingClient() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div className="group">
               <div className="text-4xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-primary-blue dark:group-hover:text-accent-red transition-colors">10K+</div>
-              <div className="text-gray-600 dark:text-gray-300">Active Talent</div>
+              <div className="text-gray-600 dark:text-gray-300">{t('activeTalent')}</div>
             </div>
             <div className="group">
               <div className="text-4xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-accent-blue dark:group-hover:text-primary-red transition-colors">500+</div>
-              <div className="text-gray-600 dark:text-gray-300">Projects Posted</div>
+              <div className="text-gray-600 dark:text-gray-300">{t('projectsPosted')}</div>
             </div>
             <div className="group">
               <div className="text-4xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-primary-blue dark:group-hover:text-accent-red transition-colors">95%</div>
-              <div className="text-gray-600 dark:text-gray-300">Success Rate</div>
+              <div className="text-gray-600 dark:text-gray-300">{t('successRate')}</div>
             </div>
             <div className="group">
               <div className="text-4xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-accent-blue dark:group-hover:text-primary-red transition-colors">24/7</div>
-              <div className="text-gray-600 dark:text-gray-300">Support</div>
+              <div className="text-gray-600 dark:text-gray-300">{t('support')}</div>
             </div>
           </div>
         </div>
@@ -657,9 +606,9 @@ export default function LandingClient() {
       <div className="py-24 bg-gradient-to-br from-primary-blue/8 via-transparent to-primary-red/8 dark:from-primary-blue/20 dark:via-transparent dark:to-primary-red/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">How 3YESES Works</h2>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">{t('howItWorksTitle')}</h2>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-              Our platform makes it easy to connect, collaborate, and create amazing projects together.
+              {t('howItWorksDescription')}
             </p>
           </div>
           
@@ -667,24 +616,30 @@ export default function LandingClient() {
             {[
               {
                 step: "01",
-                title: "Create Your Profile",
-                description: "Showcase your talents, experience, and portfolio to stand out from the crowd."
+                icon: <UserPlus className="h-12 w-12" />,
+                title: t('createYourProfile'),
+                description: t('createYourProfileDescription')
               },
               {
-                step: "02", 
-                title: "Browse & Apply",
-                description: "Find projects that match your skills and interests. Apply with confidence."
+                step: "02",
+                icon: <LucideImage className="h-12 w-12" />,
+                title: t('showcaseYourWork'),
+                description: t('showcaseYourWorkDescription')
               },
               {
                 step: "03",
-                title: "Get Hired",
-                description: "Connect with clients, negotiate terms, and bring creative visions to life."
+                icon: <BarChart3 className="h-12 w-12" />,
+                title: t('buildYourReputation'),
+                description: t('buildYourReputationDescription')
               }
             ].map((item) => (
               <div key={`step-${item.step}-${item.title.replace(/\s+/g, '-').toLowerCase()}`} className="text-center group">
                 <div className="bg-gradient-to-br from-primary-blue/20 to-primary-red/20 rounded-2xl p-8 backdrop-blur-sm border border-primary-blue/20 hover:border-accent-red/50 dark:hover:border-primary-blue/50 transition-all duration-300 group-hover:scale-105">
                   <div className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-blue to-accent-blue dark:from-accent-red dark:to-primary-red mb-4 group-hover:from-accent-blue group-hover:to-primary-blue dark:group-hover:from-primary-red dark:group-hover:to-accent-red transition-all duration-300">
                     {item.step}
+                  </div>
+                  <div className="flex justify-center mb-4 text-primary-blue dark:text-accent-red group-hover:text-accent-blue dark:group-hover:text-primary-red transition-colors">
+                    {item.icon}
                   </div>
                   <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">{item.title}</h3>
                   <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{item.description}</p>
@@ -694,6 +649,10 @@ export default function LandingClient() {
           </div>
         </div>
       </div>
-    </div>
+
+      {/* Feature Highlights Section */}
+      <FeatureHighlights />
+    </main>
+  </div>
   )
 }

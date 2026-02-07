@@ -1,65 +1,137 @@
-// Authentication API endpoint for user login
-// POST /api/auth/login
-
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import { getPrisma } from '@/lib/prisma';
 import AuthService from '@/lib/auth/auth-service';
-
-const prisma = new PrismaClient();
+import { cookies } from 'next/headers';
 
 export async function POST(request: NextRequest) {
-  try {
-    const { email, password } = await request.json();
+  const prisma = getPrisma();
 
+  try {
+    const body = await request.json();
+    const { email, password, rememberMe } = body;
+
+    // Validation
     if (!email || !password) {
       return NextResponse.json(
-        { success: false, message: 'Email and password are required' },
+        { error: 'Email and password are required' },
         { status: 400 }
       );
     }
 
-    const user = await prisma.user.findUnique({
-      where: { email: email.toLowerCase() },
+    // Find user by email (case-insensitive)
+    const user = await prisma.user.findFirst({
+      where: {
+        email: {
+          equals: email,
+          mode: 'insensitive',
+        },
+      },
+      include: {
+        talentProfile: {
+          select: {
+            id: true,
+            roleDescription: true,
+          },
+        },
+      },
     });
 
-    if (!user || !(await AuthService.verifyPassword(password, user.password))) {
+    if (!user) {
+      // Don't reveal whether email exists
       return NextResponse.json(
-        { success: false, message: 'Invalid credentials' },
+        { error: 'Invalid email or password' },
         { status: 401 }
       );
     }
 
-    const token = AuthService.generateJWT({
+    // Verify password
+    const isPasswordValid = await AuthService.verifyPassword(password, user.password);
+
+    if (!isPasswordValid) {
+      return NextResponse.json(
+        { error: 'Invalid email or password' },
+        { status: 401 }
+      );
+    }
+
+    // Check email verification (only for accounts that need it)
+    if (!user.emailVerified && !user.parentalConsentRequired) {
+      return NextResponse.json(
+        { 
+          error: 'Please verify your email address before logging in.',
+          requiresEmailVerification: true,
+          email: user.email
+        },
+        { status: 403 }
+      );
+    }
+
+    // Check parental consent for accounts that require it
+    if (user.parentalConsentRequired && user.parentalConsentPending) {
+      return NextResponse.json(
+        { 
+          error: 'Your account is pending parental consent approval.',
+          requiresParentalConsent: true,
+          parentEmail: user.parentEmail
+        },
+        { status: 403 }
+      );
+    }
+
+    // Generate tokens
+    const accessToken = AuthService.generateJWT({
       userId: user.id,
       email: user.email,
       role: user.role,
       name: user.name,
     });
 
-    const response = NextResponse.json({
-      success: true,
-      message: 'Login successful',
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-      },
+    const refreshToken = AuthService.generateRefreshToken({
+      userId: user.id,
     });
 
-    response.cookies.set('auth-token', token, {
+    // Set HTTP-only cookies for tokens
+    const cookieStore = await cookies();
+    const cookieOptions = {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      sameSite: 'lax' as const,
       path: '/',
-      maxAge: 60 * 60 * 24 * 7, // 1 week
+    };
+
+    cookieStore.set('accessToken', accessToken, {
+      ...cookieOptions,
+      maxAge: rememberMe ? 7 * 24 * 60 * 60 : 24 * 60 * 60, // 7 days or 24 hours
     });
 
-    return response;
+    cookieStore.set('refreshToken', refreshToken, {
+      ...cookieOptions,
+      maxAge: rememberMe ? 30 * 24 * 60 * 60 : 7 * 24 * 60 * 60, // 30 days or 7 days
+    });
+
+    // Return user data
+    return NextResponse.json({
+      success: true,
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+        emailVerified: !!user.emailVerified,
+        talentProfile: user.talentProfile
+          ? {
+              id: user.talentProfile.id,
+              roleDescription: user.talentProfile.roleDescription,
+            }
+          : null,
+      },
+      accessToken, // Also return in body for client-side storage if needed
+    });
+
   } catch (error) {
     console.error('Login error:', error);
     return NextResponse.json(
-      { success: false, message: 'Internal Server Error' },
+      { error: 'An error occurred during login. Please try again.' },
       { status: 500 }
     );
   }

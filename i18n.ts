@@ -1,15 +1,25 @@
-import { getRequestConfig } from 'next-intl/server';
-import { notFound } from 'next/navigation';
+import {getRequestConfig} from 'next-intl/server';
 
-const locales = ['en-GB', 'fr'];
 
-export default getRequestConfig(async ({ locale }) => {
-  // Validate that the incoming `locale` parameter is valid
-  const isValidLocale = locales.some((cur) => cur === locale);
-  if (!isValidLocale) notFound();
-
-  return {
-    locale: locale as string,
-    messages: (await import(`../messages/${locale}.json`)).default
-  };
+export default getRequestConfig(async ({locale}) => {
+  const resolvedLocale = locale || 'en-gb';
+  
+  // Handle 'en' locale by using 'en.json' messages
+  const messagesFile = resolvedLocale;
+  try {
+    const messages = (await import(`./messages/${messagesFile}.json`)).default;
+    return {
+      locale: resolvedLocale,
+      messages,
+      timeZone: 'UTC'
+    };
+  } catch {
+    // Fallback to en-gb if locale file doesn't exist
+    console.warn(`Messages file for locale '${messagesFile}' not found, falling back to 'en-gb'`);
+    return {
+      locale: resolvedLocale,
+      messages: (await import(`./messages/en-gb.json`)).default,
+      timeZone: 'UTC'
+    };
+  }
 });

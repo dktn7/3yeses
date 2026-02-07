@@ -1,5 +1,5 @@
 import { BarChart, Bookmark } from 'lucide-react';
-import DashboardWidget from './DashboardWidget';
+import DashboardWidget from './DashboardWidget.tsx';
 
 /**
  * @typedef {object} StatItem

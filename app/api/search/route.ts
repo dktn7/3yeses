@@ -1,7 +1,207 @@
-import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+    const query = body.query || '';
+    const category = body.category;
+    const subcategory = body.subcategory;
+    const location = body.location;
+    const minAge = body.minAge;
+    const maxAge = body.maxAge;
+    const minExperience = body.minExperience;
+    const maxExperience = body.maxExperience;
+    const minRating = body.minRating;
+    const skills = body.skills;
+    const languages = body.languages;
+    const gender = body.gender;
+    const bodyTypesRaw = body.bodyType ? (Array.isArray(body.bodyType) ? body.bodyType : [body.bodyType]) : undefined;
+    const ethnicities = body.ethnicity ? (Array.isArray(body.ethnicity) ? body.ethnicity : [body.ethnicity]) : undefined;
+    const sortBy = body.sortBy || 'relevance';
+    const page = body.page || 1;
+    const limit = body.limit || 12;
+    const skip = (page - 1) * limit;
 
-const prisma = new PrismaClient();
+    // Build where clause for comprehensive search
+    const whereClause: Record<string, unknown> = {};
+    const orClauses: unknown[] = [];
+
+    if (query) {
+      const searchTerms = query.toLowerCase().split(' ').filter((term: string) => term.length > 0);
+      orClauses.push(
+        { user: { name: { contains: query, mode: 'insensitive' } } },
+        { roleDescription: { contains: query, mode: 'insensitive' } },
+        { bio: { contains: query, mode: 'insensitive' } },
+        { skills: { hasSome: searchTerms } },
+        { languages: { hasSome: searchTerms } },
+        { category: { name: { contains: query, mode: 'insensitive' } } },
+        { subcategory: { name: { contains: query, mode: 'insensitive' } } },
+        { location: { contains: query, mode: 'insensitive' } }
+      );
+    }
+
+    if (category) {
+      whereClause.category = { name: { contains: category, mode: 'insensitive' } };
+    }
+    if (subcategory) {
+      whereClause.subcategory = { name: { contains: subcategory, mode: 'insensitive' } };
+    }
+    if (location) {
+      whereClause.location = { contains: location, mode: 'insensitive' };
+    }
+    if (minAge !== undefined || maxAge !== undefined) {
+      const ageFilter: Record<string, number> = {};
+      if (minAge !== undefined) ageFilter.gte = minAge;
+      if (maxAge !== undefined) ageFilter.lte = maxAge;
+      if (Object.keys(ageFilter).length > 0) (whereClause as Record<string, unknown>)['age'] = ageFilter;
+    }
+    if (minExperience !== undefined || maxExperience !== undefined) {
+      const expFilter: Record<string, number> = {};
+      if (minExperience !== undefined) expFilter.gte = minExperience;
+      if (maxExperience !== undefined) expFilter.lte = maxExperience;
+      if (Object.keys(expFilter).length > 0) (whereClause as Record<string, unknown>)['experience'] = expFilter;
+    }
+    if (skills && skills.length > 0) {
+      whereClause.skills = { hasSome: skills };
+    }
+    if (languages && languages.length > 0) {
+      whereClause.languages = { hasSome: languages };
+    }
+    if (gender) {
+      whereClause.gender = gender.toUpperCase();
+    }
+    if (bodyTypesRaw && bodyTypesRaw.length > 0) {
+      const mapBodyType = (b: string) => {
+        const s = b.toLowerCase();
+        if (s === 'slim') return 'SLIM';
+        if (s === 'athletic') return 'ATHLETIC';
+        if (s === 'curvy') return 'CURVY';
+        if (s === 'plus-size' || s === 'plus_size' || s === 'plussize') return 'PLUS_SIZE';
+        if (s === 'muscular') return 'MUSCULAR';
+        if (s === 'average') return undefined;
+        return undefined;
+      };
+      const mapped = bodyTypesRaw.map(mapBodyType).filter(Boolean) as string[];
+      if (mapped.length > 0) {
+        whereClause.bodyType = { in: mapped };
+      }
+    }
+    if (ethnicities && ethnicities.length > 0) {
+      const ethOr = ethnicities.map((e: string) => ({ ethnicity: { contains: e, mode: 'insensitive' } }));
+      ethOr.forEach((clause: Record<string, unknown>) => (orClauses as Array<Record<string, unknown>>).push(clause));
+    }
+    if (orClauses.length > 0) {
+      (whereClause as Record<string, unknown>)['OR'] = orClauses as Array<Record<string, unknown>>;
+    }
+    let orderBy: Record<string, unknown> | Record<string, unknown>[] = {};
+    switch (sortBy) {
+      case 'name':
+        orderBy = { user: { name: 'asc' } };
+        break;
+      case 'rating':
+        orderBy = { rating: 'desc' };
+        break;
+      case 'experience':
+        orderBy = { experience: 'desc' };
+        break;
+      case 'newest':
+        orderBy = { user: { createdAt: 'desc' } };
+        break;
+      case 'popular':
+        orderBy = { viewCount: 'desc' };
+        break;
+      default:
+        orderBy = [
+          { viewCount: 'desc' },
+          { rating: 'desc' },
+          { user: { createdAt: 'desc' } }
+        ];
+    }
+    const talents = await prisma.talentProfile.findMany({
+      where: whereClause,
+      include: {
+        user: { select: { id: true, name: true, createdAt: true } },
+        category: { select: { id: true, name: true, icon: true } },
+        subcategory: { select: { id: true, name: true, description: true } },
+        portfolio: { select: { id: true, title: true, url: true, type: true }, take: 3 },
+        reviewsReceived: { select: { rating: true } },
+        _count: { select: { reviewsReceived: true, portfolio: true } },
+      },
+      orderBy,
+      skip,
+      take: limit,
+    });
+    const totalCount = await prisma.talentProfile.count({ where: whereClause });
+    const formattedTalents = talents.map(talent => {
+      const avgRating = talent.reviewsReceived.length > 0
+        ? talent.reviewsReceived.reduce((sum, review) => sum + review.rating, 0) / talent.reviewsReceived.length
+        : 0;
+      return {
+        id: talent.id,
+        name: talent.user.name,
+        role: talent.roleDescription || 'Professional Talent',
+        category: talent.category?.name || 'Uncategorized',
+        subcategory: talent.subcategory?.name || 'General',
+        skills: talent.skills || [],
+        videoUrl: talent.videoUrl,
+        avatarUrl: talent.avatarUrl,
+        location: talent.location || 'Location not specified',
+        experience: talent.experience || 0,
+        rating: Number(avgRating.toFixed(1)),
+        languages: talent.languages || [],
+        bio: talent.bio || 'No bio available',
+        gender: talent.gender?.toLowerCase() as 'male' | 'female' | 'non-binary' | 'other' || 'other',
+        ethnicity: talent.ethnicity || 'Not specified',
+        age: talent.age || 0,
+        height: talent.height || 0,
+        bodyType: talent.bodyType?.toLowerCase() as 'slim' | 'athletic' | 'average' | 'curvy' | 'plus-size' | 'muscular' || 'average',
+        eyeColor: talent.eyeColor || 'Not specified',
+        hairColor: talent.hairColor || 'Not specified',
+        socialMedia: Array.isArray(talent.socialMedia) ? talent.socialMedia as { platform: string; url: string }[] : [],
+        portfolio: talent.portfolio.map(item => ({ title: item.title, url: item.url, type: item.type.toLowerCase() as 'image' | 'video' | 'audio' })),
+        reviews: [],
+        isBeginner: talent.isBeginner,
+        viewCount: talent.viewCount,
+      };
+    }).filter(talent => {
+      if (minRating && talent.rating < minRating) {
+        return false;
+      }
+      return true;
+    });
+    const totalPages = Math.ceil(totalCount / limit);
+    const filterSuggestions = await getFilterSuggestions(query);
+    return NextResponse.json({
+      talents: formattedTalents,
+      pagination: {
+        page,
+        limit,
+        totalCount: formattedTalents.length,
+        totalPages: Math.ceil(formattedTalents.length / limit),
+        hasNextPage: page < totalPages,
+        hasPrevPage: page > 1,
+      },
+      query,
+      filters: {
+        category,
+        subcategory,
+        location,
+        minRating,
+        skills,
+        languages,
+        gender,
+        sortBy,
+      },
+      suggestions: filterSuggestions,
+    });
+  } catch (error) {
+    console.error('Error in search API (POST):', error);
+    return NextResponse.json(
+      { error: 'Failed to perform search (POST)' },
+      { status: 500 }
+    );
+  }
+}
+import { NextResponse } from 'next/server';
+import prisma from '@/lib/prisma';
 
 export async function GET(request: Request) {
   try {
@@ -35,7 +235,7 @@ export async function GET(request: Request) {
 
     // Text search across multiple fields
     if (query) {
-      const searchTerms = query.toLowerCase().split(' ').filter(term => term.length > 0);
+      const searchTerms = query.toLowerCase().split(' ').filter((term: string) => term.length > 0);
       
       orClauses.push(
         // Search in user name
@@ -184,8 +384,8 @@ export async function GET(request: Request) {
 
     // Ethnicity filter (comma-separated, ILIKE contains)
     if (ethnicities && ethnicities.length > 0) {
-      const ethOr = ethnicities.map((e) => ({ ethnicity: { contains: e, mode: 'insensitive' } }));
-      ethOr.forEach((clause) => (orClauses as Array<Record<string, unknown>>).push(clause));
+      const ethOr = ethnicities.map((e: string) => ({ ethnicity: { contains: e, mode: 'insensitive' } }));
+      ethOr.forEach((clause: Record<string, unknown>) => (orClauses as Array<Record<string, unknown>>).push(clause));
     }
 
     // (Availability not modeled in Prisma schema)

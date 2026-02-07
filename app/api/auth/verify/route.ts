@@ -1,42 +1,79 @@
-// Authentication API endpoint for session verification
-// GET /api/auth/verify
-
+export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 import AuthService from '@/lib/auth/auth-service';
+import { getPrisma } from '@/lib/prisma';
 
 export async function GET(request: NextRequest) {
   try {
-    // Get session cookie
-    const token = request.cookies.get('auth-token')?.value;
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get('accessToken')?.value;
 
-    if (!token) {
+    if (!accessToken) {
       return NextResponse.json(
-        { success: false, message: 'No session found' },
+        { success: false, error: 'Not authenticated' },
         { status: 401 }
       );
     }
 
-    // Verify the JWT
-    const decodedUser = AuthService.verifyJWT(token);
+    // Verify the token
+    const decoded = AuthService.verifyJWT(accessToken);
 
-    if (!decodedUser) {
+    if (!decoded) {
       return NextResponse.json(
-        { success: false, message: 'Invalid or expired session' },
+        { success: false, error: 'Invalid token' },
         { status: 401 }
       );
     }
 
-    // Return the session data
+    // Get user from database
+    const prisma = getPrisma();
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.userId },
+      include: {
+        talentProfile: {
+          select: {
+            id: true,
+            roleDescription: true,
+            profileComplete: true,
+            avatarUrl: true,
+          }
+        }
+      }
+    });
+
+    if (!user) {
+      return NextResponse.json(
+        { success: false, error: 'User not found' },
+        { status: 404 }
+      );
+    }
+
     return NextResponse.json({
       success: true,
-      user: decodedUser
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+        firstName: user.name?.split(' ')[0] || '',
+        lastName: user.name?.split(' ').slice(1).join(' ') || '',
+        emailVerified: !!user.emailVerified,
+        profileComplete: user.talentProfile?.profileComplete || false,
+        avatarUrl: user.talentProfile?.avatarUrl || null,
+        talentProfile: user.talentProfile
+          ? {
+              id: user.talentProfile.id,
+              roleDescription: user.talentProfile.roleDescription,
+            }
+          : null,
+      }
     });
 
   } catch (error) {
-    console.error('Session verification error:', error);
-    
+    console.error('Verify error:', error);
     return NextResponse.json(
-      { success: false, message: 'Internal Server Error' },
+      { success: false, error: 'Verification failed' },
       { status: 500 }
     );
   }

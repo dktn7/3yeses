@@ -1,38 +1,64 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
+import AuthService from '@/lib/auth/auth-service';
+import { getPrisma } from '@/lib/prisma';
 
-// GET - Fetch user notifications
-export async function GET() {
+// GET - Fetch persisted notifications for the authenticated talent profile
+export async function GET(request: NextRequest) {
   try {
-    // For demo purposes, return mock notifications
-    // In a real app, you'd authenticate the user and fetch from database
-    const mockNotifications = [
-      {
-        id: '1',
-        type: 'profile_view',
-        title: 'Profile View',
-        message: 'Sarah Johnson viewed your profile',
-        timestamp: new Date(Date.now() - 5 * 60 * 1000),
-        read: false,
-      },
-      {
-        id: '2',
-        type: 'profile_save',
-        title: 'Profile Saved',
-        message: 'Alex Thompson saved your profile',
-        timestamp: new Date(Date.now() - 30 * 60 * 1000),
-        read: false,
-      },
-      {
-        id: '3',
-        type: 'booking_request',
-        title: 'Booking Request',
-        message: 'New booking request from Creative Agency',
-        timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
-        read: true,
-      },
-    ];
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get('accessToken')?.value;
 
-    return NextResponse.json({ notifications: mockNotifications });
+    if (!accessToken) {
+      return NextResponse.json({ notifications: [], unreadCount: 0 }, { status: 401 });
+    }
+
+    const decoded = AuthService.verifyJWT(accessToken);
+    if (!decoded) {
+      return NextResponse.json({ notifications: [], unreadCount: 0 }, { status: 401 });
+    }
+
+    const prisma = getPrisma();
+
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.userId },
+      select: { talentProfile: { select: { id: true } } },
+    });
+
+    const talentProfileId = user?.talentProfile?.id;
+    if (!talentProfileId) {
+      return NextResponse.json({ notifications: [], unreadCount: 0 }, { status: 200 });
+    }
+
+    const notifications = await prisma.notification.findMany({
+      where: { talentProfileId, dismissed: false },
+      orderBy: { createdAt: 'desc' },
+      take: 50,
+      select: {
+        id: true,
+        type: true,
+        title: true,
+        message: true,
+        read: true,
+        dismissed: true,
+        createdAt: true,
+      },
+    });
+
+    const unreadCount = notifications.filter(n => !n.read).length;
+
+    // Map enum to user-friendly strings
+    const mapped = notifications.map(n => ({
+      id: n.id,
+      type: n.type.toLowerCase(),
+      title: n.title,
+      message: n.message,
+      timestamp: n.createdAt,
+      read: n.read,
+      dismissed: n.dismissed,
+    }));
+
+    return NextResponse.json({ notifications: mapped, unreadCount }, { status: 200 });
   } catch (error) {
     console.error('Error fetching notifications:', error);
     return NextResponse.json(
@@ -42,16 +68,39 @@ export async function GET() {
   }
 }
 
-// POST - Mark notifications as read
-export async function POST(request: NextRequest) {
+// POST - Bulk mark notifications as read
+export async function POST(request: Request) {
   try {
     const { notificationIds, markAllAsRead } = await request.json();
 
-    // In a real app, you'd update the notifications in the database
-    // For now, just return success
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get('accessToken')?.value;
+    if (!accessToken) return NextResponse.json({ message: 'Not authenticated' }, { status: 401 });
+
+    const decoded = AuthService.verifyJWT(accessToken);
+    if (!decoded) return NextResponse.json({ message: 'Invalid token' }, { status: 401 });
+
+    const prisma = getPrisma();
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.userId },
+      select: { talentProfile: { select: { id: true } } },
+    });
+    const talentProfileId = user?.talentProfile?.id;
+    if (!talentProfileId) return NextResponse.json({ message: 'No profile' }, { status: 400 });
+
     if (markAllAsRead) {
+      await prisma.notification.updateMany({
+        where: { talentProfileId, dismissed: false },
+        data: { read: true },
+      });
       return NextResponse.json({ message: 'All notifications marked as read' });
-    } else if (notificationIds && Array.isArray(notificationIds)) {
+    }
+
+    if (notificationIds && Array.isArray(notificationIds) && notificationIds.length > 0) {
+      await prisma.notification.updateMany({
+        where: { id: { in: notificationIds }, talentProfileId, dismissed: false },
+        data: { read: true },
+      });
       return NextResponse.json({ message: `${notificationIds.length} notifications marked as read` });
     }
 

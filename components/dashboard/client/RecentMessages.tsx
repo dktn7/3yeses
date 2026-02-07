@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import DashboardWidget from './DashboardWidget';
-import { mockTalents } from '@/lib/data';
+import DashboardWidget from './DashboardWidget.tsx';
+import { mockTalents } from '@/lib/data.ts';
 
 /**
  * @typedef {object} MockMessage

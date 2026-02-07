@@ -1,7 +1,7 @@
+export const dynamic = 'force-dynamic';
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import prisma from '@/lib/prisma';
+import { Prisma } from '@prisma/client';
 
 export async function GET(request: Request) {
   try {
@@ -12,8 +12,7 @@ export async function GET(request: Request) {
     const sortBy = searchParams.get('sortBy') || 'createdAt';
     const sortOrder = searchParams.get('sortOrder') || 'desc';
     const minRating = searchParams.get('minRating') ? parseFloat(searchParams.get('minRating')!) : undefined;
-    const maxPrice = searchParams.get('maxPrice') ? parseFloat(searchParams.get('maxPrice')!) : undefined;
-    const minPrice = searchParams.get('minPrice') ? parseFloat(searchParams.get('minPrice')!) : undefined;
+  // price fields removed from schema; ignore price filters
     const location = searchParams.get('location');
     const skills = searchParams.get('skills')?.split(',').filter(Boolean);
 
@@ -31,12 +30,7 @@ export async function GET(request: Request) {
       subcategoryId: subcategoryId,
     };
 
-    // Add price filters
-    if (minPrice !== undefined || maxPrice !== undefined) {
-      whereClause.ratePerHour = {};
-      if (minPrice !== undefined) (whereClause.ratePerHour as Record<string, number>).gte = minPrice;
-      if (maxPrice !== undefined) (whereClause.ratePerHour as Record<string, number>).lte = maxPrice;
-    }
+    // No price filter available in current schema
 
     // Add location filter
     if (location) {
@@ -66,19 +60,20 @@ export async function GET(request: Request) {
 
     // Build order by clause
   // Prisma typing for orderBy can be complex; use any-safe shape here for now
-  let orderBy: any = {};
+  let orderBy: Prisma.TalentProfileOrderByWithRelationInput = {};
     switch (sortBy) {
       case 'rating':
-        orderBy = { rating: sortOrder };
+          orderBy = { rating: sortOrder as Prisma.SortOrder };
         break;
       case 'price':
-        orderBy = { ratePerHour: sortOrder };
+        // ratePerHour was removed; fall back to experience
+          orderBy = { experience: sortOrder as Prisma.SortOrder };
         break;
       case 'experience':
-        orderBy = { experience: sortOrder };
+          orderBy = { experience: sortOrder as Prisma.SortOrder };
         break;
       default:
-        orderBy = { user: { createdAt: sortOrder } }; // Use user's createdAt
+          orderBy = { user: { createdAt: sortOrder as Prisma.SortOrder } }; // Use user's createdAt
     }
 
     // Get talent profiles
@@ -134,7 +129,7 @@ export async function GET(request: Request) {
         id: talent.id,
         roleDescription: talent.roleDescription,
         bio: talent.bio,
-        ratePerHour: talent.ratePerHour,
+  // ratePerHour removed from schema
         location: talent.location,
         experience: talent.experience,
   // availability removed from schema

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn } from 'react-icons/fa6';
-import { ModeToggle } from './ThemeToggle';
+import { ModeToggle } from './ThemeToggle.tsx';
 import { ChevronUp, ChevronDown } from 'lucide-react';
 
 export default function StickyPanel() {

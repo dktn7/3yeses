@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
-
-const headlines = [
-  "Get cast in your next role today",
-  "Showcase your talent to the world",
-  "Connect with industry professionals",
-  "Build your creative portfolio",
-  "Discover new opportunities daily",
-  "Join the talent revolution",
-  "Your next big break awaits",
-  "Turn your passion into success"
-];
+import { useTranslations } from 'next-intl';
 
 export default function DynamicHeadline() {
+  const t = useTranslations('Home');
+  const headlines = [
+    t('headlines.getCast'),
+    t('headlines.showcase'),
+    t('headlines.connect'),
+    t('headlines.build'),
+    t('headlines.discover'),
+    t('headlines.join'),
+    t('headlines.break'),
+    t('headlines.passion')
+  ];
+  
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
 

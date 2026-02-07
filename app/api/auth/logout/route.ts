@@ -1,28 +1,23 @@
-// Authentication API endpoint for user logout
-// POST /api/auth/logout
+export const dynamic = 'force-dynamic';
+import { NextRequest, NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 
-import { NextResponse } from 'next/server';
-
-export async function POST() {
+export async function POST(request: NextRequest) {
   try {
-    const response = NextResponse.json({
-      success: true,
-      message: 'Logged out successfully',
-    });
-
-    response.cookies.set('auth-token', '', {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-      expires: new Date(0),
-    });
-
-    return response;
+    const cookieStore = await cookies();
+    
+    // Clear authentication cookies
+    cookieStore.delete('accessToken');
+    cookieStore.delete('refreshToken');
+    
+    return NextResponse.json(
+      { success: true, message: 'Logged out successfully' },
+      { status: 200 }
+    );
   } catch (error) {
     console.error('Logout error:', error);
     return NextResponse.json(
-      { success: false, message: 'Internal Server Error' },
+      { success: false, error: 'Logout failed' },
       { status: 500 }
     );
   }

@@ -1,13 +1,19 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
-import { X, ChevronLeft, ChevronRight, Play, Volume2, ExternalLink, ImageIcon } from 'lucide-react';
-import VideoPlayer from './VideoPlayer';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { createPortal } from 'react-dom';
+import { X, ChevronLeft, ChevronRight, Play, ExternalLink, ImageIcon, Music, Heart, Flag } from 'lucide-react';
+import VideoPlayer from './VideoPlayer.tsx';
+import FlagButton from './FlagButton';
+import CommentsSection from './CommentsSection';
 
 interface GalleryItem {
+  id: string;
   url: string;
   title: string;
   type: 'video' | 'image' | 'audio';
+  thumbnail?: string;
+  likes?: number;
 }
 
 interface GalleryViewerProps {
@@ -19,6 +25,22 @@ interface GalleryViewerProps {
 
 export default function GalleryViewer({ items, initialIndex, isOpen, onClose }: GalleryViewerProps) {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
+  const [isLiked, setIsLiked] = useState(false);
+  const [likesCount, setLikesCount] = useState(0);
+  const viewerRef = useRef<HTMLDivElement>(null);
+
+  // Fullscreen modal – ignore page layout (sidebar/topbar)
+  // Positioning handled entirely by fixed + inset-0 classes
+
+  // Prevent body scroll when overlay is open
+  useEffect(() => {
+    if (!isOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prev || '';
+    };
+  }, [isOpen]);
 
   // Define callbacks before using them in useEffect
   const nextItem = useCallback(() => {
@@ -118,40 +140,63 @@ export default function GalleryViewer({ items, initialIndex, isOpen, onClose }: 
 
   const currentItem = items[currentIndex];
 
+  useEffect(() => {
+    setIsLiked(false);
+    setLikesCount(currentItem?.likes || 0);
+  }, [currentItem?.id, currentItem?.likes]);
+
+  const handleLike = async () => {
+    if (!currentItem?.id) return;
+    const nextLiked = !isLiked;
+    setIsLiked(nextLiked);
+    setLikesCount((prev) => (nextLiked ? prev + 1 : Math.max(0, prev - 1)));
+    try {
+      const res = await fetch(`/api/portfolio/${currentItem.id}/like`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ like: nextLiked }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (typeof data.likes === 'number') setLikesCount(data.likes);
+      }
+    } catch (error) {
+      console.error('Failed to like portfolio item:', error);
+    }
+  };
+
   const goToItem = (index: number) => {
     setCurrentIndex(index);
   };
 
   const renderMainContent = () => {
+    if (!isOpen) return null;
     switch (currentItem.type) {
       case 'video':
         return (
-          <div className="w-full h-full max-w-4xl max-h-[70vh] mx-auto">
-            <VideoPlayer url={currentItem.url} />
+          <div key={`video-${currentIndex}`} className="w-full h-full flex items-center justify-center">
+            <VideoPlayer url={currentItem.url} type="VIDEO" />
           </div>
         );
       case 'image':
         return (
-          <div className="w-full h-full max-w-4xl max-h-[70vh] mx-auto flex items-center justify-center">
+          <div key={`image-${currentIndex}`} className="w-full h-full flex items-center justify-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={currentItem.url}
               alt={currentItem.title}
-              className="max-w-full max-h-full object-contain rounded-lg shadow-lg"
+              className="max-w-[95%] max-h-[95%] w-auto h-auto object-contain rounded-lg shadow-lg"
             />
           </div>
         );
       case 'audio':
         return (
-          <div className="w-full max-w-2xl mx-auto bg-gradient-to-br from-purple-100 to-blue-100 dark:from-purple-900 dark:to-blue-900 rounded-lg p-8 flex flex-col items-center justify-center">
-            <div className="text-6xl mb-4 text-purple-600 dark:text-purple-400">
-              <Volume2 />
-            </div>
-            <h3 className="text-2xl font-semibold mb-4 text-center">{currentItem.title}</h3>
-            <audio controls className="w-full max-w-md">
-              <source src={currentItem.url} />
-              Your browser does not support the audio element.
-            </audio>
+          <div key={`audio-${currentIndex}`} className="w-full h-full flex flex-col items-center justify-center px-4 sm:px-6 md:px-8">
+            <VideoPlayer
+              url={currentItem.url}
+              type="AUDIO"
+              talentProfile={{ id: 'gallery', name: currentItem.title }}
+            />
           </div>
         );
       default:
@@ -166,55 +211,58 @@ export default function GalleryViewer({ items, initialIndex, isOpen, onClose }: 
       case 'image':
         return <ImageIcon size={16} className="text-green-600" />;
       case 'audio':
-        return <Volume2 size={16} className="text-purple-600" />;
+        return <Music size={16} className="text-purple-600" />;
       default:
         return null;
     }
   };
 
-  return (
-    <div className="fixed inset-0 z-50 bg-black bg-opacity-90 flex flex-col gallery-viewer">
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 bg-black bg-opacity-50 text-white">
-        <div className="flex items-center gap-4">
-          <h2 className="text-xl font-semibold">{currentItem.title}</h2>
-          <span className="text-sm bg-gray-700 px-2 py-1 rounded capitalize">
+  return createPortal(
+    <div 
+      className="fixed inset-0 z-[100] bg-black/90 flex flex-col gallery-viewer"
+      ref={viewerRef}
+    >
+      {/* Header - Compact and responsive */}
+      <div className="flex items-center justify-between px-3 sm:px-4 md:px-6 py-2 sm:py-3 bg-black/60 text-white border-b border-gray-700">
+        <div className="flex items-center gap-2 min-w-0">
+          <h2 className="text-sm sm:text-base md:text-lg font-semibold truncate">{currentItem.title}</h2>
+          <span className="text-xs bg-gray-700 px-2 py-0.5 rounded capitalize flex-shrink-0">
             {currentItem.type}
           </span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
           <button
             onClick={() => window.open(currentItem.url, '_blank')}
-            className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
+            className="p-1.5 hover:bg-gray-700 rounded-lg transition-colors"
             title="Open in new tab"
           >
-            <ExternalLink size={20} />
+            <ExternalLink size={18} />
           </button>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
+            className="p-1.5 hover:bg-gray-700 rounded-lg transition-colors"
             title="Close gallery"
           >
-            <X size={24} />
+            <X size={18} />
           </button>
         </div>
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex items-center justify-center p-4 relative">
+      <div className="flex-1 flex items-center justify-center p-2 sm:p-3 md:p-4 relative">
         {/* Navigation Arrows */}
         {items.length > 1 && (
           <>
             <button
               onClick={prevItem}
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 p-3 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full transition-all z-10"
+              className="absolute left-2 sm:left-3 md:left-4 top-1/2 transform -translate-y-1/2 p-2 sm:p-3 bg-black/50 hover:bg-black/70 text-white rounded-full transition-all z-50"
               title="Previous item"
             >
               <ChevronLeft size={24} />
             </button>
             <button
               onClick={nextItem}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 p-3 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full transition-all z-10"
+              className="absolute right-2 sm:right-3 md:right-4 top-1/2 transform -translate-y-1/2 p-2 sm:p-3 bg-black/50 hover:bg-black/70 text-white rounded-full transition-all z-50"
               title="Next item"
             >
               <ChevronRight size={24} />
@@ -228,44 +276,77 @@ export default function GalleryViewer({ items, initialIndex, isOpen, onClose }: 
 
       {/* Thumbnail Navigation */}
       {items.length > 1 && (
-        <div className="bg-black bg-opacity-50 p-4">
-          <div className="flex justify-center">
-            <div className="flex gap-2 max-w-full overflow-x-auto pb-2">
+        <div className="bg-gradient-to-t from-black/80 via-black/70 to-black/60 backdrop-blur-md border-t border-gray-700/50 p-3 sm:p-4 flex flex-col">
+          <div className="flex justify-center items-center gap-3 h-20 sm:h-24 md:h-28">
+            {/* Scroll indicator left */}
+            {items.length > 6 && (
+              <button
+                onClick={() => {
+                  const container = document.querySelector('.thumbnail-scroll');
+                  if (container) container.scrollBy({ left: -200, behavior: 'smooth' });
+                }}
+                className="hidden md:flex items-center justify-center w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all flex-shrink-0"
+              >
+                <ChevronLeft size={20} />
+              </button>
+            )}
+            
+            <div className="flex gap-2 sm:gap-3 max-w-full overflow-x-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent thumbnail-scroll scroll-smooth">
               {items.map((item, index) => (
                 <button
                   key={`${item.url}-${index}`}
                   onClick={() => goToItem(index)}
-                  className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${
+                  className={`flex-shrink-0 w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-lg overflow-hidden border-2 transition-colors duration-200 ${
                     index === currentIndex
-                      ? 'border-blue-500 scale-110'
-                      : 'border-gray-600 hover:border-gray-400'
+                      ? 'border-blue-500'
+                      : 'border-gray-600/80 hover:border-gray-400'
                   }`}
                   title={item.title}
                 >
-                  <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-300 dark:from-gray-700 dark:to-gray-800 flex items-center justify-center">
-                    {item.type === 'image' ? (
+                  <div className="w-full h-full bg-gradient-to-br from-gray-800 via-gray-900 to-black flex items-center justify-center overflow-hidden">
+                    {item.thumbnail || item.type === 'image' ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
-                        src={item.url}
+                        src={item.thumbnail || item.url}
                         alt={item.title}
-                        className="w-full h-full object-cover"
+                        className="block w-full h-full object-cover scale-100"
                       />
                     ) : (
-                      <div className="flex flex-col items-center justify-center text-gray-600 dark:text-gray-400">
-                        {getItemIcon(item.type)}
-                        <span className="text-xs mt-1 capitalize">{item.type}</span>
+                      <div className="flex flex-col items-center justify-center gap-1.5 text-white bg-gradient-to-br from-gray-700/50 to-gray-900/50 w-full h-full backdrop-blur-sm">
+                        <div className={`p-2 rounded-full ${
+                          item.type === 'video' ? 'bg-blue-500/20' : 'bg-purple-500/20'
+                        }`}>
+                          {getItemIcon(item.type)}
+                        </div>
+                        <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wide">{item.type}</span>
                       </div>
                     )}
                   </div>
                 </button>
               ))}
             </div>
+            
+            {/* Scroll indicator right */}
+            {items.length > 6 && (
+              <button
+                onClick={() => {
+                  const container = document.querySelector('.thumbnail-scroll');
+                  if (container) container.scrollBy({ left: 200, behavior: 'smooth' });
+                }}
+                className="hidden md:flex items-center justify-center w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all flex-shrink-0"
+              >
+                <ChevronRight size={20} />
+              </button>
+            )}
           </div>
-          <div className="text-center mt-2 text-white text-sm">
-            {currentIndex + 1} of {items.length}
+          <div className="text-center mt-2 sm:mt-3">
+            <span className="text-white font-semibold text-sm sm:text-base">
+              {currentIndex + 1} <span className="text-gray-400">/</span> {items.length}
+            </span>
           </div>
         </div>
       )}
-    </div>
+    </div>,
+    document.body
   );
 }

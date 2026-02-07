@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { X } from 'lucide-react'
-import type { TalentFilters } from '@/types'
+import type { TalentFilters } from '@/types/index.ts'
 
 interface ActiveFiltersProps {
   filters: TalentFilters
@@ -78,6 +78,61 @@ const ActiveFilters: React.FC<ActiveFiltersProps> = ({
       })
     }
 
+    // Ethnicity
+    if (filters.ethnicity?.length) {
+      filters.ethnicity.forEach((eth) => {
+        activeFilters.push({
+          type: 'ethnicity',
+          value: eth,
+          label: `Ethnicity: ${eth.replace(/_/g, ' ').toLowerCase()}`,
+        })
+      })
+    }
+
+    // Languages
+    if (filters.languages?.length) {
+      filters.languages.forEach((lang) => {
+        activeFilters.push({
+          type: 'languages',
+          value: lang,
+          label: `Language: ${lang}`,
+        })
+      })
+    }
+
+    // Eye Color
+    if (filters.eyeColor?.length) {
+      filters.eyeColor.forEach((color) => {
+        activeFilters.push({
+          type: 'eyeColor',
+          value: color,
+          label: `Eye: ${color}`,
+        })
+      })
+    }
+
+    // Hair Color
+    if (filters.hairColor?.length) {
+      filters.hairColor.forEach((color) => {
+        activeFilters.push({
+          type: 'hairColor',
+          value: color,
+          label: `Hair: ${color}`,
+        })
+      })
+    }
+
+    // Disabilities
+    if (filters.disabilities?.length) {
+      filters.disabilities.forEach((disability) => {
+        activeFilters.push({
+          type: 'disabilities',
+          value: disability,
+          label: `Accessibility: ${disability}`,
+        })
+      })
+    }
+
     return activeFilters
   }
 
@@ -88,32 +143,35 @@ const ActiveFilters: React.FC<ActiveFiltersProps> = ({
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-2">
-      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-        Active filters:
-      </span>
-      {activeFilters.map((filter, index) => (
-        <div
-          key={`${filter.type}-${filter.value}-${index}`}
-          className="inline-flex items-center gap-1 px-3 py-1 bg-primary-blue/10 dark:bg-accent-red/10 text-primary-blue dark:text-accent-red rounded-full text-sm border border-primary-blue/20 dark:border-accent-red/20"
-        >
-          <span>{filter.label}</span>
-          <button
-            onClick={() => onRemoveFilter(filter.type, filter.value)}
-            className="hover:bg-primary-blue/20 dark:hover:bg-accent-red/20 rounded-full p-0.5"
+    <div className="w-full bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 py-3 px-4">
+      <div className="container mx-auto flex flex-wrap items-center gap-3">
+        <span className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mr-2">
+          Active Filters:
+        </span>
+        
+        {activeFilters.map((filter, index) => (
+          <div
+            key={`${filter.type}-${filter.value}-${index}`}
+            className="group flex items-center gap-2 px-3 py-1.5 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-lg text-sm font-medium border border-blue-100 dark:border-blue-800 transition-all hover:bg-blue-100 dark:hover:bg-blue-900/40 hover:shadow-sm"
           >
-            <X size={14} />
-          </button>
-        </div>
-      ))}
-      {activeFilters.length > 1 && (
+            <span>{filter.label}</span>
+            <button
+              onClick={() => onRemoveFilter(filter.type, filter.value)}
+              className="p-0.5 rounded-full hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
+              aria-label={`Remove ${filter.label} filter`}
+            >
+              <X size={14} />
+            </button>
+          </div>
+        ))}
+
         <button
           onClick={onClearAll}
-          className="text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 underline"
+          className="ml-auto text-sm font-medium text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:underline transition-colors"
         >
-          Clear all
+          Clear All
         </button>
-      )}
+      </div>
     </div>
   )
 }

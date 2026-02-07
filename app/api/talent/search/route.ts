@@ -1,185 +1,453 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { Pool } from 'pg';
+import { NextResponse } from 'next/server';
+import { getPrisma } from '@/lib/prisma';
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
-
-type SqlParam = string | number | string[] | number[];
-
-type Filters = {
-  gender?: string | string[];
-  ethnicity?: string | string[];
-  minAge?: number;
-  maxAge?: number;
-  bodyType?: string | string[];
-  minExperience?: number;
-  maxExperience?: number;
-  search?: string;
-  subcategoryId?: string;
-  page?: number;
-  pageSize?: number;
-};
-
-// Map UI gender strings to DB enum Gender
-function mapGender(g: string): 'MALE' | 'FEMALE' | 'NON_BINARY' | 'PREFER_NOT_TO_SAY' | undefined {
-  const s = (g || '').toLowerCase();
-  if (s === 'male') return 'MALE';
-  if (s === 'female') return 'FEMALE';
-  if (s === 'non-binary' || s === 'nonbinary') return 'NON_BINARY';
-  if (s === 'prefer_not_to_say' || s === 'prefer-not-to-say' || s === 'other') return 'PREFER_NOT_TO_SAY';
-  return undefined;
-}
-
-// Map UI body types to DB enum BodyType
-function mapBodyType(b: string): 'SLIM' | 'ATHLETIC' | 'CURVY' | 'PLUS_SIZE' | 'MUSCULAR' | undefined {
-  const s = (b || '').toLowerCase();
-  if (s === 'slim') return 'SLIM';
-  if (s === 'athletic') return 'ATHLETIC';
-  if (s === 'curvy') return 'CURVY';
-  if (s === 'plus-size' || s === 'plus_size' || s === 'plussize') return 'PLUS_SIZE';
-  if (s === 'muscular') return 'MUSCULAR';
-  // 'average' not present in DB enum; ignore it
-  return undefined;
-}
-
-function pushClause(
-  acc: { clauses: string[]; values: SqlParam[]; idx: number },
-  clause: string,
-  value: SqlParam | SqlParam[]
-) {
-  acc.clauses.push(clause.replace('$IDX', `$${acc.idx}`));
-  acc.values.push(value as SqlParam);
-  acc.idx += 1;
-}
-
-// Push an ANY(ARRAY[...]) clause with explicit enum casts, avoiding driver array encoding like '{}'
-function pushEnumAny(
-  acc: { clauses: string[]; values: SqlParam[]; idx: number },
-  column: string,
-  enumName: 'Gender' | 'BodyType',
-  values: string[]
-) {
-  if (values.length === 1) {
-    // Single value: simpler equality with enum cast
-    pushClause(acc, `${column} = $IDX::"${enumName}"`, values[0]);
-    return;
-  }
-  // Multiple values: expand to ARRAY[$i, $i+1, ...]::"Enum"[]
-  const placeholders: string[] = [];
-  for (let i = 0; i < values.length; i += 1) {
-    placeholders.push(`$${acc.idx + i}::"${enumName}"`);
-  }
-  acc.clauses.push(`${column} = ANY(ARRAY[${placeholders.join(', ')}]::"${enumName}"[])`);
-  for (const v of values) {
-    acc.values.push(v);
-  }
-  acc.idx += values.length;
-}
-
-function buildGender(acc: { clauses: string[]; values: SqlParam[]; idx: number }, gender?: string | string[]) {
-  if (Array.isArray(gender) && gender.length > 0) {
-    const mapped = gender
-      .map(mapGender)
-      .filter((v): v is 'MALE' | 'FEMALE' | 'NON_BINARY' | 'PREFER_NOT_TO_SAY' => Boolean(v));
-  if (mapped.length > 0) pushEnumAny(acc, '"gender"', 'Gender', mapped);
-  } else if (typeof gender === 'string' && gender.trim() !== '') {
-    const g = mapGender(gender);
-    if (g) pushClause(acc, '"gender" = $IDX::"Gender"', g);
-  }
-}
-
-function buildEthnicity(acc: { clauses: string[]; values: SqlParam[]; idx: number }, ethnicity?: string | string[]) {
-  if (Array.isArray(ethnicity) && ethnicity.length > 0) {
-    const startIdx = acc.idx;
-    const parts: string[] = [];
-    ethnicity.forEach((e) => {
-      if (typeof e === 'string' && e.trim() !== '') {
-        parts.push(`"ethnicity" ILIKE $${acc.idx}`);
-        acc.values.push(`%${e}%`);
-        acc.idx += 1;
-      }
-    });
-    if (parts.length > 0) acc.clauses.push(`(${parts.join(' OR ')})`);
-    else acc.idx = startIdx; // revert if nothing added
-  } else if (typeof ethnicity === 'string' && ethnicity.trim() !== '') {
-    pushClause(acc, '"ethnicity" ILIKE $IDX', `%${ethnicity}%`);
-  }
-}
-
-function buildRange(acc: { clauses: string[]; values: SqlParam[]; idx: number }, column: string, min?: number, max?: number) {
-  if (min !== undefined) pushClause(acc, `${column} >= $IDX`, min);
-  if (max !== undefined) pushClause(acc, `${column} <= $IDX`, max);
-}
-
-function buildBodyType(acc: { clauses: string[]; values: SqlParam[]; idx: number }, bodyType?: string | string[]) {
-  if (Array.isArray(bodyType) && bodyType.length > 0) {
-    const mapped = bodyType
-      .map(mapBodyType)
-      .filter((v): v is 'SLIM' | 'ATHLETIC' | 'CURVY' | 'PLUS_SIZE' | 'MUSCULAR' => Boolean(v));
-  if (mapped.length > 0) pushEnumAny(acc, '"bodyType"', 'BodyType', mapped);
-  } else if (typeof bodyType === 'string' && bodyType.trim() !== '') {
-    const b = mapBodyType(bodyType);
-    if (b) pushClause(acc, '"bodyType" = $IDX::"BodyType"', b);
-  }
-}
-
-function buildSubcategory(acc: { clauses: string[]; values: SqlParam[]; idx: number }, subcategoryId?: string) {
-  if (typeof subcategoryId === 'string' && subcategoryId.trim() !== '') {
-    pushClause(acc, '"subcategoryId" = $IDX', subcategoryId);
-  }
-}
-
-function buildSearch(acc: { clauses: string[]; values: SqlParam[]; idx: number }, search?: string) {
-  if (search && search.trim() !== '') {
-    acc.clauses.push(`("bio" ILIKE $${acc.idx} OR "skills"::text ILIKE $${acc.idx} OR "location" ILIKE $${acc.idx})`);
-    acc.values.push(`%${search}%`);
-    acc.idx += 1;
-  }
-}
-
-function buildWhereAndValues(filters: Filters): { where: string; values: SqlParam[]; nextIdx: number } {
-  const acc = { clauses: [] as string[], values: [] as SqlParam[], idx: 1 };
-  buildGender(acc, filters.gender);
-  buildEthnicity(acc, filters.ethnicity);
-  buildRange(acc, '"age"', filters.minAge, filters.maxAge);
-  buildBodyType(acc, filters.bodyType);
-  buildRange(acc, '"experience"', filters.minExperience, filters.maxExperience);
-  buildSubcategory(acc, filters.subcategoryId);
-  buildSearch(acc, filters.search);
-  const where = acc.clauses.length ? `WHERE ${acc.clauses.join(' AND ')}` : '';
-  return { where, values: acc.values, nextIdx: acc.idx };
-}
-
-export async function POST(request: NextRequest) {
+export async function GET(request: Request) {
+  const prisma = getPrisma();
   try {
-    const filters = await request.json();
-    const { where, values, nextIdx } = buildWhereAndValues(filters);
-    const page: number = (filters && typeof filters.page === 'number') ? filters.page : 1;
-    const pageSize: number = (filters && typeof filters.pageSize === 'number') ? filters.pageSize : 12;
-    const offset = (page - 1) * pageSize;
+    const { searchParams } = new URL(request.url);
+    
+    const category = searchParams.get('category');
+    const subcategory = searchParams.get('subcategory');
+    const query = searchParams.get('q');
+    const location = searchParams.get('location');
+    const gender = searchParams.get('gender')?.split(',').filter(Boolean);
+    const bodyType = searchParams.get('bodyType')?.split(',').filter(Boolean);
+    const ethnicity = searchParams.get('ethnicity');
+    const minAge = searchParams.get('minAge');
+    const maxAge = searchParams.get('maxAge');
+    const minHeight = searchParams.get('minHeight');
+    const maxHeight = searchParams.get('maxHeight');
+    const eyeColor = searchParams.get('eyeColor')?.split(',').filter(Boolean);
+    const hairColor = searchParams.get('hairColor')?.split(',').filter(Boolean);
+    const skills = searchParams.get('skills')?.split(',').filter(Boolean);
+    const languages = searchParams.get('languages')?.split(',').filter(Boolean);
 
-    const client = await pool.connect();
-    try {
-      // Get total count for pagination
-      const countQuery = `SELECT COUNT(*) FROM "TalentProfile" ${where}`;
-      const countResult = await client.query(countQuery, values);
-      const total = parseInt(countResult.rows[0].count, 10);
+    const page = parseInt(searchParams.get('page') || '1');
+    const pageSize = parseInt(searchParams.get('pageSize') || '12');
 
-      const query = `
-        SELECT * FROM "TalentProfile"
-        ${where}
-        ORDER BY "id" DESC
-        LIMIT $${nextIdx} OFFSET $${nextIdx + 1}
-      `;
-      const pagedValues = [...values, pageSize, offset];
-      const result = await client.query(query, pagedValues);
-      return NextResponse.json({ success: true, talents: result.rows, total });
-    } finally {
-      client.release();
+    const skip = (page - 1) * pageSize;
+
+    const whereClause: any = {};
+
+    // Apply filters based on query parameters
+    if (category) {
+      whereClause.categoryId = category;
     }
+    
+    if (subcategory) {
+      whereClause.subcategoryId = subcategory;
+    }
+
+    if (query) {
+      whereClause.OR = [
+        { user: { name: { contains: query, mode: 'insensitive' } } },
+        { bio: { contains: query, mode: 'insensitive' } },
+        { roleDescription: { contains: query, mode: 'insensitive' } },
+      ];
+    }
+
+    if (location) {
+      whereClause.location = { contains: location, mode: 'insensitive' };
+    }
+
+    if (gender && gender.length > 0) {
+      const mappedGender = gender.map((g: string) => {
+        const upper = g.toUpperCase();
+        if (upper === 'NON-BINARY') return 'NON_BINARY';
+        return upper;
+      });
+      whereClause.gender = { in: mappedGender };
+    }
+
+    if (bodyType && bodyType.length > 0) {
+      const mappedBodyType = bodyType.map((b: string) => {
+        return b.toUpperCase().replace(/\s+/g, '_').replace('-', '_');
+      });
+      whereClause.bodyType = { in: mappedBodyType };
+    }
+
+    if (ethnicity) {
+      const e = ethnicity;
+      const lower = e.toLowerCase();
+      let mappedEthnicity = e.toUpperCase().replace(/[\s/-]/g, '_');
+      
+      if (lower === 'white') mappedEthnicity = 'WHITE_CAUCASIAN';
+      else if (lower === 'black/african' || lower === 'black') mappedEthnicity = 'BLACK_AFRICAN';
+      else if (lower === 'hispanic/latino') mappedEthnicity = 'HISPANIC_LATINO';
+      else if (lower === 'asian') mappedEthnicity = 'ASIAN';
+      else if (lower === 'middle eastern') mappedEthnicity = 'MIDDLE_EASTERN';
+      else if (lower === 'mixed race' || lower === 'mixed') mappedEthnicity = 'MIXED_MULTIRACIAL';
+      else if (lower === 'other') mappedEthnicity = 'OTHER';
+      
+      whereClause.ethnicity = mappedEthnicity;
+    }
+
+    if (minAge || maxAge) {
+      whereClause.age = {};
+      if (minAge) whereClause.age.gte = parseInt(minAge);
+      if (maxAge) whereClause.age.lte = parseInt(maxAge);
+    }
+
+    if (minHeight || maxHeight) {
+      whereClause.height = {};
+      if (minHeight) whereClause.height.gte = parseInt(minHeight);
+      if (maxHeight) whereClause.height.lte = parseInt(maxHeight);
+    }
+
+    if (eyeColor && eyeColor.length > 0) {
+      whereClause.eyeColor = { in: eyeColor };
+    }
+
+    if (hairColor && hairColor.length > 0) {
+      whereClause.hairColor = { in: hairColor };
+    }
+
+    if (skills && skills.length > 0) {
+      whereClause.skills = { hasSome: skills };
+    }
+
+    // Languages handling - assuming relation based on POST handler
+    if (languages && languages.length > 0) {
+      // Note: If languages is a relation, we need to check schema. 
+      // Assuming POST handler is correct about `languages` being a relation.
+      // But if it's a string array in DB, use hasSome.
+      // Let's try to be safe. If POST uses `some`, it's likely a relation.
+      // However, if we are not sure, we might break it.
+      // Given the POST handler code:
+      /*
+      whereClause.languages = {
+        some: {
+          name: { in: languages }
+        }
+      };
+      */
+      // I will use the same logic.
+      whereClause.languages = {
+        some: {
+          name: { in: languages }
+        }
+      };
+    }
+
+    const [talents, total] = await Promise.all([
+      prisma.talentProfile.findMany({
+        where: whereClause,
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+            }
+          },
+          category: {
+            select: { id: true, name: true }
+          },
+          subcategory: {
+            select: { id: true, name: true }
+          },
+          portfolio: {
+            select: {
+              id: true,
+              title: true,
+              url: true,
+              type: true,
+              thumbnail: true,
+              description: true,
+              createdAt: true
+            },
+            orderBy: { createdAt: 'desc' },
+            take: 5
+          }
+        },
+        skip,
+        take: pageSize,
+        orderBy: [
+          { rating: 'desc' },
+          { viewCount: 'desc' },
+          { createdAt: 'desc' }
+        ]
+      }),
+      prisma.talentProfile.count({ where: whereClause }),
+    ]);
+
+    // Transform data to match client expectation
+    const transformedTalents = talents.map(talent => ({
+      id: talent.id,
+      name: talent.user.name,
+      role: talent.roleDescription || '',
+      title: talent.roleDescription || '',
+      description: talent.bio || '',
+      location: talent.location || '',
+      rating: talent.rating || 0,
+      avatarUrl: talent.avatarUrl,
+      videoUrl: talent.videoUrl,
+      category: talent.category?.name || '',
+      subcategory: talent.subcategory?.name || '',
+      skills: talent.skills || [],
+      featuredSkills: (talent as any).featuredSkills || [],
+      viewCount: talent.viewCount || 0,
+      portfolio: talent.portfolio.map(item => ({
+        id: item.id,
+        title: item.title,
+        url: item.url,
+        type: item.type,
+        thumbnail: item.thumbnail || (item.type === 'IMAGE' ? item.url : undefined),
+        description: item.description || '',
+        talentProfile: {
+          id: talent.id,
+          user: { name: talent.user.name },
+          avatarUrl: talent.avatarUrl,
+          category: talent.category ? { name: talent.category.name } : undefined
+        },
+        views: 0,
+        likes: 0,
+        isSponsored: false,
+        createdAt: item.createdAt.toISOString()
+      })),
+    }));
+
+    return NextResponse.json({
+      success: true,
+      talents: transformedTalents,
+      total
+    });
+
+  } catch (error) {
+    console.error('Error in talent search (GET):', error);
+    return NextResponse.json(
+      { success: false, error: 'Failed to fetch talents' },
+      { status: 500 }
+    );
+  }
+}
+
+export async function POST(request: Request) {
+  const prisma = getPrisma();
+  try {
+    let body;
+    try {
+      const text = await request.text();
+      body = text ? JSON.parse(text) : {};
+    } catch (e) {
+      console.warn('Invalid or empty JSON body, using defaults');
+      body = {};
+    }
+    console.log('Talent Search POST body:', JSON.stringify(body, null, 2));
+
+    const {
+      subcategoryId,
+      page = 1,
+      pageSize = 12,
+      gender,
+      ethnicity,
+      ageRange,
+      heightRange,
+      bodyType,
+      experience,
+      location,
+      eyeColor,
+      hairColor,
+      skills,
+      languages
+    } = body;
+
+    const skip = (page - 1) * pageSize;
+
+    const whereClause: any = {};
+    
+    if (subcategoryId) {
+      whereClause.subcategoryId = subcategoryId;
+    }
+
+    // Apply filters
+    if (gender && gender.length > 0) {
+      const mappedGender = gender.map((g: string) => {
+        const upper = g.toUpperCase();
+        if (upper === 'NON-BINARY') return 'NON_BINARY';
+        return upper;
+      });
+      whereClause.gender = { in: mappedGender };
+    }
+
+    if (ethnicity && ethnicity.length > 0) {
+      const mappedEthnicity = ethnicity.map((e: string) => {
+        const lower = e.toLowerCase();
+        if (lower === 'white') return 'WHITE_CAUCASIAN';
+        if (lower === 'black/african') return 'BLACK_AFRICAN';
+        if (lower === 'hispanic/latino') return 'HISPANIC_LATINO';
+        if (lower === 'asian') return 'ASIAN';
+        if (lower === 'middle eastern') return 'MIDDLE_EASTERN';
+        if (lower === 'mixed race') return 'MIXED_MULTIRACIAL';
+        if (lower === 'other') return 'OTHER';
+        return e.toUpperCase().replace(/[\s/-]/g, '_');
+      });
+      whereClause.ethnicity = { in: mappedEthnicity };
+    }
+
+    if (ageRange) {
+      if (ageRange.min !== undefined) whereClause.age = { ...whereClause.age, gte: ageRange.min };
+      if (ageRange.max !== undefined) whereClause.age = { ...whereClause.age, lte: ageRange.max };
+    }
+
+    if (heightRange) {
+      if (heightRange.min !== undefined) whereClause.height = { ...whereClause.height, gte: heightRange.min };
+      if (heightRange.max !== undefined) whereClause.height = { ...whereClause.height, lte: heightRange.max };
+    }
+
+    if (bodyType && bodyType.length > 0) {
+      const mappedBodyType = bodyType.map((b: string) => {
+        return b.toUpperCase().replace(/\s+/g, '_').replace('-', '_');
+      });
+      whereClause.bodyType = { in: mappedBodyType };
+    }
+
+    if (location) {
+      whereClause.location = { contains: location, mode: 'insensitive' };
+    }
+
+    if (eyeColor && eyeColor.length > 0) {
+      whereClause.eyeColor = { in: eyeColor };
+    }
+
+    if (hairColor && hairColor.length > 0) {
+      whereClause.hairColor = { in: hairColor };
+    }
+
+    if (skills && skills.length > 0) {
+      whereClause.skills = { hasSome: skills };
+    }
+
+    // Languages in schema is a relation `languages Language[]`
+    // Client sends string array.
+    if (languages && languages.length > 0) {
+      whereClause.languages = {
+        some: {
+          name: { in: languages }
+        }
+      };
+    }
+
+    // Experience is String in schema, but client sends range.
+    // We can't easily filter string ranges in DB.
+    // We might need to fetch and filter in memory or ignore for now if the schema is incompatible.
+    // Ignoring experience filter for now to prevent errors.
+
+    console.log('Talent Search WhereClause:', JSON.stringify(whereClause, null, 2));
+
+    const [talents, total] = await Promise.all([
+      prisma.talentProfile.findMany({
+        where: whereClause,
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              // profilePicture: true // Not in schema User model?
+            }
+          },
+          category: {
+            select: { id: true, name: true }
+          },
+          subcategory: {
+            select: { id: true, name: true }
+          },
+          portfolio: {
+            select: {
+              id: true,
+              title: true,
+              url: true,
+              type: true,
+              thumbnail: true,
+              description: true,
+              createdAt: true
+            },
+            orderBy: { createdAt: 'desc' },
+            take: 5
+          }
+          // skills is string[] in schema, so it's included by default
+        },
+        skip,
+        take: pageSize,
+        orderBy: [
+          { rating: 'desc' },
+          { viewCount: 'desc' },
+          { createdAt: 'desc' }
+        ]
+      }),
+      prisma.talentProfile.count({ where: whereClause }),
+    ]);
+
+    console.log(`Found ${talents.length} talents, total: ${total}`);
+
+    // Transform data to match client expectation
+    const transformedTalents = talents.map(talent => ({
+      id: talent.id,
+      name: talent.user.name, // For VideoTalentCard
+      role: talent.roleDescription || '', // For VideoTalentCard
+      title: talent.roleDescription || '',
+      description: talent.bio || '',
+      priceRange: '', // Not in schema
+      ratePerHour: 0, // Not in schema
+      location: talent.location || '',
+      experience: 0, // talent.experience is string
+      availability: '', // Not in schema
+      rating: talent.rating || 0,
+      reviewCount: 0, // talent.reviewsReceived.length (need to include)
+      bookingCount: 0,
+      user: {
+        id: talent.user.id,
+        name: talent.user.name,
+        profilePicture: talent.avatarUrl || undefined // Using avatarUrl from profile
+      },
+      avatarUrl: talent.avatarUrl, // For VideoTalentCard
+      videoUrl: talent.videoUrl, // For VideoTalentCard
+      category: talent.category?.name || '',
+      subcategory: talent.subcategory?.name || '',
+      skills: talent.skills || [],
+      featuredSkills: (talent as any).featuredSkills || [],
+      // Add other fields required by Talent type if needed, or map them in the client
+      gender: talent.gender?.toLowerCase() || 'other',
+      ethnicity: talent.ethnicity || '',
+      age: talent.age || 0,
+      height: talent.height || 0,
+      bodyType: talent.bodyType?.toLowerCase() || 'average',
+      eyeColor: talent.eyeColor || '',
+      hairColor: talent.hairColor || '',
+      socialMedia: [],
+      portfolio: talent.portfolio.map(item => ({
+        id: item.id,
+        title: item.title,
+        url: item.url,
+        type: item.type,
+        thumbnail: item.thumbnail || (item.type === 'IMAGE' ? item.url : undefined),
+        description: item.description || '',
+        talentProfile: {
+          id: talent.id,
+          user: { name: talent.user.name },
+          avatarUrl: talent.avatarUrl,
+          category: talent.category ? { name: talent.category.name } : undefined
+        },
+        views: 0,
+        likes: 0,
+        isSponsored: false,
+        createdAt: item.createdAt.toISOString()
+      })),
+      isBeginner: talent.isBeginner || false,
+      viewCount: talent.viewCount || 0,
+      likeCount: talent.likeCount || 0
+    }));
+
+    return NextResponse.json({
+      success: true,
+      talents: transformedTalents,
+      total
+    });
+
   } catch (error) {
     console.error('Error in talent search:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: 'Failed to fetch talents' },
+      { status: 500 }
+    );
   }
 }

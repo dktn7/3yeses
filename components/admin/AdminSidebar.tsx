@@ -33,13 +33,8 @@ const adminNavItems = [
     icon: Briefcase,
   },
   {
-    name: 'Bookings',
-    href: '/admin/bookings',
-    icon: Calendar,
-  },
-  {
-    name: 'Messages',
-    href: '/admin/messages',
+    name: 'Comments',
+    href: '/admin/comments',
     icon: MessageSquare,
   },
   {

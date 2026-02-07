@@ -9,7 +9,7 @@ export default function AdminFooter() {
 
   return (
     <footer className="mt-auto bg-white/10 dark:bg-white/5 backdrop-blur-md border-t border-gray-200/20 dark:border-white/20">
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="max-w-screen-2xl mx-auto px-6 py-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Admin Brand */}
           <div className="col-span-1">

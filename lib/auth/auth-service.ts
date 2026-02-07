@@ -1,16 +1,16 @@
 // Authentication service for 3YESES platform
 // Implements secure authentication with JWT, bcrypt, and rate limiting
 
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import * as bcrypt from 'bcryptjs';
+import * as jwt from 'jsonwebtoken';
 import { randomBytes } from 'crypto';
-import type { AuditLog } from '../database/schemas';
+import type { AuditLog } from '../database/schemas.ts';
 
 // Configuration constants
 const JWT_SECRET = process.env.JWT_SECRET || 'your-super-secret-jwt-key';
 const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'your-refresh-secret';
-const ACCESS_TOKEN_EXPIRY = '15m'; // Short-lived access tokens
-const REFRESH_TOKEN_EXPIRY = '7d'; // Longer refresh tokens
+const ACCESS_TOKEN_EXPIRY = '24h'; // Activity-based sliding window
+const REFRESH_TOKEN_EXPIRY = '7d'; // Long-term refresh token
 const PASSWORD_SALT_ROUNDS = 12; // Strong password hashing
 const MAX_LOGIN_ATTEMPTS = 5;
 const LOCKOUT_DURATION = 15 * 60 * 1000; // 15 minutes
@@ -18,7 +18,7 @@ const LOCKOUT_DURATION = 15 * 60 * 1000; // 15 minutes
 /**
  * AuthService class providing secure authentication functionality
  */
-export default class AuthService {
+class AuthService {
   
   /**
    * Hash a password using bcrypt with salt
@@ -296,3 +296,7 @@ export default class AuthService {
     return new Date() > expiryDate;
   }
 }
+
+// Provide both named and default export for maximum interop (Next.js + TS + any CJS transpiled remnants)
+export { AuthService };
+export default AuthService;

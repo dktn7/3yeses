@@ -1,16 +1,20 @@
 'use client'
 
 import React from 'react'
+import SkillMultiSelect from './SkillMultiSelect.tsx'
+import MultiSelect from './MultiSelect.tsx'
+import LocationAutocomplete from './LocationAutocomplete.tsx'
 import { X, SlidersHorizontal } from 'lucide-react'
-import type { TalentFilters } from '@/types'
-import type { CategoryGroup } from '@/lib/data'
+import type { TalentFilters } from '@/types/index.ts'
+type LocalSub = { id: string; name: string; description?: string };
+type LocalCategoryGroup = { id: string; name: string; subcategories: LocalSub[] };
 
 interface FilterSidebarProps {
   isOpen: boolean
   onClose: () => void
   filters: TalentFilters
   setFilters: React.Dispatch<React.SetStateAction<TalentFilters>>
-  categories: CategoryGroup[]
+  categories: LocalCategoryGroup[]
   applyFilters: () => void
   clearFilters: () => void
   selectedCategory: string
@@ -29,7 +33,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
   setSelectedCategory,
 }) => {
   const handleRangeChange = (
-    key: 'ageRange' | 'experience',
+    key: 'ageRange' | 'experience' | 'heightRange',
     field: 'min' | 'max',
     value: string
   ) => {
@@ -166,6 +170,31 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
                 </div>
               </div>
 
+              {/* Height Range */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Height (cm): {filters.heightRange?.min || 140} - {filters.heightRange?.max || 220}
+                </label>
+                <div className="flex items-center gap-4">
+                  <input
+                    type="range"
+                    min="140"
+                    max="220"
+                    value={filters.heightRange?.min || 140}
+                    onChange={(e) => handleRangeChange('heightRange', 'min', e.target.value)}
+                    className="w-full"
+                  />
+                  <input
+                    type="range"
+                    min="140"
+                    max="220"
+                    value={filters.heightRange?.max || 220}
+                    onChange={(e) => handleRangeChange('heightRange', 'max', e.target.value)}
+                    className="w-full"
+                  />
+                </div>
+              </div>
+
               {/* Age Range Slider */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -216,20 +245,31 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
                 </div>
               </div>
 
+              {/* Skills */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Skills
+                </label>
+                <SkillMultiSelect
+                  value={filters.skills || []}
+                  onChange={(vals) => setFilters((prev) => ({ ...prev, skills: vals }))}
+                  placeholder="Add skill"
+                />
+              </div>
+
               {/* Location with city autocomplete and GPS */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   City / Location
                 </label>
                 <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={filters.location}
-                    onChange={(e) => setFilters((prev) => ({ ...prev, location: e.target.value }))}
-                    placeholder="Enter city or use GPS"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-primary-blue focus:border-primary-blue"
-                    list="city-autocomplete"
-                  />
+                  <div className="flex-1">
+                    <LocationAutocomplete
+                      value={filters.location || ''}
+                      onChange={(v) => setFilters((prev) => ({ ...prev, location: v }))}
+                      placeholder="Enter city or use GPS"
+                    />
+                  </div>
                   <button
                     type="button"
                     className="px-3 py-2 rounded-md bg-primary-blue text-white hover:bg-primary-blueHover transition-colors"
@@ -239,10 +279,14 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
                         navigator.geolocation.getCurrentPosition(async (pos) => {
                           const { latitude, longitude } = pos.coords;
                           // Use a free geocoding API or your backend to get city name
-                          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
-                          const data = await res.json();
-                          const city = data.address?.city || data.address?.town || data.address?.village || data.address?.state || '';
-                          setFilters((prev) => ({ ...prev, location: city }));
+                          try {
+                            const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+                            const data = await res.json();
+                            const city = data.address?.city || data.address?.town || data.address?.village || data.address?.state || '';
+                            setFilters((prev) => ({ ...prev, location: city }));
+                          } catch {
+                            // ignore
+                          }
                         });
                       }
                     }}
@@ -250,18 +294,117 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
                     📍
                   </button>
                 </div>
-                {/* Example city autocomplete list (static, for demo) */}
-                <datalist id="city-autocomplete">
-                  <option value="Los Angeles" />
-                  <option value="New York" />
-                  <option value="London" />
-                  <option value="Paris" />
-                  <option value="Toronto" />
-                  <option value="Berlin" />
-                  <option value="Sydney" />
-                  <option value="San Francisco" />
-                  <option value="Atlanta" />
-                </datalist>
+              </div>
+
+              {/* Ethnicity */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Ethnicity
+                </label>
+                <MultiSelect
+                  options={[
+                    { label: 'White / Caucasian', value: 'WHITE_CAUCASIAN' },
+                    { label: 'Black / African', value: 'BLACK_AFRICAN' },
+                    { label: 'Asian', value: 'ASIAN' },
+                    { label: 'Hispanic / Latino', value: 'HISPANIC_LATINO' },
+                    { label: 'Middle Eastern', value: 'MIDDLE_EASTERN' },
+                    { label: 'Mixed / Multiracial', value: 'MIXED_MULTIRACIAL' },
+                    { label: 'Native American', value: 'NATIVE_AMERICAN' },
+                    { label: 'Pacific Islander', value: 'PACIFIC_ISLANDER' },
+                    { label: 'Other', value: 'OTHER' },
+                  ]}
+                  value={filters.ethnicity || []}
+                  onChange={(vals) => setFilters((prev) => ({ ...prev, ethnicity: vals }))}
+                  placeholder="Select ethnicity"
+                />
+              </div>
+
+              {/* Languages */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Languages
+                </label>
+                <MultiSelect
+                  options={[
+                    { label: 'English', value: 'English' },
+                    { label: 'Spanish', value: 'Spanish' },
+                    { label: 'French', value: 'French' },
+                    { label: 'German', value: 'German' },
+                    { label: 'Italian', value: 'Italian' },
+                    { label: 'Portuguese', value: 'Portuguese' },
+                    { label: 'Chinese (Mandarin)', value: 'Mandarin' },
+                    { label: 'Japanese', value: 'Japanese' },
+                    { label: 'Arabic', value: 'Arabic' },
+                    { label: 'Hindi', value: 'Hindi' },
+                    { label: 'Russian', value: 'Russian' },
+                  ]}
+                  value={filters.languages || []}
+                  onChange={(vals) => setFilters((prev) => ({ ...prev, languages: vals }))}
+                  placeholder="Select languages"
+                />
+              </div>
+
+              {/* Accessibility / Disabilities */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Accessibility / Inclusive Casting
+                </label>
+                <MultiSelect
+                  options={[
+                    { label: 'Mobility Impairment', value: 'Mobility' },
+                    { label: 'Hearing Impairment', value: 'Hearing' },
+                    { label: 'Visual Impairment', value: 'Visual' },
+                    { label: 'Neurodivergent', value: 'Neurodivergent' },
+                    { label: 'Cognitive', value: 'Cognitive' },
+                    { label: 'Other', value: 'Other' },
+                  ]}
+                  value={filters.disabilities || []}
+                  onChange={(vals) => setFilters((prev) => ({ ...prev, disabilities: vals }))}
+                  placeholder="Select accessibility needs"
+                />
+              </div>
+
+              {/* Eye Color */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Eye Color
+                </label>
+                <MultiSelect
+                  options={[
+                    { label: 'Amber', value: 'Amber' },
+                    { label: 'Blue', value: 'Blue' },
+                    { label: 'Brown', value: 'Brown' },
+                    { label: 'Gray', value: 'Gray' },
+                    { label: 'Green', value: 'Green' },
+                    { label: 'Hazel', value: 'Hazel' },
+                    { label: 'Red', value: 'Red' },
+                  ]}
+                  value={filters.eyeColor || []}
+                  onChange={(vals) => setFilters((prev) => ({ ...prev, eyeColor: vals }))}
+                  placeholder="Select eye color"
+                />
+              </div>
+
+              {/* Hair Color */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Hair Color
+                </label>
+                <MultiSelect
+                  options={[
+                    { label: 'Black', value: 'Black' },
+                    { label: 'Blonde', value: 'Blonde' },
+                    { label: 'Brown', value: 'Brown' },
+                    { label: 'Red', value: 'Red' },
+                    { label: 'White', value: 'White' },
+                    { label: 'Gray', value: 'Gray' },
+                    { label: 'Bald', value: 'Bald' },
+                    { label: 'Dyed', value: 'Dyed' },
+                  ]}
+                  value={filters.hairColor || []}
+                  onChange={(vals) => setFilters((prev) => ({ ...prev, hairColor: vals }))}
+                  placeholder="Select hair color"
+                />
               </div>
             </div>
           </div>

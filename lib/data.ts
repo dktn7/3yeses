@@ -1,6 +1,6 @@
-import { Talent, TalentFilters } from '../types';
-
-export type { Talent, TalentFilters } from '../types';
+import { Talent, TalentFilters } from '../types/index.ts';
+export type { Talent, TalentFilters } from '../types/index.ts';
+// Removed duplicate export
 
 // Lightweight category types used by search/category UIs
 export type CategoryItem = {
@@ -9,12 +9,21 @@ export type CategoryItem = {
   description?: string;
 };
 
+// CategoryGroup type extended with metadata
 export type CategoryGroup = {
   id: string;
   name: string;
-  description?: string;
-  icon?: string;
-  subcategories: CategoryItem[];
+  popularity?: number;
+  relevance?: number;
+  customOrder?: number;
+  subcategories: Array<{
+    id: string;
+    name: string;
+    description?: string;
+    popularity?: number;
+    relevance?: number;
+    customOrder?: number;
+  }>;
 };
 
 // Category type is CategoryGroup
@@ -156,38 +165,108 @@ export function filterTalents(talents: Talent[], filters: TalentFilters): Talent
     });
 }
 
-// Inclusive categories/subcategories used by SearchClient and category pickers
+// Enhanced getCategoryData with metadata
 export function getCategoryData(): CategoryGroup[] {
   return [
     {
       id: 'actors',
       name: 'Actors',
+      popularity: 95,
+      relevance: 90,
+      customOrder: 1,
       subcategories: [
-        { id: 'female-actor', name: 'Female Actor', description: 'Women and femme-identifying actors' },
-        { id: 'male-actor', name: 'Male Actor', description: 'Men and masc-identifying actors' },
-        { id: 'nonbinary-actor', name: 'Non-binary Actor', description: 'Non-binary and gender-diverse actors' },
-        { id: 'child-actor', name: 'Child Actor', description: 'Young performers and minors' },
+        { id: 'female-actor', name: 'Female Actor', description: 'Women and femme-identifying actors', popularity: 80, relevance: 85, customOrder: 1 },
+        { id: 'male-actor', name: 'Male Actor', description: 'Men and masc-identifying actors', popularity: 75, relevance: 80, customOrder: 2 },
+        { id: 'nonbinary-actor', name: 'Non-binary Actor', description: 'Non-binary and gender-diverse actors', popularity: 60, relevance: 70, customOrder: 3 },
+        { id: 'child-actor', name: 'Child Actor', description: 'Young performers and minors', popularity: 50, relevance: 60, customOrder: 4 },
       ],
     },
     {
       id: 'musicians',
       name: 'Musicians',
+      popularity: 85,
+      relevance: 80,
+      customOrder: 2,
       subcategories: [
-        { id: 'singers', name: 'Singers' },
-        { id: 'guitarists', name: 'Guitarists' },
-        { id: 'producers', name: 'Producers' },
+        { id: 'singers', name: 'Singers', popularity: 70, relevance: 75, customOrder: 1 },
+        { id: 'guitarists', name: 'Guitarists', popularity: 65, relevance: 70, customOrder: 2 },
+        { id: 'producers', name: 'Producers', popularity: 60, relevance: 65, customOrder: 3 },
       ],
     },
     {
       id: 'dancers',
       name: 'Dancers',
+      popularity: 80,
+      relevance: 75,
+      customOrder: 3,
       subcategories: [
-        { id: 'contemporary-dancers', name: 'Contemporary Dancers' },
-        { id: 'ballet-dancers', name: 'Ballet Dancers' },
-        { id: 'hiphop-dancers', name: 'Hip Hop Dancers' },
+        { id: 'contemporary-dancers', name: 'Contemporary Dancers', popularity: 55, relevance: 60, customOrder: 1 },
+        { id: 'ballet-dancers', name: 'Ballet Dancers', popularity: 50, relevance: 55, customOrder: 2 },
+        { id: 'hiphop-dancers', name: 'Hip Hop Dancers', popularity: 60, relevance: 65, customOrder: 3 },
       ],
     },
   ];
+}
+
+// Sorting utility for categories and subcategories
+export function sortCategories(
+  categories: CategoryGroup[],
+  sortBy: 'alphabetical' | 'popularity' | 'relevance' | 'customOrder' = 'alphabetical'
+): CategoryGroup[] {
+  // Subcategory sort function
+  const subSortFn = (a: CategoryGroup['subcategories'][number], b: CategoryGroup['subcategories'][number]) => {
+    switch (sortBy) {
+      case 'popularity':
+        return (b.popularity ?? 0) - (a.popularity ?? 0);
+      case 'relevance':
+        return (b.relevance ?? 0) - (a.relevance ?? 0);
+      case 'customOrder':
+        return (a.customOrder ?? 0) - (b.customOrder ?? 0);
+      case 'alphabetical':
+      default:
+        return a.name.localeCompare(b.name);
+    }
+  };
+  // Category sort function
+  const catSortFn = (a: CategoryGroup, b: CategoryGroup) => {
+    switch (sortBy) {
+      case 'popularity':
+        return (b.popularity ?? 0) - (a.popularity ?? 0);
+      case 'relevance':
+        return (b.relevance ?? 0) - (a.relevance ?? 0);
+      case 'customOrder':
+        return (a.customOrder ?? 0) - (b.customOrder ?? 0);
+      case 'alphabetical':
+      default:
+        return a.name.localeCompare(b.name);
+    }
+  };
+  return categories
+    .map(cat => ({
+      ...cat,
+      subcategories: [...cat.subcategories].sort(subSortFn),
+    }))
+    .sort(catSortFn);
+}
+
+// Filtering utility for categories
+export function filterCategories(
+  categories: CategoryGroup[],
+  searchTerm: string
+): CategoryGroup[] {
+  const term = searchTerm.toLowerCase();
+  return categories
+    .map(cat => ({
+      ...cat,
+      subcategories: cat.subcategories.filter(sub =>
+        sub.name.toLowerCase().includes(term) ||
+        (sub.description?.toLowerCase().includes(term) ?? false)
+      ),
+    }))
+    .filter(cat =>
+      cat.name.toLowerCase().includes(term) ||
+      cat.subcategories.length > 0
+    );
 }
 
 // Search talents by name, role, skills, or category with optional filters
@@ -211,17 +290,17 @@ export function searchTalents(query: string, filters?: TalentFilters): Talent[] 
         );
 
         const matchesFilters = (!filters || (
-            (!filters.gender.length || filters.gender.includes(talent.gender)) &&
-            (!filters.ethnicity.length || filters.ethnicity.includes(talent.ethnicity)) &&
-            (!filters.eyeColor.length || filters.eyeColor.includes(talent.eyeColor)) &&
-            (!filters.hairColor.length || filters.hairColor.includes(talent.hairColor)) &&
-            (!filters.skills.length || filters.skills.every(skill => talent.skills.includes(skill))) &&
-            (!filters.languages.length || filters.languages.every(lang => talent.languages.includes(lang))) &&
+            (!filters.gender?.length || filters.gender?.includes(talent.gender)) &&
+            (!filters.ethnicity?.length || filters.ethnicity?.includes(talent.ethnicity)) &&
+            (!filters.eyeColor?.length || filters.eyeColor?.includes(talent.eyeColor)) &&
+            (!filters.hairColor?.length || filters.hairColor?.includes(talent.hairColor)) &&
+            (!filters.skills?.length || filters.skills?.every(skill => talent.skills.includes(skill))) &&
+            (!filters.languages?.length || filters.languages?.every(lang => talent.languages.includes(lang))) &&
             (!filters.location || talent.location.toLowerCase().includes(filters.location.toLowerCase()))
         ));
 
-        return matchesQuery && matchesFilters;
-    });
+    return matchesQuery && matchesFilters;
+  });
 }
 
 // Get all talents for global search

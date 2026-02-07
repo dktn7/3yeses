@@ -8,6 +8,13 @@
 			"group": "build",
 			"isBackground": true,
 			"problemMatcher": []
+		},
+		{
+			"label": "Run Next.js dev server clean",
+			"type": "shell",
+			"command": "npx next dev",
+			"isBackground": true,
+			"group": "build"
 		}
 	]
 }

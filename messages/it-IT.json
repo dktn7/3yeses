@@ -1,0 +1,544 @@
+{
+  "Navigation": {
+    "home": "Home",
+    "about": "Chi Siamo",
+    "categories": "Categorie",
+    "contact": "Contatti",
+    "news": "Notizie",
+    "resources": "Risorse",
+    "successStories": "Storie di Successo",
+    "pricingPlans": "Piani di Prezzo",
+    "legal": "Legale",
+    "privacyPolicy": "Informativa Privacy",
+    "termsOfService": "Termini di Servizio",
+    "dashboard": "Cruscotto",
+    "profile": "Profilo",
+    "settings": "Impostazioni",
+    "logout": "Esci",
+    "login": "Accedi",
+    "signup": "Registrati"
+  },
+  "Footer": {
+    "aboutUs": "Chi siamo",
+    "companyInfo": "Collegare talenti con opportunità nel settore dell'intrattenimento.",
+    "forTalent": "Per i talenti",
+    "joinAsTalent": "Unisciti come talento",
+    "talentDashboard": "Dashboard dei talenti",
+    "browseCategories": "Sfoglia le categorie",
+    "pricingPlans": "Piani tariffari",
+    "howItWorks": "Come funziona",
+    "successStories": "Storie di successo",
+    "contactUs": "Contattaci",
+    "email": "contact@3yeses.co.uk",
+    "phone": "+44 121 123 4567",
+    "location": "Birmingham, Regno Unito",
+    "language": "Lingua",
+    "copyright": "© 2025 3YESES. Tutti i diritti riservati.",
+    "privacyPolicy": "Informativa sulla privacy",
+    "termsOfService": "Termini di servizio"
+  },
+  "Language": {
+    "english": "Inglese",
+    "french": "Francese",
+    "german": "Tedesco",
+    "spanish": "Spagnolo",
+    "italian": "Italiano",
+    "portuguese": "Portoghese",
+    "russian": "Russo",
+    "japanese": "Giapponese",
+    "chinese": "Cinese",
+    "arabic": "Arabo"
+  },
+  "Home": {
+    "tagline": "Collegare talenti con opportunità nel settore dell'intrattenimento.",
+    "welcome": {
+      "title": "Benvenuto in 3YESES",
+      "description": "Trova il talento perfetto per il tuo prossimo progetto o scopri interessanti opportunità nel settore dell'intrattenimento."
+    },
+    "forTalent": {
+      "title": "Per i talenti",
+      "description": "Mostra le tue abilità e trova la tua prossima grande opportunità.",
+      "browse": "Sfoglia le categorie"
+    },
+    "whyChooseTitle": "Perché scegliere",
+    "whyChooseSubtitle": "3YESES",
+    "whyChooseDescription": "Scopri cosa rende 3YESES la tua piattaforma di riferimento per trovare e connetterti con talenti creativi nell'industria dell'intrattenimento.",
+    "readyToConnectTitle": "Pronto a connetterti con talenti creativi?",
+    "readyToConnectDescription": "Unisciti alla crescente comunità di professionisti creativi che trovano opportunità su 3YESES.",
+    "features": {
+      "creativeDirectory": {
+        "title": "Directory dei Talenti Creativi",
+        "description": "Sfoglia e connettiti con professionisti creativi in diverse categorie e specialità.",
+        "benefits": [
+          "Scoperta facile dei talenti",
+          "Ricerca per categoria",
+          "Messaggistica diretta",
+          "Portfolio dei lavori"
+        ]
+      },
+      "advancedSearch": {
+        "title": "Ricerca Avanzata e Filtri",
+        "description": "Trova il talento perfetto con le nostre potenti capacità di ricerca e filtraggio.",
+        "benefits": [
+          "Ricerca per posizione",
+          "Filtri competenze ed esperienza",
+          "Navigazione per categorie",
+          "Profili dettagliati"
+        ]
+      },
+      "talentProfiles": {
+        "title": "Profili dei Talenti",
+        "description": "Profili completi che mostrano competenze, esperienza e lavori precedenti dei talenti.",
+        "benefits": [
+          "Portfolio dei lavori",
+          "Cronologia dell'esperienza",
+          "Elenchi delle competenze",
+          "Informazioni di contatto"
+        ]
+      },
+      "mobileOptimized": {
+        "title": "Ottimizzato per Mobile",
+        "description": "Accedi alla piattaforma da qualsiasi dispositivo con design completamente responsive.",
+        "benefits": [
+          "Interfaccia mobile-friendly",
+          "Navigazione ottimizzata per touch",
+          "Layout responsive",
+          "Compatibilità cross-device"
+        ]
+      },
+      "growingCommunity": {
+        "title": "Comunità in Crescita",
+        "description": "Unisciti a una rete in espansione di professionisti creativi e relazioni del settore.",
+        "benefits": [
+          "Talenti diversificati",
+          "Networking del settore",
+          "Opportunità creative",
+          "Supporto della comunità"
+        ]
+      },
+      "alwaysAvailable": {
+        "title": "Accesso Piattaforma 24/7",
+        "description": "Cerca e connettiti con talenti quando ne hai bisogno, giorno e notte.",
+        "benefits": [
+          "Sempre disponibile",
+          "Nessuna restrizione oraria",
+          "Programmazione flessibile",
+          "Accesso globale"
+        ]
+      }
+    },
+    "headlines": {
+      "getCast": "Ottieni il tuo prossimo ruolo oggi",
+      "showcase": "Mostra il tuo talento al mondo",
+      "connect": "Connettiti con professionisti del settore",
+      "build": "Costruisci il tuo portfolio creativo",
+      "discover": "Scopri nuove opportunità ogni giorno",
+      "join": "Unisciti alla rivoluzione del talento",
+      "break": "La tua prossima grande occasione ti aspetta",
+      "passion": "Trasforma la tua passione in successo"
+    },
+    "mobileOptimized": "Ottimizzato per Mobile",
+    "support247": "Supporto 24/7"
+  },
+  "News": {
+    "title": "Notizie e Approfondimenti del Settore",
+    "loading": "Caricamento degli ultimi approfondimenti...",
+    "trendingTopics": "Argomenti di tendenza",
+    "noTrending": "Nessun argomento di tendenza al momento.",
+    "popularTags": "Tag popolari",
+    "clearTags": "Cancella tag",
+    "newsletter": {
+      "title": "Rimani aggiornato",
+      "description": "Ricevi gli ultimi approfondimenti del settore e analisi basate sull'IA direttamente nella tua inbox.",
+      "cta": "Iscriviti"
+    },
+    "readMore": "Leggi di più",
+    "readMoreAria": "Leggi di più su {title}",
+    "avatarAlt": "Avatar di {author}",
+    "activeCategory": "Categoria: {category}",
+    "clearAll": "Cancella tutto",
+    "pagination": {
+      "prev": "Prec",
+      "next": "Succ"
+    },
+    "empty": "Nessun articolo corrisponde ai filtri correnti.",
+    "sort": {
+      "trending": "Di tendenza",
+      "recent": "Più recenti",
+      "popular": "Più popolari",
+      "views": "Più visti"
+    },
+    "categories": {
+      "all": "Tutte le notizie",
+      "acting": "Recitazione",
+      "music": "Musica",
+      "dance": "Danza",
+      "crew": "Produzione",
+      "platform": "Piattaforma"
+    }
+  },
+  "Auth": {
+    "signin": {
+      "title": "Bentornato",
+      "subtitle": "Accedi al tuo account",
+      "email": "Indirizzo email",
+      "emailPlaceholder": "tuo.email@esempio.it",
+      "password": "Password",
+      "passwordPlaceholder": "Inserisci la tua password",
+      "rememberMe": "Ricordami",
+      "forgotPassword": "Password dimenticata?",
+      "submit": "Accedi",
+      "orContinueWith": "oppure continua con",
+      "continueWithGoogle": "Continua con Google",
+      "continueWithFacebook": "Continua con Facebook",
+      "continueWithApple": "Continua con Apple",
+      "noAccount": "Non hai un account?",
+      "signUpLink": "Registrati",
+      "errors": {
+        "emailRequired": "L'email è obbligatoria",
+        "emailInvalid": "Inserisci un indirizzo email valido",
+        "passwordRequired": "La password è obbligatoria",
+        "passwordTooShort": "La password deve contenere almeno 6 caratteri",
+        "loginFailed": "Email o password errati",
+        "serverError": "Si è verificato un errore. Riprova"
+      },
+      "success": {
+        "loginSuccess": "Accesso effettuato con successo!"
+      }
+    },
+    "signup": {
+      "title": "Crea il tuo account",
+      "subtitle": "Unisciti a migliaia di professionisti creativi",
+      "startButton": "Inizia il tuo viaggio",
+      "alreadyHaveAccount": "Hai già un account?",
+      "signIn": "Accedi",
+      "back": "Indietro",
+      "next": "Passo successivo",
+      "submit": "Completa registrazione",
+      "step1Title": "Informazioni account",
+      "step1Description": "Dettagli di base",
+      "step2Title": "Il tuo profilo",
+      "step2Description": "Informazioni professionali",
+      "step3Title": "Carica media",
+      "step3Description": "Portfolio e video",
+      "firstName": "Nome",
+      "firstNamePlaceholder": "Mario",
+      "lastName": "Cognome",
+      "lastNamePlaceholder": "Rossi",
+      "email": "Indirizzo email",
+      "emailPlaceholder": "tuo.email@esempio.it",
+      "phone": "Numero di telefono",
+      "phonePlaceholder": "+39 XXX XXX XXXX",
+      "password": "Password",
+      "passwordPlaceholder": "Crea una password sicura",
+      "confirmPassword": "Conferma password",
+      "confirmPasswordPlaceholder": "Reinserisci la tua password",
+      "category": "Categoria principale",
+      "categoryPlaceholder": "Seleziona la tua categoria principale",
+      "bio": "Biografia",
+      "bioPlaceholder": "Raccontaci di te e della tua esperienza...",
+      "location": "Località",
+      "locationPlaceholder": "Città, Paese",
+      "experience": "Anni di esperienza",
+      "experiencePlaceholder": "Seleziona il tuo livello di esperienza",
+      "skills": "Competenze",
+      "skillsPlaceholder": "Aggiungi le tue competenze",
+      "dateOfBirth": "Data di nascita",
+      "dateOfBirthPlaceholder": "Seleziona la tua data di nascita",
+      "parentManagedAccount": "Account gestito dai genitori richiesto",
+      "parentManagedAccountTitle": "Account gestito da genitore/tutore",
+      "parentManagedAccountDescription": "Per utenti di età compresa tra 13 e 17 anni, un genitore o tutore deve creare e gestire questo account.",
+      "parentGuardianInfo": "Informazioni del genitore/tutore",
+      "yourInformation": "Le tue informazioni",
+      "childTalentInfo": "Informazioni sul talento del bambino",
+      "accountSecurity": "Sicurezza dell'account",
+      "parentFirstName": "Nome del genitore",
+      "parentLastName": "Cognome del genitore",
+      "parentEmail": "Indirizzo email del genitore",
+      "parentPhone": "Numero di telefono del genitore",
+      "childFirstName": "Nome del bambino",
+      "childLastName": "Cognome del bambino",
+      "childDateOfBirth": "Data di nascita del bambino",
+      "parentalConsentText": "Confermo di essere il genitore/tutore legale del bambino sopra indicato e acconsento alla creazione di questo account.",
+      "iAgreeToThe": "Accetto i",
+      "termsAndConditions": "Termini e Condizioni",
+      "and": "e la",
+      "privacyPolicy": "Informativa sulla Privacy",
+      "gender": "Genere",
+      "genderPlaceholder": "Seleziona il tuo genere",
+      "genderMale": "Maschio",
+      "genderFemale": "Femmina",
+      "genderNonBinary": "Non binario",
+      "genderPreferNotToSay": "Preferisco non dire",
+      "genderOther": "Altro",
+      "genderOtherSpecify": "Specifica",
+      "ethnicity": "Etnia",
+      "ethnicityPlaceholder": "Seleziona la tua etnia",
+      "ethnicityWhite": "Bianco/Caucasico",
+      "ethnicityBlack": "Nero/Africano",
+      "ethnicityAsian": "Asiatico",
+      "ethnicityHispanic": "Ispanico/Latino",
+      "ethnicityMiddleEastern": "Medio Orientale",
+      "ethnicityMixed": "Misto/Multirazziale",
+      "ethnicityNative": "Nativo Americano",
+      "ethnicityPacific": "Isolano del Pacifico",
+      "ethnicityPreferNotToSay": "Preferisco non dire",
+      "ethnicityOther": "Altro",
+      "ethnicityOtherSpecify": "Specifica",
+      "bodyType": "Tipo di corporatura",
+      "bodyTypePlaceholder": "Seleziona il tuo tipo di corporatura",
+      "bodyTypeSlim": "Snello",
+      "bodyTypeAverage": "Medio",
+      "bodyTypeAthletic": "Atletico",
+      "bodyTypeCurvy": "Formoso",
+      "bodyTypePlusSize": "Taglie forti",
+      "bodyTypeMuscular": "Muscoloso",
+      "bodyTypePreferNotToSay": "Preferisco non dirlo",
+      "languages": "Lingue",
+      "languagesPlaceholder": "Aggiungi le lingue che parli",
+      "languageName": "Lingua",
+      "languageNamePlaceholder": "es. Italiano, Inglese",
+      "proficiency": "Competenza",
+      "proficiencyNative": "Madrelingua",
+      "proficiencyFluent": "Fluente",
+      "proficiencyIntermediate": "Intermedio",
+      "proficiencyBasic": "Base",
+      "addLanguage": "Aggiungi lingua",
+      "removeLanguage": "Rimuovi",
+      "disability": "Disabilità/Accessibilità (Opzionale)",
+      "disabilityDescription": "Seleziona le opzioni applicabili per opportunità di casting inclusivo",
+      "disabilityWheelchairUser": "Utente su sedia a rotelle",
+      "disabilityMobilityImpairment": "Limitazione della mobilità",
+      "disabilityLimbDifferenceAmputation": "Differenza/Amputazione degli arti",
+      "disabilityDeafHardOfHearing": "Sordo/Ipoacusico",
+      "disabilityBlindVisualImpairment": "Cieco/Ipovedente",
+      "disabilityNeurodivergent": "Neurodivergente (Autismo, ADHD, Dislessia, ecc.)",
+      "disabilitySpeechCommunicationDifference": "Differenza nel linguaggio/comunicazione",
+      "disabilityDwarfismShortStature": "Nanismo/Bassa statura",
+      "disabilityFacialDifference": "Differenza facciale",
+      "disabilityChronicPainFatigue": "Dolore cronico/Affaticamento",
+      "disabilityInvisibleDisability": "Disabilità invisibile (Epilessia, Diabete, ecc.)",
+      "disabilityOther": "Altro",
+      "disabilityOtherSpecify": "Per favore specifica",
+      "disabilityNonePreferNotToSay": "Nessuna / Preferisco non dirlo",
+      "optional": "opzionale",
+      "profilePhoto": "Foto profilo",
+      "uploadPhoto": "Carica foto",
+      "removePhoto": "Rimuovi",
+      "portfolio": "Immagini portfolio",
+      "uploadPortfolio": "Carica immagini (Max 10)",
+      "videos": "Video dimostrativi",
+      "videoUrl": "URL video",
+      "videoUrlPlaceholder": "https://youtube.com/watch?v=...",
+      "addVideo": "Aggiungi video",
+      "removeVideo": "Rimuovi",
+      "errors": {
+        "firstNameRequired": "Il nome è obbligatorio",
+        "lastNameRequired": "Il cognome è obbligatorio",
+        "childFirstNameRequired": "Il nome del bambino è obbligatorio",
+        "childLastNameRequired": "Il cognome del bambino è obbligatorio",
+        "minimumAge13": "Devi avere almeno 13 anni per registrarti",
+        "parentalConsentRequired": "È richiesto il consenso dei genitori",
+        "termsRequired": "Devi accettare i Termini e Condizioni",
+        "emailRequired": "L'email è obbligatoria",
+        "emailInvalid": "Inserisci un indirizzo email valido",
+        "emailTaken": "Questa email è già registrata",
+        "phoneRequired": "Il numero di telefono è obbligatorio",
+        "phoneInvalid": "Inserisci un numero di telefono valido",
+        "passwordRequired": "La password è obbligatoria",
+        "passwordTooShort": "La password deve contenere almeno 8 caratteri",
+        "passwordWeak": "La password deve contenere maiuscole, minuscole e numeri",
+        "passwordMismatch": "Le password non corrispondono",
+        "confirmPasswordRequired": "Conferma la tua password",
+        "categoryRequired": "Seleziona una categoria",
+        "bioRequired": "Raccontaci di te",
+        "locationRequired": "La località è obbligatoria",
+        "serverError": "Si è verificato un errore. Riprova"
+      },
+      "success": {
+        "accountCreated": "Account creato con successo!",
+        "redirecting": "Reindirizzamento alla verifica..."
+      }
+    },
+    "forgotPassword": {
+      "title": "Password dimenticata?",
+      "subtitle": "Inserisci la tua email e ti invieremo un link per reimpostarla",
+      "email": "Indirizzo email",
+      "emailPlaceholder": "tuo.email@esempio.it",
+      "submit": "Invia link di reset",
+      "errors": {
+        "emailRequired": "L'email è obbligatoria",
+        "emailInvalid": "Inserisci un indirizzo email valido",
+        "requestFailed": "Invio email fallito",
+        "serverError": "Si è verificato un errore. Riprova"
+      },
+      "success": {
+        "title": "Email inviata!",
+        "message": "Se esiste un account con questa email, riceverai un link per reimpostare la password.",
+        "checkSpam": "Se non vedi l'email, controlla la cartella spam."
+      }
+    },
+    "resetPassword": {
+      "title": "Reimposta password",
+      "subtitle": "Inserisci la tua nuova password",
+      "newPassword": "Nuova password",
+      "newPasswordPlaceholder": "Inserisci la nuova password",
+      "confirmPassword": "Conferma password",
+      "confirmPasswordPlaceholder": "Reinserisci la nuova password",
+      "passwordRequirements": "Min 8 caratteri con maiuscole, minuscole e numeri",
+      "submit": "Reimposta password",
+      "errors": {
+        "passwordRequired": "La password è obbligatoria",
+        "passwordTooShort": "La password deve contenere almeno 8 caratteri",
+        "passwordWeak": "La password deve contenere maiuscole, minuscole e numeri",
+        "confirmPasswordRequired": "Conferma la tua password",
+        "passwordMismatch": "Le password non corrispondono",
+        "resetFailed": "Reimpostazione password fallita",
+        "serverError": "Si è verificato un errore. Riprova"
+      },
+      "success": {
+        "title": "Password reimpostata!",
+        "message": "La tua password è stata reimpostata con successo."
+      }
+    },
+    "verifyEmail": {
+      "title": "Verifica la tua email",
+      "subtitle": "Abbiamo inviato un'email di verifica a",
+      "checking": "Verifica della tua email in corso...",
+      "pending": {
+        "title": "Verifica la tua email",
+        "message": "Abbiamo inviato un link di verifica alla tua email. Controlla la tua casella di posta e clicca sul link per verificare il tuo account."
+      },
+      "success": {
+        "title": "Email verificata con successo!",
+        "message": "La tua email è stata verificata. Ora puoi continuare.",
+        "button": "Continua alla configurazione del profilo"
+      },
+      "error": {
+        "title": "Verifica fallita",
+        "message": "Non siamo riusciti a verificare la tua email. Riprova o richiedi una nuova email di verifica."
+      },
+      "expired": {
+        "title": "Link di verifica scaduto",
+        "message": "Questo link di verifica è scaduto. Richiedine uno nuovo."
+      },
+      "resend": "Reinvia email",
+      "resending": "Invio in corso...",
+      "resentSuccess": "Email di verifica inviata!",
+      "changeEmail": "Cambia indirizzo email",
+      "checkSpam": "Se non vedi l'email, controlla la cartella spam.",
+      "maxAttempts": "Numero massimo di tentativi raggiunto",
+      "cooldown": "Reinvia tra {seconds}s",
+      "attemptsRemaining": "Email inviate: {count}/3",
+      "needHelp": "Serve aiuto? Contatta il supporto",
+      "backToLogin": "Torna al login"
+    },
+    "orDivider": "o",
+    "termsAgree": "Registrandoti, accetti i nostri",
+    "termsLink": "Termini di servizio",
+    "privacyLink": "Informativa sulla privacy",
+    "and": "e"
+  },
+  "Hub": {
+    "title": "Hub Multimediale",
+    "subtitle": "Scopri video, immagini e audio da creatori di talento",
+    "search": {
+      "placeholder": "Cerca per titolo, talento o descrizione...",
+      "clear": "Cancella ricerca"
+    },
+    "categories": {
+      "title": "Categorie",
+      "all": "Tutti",
+      "acting": "Recitazione",
+      "music": "Musica",
+      "modeling": "Modelle",
+      "directing": "Regia",
+      "writing": "Scrittura",
+      "photography": "Fotografia"
+    },
+    "type": {
+      "title": "Tipo:",
+      "all": "Tutti",
+      "videos": "Video",
+      "audio": "Audio",
+      "images": "Immagini"
+    },
+    "filters": {
+      "button": "Filtri",
+      "popularityTier": "Livello di popolarità",
+      "viral": "Virale",
+      "popular": "Popolare",
+      "rising": "In crescita",
+      "fresh": "Recente",
+      "uploadDate": "Data di caricamento",
+      "allTime": "Sempre",
+      "today": "Oggi",
+      "pastWeek": "Ultima settimana",
+      "pastMonth": "Ultimo mese",
+      "pastYear": "Ultimo anno",
+      "sortBy": "Ordina per",
+      "trending": "Tendenza",
+      "newest": "Più recente",
+      "mostLiked": "Popolare",
+      "alphabetical": "A-Z",
+      "oldest": "Oldest First",
+      "mostViews": "Most Views",
+      "leastViews": "Least Views",
+      "mostLikes": "Most Likes",
+      "leastLikes": "Least Likes",
+      "zToA": "Z-A",
+      "clearAll": "Cancella tutti i filtri",
+      "activeFilters": "Filtri attivi",
+      "search": "Ricerca",
+      "category": "Categoria",
+      "type": "Tipo",
+      "sort": "Ordinamento",
+      "showing": "Mostra",
+      "results": "risultato",
+      "resultsPlural": "risultati"
+    },
+    "sections": {
+      "featuredCreators": "Creatori in evidenza",
+      "discoverTopTalent": "Scopri i migliori talenti sulla piattaforma",
+      "trendingNow": "Tendenze attuali",
+      "hotContent": "Contenuto popolare ora",
+      "mostViewed": "Contenuto più visto ora",
+      "featuredVideos": "Video in evidenza",
+      "video": "video",
+      "videos": "video",
+      "viewAllVideos": "Vedi tutti i video →",
+      "featuredAudio": "Audio in evidenza",
+      "audioTrack": "traccia audio",
+      "audioTracks": "tracce audio",
+      "viewAllAudio": "Vedi tutto l'audio →",
+      "featuredImages": "Immagini in evidenza",
+      "image": "immagine",
+      "images": "immagini",
+      "viewAllImages": "Vedi tutte le immagini →",
+      "latestUploads": "Ultimi caricamenti",
+      "freshContent": "Contenuti freschi",
+      "mostPopular": "Più popolari",
+      "lovedByCommunity": "Amato dalla comunità"
+    },
+    "badges": {
+      "sponsored": "Sponsorizzato",
+      "trending": "Tendenza",
+      "hot": "Popolare",
+      "new": "Nuovo",
+      "popular": "Popolare"
+    },
+    "pagination": {
+      "previous": "Precedente",
+      "next": "Successivo"
+    },
+    "empty": {
+      "title": "Nessun contenuto trovato",
+      "description": "Prova a regolare i filtri per vedere più risultati"
+    }
+  },
+  "SearchResults": {
+    "noResultsTitle": "Nessun risultato trovato",
+    "noResultsDescription": "Prova a modificare i criteri di ricerca o i filtri",
+    "clearAllFilters": "Cancella tutti i filtri"
+  }
+}

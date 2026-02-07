@@ -205,7 +205,7 @@ export default function ProfileSettings() {
                 { key: 'showReviewCount', label: 'Comment Count', desc: 'Show number of comments received' },
                 { key: 'showWorkHistory', label: 'Work History', desc: 'Show your past work and achievements' },
                 { key: 'showSocialMedia', label: 'Social Media Links', desc: 'Show your social media profiles' },
-                { key: 'showContactInfo', label: 'Contact Information', desc: 'Show contact details and booking options' },
+                { key: 'showContactInfo', label: 'Contact Information', desc: 'Show contact details for inquiries' },
               ].map(({ key, label, desc }) => (
                 <div key={key} className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                   <div className="flex-1">
@@ -238,7 +238,7 @@ export default function ProfileSettings() {
             <div className="space-y-4">
               {[
                 { key: 'searchable', label: 'Searchable Profile', desc: 'Allow your profile to appear in search results' },
-                { key: 'allowDirectContact', label: 'Direct Contact', desc: 'Allow clients to contact you directly' },
+                { key: 'allowDirectContact', label: 'Direct Contact', desc: 'Allow people to contact you directly' },
                 { key: 'showOnlineStatus', label: 'Online Status', desc: 'Show when you\'re online or last active' },
               ].map(({ key, label, desc }) => (
                 <div key={key} className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg">

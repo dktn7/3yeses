@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { X } from 'lucide-react';
 
 type Option = { label: string; value: string };
 
@@ -14,6 +15,7 @@ type MultiSelectProps = {
 export default function MultiSelect({ options, value, onChange, placeholder, allowCustom = false, label }: MultiSelectProps) {
   const [input, setInput] = useState('');
   const [showOptions, setShowOptions] = useState(false);
+  const containerRef = React.useRef<HTMLDivElement>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [highlighted, setHighlighted] = useState<number>(-1);
 
@@ -24,46 +26,57 @@ export default function MultiSelect({ options, value, onChange, placeholder, all
   );
 
   const addValue = (val: string) => {
-  if (!val.trim() || value.includes(val)) return;
-  onChange([...value, val]);
-  setInput('');
-  setShowOptions(true);
-  setHighlighted(-1);
-  setTimeout(() => inputRef.current?.focus(), 0);
+    if (!val.trim() || value.includes(val)) return;
+    onChange([...value, val]);
+    setInput('');
+    setShowOptions(false);
+    setHighlighted(-1);
+    setTimeout(() => inputRef.current?.focus(), 0);
   };
 
   const removeValue = (val: string) => {
     onChange(value.filter((v) => v !== val));
   };
 
+  React.useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setShowOptions(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   return (
-    <div className="relative">
+    <div className="relative" ref={containerRef}>
       {label && <div className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">{label}</div>}
       <div
         className="flex flex-wrap items-center gap-1 px-2 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white cursor-text min-h-[2.5rem]"
-        tabIndex={0}
         onClick={() => { setShowOptions(true); inputRef.current?.focus(); }}
-        onFocus={() => setShowOptions(true)}
-        onBlur={e => {
-          if (!e.currentTarget.contains(e.relatedTarget as Node)) setShowOptions(false);
-        }}
       >
-        {value.map((val) => (
+        {value.map((val) => {
+          // Find the label for this value, or use the value itself
+          const option = options.find(o => o.value === val);
+          const displayLabel = option?.label || val;
+          return (
           <span
             key={val}
             className="flex items-center bg-primary-blue/10 dark:bg-accent-red/20 text-primary-blue dark:text-accent-red rounded px-2 py-0.5 text-xs mr-1 mb-1"
           >
-            {val}
+            {displayLabel}
             <button
               type="button"
               className="ml-1 text-xs text-gray-400 hover:text-red-500"
               onClick={e => { e.stopPropagation(); removeValue(val); }}
-              aria-label={`Remove ${val}`}
+              aria-label={`Remove ${displayLabel}`}
             >
-              ×
+              <X className="w-3 h-3" />
             </button>
           </span>
-        ))}
+          );
+        })}
         <input
           ref={inputRef}
           type="text"
@@ -103,7 +116,7 @@ export default function MultiSelect({ options, value, onChange, placeholder, all
                   ? 'bg-primary-blue/10 dark:bg-accent-red/20 text-primary-blue dark:text-accent-red'
                   : 'bg-white dark:bg-gray-900 text-gray-900 dark:text-white'
               } hover:bg-primary-blue/10 dark:hover:bg-accent-red/10 hover:text-primary-blue dark:hover:text-accent-red`}
-              onClick={() => addValue(opt.value)}
+              onClick={(e) => { e.preventDefault(); addValue(opt.value); }}
               onMouseEnter={() => setHighlighted(i)}
             >
               {opt.label}
@@ -113,7 +126,7 @@ export default function MultiSelect({ options, value, onChange, placeholder, all
             <button
               type="button"
               className="block w-full text-left px-4 py-2 text-primary-blue dark:text-accent-red text-sm bg-white dark:bg-gray-900 hover:bg-primary-blue/10 dark:hover:bg-accent-red/10 hover:text-primary-blue dark:hover:text-accent-red transition-colors"
-              onClick={() => addValue(input.trim())}
+              onClick={(e) => { e.preventDefault(); addValue(input.trim()); }}
             >
               {`Add "${input.trim()}"`}
             </button>

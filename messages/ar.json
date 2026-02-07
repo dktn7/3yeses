@@ -1,0 +1,617 @@
+{
+  "Navigation": {
+    "home": "الرئيسية",
+    "about": "حول",
+    "categories": "الفئات",
+    "contact": "اتصل بنا",
+    "news": "الأخبار",
+    "resources": "الموارد",
+    "pricingPlans": "خطط التسعير",
+    "legal": "قانوني",
+    "privacyPolicy": "سياسة الخصوصية",
+    "termsOfService": "شروط الخدمة",
+    "dashboard": "لوحة التحكم",
+    "profile": "الملف الشخصي",
+    "settings": "الإعدادات",
+    "logout": "تسجيل الخروج",
+    "login": "تسجيل الدخول",
+    "signup": "التسجيل"
+  },
+  "Footer": {
+    "aboutUs": "نبذة عنا",
+    "companyInfo": "ربط المواهب بالفرص في صناعة الترفيه.",
+    "forTalent": "للمواهب",
+    "joinAsTalent": "انضم كموهبة",
+    "talentDashboard": "لوحة تحكم المواهب",
+    "browseCategories": "تصفح الفئات",
+    "pricingPlans": "خطط التسعير",
+    "howItWorks": "كيف تعمل",
+    "successStories": "قصص نجاح",
+    "contactUs": "اتصل بنا",
+    "email": "contact@3yeses.co.uk",
+    "phone": "+44 121 123 4567",
+    "location": "برمنغهام، المملكة المتحدة",
+    "language": "لغة",
+    "copyright": "© 2025 3YESES. كل الحقوق محفوظة.",
+    "privacyPolicy": "سياسة الخصوصية",
+    "termsOfService": "شروط الخدمة"
+  },
+  "Language": {
+    "english": "الإنجليزية",
+    "french": "الفرنسية",
+    "german": "الألمانية",
+    "spanish": "الإسبانية",
+    "italian": "الإيطالية",
+    "portuguese": "البرتغالية",
+    "russian": "الروسية",
+    "japanese": "اليابانية",
+    "chinese": "الصينية",
+    "arabic": "العربية"
+  },
+  "Home": {
+    "tagline": "ربط المواهب بالفرص في صناعة الترفيه.",
+    "welcome": {
+      "title": "مرحبًا بك في 3YESES",
+      "description": "ابحث عن الموهبة المثالية لمشروعك القادم أو اكتشف فرصًا مثيرة في صناعة الترفيه."
+    },
+    "forTalent": {
+      "title": "للمواهب",
+      "description": "اعرض مهاراتك وابحث عن فرصتك الكبيرة التالية.",
+      "browse": "تصفح الفئات"
+    },
+    "expertTalent": "المواهب الخبيرة",
+    "expertTalentDescription": "الوصول إلى المهنيين المعتمدين مع سجلات مثبتة",
+    "qualityAssured": "الجودة مضمونة",
+    "qualityAssuredDescription": "جميع المواهب يتم فحصها والتحقق منها لراحة بالك",
+    "careerGrowth": "نمو مهني",
+    "careerGrowthDescription": "بناء اتصالات دائمة وتطوير مسيرتك المهنية",
+    "searchPlaceholder": "البحث عن مواهب أو مهارات أو فئات...",
+    "searchButton": "بحث",
+    "allCategories": "كل الفئات",
+    "location": "الموقع",
+    "filters": "المرشحات",
+    "findYourNextJob": "ابحث عن وظيفتك التالية",
+    "elevateYourCareer": "ارتقِ بمسيرتك المهنية",
+    "joinNow": "انضم الآن",
+    "learnMore": "تعلم المزيد",
+    "activeTalent": "المواهب النشطة",
+    "projectsPosted": "المشاريع المنشورة",
+    "successRate": "معدل النجاح",
+    "support": "دعم 24/7",
+    "howItWorksTitle": "كيف تعمل",
+    "howItWorksDescription": "ابدأ في 3 خطوات بسيطة",
+    "createYourProfile": "أنشئ ملفك الشخصي",
+    "createYourProfileDescription": "اعرض مهاراتك وخبرتك",
+    "showcaseYourWork": "اعرض أعمالك",
+    "showcaseYourWorkDescription": "ارفع معرض أعمالك ومقاطع العرض",
+    "buildYourReputation": "ابنِ سمعتك",
+    "buildYourReputationDescription": "احصل على تقييمات وابنِ شبكة علاقاتك",
+    "mobileOptimized": "محسن للجوال",
+    "support247": "دعم 24/7",
+    "joinThousands": "انضم إلى آلاف المهنيين الموهوبين الذين يثقون في 3YESES لربطهم بمشاريع أحلامهم.",
+    "supportCreativeJourney": "من الاختبارات إلى الحجوزات، نحن هنا لدعم رحلتك الإبداعية.",
+    "whyChooseTitle": "لماذا تختار",
+    "whyChooseSubtitle": "3YESES",
+    "whyChooseDescription": "اكتشف ما يجعل 3YESES منصتك المفضلة للعثور على المواهب الإبداعية والتواصل معها في صناعة الترفيه.",
+    "readyToConnectTitle": "مستعد للتواصل مع المواهب الإبداعية؟",
+    "readyToConnectDescription": "انضم إلى المجتمع المتنامي من المهنيين الإبداعيين الذين يجدون الفرص في 3YESES.",
+    "features": {
+      "creativeDirectory": {
+        "title": "دليل المواهب الإبداعية",
+        "description": "تصفح وتواصل مع المهنيين الإبداعيين عبر فئات وتخصصات مختلفة.",
+        "benefits": [
+          "اكتشاف المواهب بسهولة",
+          "البحث حسب الفئة",
+          "المراسلة المباشرة",
+          "معارض الأعمال"
+        ]
+      },
+      "advancedSearch": {
+        "title": "البحث المتقدم والمرشحات",
+        "description": "ابحث عن الموهبة المثالية بإمكانيات البحث والترشيح القوية.",
+        "benefits": [
+          "البحث حسب الموقع",
+          "مرشحات المهارات والخبرة",
+          "تصفح الفئات",
+          "ملفات شخصية مفصلة"
+        ]
+      },
+      "talentProfiles": {
+        "title": "ملفات المواهب الشخصية",
+        "description": "ملفات شاملة تعرض مهارات وخبرة وأعمال المواهب السابقة.",
+        "benefits": [
+          "معارض الأعمال",
+          "تاريخ الخبرة",
+          "قوائم المهارات",
+          "معلومات الاتصال"
+        ]
+      },
+      "mobileOptimized": {
+        "title": "محسن للجوال",
+        "description": "الوصول إلى المنصة من أي جهاز بتصميم مستجيب بالكامل.",
+        "benefits": [
+          "واجهة صديقة للجوال",
+          "تنقل محسن للمس",
+          "تخطيطات مستجيبة",
+          "توافق عبر الأجهزة"
+        ]
+      },
+      "growingCommunity": {
+        "title": "مجتمع متنامي",
+        "description": "انضم إلى شبكة متوسعة من المهنيين الإبداعيين وعلاقات الصناعة.",
+        "benefits": [
+          "مجموعة متنوعة من المواهب",
+          "التواصل في الصناعة",
+          "فرص إبداعية",
+          "دعم المجتمع"
+        ]
+      },
+      "alwaysAvailable": {
+        "title": "وصول المنصة 24/7",
+        "description": "ابحث وتواصل مع المواهب متى احتجت، ليلاً أو نهاراً.",
+        "benefits": [
+          "متاح دائماً",
+          "لا توجد قيود زمنية",
+          "جدولة مرنة",
+          "وصول عالمي"
+        ]
+      }
+    },
+    "headlines": {
+      "getCast": "احصل على دورك التالي اليوم",
+      "showcase": "أظهر موهبتك للعالم",
+      "connect": "تواصل مع المهنيين في الصناعة",
+      "build": "ابنِ محفظة أعمالك الإبداعية",
+      "discover": "اكتشف فرصاً جديدة يومياً",
+      "join": "انضم إلى ثورة المواهب",
+      "break": "فرصتك الكبيرة التالية في انتظارك",
+      "passion": "حوّل شغفك إلى نجاح"
+    }
+  },
+  "News": {
+    "title": "أخبار ورؤى الصناعة",
+    "loading": "جاري تحميل أحدث الرؤى...",
+    "trendingTopics": "المواضيع الرائجة",
+    "noTrending": "لا توجد مواضيع رائجة حالياً.",
+    "popularTags": "الوسوم الشائعة",
+    "clearTags": "مسح الوسوم",
+    "newsletter": {
+      "title": "ابقَ على اطلاع",
+      "description": "احصل على أحدث رؤى الصناعة والتحليلات المدعومة بالذكاء الاصطناعي إلى بريدك الإلكتروني.",
+      "cta": "اشترك الآن"
+    },
+    "readMore": "اقرأ المزيد",
+    "readMoreAria": "اقرأ المزيد عن {title}",
+    "avatarAlt": "صورة {author}",
+    "activeCategory": "الفئة: {category}",
+    "clearAll": "مسح الكل",
+    "pagination": {
+      "prev": "السابق",
+      "next": "التالي"
+    },
+    "empty": "لا توجد مقالات تطابق عوامل التصفية الحالية.",
+    "sort": {
+      "trending": "رائج",
+      "recent": "الأحدث",
+      "popular": "الأكثر شعبية",
+      "views": "الأكثر مشاهدة"
+    },
+    "categories": {
+      "all": "كل الأخبار",
+      "acting": "التمثيل",
+      "music": "الموسيقى",
+      "dance": "الرقص",
+      "crew": "الإنتاج",
+      "platform": "المنصة"
+    }
+  },
+  "SignupPage": {
+    "title": "تسجيل المواهب",
+    "subtitle": "أنشئ حسابك وابدأ رحلتك في 3 خطوات بسيطة.",
+    "step1": "الحساب",
+    "step2": "الملف الشخصي",
+    "step3": "الرفع",
+    "startSignup": "بدء تسجيل المواهب",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "submit": "تسجيل"
+  },
+  "LoginPage": {
+    "title": "تسجيل الدخول",
+    "subtitle": "مرحباً بعودتك! يرجى تسجيل الدخول إلى حسابك.",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "forgotPassword": "نسيت كلمة المرور؟",
+    "rememberMe": "تذكرني",
+    "submit": "تسجيل الدخول",
+    "noAccount": "ليس لديك حساب؟",
+    "signUpLink": "سجل هنا"
+  },
+  "Auth": {
+    "signin": {
+      "title": "مرحباً بعودتك",
+      "subtitle": "تسجيل الدخول إلى حسابك",
+      "email": "عنوان البريد الإلكتروني",
+      "emailPlaceholder": "your.email@example.com",
+      "password": "كلمة المرور",
+      "passwordPlaceholder": "أدخل كلمة المرور الخاصة بك",
+      "rememberMe": "تذكرني",
+      "forgotPassword": "هل نسيت كلمة المرور؟",
+      "submit": "تسجيل الدخول",
+      "orContinueWith": "أو المتابعة بالبريد الإلكتروني",
+      "continueWithGoogle": "المتابعة باستخدام Google",
+      "continueWithFacebook": "المتابعة باستخدام Facebook",
+      "continueWithApple": "المتابعة باستخدام Apple",
+      "noAccount": "ليس لديك حساب؟",
+      "signUpLink": "سجل الآن",
+      "errors": {
+        "emailRequired": "البريد الإلكتروني مطلوب",
+        "emailInvalid": "يرجى إدخال عنوان بريد إلكتروني صالح",
+        "passwordRequired": "كلمة المرور مطلوبة",
+        "passwordTooShort": "يجب أن تكون كلمة المرور 6 أحرف على الأقل",
+        "loginFailed": "البريد الإلكتروني أو كلمة المرور غير صحيحة",
+        "serverError": "حدث خطأ. يرجى المحاولة مرة أخرى"
+      },
+      "success": {
+        "loginSuccess": "تم تسجيل الدخول بنجاح!"
+      }
+    },
+    "signup": {
+      "title": "إنشاء حسابك",
+      "subtitle": "انضم إلى آلاف المحترفين المبدعين",
+      "startButton": "ابدأ رحلتك",
+      "alreadyHaveAccount": "هل لديك حساب بالفعل؟",
+      "signIn": "تسجيل الدخول",
+      "back": "رجوع",
+      "next": "الخطوة التالية",
+      "submit": "إكمال التسجيل",
+      "step1Title": "معلومات الحساب",
+      "step1Description": "التفاصيل الأساسية",
+      "step2Title": "ملفك الشخصي",
+      "step2Description": "المعلومات المهنية",
+      "step3Title": "رفع الوسائط",
+      "step3Description": "المحفظة والفيديوهات",
+      "firstName": "الاسم الأول",
+      "firstNamePlaceholder": "أحمد",
+      "lastName": "اسم العائلة",
+      "lastNamePlaceholder": "محمد",
+      "email": "عنوان البريد الإلكتروني",
+      "emailPlaceholder": "your.email@example.com",
+      "phone": "رقم الهاتف",
+      "phonePlaceholder": "+966 XX XXX XXXX",
+      "password": "كلمة المرور",
+      "passwordPlaceholder": "أنشئ كلمة مرور قوية",
+      "confirmPassword": "تأكيد كلمة المرور",
+      "confirmPasswordPlaceholder": "أعد إدخال كلمة المرور",
+      "category": "الفئة الرئيسية",
+      "categoryPlaceholder": "اختر فئتك الرئيسية",
+      "bio": "السيرة الذاتية",
+      "bioPlaceholder": "أخبرنا عن نفسك وخبرتك...",
+      "location": "الموقع",
+      "locationPlaceholder": "المدينة، البلد",
+      "experience": "سنوات الخبرة",
+      "experiencePlaceholder": "اختر مستوى خبرتك",
+      "skills": "المهارات",
+      "skillsPlaceholder": "أضف مهاراتك",
+      "dateOfBirth": "تاريخ الميلاد",
+      "dateOfBirthPlaceholder": "اختر تاريخ ميلادك",
+      "parentManagedAccount": "حساب يديره الوالدان مطلوب",
+      "parentManagedAccountTitle": "حساب مُدار من قبل الوالدين/الوصي",
+      "parentManagedAccountDescription": "بالنسبة للمستخدمين الذين تتراوح أعمارهم بين 13-17 عامًا، يجب على أحد الوالدين أو الوصي إنشاء وإدارة هذا الحساب.",
+      "parentGuardianInfo": "معلومات الوالدين/الوصي",
+      "yourInformation": "معلوماتك",
+      "childTalentInfo": "معلومات موهبة الطفل",
+      "accountSecurity": "أمان الحساب",
+      "parentFirstName": "الاسم الأول للوالد",
+      "parentLastName": "اسم العائلة للوالد",
+      "parentEmail": "البريد الإلكتروني للوالد",
+      "parentPhone": "رقم هاتف الوالد",
+      "childFirstName": "الاسم الأول للطفل",
+      "childLastName": "اسم العائلة للطفل",
+      "childDateOfBirth": "تاريخ ميلاد الطفل",
+      "parentalConsentText": "أؤكد أنني الوالد/الوصي القانوني للطفل المذكور أعلاه وأوافق على إنشاء هذا الحساب.",
+      "iAgreeToThe": "أوافق على",
+      "termsAndConditions": "الشروط والأحكام",
+      "and": "و",
+      "privacyPolicy": "سياسة الخصوصية",
+      "gender": "الجنس",
+      "genderPlaceholder": "اختر جنسك",
+      "genderMale": "ذكر",
+      "genderFemale": "أنثى",
+      "genderNonBinary": "غير ثنائي",
+      "genderPreferNotToSay": "أفضل عدم الإفصاح",
+      "genderOther": "آخر",
+      "genderOtherSpecify": "يرجى التحديد",
+      "ethnicity": "العرق",
+      "ethnicityPlaceholder": "اختر عرقك",
+      "ethnicityWhite": "أبيض/قوقازي",
+      "ethnicityBlack": "أسود/أفريقي",
+      "ethnicityAsian": "آسيوي",
+      "ethnicityHispanic": "إسباني/لاتيني",
+      "ethnicityMiddleEastern": "شرق أوسطي",
+      "ethnicityMixed": "مختلط/متعدد الأعراق",
+      "ethnicityNative": "أمريكي أصلي",
+      "ethnicityPacific": "من جزر المحيط الهادئ",
+      "ethnicityPreferNotToSay": "أفضل عدم الإفصاح",
+      "ethnicityOther": "آخر",
+      "ethnicityOtherSpecify": "يرجى التحديد",
+      "bodyType": "نوع الجسم",
+      "bodyTypePlaceholder": "اختر نوع جسمك",
+      "bodyTypeSlim": "نحيف",
+      "bodyTypeAverage": "متوسط",
+      "bodyTypeAthletic": "رياضي",
+      "bodyTypeCurvy": "ممتلئ",
+      "bodyTypePlusSize": "مقاس كبير",
+      "bodyTypeMuscular": "عضلي",
+      "bodyTypePreferNotToSay": "أفضل عدم القول",
+      "languages": "اللغات",
+      "languagesPlaceholder": "أضف اللغات التي تتحدثها",
+      "languageName": "اللغة",
+      "languageNamePlaceholder": "مثال: العربية، الإنجليزية",
+      "proficiency": "مستوى الإتقان",
+      "proficiencyNative": "لغة أم",
+      "proficiencyFluent": "بطلاقة",
+      "proficiencyIntermediate": "متوسط",
+      "proficiencyBasic": "أساسي",
+      "addLanguage": "إضافة لغة",
+      "removeLanguage": "إزالة",
+      "disability": "الإعاقة / إمكانية الوصول (اختياري)",
+      "disabilityDescription": "اختر الخيارات المطبقة لفرص الاختيار الشاملة",
+      "disabilityWheelchairUser": "مستخدم كرسي متحرك",
+      "disabilityMobilityImpairment": "ضعف الحركة",
+      "disabilityLimbDifferenceAmputation": "اختلاف / بتر الأطراف",
+      "disabilityDeafHardOfHearing": "أصم / ضعيف السمع",
+      "disabilityBlindVisualImpairment": "أعمى / ضعيف البصر",
+      "disabilityNeurodivergent": "التنوع العصبي (التوحد، فرط الحركة، عسر القراءة، إلخ)",
+      "disabilitySpeechCommunicationDifference": "اختلاف النطق / التواصل",
+      "disabilityDwarfismShortStature": "القزامة / قصر القامة",
+      "disabilityFacialDifference": "اختلاف الوجه",
+      "disabilityChronicPainFatigue": "ألم مزمن / إرهاق",
+      "disabilityInvisibleDisability": "إعاقة غير مرئية (الصرع، السكري، إلخ)",
+      "disabilityOther": "أخرى",
+      "disabilityOtherSpecify": "يرجى التحديد",
+      "disabilityNonePreferNotToSay": "لا شيء / أفضل عدم القول",
+      "optional": "اختياري",
+      "profilePhoto": "صورة الملف الشخصي",
+      "uploadPhoto": "رفع صورة",
+      "removePhoto": "إزالة",
+      "portfolio": "صور المحفظة",
+      "uploadPortfolio": "رفع الصور (بحد أقصى 10)",
+      "videos": "فيديوهات تجريبية",
+      "videoUrl": "رابط الفيديو",
+      "videoUrlPlaceholder": "https://youtube.com/watch?v=...",
+      "addVideo": "إضافة فيديو",
+      "removeVideo": "إزالة",
+      "errors": {
+        "firstNameRequired": "الاسم الأول مطلوب",
+        "lastNameRequired": "اسم العائلة مطلوب",
+        "childFirstNameRequired": "الاسم الأول للطفل مطلوب",
+        "childLastNameRequired": "اسم العائلة للطفل مطلوب",
+        "minimumAge13": "يجب أن يكون عمرك 13 عامًا على الأقل للتسجيل",
+        "parentalConsentRequired": "موافقة الوالدين مطلوبة",
+        "termsRequired": "يجب أن توافق على الشروط والأحكام",
+        "emailRequired": "البريد الإلكتروني مطلوب",
+        "emailInvalid": "يرجى إدخال عنوان بريد إلكتروني صالح",
+        "emailTaken": "هذا البريد الإلكتروني مسجل بالفعل",
+        "phoneRequired": "رقم الهاتف مطلوب",
+        "phoneInvalid": "يرجى إدخال رقم هاتف صالح",
+        "passwordRequired": "كلمة المرور مطلوبة",
+        "passwordTooShort": "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
+        "passwordWeak": "يجب أن تحتوي كلمة المرور على أحرف كبيرة وصغيرة وأرقام",
+        "passwordMismatch": "كلمات المرور غير متطابقة",
+        "confirmPasswordRequired": "يرجى تأكيد كلمة المرور",
+        "categoryRequired": "يرجى اختيار فئة",
+        "bioRequired": "يرجى إخبارنا عن نفسك",
+        "locationRequired": "الموقع مطلوب",
+        "serverError": "حدث خطأ. يرجى المحاولة مرة أخرى"
+      },
+      "success": {
+        "accountCreated": "تم إنشاء الحساب بنجاح!",
+        "redirecting": "إعادة التوجيه إلى التحقق..."
+      }
+    },
+    "forgotPassword": {
+      "title": "هل نسيت كلمة المرور؟",
+      "subtitle": "أدخل بريدك الإلكتروني وسنرسل لك رابط إعادة التعيين",
+      "email": "عنوان البريد الإلكتروني",
+      "emailPlaceholder": "your.email@example.com",
+      "submit": "إرسال رابط إعادة التعيين",
+      "errors": {
+        "emailRequired": "البريد الإلكتروني مطلوب",
+        "emailInvalid": "يرجى إدخال عنوان بريد إلكتروني صالح",
+        "requestFailed": "فشل إرسال البريد الإلكتروني",
+        "serverError": "حدث خطأ. يرجى المحاولة مرة أخرى"
+      },
+      "success": {
+        "title": "تم إرسال البريد الإلكتروني!",
+        "message": "إذا كان هناك حساب بهذا البريد الإلكتروني، ستتلقى رابط إعادة التعيين.",
+        "checkSpam": "إذا لم تر البريد الإلكتروني، تحقق من مجلد الرسائل غير المرغوب فيها."
+      }
+    },
+    "resetPassword": {
+      "title": "إعادة تعيين كلمة المرور",
+      "subtitle": "أدخل كلمة المرور الجديدة",
+      "newPassword": "كلمة المرور الجديدة",
+      "newPasswordPlaceholder": "أدخل كلمة المرور الجديدة",
+      "confirmPassword": "تأكيد كلمة المرور",
+      "confirmPasswordPlaceholder": "أعد إدخال كلمة المرور الجديدة",
+      "passwordRequirements": "8 أحرف على الأقل مع أحرف كبيرة وصغيرة وأرقام",
+      "submit": "إعادة تعيين كلمة المرور",
+      "errors": {
+        "passwordRequired": "كلمة المرور مطلوبة",
+        "passwordTooShort": "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
+        "passwordWeak": "يجب أن تحتوي كلمة المرور على أحرف كبيرة وصغيرة وأرقام",
+        "confirmPasswordRequired": "يرجى تأكيد كلمة المرور",
+        "passwordMismatch": "كلمات المرور غير متطابقة",
+        "resetFailed": "فشل إعادة تعيين كلمة المرور",
+        "serverError": "حدث خطأ. يرجى المحاولة مرة أخرى"
+      },
+      "success": {
+        "title": "تم إعادة تعيين كلمة المرور!",
+        "message": "تم إعادة تعيين كلمة المرور الخاصة بك بنجاح."
+      }
+    },
+    "verifyEmail": {
+      "title": "تحقق من بريدك الإلكتروني",
+      "subtitle": "لقد أرسلنا بريد تحقق إلى",
+      "checking": "جارٍ التحقق من بريدك الإلكتروني...",
+      "pending": {
+        "title": "تحقق من بريدك الإلكتروني",
+        "message": "لقد أرسلنا رابط تحقق إلى بريدك الإلكتروني. يرجى التحقق من صندوق الوارد والنقر على الرابط للتحقق من حسابك."
+      },
+      "success": {
+        "title": "تم التحقق من البريد الإلكتروني بنجاح!",
+        "message": "تم التحقق من بريدك الإلكتروني. يمكنك الآن المتابعة.",
+        "button": "متابعة إعداد الملف الشخصي"
+      },
+      "error": {
+        "title": "فشل التحقق",
+        "message": "لم نتمكن من التحقق من بريدك الإلكتروني. يرجى المحاولة مرة أخرى أو طلب بريد تحقق جديد."
+      },
+      "expired": {
+        "title": "انتهت صلاحية رابط التحقق",
+        "message": "انتهت صلاحية رابط التحقق هذا. يرجى طلب رابط جديد."
+      },
+      "resend": "إعادة إرسال البريد الإلكتروني",
+      "resending": "جارٍ الإرسال...",
+      "resentSuccess": "تم إرسال بريد التحقق!",
+      "changeEmail": "تغيير عنوان البريد الإلكتروني",
+      "checkSpam": "إذا لم تر البريد الإلكتروني، تحقق من مجلد الرسائل غير المرغوب فيها.",
+      "maxAttempts": "تم الوصول إلى الحد الأقصى للمحاولات",
+      "cooldown": "إعادة الإرسال في {seconds}ث",
+      "attemptsRemaining": "البريد المرسل: {count}/3",
+      "needHelp": "هل تحتاج إلى مساعدة؟ اتصل بالدعم",
+      "backToLogin": "العودة لتسجيل الدخول"
+    },
+    "orDivider": "أو",
+    "termsAgree": "بالتسجيل، فإنك توافق على",
+    "termsLink": "شروط الخدمة",
+    "privacyLink": "سياسة الخصوصية",
+    "and": "و"
+  },
+  "Pages": {
+    "pricing": {
+      "title": "خطط الأسعار",
+      "subtitle": "اختر الخطة التي تناسبك"
+    },
+    "privacy": {
+      "title": "سياسة الخصوصية",
+      "lastUpdated": "آخر تحديث: {date}"
+    },
+    "terms": {
+      "title": "شروط الخدمة",
+      "lastUpdated": "آخر تحديث: {date}"
+    },
+    "about": {
+      "title": "حول 3YESES",
+      "subtitle": "ربط المواهب بالفرص"
+    },
+    "contact": {
+      "title": "اتصل بنا",
+      "subtitle": "تواصل مع فريقنا"
+    }
+  },
+  "Hub": {
+    "title": "مركز الوسائط",
+    "subtitle": "اكتشف مقاطع الفيديو والصور والصوت من منشئي المحتوى الموهوبين",
+    "search": {
+      "placeholder": "ابحث بالعنوان أو الموهبة أو الوصف...",
+      "clear": "مسح البحث"
+    },
+    "categories": {
+      "title": "الفئات",
+      "all": "الكل",
+      "acting": "التمثيل",
+      "music": "الموسيقى",
+      "modeling": "النمذجة",
+      "directing": "الإخراج",
+      "writing": "الكتابة",
+      "photography": "التصوير الفوتوغرافي"
+    },
+    "type": {
+      "title": "النوع:",
+      "all": "الكل",
+      "videos": "فيديوهات",
+      "audio": "صوتي",
+      "images": "صور"
+    },
+    "filters": {
+      "button": "عوامل التصفية",
+      "popularityTier": "مستوى الشعبية",
+      "viral": "فيروسي",
+      "popular": "شائع",
+      "rising": "في ارتفاع",
+      "fresh": "جديد",
+      "uploadDate": "تاريخ التحميل",
+      "allTime": "كل الوقت",
+      "today": "اليوم",
+      "pastWeek": "الأسبوع الماضي",
+      "pastMonth": "الشهر الماضي",
+      "pastYear": "العام الماضي",
+      "sortBy": "الترتيب حسب",
+      "trending": "الرائج",
+      "newest": "الأحدث",
+      "mostLiked": "الأكثر إعجابًا",
+      "alphabetical": "أ-ي",
+      "oldest": "Oldest First",
+      "mostViews": "Most Views",
+      "leastViews": "Least Views",
+      "mostLikes": "Most Likes",
+      "leastLikes": "Least Likes",
+      "zToA": "Z-A",
+      "clearAll": "مسح جميع عوامل التصفية",
+      "activeFilters": "عوامل التصفية النشطة",
+      "search": "بحث",
+      "category": "الفئة",
+      "type": "النوع",
+      "sort": "الترتيب",
+      "showing": "عرض",
+      "results": "نتيجة",
+      "resultsPlural": "نتائج"
+    },
+    "sections": {
+      "featuredCreators": "منشئو المحتوى المميزون",
+      "discoverTopTalent": "اكتشف أفضل المواهب على المنصة",
+      "trendingNow": "الرائج الآن",
+      "hotContent": "محتوى ساخن الآن",
+      "mostViewed": "الأكثر مشاهدة الآن",
+      "featuredVideos": "فيديوهات مميزة",
+      "video": "فيديو",
+      "videos": "فيديوهات",
+      "viewAllVideos": "عرض جميع الفيديوهات ←",
+      "featuredAudio": "صوتيات مميزة",
+      "audioTrack": "مقطع صوتي",
+      "audioTracks": "مقاطع صوتية",
+      "viewAllAudio": "عرض جميع الصوتيات ←",
+      "featuredImages": "صور مميزة",
+      "image": "صورة",
+      "images": "صور",
+      "viewAllImages": "عرض جميع الصور ←",
+      "latestUploads": "أحدث التحميلات",
+      "freshContent": "محتوى جديد",
+      "mostPopular": "الأكثر شعبية",
+      "lovedByCommunity": "محبوب من المجتمع"
+    },
+    "badges": {
+      "sponsored": "برعاية",
+      "trending": "رائج",
+      "hot": "ساخن",
+      "new": "جديد",
+      "popular": "شائع"
+    },
+    "pagination": {
+      "previous": "السابق",
+      "next": "التالي"
+    },
+    "empty": {
+      "title": "لم يتم العثور على محتوى",
+      "description": "حاول ضبط عوامل التصفية لرؤية المزيد من النتائج"
+    }
+  },
+  "SearchResults": {
+    "noResultsTitle": "لم يتم العثور على نتائج",
+    "noResultsDescription": "حاول تعديل معايير البحث أو عوامل التصفية",
+    "clearAllFilters": "مسح جميع عوامل التصفية"
+  }
+}

@@ -213,7 +213,7 @@ async function createSampleTalents() {
             email: `${reviewData.name.toLowerCase().replace(' ', '.')}@example.com`,
             password: 'hashedpassword123',
             name: reviewData.name,
-            role: 'CLIENT'
+            role: 'TALENT'
           }
         });
 

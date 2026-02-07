@@ -40,4 +40,15 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# Compiled JavaScript files from TypeScript
+*.js
+*.js.map
+*.d.ts
+!next.config.mjs
+!postcss.config.mjs
+!eslint.config.mjs
+!scripts/*.js
+!jest.config.js
+!playwright.config.js
+
 /lib/generated/prisma

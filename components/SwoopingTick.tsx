@@ -4,9 +4,57 @@ interface SwoopingTickProps {
   readonly size?: number;
   readonly className?: string;
   readonly hovered?: boolean;
+  readonly spinnerOnly?: boolean; // New prop for clean spinner without checkmark
 }
 
-export default function SwoopingTick({ size = 48, className = '', hovered = false }: Readonly<SwoopingTickProps>) {
+export default function SwoopingTick({ 
+  size = 48, 
+  className = '', 
+  hovered = false,
+  spinnerOnly = false 
+}: Readonly<SwoopingTickProps>) {
+  
+  // Pure spinning circle loader
+  if (spinnerOnly) {
+    return (
+      <svg
+        width={size}
+        height={size}
+        viewBox="0 0 48 48"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className={`animate-spin ${className}`}
+        style={{
+          animation: 'spin 1s linear infinite'
+        }}
+      >
+        {/* Outer spinning circle */}
+        <circle
+          cx="24"
+          cy="24"
+          r="20"
+          stroke="currentColor"
+          strokeWidth="3"
+          fill="none"
+          opacity="0.2"
+        />
+        
+        {/* Spinning arc */}
+        <circle
+          cx="24"
+          cy="24"
+          r="20"
+          stroke="currentColor"
+          strokeWidth="3"
+          fill="none"
+          strokeDasharray="31.4 94.2"
+          strokeLinecap="round"
+        />
+      </svg>
+    );
+  }
+
+  // Original checkmark animation
   return (
     <svg
       width={size}

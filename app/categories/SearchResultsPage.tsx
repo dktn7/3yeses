@@ -18,7 +18,7 @@ interface SearchResultsPageProps {
 const SearchResultsPage: React.FC<SearchResultsPageProps> = ({ query, results }) => {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
-      <div className="p-6 max-w-7xl mx-auto">
+      <div className="p-6 max-w-screen-2xl mx-auto">
         <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white mb-6 tracking-tight">
           Search Results
         </h1>

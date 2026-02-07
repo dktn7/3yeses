@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
+import LoadingSpinner from '@/components/LoadingSpinner';
 import { 
   User, 
   Calendar, 
@@ -17,7 +18,7 @@ import Link from 'next/link';
 interface DashboardStats {
   totalViews: number;
   activeOpportunities: number;
-  completedBookings: number;
+  subscriptionPlan: string;
   totalEarnings: number;
   averageRating: number;
   responseRate: number;
@@ -29,7 +30,7 @@ export default function TalentDashboard() {
   const [stats, setStats] = useState<DashboardStats>({
     totalViews: 0,
     activeOpportunities: 0,
-    completedBookings: 0,
+    subscriptionPlan: 'FREE',
     totalEarnings: 0,
     averageRating: 0,
     responseRate: 0
@@ -45,7 +46,7 @@ export default function TalentDashboard() {
       setStats({
         totalViews: 1247,
         activeOpportunities: 3,
-        completedBookings: 12,
+        subscriptionPlan: 'FREE',
         totalEarnings: 3450,
         averageRating: 4.8,
         responseRate: 95
@@ -60,7 +61,7 @@ export default function TalentDashboard() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-blue"></div>
+        <LoadingSpinner size="large" />
       </div>
     );
   }
@@ -69,7 +70,7 @@ export default function TalentDashboard() {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
       <div className="bg-white dark:bg-gray-800 shadow">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div>
               <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -83,7 +84,7 @@ export default function TalentDashboard() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           <div className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">

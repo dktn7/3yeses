@@ -1,13 +1,12 @@
 'use client';
 
-import { useState } from 'react';
-import { getTalentsBySubCategory, getSubSubCategories, searchTalents } from '@/lib/data';
-import { Talent, TalentFilters } from '@/types';
+import { useState, useRef, useEffect } from 'react';
+import { getTalentsBySubCategory, getSubSubCategories } from '@/lib/data';
+import type { Talent, TalentFilters } from '@/types/index.ts';
 import { ArrowLeft, CheckCircle, Users, Music, Zap, Camera, UserCheck, Filter, X, Search, MapPin } from 'lucide-react';
 import EmptyState from '@/components/EmptyState';
 import VideoTalentCard from '@/components/VideoTalentCard';
-import FilterSidebar from '@/components/FilterSidebar';
-import AdvancedSearchPanel from '@/components/AdvancedSearchPanel';
+import LocationAutocomplete from '@/components/LocationAutocomplete';
 
 // Local lightweight types matching data shapes used in this component
 type LocalSubCategory = { id: string; name: string; description?: string; talentCount?: number };
@@ -26,17 +25,7 @@ const getCategoryIcon = (iconName: string) => {
   }
 };
 
-// Helper to match a talent against a simple text query
-const matchTalentQuery = (talent: Talent, q: string) => {
-  const term = q.toLowerCase();
-  return (
-    talent.name.toLowerCase().includes(term) ||
-    talent.role.toLowerCase().includes(term) ||
-    talent.bio.toLowerCase().includes(term) ||
-    talent.location.toLowerCase().includes(term) ||
-    talent.skills.some(skill => skill.toLowerCase().includes(term))
-  );
-};
+// ...existing code...
 
 interface CategoriesClientProps {
   categories: LocalCategory[];
@@ -86,10 +75,27 @@ export default function CategoriesClient({ categories }: Readonly<CategoriesClie
 
   const handleSearch = async () => {
     setIsSearching(true);
-    const results = await Promise.resolve(searchTalents(searchQuery, filters));
-    setSearchResults(results);
+    try {
+      const res = await fetch('/api/search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ q: searchQuery, filters, page: 1, limit: 50 })
+      });
+      const data = await res.json();
+      setSearchResults(data.talents || []);
+    } catch {
+      setSearchResults([]);
+    }
     setIsSearching(false);
   };
+
+  // debounce search when typing in the search input
+  const searchTimer = useRef<number | null>(null);
+  useEffect(() => {
+    return () => {
+      if (searchTimer.current) window.clearTimeout(searchTimer.current);
+    };
+  }, []);
 
   const clearSearch = () => {
     setSearchQuery('');
@@ -246,16 +252,7 @@ export default function CategoriesClient({ categories }: Readonly<CategoriesClie
   const currentSubSubcategories = selectedSubtype ? getSubSubCategories(selectedSubtype.id) : [];
   const shouldShowSubSubcategories = selectedSubtype && !selectedSubSubtype && currentSubSubcategories.length > 0;
 
-  // Helper to toggle body type selection (avoid inline nested functions)
-  const toggleBodyType = (type: string, checked: boolean) => {
-    setFilters(prev => {
-      const current = prev.bodyType || [];
-      if (checked) {
-        return { ...prev, bodyType: Array.from(new Set([...current, type])) };
-      }
-      return { ...prev, bodyType: current.filter(t => t !== type) };
-    });
-  };
+  // ...existing code...
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -286,14 +283,21 @@ export default function CategoriesClient({ categories }: Readonly<CategoriesClie
           </div>
 
           {/* Search Bar */}
-          <div className="relative max-w-2xl">
+              <div className="relative max-w-2xl">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
                 type="text"
                 placeholder={getSearchPlaceholder()}
                 value={searchQuery}
-                onChange={(e) => handleSearch(e.target.value)}
+                    onChange={(e) => {
+                      const v = e.target.value;
+                      setSearchQuery(v);
+                      if (searchTimer.current) window.clearTimeout(searchTimer.current);
+                      searchTimer.current = window.setTimeout(() => {
+                        handleSearch();
+                      }, 300);
+                    }}
                 className="w-full pl-10 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-red-500 focus:border-transparent"
               />
               {searchQuery && (
@@ -332,23 +336,20 @@ export default function CategoriesClient({ categories }: Readonly<CategoriesClie
             </div>
             
             {/* Basic Filters */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
-                <label htmlFor="location-input" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   <MapPin size={16} className="inline mr-1" />
                   Location
                 </label>
-                <input
-                  id="location-input"
-                  type="text"
-                  placeholder="City, State, Country"
+                <LocationAutocomplete
                   value={filters.location || ''}
-                  onChange={(e) => {
-                    const newFilters = { ...filters, location: e.target.value };
+                  onChange={(v: string) => {
+                    const newFilters = { ...filters, location: v };
                     setFilters(newFilters);
                     handleFilterChange(newFilters);
                   }}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                  placeholder="City, State, Country"
                 />
               </div>
             </div>
@@ -398,7 +399,7 @@ export default function CategoriesClient({ categories }: Readonly<CategoriesClie
           {/* Sub-subcategories Grid */}
           {shouldShowSubSubcategories && !isSearching && (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 animate-fade-in">
-              {currentSubSubcategories.map(subSub => (
+              {currentSubSubcategories.map((subSub: LocalSubCategory) => (
                 <button
                   key={subSub.id}
                   type="button"

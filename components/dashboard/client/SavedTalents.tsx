@@ -1,8 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import DashboardWidget from './DashboardWidget';
-import { mockTalents } from '@/lib/data';
-import type { Talent } from '@/types';
+import DashboardWidget from './DashboardWidget.tsx';
+import { mockTalents } from '@/lib/data.ts';
+import type { Talent } from '@/types/index.ts';
 
 /**
  * A widget to display a list of talents the client has saved or bookmarked.

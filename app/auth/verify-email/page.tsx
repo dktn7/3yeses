@@ -1,14 +1,24 @@
 'use client';
 
 import { useState, useEffect, Suspense } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { Mail, Check, X, RefreshCw, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 function VerifyEmailContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const email = searchParams.get('email');
+  const pathname = usePathname();
+  const t = useTranslations('Auth.verifyEmail');
+  const email = searchParams?.get ? searchParams.get('email') : null;
+  
+  // Extract locale for dashboard redirect
+  const pathSegments = pathname?.split('/').filter(Boolean) || [];
+  const validLocales = ['en-gb', 'fr-FR', 'de-DE', 'es-ES', 'it-IT', 'pt-PT', 'ru-RU', 'ja-JP', 'zh-CN', 'ar'];
+  const firstSegment = pathSegments[0] || 'en-gb';
+  const locale = validLocales.includes(firstSegment) ? firstSegment : 'en-gb';
   const [verificationStatus, setVerificationStatus] = useState<'pending' | 'success' | 'error' | 'expired'>('pending');
   const [loading, setLoading] = useState(false);
   const [resendCount, setResendCount] = useState(0);
@@ -16,7 +26,7 @@ function VerifyEmailContent() {
 
   useEffect(() => {
     if (!email) {
-      router.push('/auth/signup/step-1');
+      router.push('/auth/signin');
       return;
     }
 
@@ -57,7 +67,7 @@ function VerifyEmailContent() {
 
   const handleContinue = () => {
     if (verificationStatus === 'success') {
-      router.push('/auth/signup/step-2');
+      router.push(`/${locale}/dashboard`);
     }
   };
 
@@ -78,27 +88,27 @@ function VerifyEmailContent() {
     switch (verificationStatus) {
       case 'success':
         return {
-          title: 'Email Verified Successfully!',
-          message: 'Your email has been verified. You can now continue with your registration.',
-          action: 'Continue to Profile Setup'
+          title: t('success.title'),
+          message: t('success.message'),
+          action: t('success.button')
         };
       case 'error':
         return {
-          title: 'Verification Failed',
-          message: 'We couldn\'t verify your email. Please try again or request a new verification email.',
-          action: 'Try Again'
+          title: t('error.title'),
+          message: t('error.message'),
+          action: t('resend')
         };
       case 'expired':
         return {
-          title: 'Verification Link Expired',
-          message: 'This verification link has expired. Please request a new one.',
-          action: 'Resend Email'
+          title: t('expired.title'),
+          message: t('expired.message'),
+          action: t('resend')
         };
       default:
         return {
-          title: 'Check Your Email',
-          message: `We've sent a verification link to ${email}. Please check your inbox and click the link to verify your account.`,
-          action: 'Resend Email'
+          title: t('pending.title'),
+          message: t('pending.message'),
+          action: t('resend')
         };
     }
   };
@@ -115,7 +125,7 @@ function VerifyEmailContent() {
         {/* Back Link */}
         <div className="mb-6">
           <Link 
-            href="/auth/signup/step-1"
+            href="/auth/signin"
             className="inline-flex items-center text-sm text-gray-600 dark:text-gray-400 hover:text-primary-blue transition-colors"
           >
             <ArrowLeft className="h-4 w-4 mr-1" />
@@ -164,17 +174,17 @@ function VerifyEmailContent() {
               <button
                 onClick={handleResendEmail}
                 disabled={loading || cooldownTime > 0 || resendCount >= 3}
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-blue hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-red-600 hover:from-blue-700 hover:to-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
               >
                 {loading ? (
                   <div className="flex items-center">
                     <RefreshCw className="animate-spin h-4 w-4 mr-2" />
-                    Sending...
+                    {t('resending')}
                   </div>
                 ) : cooldownTime > 0 ? (
-                  `Resend in ${cooldownTime}s`
+                  t('cooldown', { seconds: cooldownTime })
                 ) : resendCount >= 3 ? (
-                  'Max attempts reached'
+                  t('maxAttempts')
                 ) : (
                   status.action
                 )}
@@ -184,11 +194,11 @@ function VerifyEmailContent() {
             {/* Additional Options */}
             <div className="text-center">
               <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
-                Didn&apos;t receive the email? Check your spam folder.
+                {t('checkSpam')}
               </p>
               {resendCount > 0 && (
                 <p className="text-xs text-gray-400">
-                  Emails sent: {resendCount}/3
+                  {t('attemptsRemaining', { count: resendCount })}
                 </p>
               )}
             </div>
@@ -197,10 +207,10 @@ function VerifyEmailContent() {
           {/* Support Link */}
           <div className="mt-6 text-center">
             <Link
-              href="/contact"
-              className="text-sm text-primary-blue hover:text-blue-800"
+              href={`/${locale}/contact`}
+              className="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
             >
-              Need help? Contact support
+              {t('needHelp')}
             </Link>
           </div>
         </div>
@@ -211,8 +221,8 @@ function VerifyEmailContent() {
 
 export default function VerifyEmail() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-background-light dark:bg-background-dark flex items-center justify-center">
-      <div className="text-center">Loading...</div>
+    <Suspense fallback={<div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center">
+      <LoadingSpinner />
     </div>}>
       <VerifyEmailContent />
     </Suspense>

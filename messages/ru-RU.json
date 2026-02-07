@@ -1,0 +1,544 @@
+{
+  "Navigation": {
+    "home": "Главная",
+    "about": "О нас",
+    "categories": "Категории",
+    "contact": "Контакты",
+    "news": "Новости",
+    "resources": "Ресурсы",
+    "successStories": "Истории успеха",
+    "pricingPlans": "Тарифные планы",
+    "legal": "Правовая информация",
+    "privacyPolicy": "Политика конфиденциальности",
+    "termsOfService": "Условия обслуживания",
+    "dashboard": "Панель управления",
+    "profile": "Профиль",
+    "settings": "Настройки",
+    "logout": "Выйти",
+    "login": "Войти",
+    "signup": "Регистрация"
+  },
+  "Footer": {
+    "aboutUs": "О нас",
+    "companyInfo": "Связываем таланты с возможностями в индустрии развлечений.",
+    "forTalent": "Для талантов",
+    "joinAsTalent": "Присоединиться как талант",
+    "talentDashboard": "Панель талантов",
+    "browseCategories": "Просмотр категорий",
+    "pricingPlans": "Тарифные планы",
+    "howItWorks": "Как это работает",
+    "successStories": "Истории успеха",
+    "contactUs": "Свяжитесь с нами",
+    "email": "contact@3yeses.co.uk",
+    "phone": "+44 121 123 4567",
+    "location": "Бирмингем, Великобритания",
+    "language": "Язык",
+    "copyright": "© 2025 3YESES. Все права защищены.",
+    "privacyPolicy": "Политика конфиденциальности",
+    "termsOfService": "Условия обслуживания"
+  },
+  "Language": {
+    "english": "Английский",
+    "french": "Французский",
+    "german": "Немецкий",
+    "spanish": "Испанский",
+    "italian": "Итальянский",
+    "portuguese": "Португальский",
+    "russian": "Русский",
+    "japanese": "Японский",
+    "chinese": "Китайский",
+    "arabic": "Арабский"
+  },
+  "Home": {
+    "tagline": "Связываем таланты с возможностями в индустрии развлечений.",
+    "welcome": {
+      "title": "Добро пожаловать в 3YESES",
+      "description": "Найдите идеальный талант для вашего следующего проекта или откройте для себя захватывающие возможности в индустрии развлечений."
+    },
+    "forTalent": {
+      "title": "Для талантов",
+      "description": "Продемонстрируйте свои навыки и найдите свою следующую большую возможность.",
+      "browse": "Просмотр категорий"
+    },
+    "whyChooseTitle": "Почему выбирают",
+    "whyChooseSubtitle": "3YESES",
+    "whyChooseDescription": "Откройте для себя, что делает 3YESES вашей предпочтительной платформой для поиска и связи с творческими талантами в индустрии развлечений.",
+    "readyToConnectTitle": "Готовы связаться с творческими талантами?",
+    "readyToConnectDescription": "Присоединяйтесь к растущему сообществу творческих профессионалов, которые находят возможности на 3YESES.",
+    "features": {
+      "creativeDirectory": {
+        "title": "Каталог творческих талантов",
+        "description": "Просматривайте и связывайтесь с творческими профессионалами в различных категориях и специальностях.",
+        "benefits": [
+          "Легкое обнаружение талантов",
+          "Поиск по категориям",
+          "Прямое общение",
+          "Портфолио работ"
+        ]
+      },
+      "advancedSearch": {
+        "title": "Расширенный поиск и фильтры",
+        "description": "Найдите идеальный талант с помощью наших мощных возможностей поиска и фильтрации.",
+        "benefits": [
+          "Поиск по местоположению",
+          "Фильтры навыков и опыта",
+          "Навигация по категориям",
+          "Подробные профили"
+        ]
+      },
+      "talentProfiles": {
+        "title": "Профили талантов",
+        "description": "Всесторонние профили, показывающие навыки, опыт и предыдущие работы талантов.",
+        "benefits": [
+          "Портфолио работ",
+          "История опыта",
+          "Списки навыков",
+          "Контактная информация"
+        ]
+      },
+      "mobileOptimized": {
+        "title": "Оптимизировано для мобильных",
+        "description": "Доступ к платформе с любого устройства с полностью адаптивным дизайном.",
+        "benefits": [
+          "Мобильный интерфейс",
+          "Оптимизированная навигация",
+          "Адаптивные макеты",
+          "Кроссплатформенная совместимость"
+        ]
+      },
+      "growingCommunity": {
+        "title": "Растущее сообщество",
+        "description": "Присоединяйтесь к расширяющейся сети творческих профессионалов и отраслевых связей.",
+        "benefits": [
+          "Разнообразные таланты",
+          "Отраслевые связи",
+          "Творческие возможности",
+          "Поддержка сообщества"
+        ]
+      },
+      "alwaysAvailable": {
+        "title": "Доступ к платформе 24/7",
+        "description": "Ищите и связывайтесь с талантами когда вам нужно, днем и ночью.",
+        "benefits": [
+          "Всегда доступно",
+          "Без временных ограничений",
+          "Гибкое планирование",
+          "Глобальный доступ"
+        ]
+      }
+    },
+    "headlines": {
+      "getCast": "Получите свою следующую роль сегодня",
+      "showcase": "Покажите свой талант миру",
+      "connect": "Свяжитесь с профессионалами индустрии",
+      "build": "Создайте свое творческое портфолио",
+      "discover": "Открывайте новые возможности ежедневно",
+      "join": "Присоединяйтесь к революции талантов",
+      "break": "Ваш следующий большой прорыв ждет",
+      "passion": "Превратите страсть в успех"
+    },
+    "mobileOptimized": "Оптимизировано для мобильных",
+    "support247": "Поддержка 24/7"
+  },
+  "News": {
+    "title": "Новости и аналитика индустрии",
+    "loading": "Загрузка последних материалов...",
+    "trendingTopics": "Актуальные темы",
+    "noTrending": "Сейчас нет актуальных тем.",
+    "popularTags": "Популярные теги",
+    "clearTags": "Очистить теги",
+    "newsletter": {
+      "title": "Будьте в курсе",
+      "description": "Получайте последние отраслевые инсайты и аналитику с ИИ на вашу почту.",
+      "cta": "Подписаться"
+    },
+    "readMore": "Читать далее",
+    "readMoreAria": "Подробнее о {title}",
+    "avatarAlt": "Аватар {author}",
+    "activeCategory": "Категория: {category}",
+    "clearAll": "Очистить все",
+    "pagination": {
+      "prev": "Назад",
+      "next": "Далее"
+    },
+    "empty": "Нет статей, соответствующих текущим фильтрам.",
+    "sort": {
+      "trending": "В тренде",
+      "recent": "Самые новые",
+      "popular": "Популярные",
+      "views": "Просматриваемые"
+    },
+    "categories": {
+      "all": "Все новости",
+      "acting": "Актёрство",
+      "music": "Музыка",
+      "dance": "Танец",
+      "crew": "Продакшн",
+      "platform": "Платформа"
+    }
+  },
+  "Auth": {
+    "signin": {
+      "title": "Добро пожаловать",
+      "subtitle": "Войдите в свою учетную запись",
+      "email": "Адрес электронной почты",
+      "emailPlaceholder": "ваш.email@пример.ru",
+      "password": "Пароль",
+      "passwordPlaceholder": "Введите ваш пароль",
+      "rememberMe": "Запомнить меня",
+      "forgotPassword": "Забыли пароль?",
+      "submit": "Войти",
+      "orContinueWith": "или продолжить с электронной почтой",
+      "continueWithGoogle": "Продолжить с Google",
+      "continueWithFacebook": "Продолжить с Facebook",
+      "continueWithApple": "Продолжить с Apple",
+      "noAccount": "Нет учетной записи?",
+      "signUpLink": "Зарегистрироваться",
+      "errors": {
+        "emailRequired": "Электронная почта обязательна",
+        "emailInvalid": "Пожалуйста, введите действительный адрес электронной почты",
+        "passwordRequired": "Пароль обязателен",
+        "passwordTooShort": "Пароль должен содержать не менее 6 символов",
+        "loginFailed": "Неверная электронная почта или пароль",
+        "serverError": "Произошла ошибка. Пожалуйста, попробуйте еще раз"
+      },
+      "success": {
+        "loginSuccess": "Успешный вход!"
+      }
+    },
+    "signup": {
+      "title": "Создайте свою учетную запись",
+      "subtitle": "Присоединяйтесь к тысячам творческих профессионалов",
+      "startButton": "Начните свое путешествие",
+      "alreadyHaveAccount": "Уже есть учетная запись?",
+      "signIn": "Войти",
+      "back": "Назад",
+      "next": "Следующий шаг",
+      "submit": "Завершить регистрацию",
+      "step1Title": "Информация об учетной записи",
+      "step1Description": "Основные данные",
+      "step2Title": "Ваш профиль",
+      "step2Description": "Профессиональная информация",
+      "step3Title": "Загрузить медиа",
+      "step3Description": "Портфолио и видео",
+      "firstName": "Имя",
+      "firstNamePlaceholder": "Иван",
+      "lastName": "Фамилия",
+      "lastNamePlaceholder": "Иванов",
+      "email": "Адрес электронной почты",
+      "emailPlaceholder": "ваш.email@пример.ru",
+      "phone": "Номер телефона",
+      "phonePlaceholder": "+7 XXX XXX XX XX",
+      "password": "Пароль",
+      "passwordPlaceholder": "Создайте надежный пароль",
+      "confirmPassword": "Подтвердите пароль",
+      "confirmPasswordPlaceholder": "Введите пароль еще раз",
+      "category": "Основная категория",
+      "categoryPlaceholder": "Выберите основную категорию",
+      "bio": "Биография",
+      "bioPlaceholder": "Расскажите нам о себе и своем опыте...",
+      "location": "Местоположение",
+      "locationPlaceholder": "Город, Страна",
+      "experience": "Годы опыта",
+      "experiencePlaceholder": "Выберите уровень опыта",
+      "skills": "Навыки",
+      "skillsPlaceholder": "Добавьте свои навыки",
+      "dateOfBirth": "Дата рождения",
+      "dateOfBirthPlaceholder": "Выберите дату рождения",
+      "parentManagedAccount": "Требуется учетная запись, управляемая родителями",
+      "parentManagedAccountTitle": "Учетная запись, управляемая родителем/опекуном",
+      "parentManagedAccountDescription": "Для пользователей в возрасте 13-17 лет родитель или опекун должен создать и управлять этой учетной записью.",
+      "parentGuardianInfo": "Информация о родителе/опекуне",
+      "yourInformation": "Ваша информация",
+      "childTalentInfo": "Информация о таланте ребенка",
+      "accountSecurity": "Безопасность учетной записи",
+      "parentFirstName": "Имя родителя",
+      "parentLastName": "Фамилия родителя",
+      "parentEmail": "Электронная почта родителя",
+      "parentPhone": "Телефон родителя",
+      "childFirstName": "Имя ребенка",
+      "childLastName": "Фамилия ребенка",
+      "childDateOfBirth": "Дата рождения ребенка",
+      "parentalConsentText": "Я подтверждаю, что являюсь родителем/законным опекуном вышеуказанного ребенка и даю согласие на создание этой учетной записи.",
+      "iAgreeToThe": "Я согласен с",
+      "termsAndConditions": "Условиями использования",
+      "and": "и",
+      "privacyPolicy": "Политикой конфиденциальности",
+      "gender": "Пол",
+      "genderPlaceholder": "Выберите пол",
+      "genderMale": "Мужской",
+      "genderFemale": "Женский",
+      "genderNonBinary": "Небинарный",
+      "genderPreferNotToSay": "Предпочитаю не указывать",
+      "genderOther": "Другое",
+      "genderOtherSpecify": "Укажите",
+      "ethnicity": "Этническая принадлежность",
+      "ethnicityPlaceholder": "Выберите этническую принадлежность",
+      "ethnicityWhite": "Белый/Кавказский",
+      "ethnicityBlack": "Черный/Африканский",
+      "ethnicityAsian": "Азиатский",
+      "ethnicityHispanic": "Латиноамериканский",
+      "ethnicityMiddleEastern": "Ближневосточный",
+      "ethnicityMixed": "Смешанный/Мультирасовый",
+      "ethnicityNative": "Коренной американец",
+      "ethnicityPacific": "Житель островов Тихого океана",
+      "ethnicityPreferNotToSay": "Предпочитаю не указывать",
+      "ethnicityOther": "Другое",
+      "ethnicityOtherSpecify": "Укажите",
+      "bodyType": "Тип телосложения",
+      "bodyTypePlaceholder": "Выберите тип телосложения",
+      "bodyTypeSlim": "Стройный",
+      "bodyTypeAverage": "Средний",
+      "bodyTypeAthletic": "Атлетический",
+      "bodyTypeCurvy": "Пышный",
+      "bodyTypePlusSize": "Больших размеров",
+      "bodyTypeMuscular": "Мускулистый",
+      "bodyTypePreferNotToSay": "Предпочитаю не говорить",
+      "languages": "Языки",
+      "languagesPlaceholder": "Добавьте языки, которыми владеете",
+      "languageName": "Язык",
+      "languageNamePlaceholder": "напр. Русский, Английский",
+      "proficiency": "Уровень владения",
+      "proficiencyNative": "Родной",
+      "proficiencyFluent": "Свободный",
+      "proficiencyIntermediate": "Средний",
+      "proficiencyBasic": "Базовый",
+      "addLanguage": "Добавить язык",
+      "removeLanguage": "Удалить",
+      "disability": "Инвалидность/Доступность (Необязательно)",
+      "disabilityDescription": "Выберите применимые варианты для инклюзивного кастинга",
+      "disabilityWheelchairUser": "Пользователь инвалидной коляски",
+      "disabilityMobilityImpairment": "Нарушение подвижности",
+      "disabilityLimbDifferenceAmputation": "Разница/Ампутация конечностей",
+      "disabilityDeafHardOfHearing": "Глухой/Слабослышащий",
+      "disabilityBlindVisualImpairment": "Слепой/Нарушение зрения",
+      "disabilityNeurodivergent": "Нейроразнообразие (Аутизм, СДВГ, Дислексия и т. д.)",
+      "disabilitySpeechCommunicationDifference": "Разница в речи/общении",
+      "disabilityDwarfismShortStature": "Карликовость/Низкий рост",
+      "disabilityFacialDifference": "Особенности лица",
+      "disabilityChronicPainFatigue": "Хроническая боль/Усталость",
+      "disabilityInvisibleDisability": "Невидимая инвалидность (Эпилепсия, Диабет и т. д.)",
+      "disabilityOther": "Другое",
+      "disabilityOtherSpecify": "Пожалуйста, уточните",
+      "disabilityNonePreferNotToSay": "Нет / Предпочитаю не говорить",
+      "optional": "необязательно",
+      "profilePhoto": "Фото профиля",
+      "uploadPhoto": "Загрузить фото",
+      "removePhoto": "Удалить",
+      "portfolio": "Изображения портфолио",
+      "uploadPortfolio": "Загрузить изображения (Макс 10)",
+      "videos": "Демонстрационные видео",
+      "videoUrl": "URL видео",
+      "videoUrlPlaceholder": "https://youtube.com/watch?v=...",
+      "addVideo": "Добавить видео",
+      "removeVideo": "Удалить",
+      "errors": {
+        "firstNameRequired": "Имя обязательно",
+        "lastNameRequired": "Фамилия обязательна",
+        "childFirstNameRequired": "Имя ребенка обязательно",
+        "childLastNameRequired": "Фамилия ребенка обязательна",
+        "minimumAge13": "Вам должно быть не менее 13 лет для регистрации",
+        "parentalConsentRequired": "Требуется согласие родителей",
+        "termsRequired": "Вы должны принять Условия использования",
+        "emailRequired": "Электронная почта обязательна",
+        "emailInvalid": "Пожалуйста, введите действительный адрес электронной почты",
+        "emailTaken": "Эта электронная почта уже зарегистрирована",
+        "phoneRequired": "Номер телефона обязателен",
+        "phoneInvalid": "Пожалуйста, введите действительный номер телефона",
+        "passwordRequired": "Пароль обязателен",
+        "passwordTooShort": "Пароль должен содержать не менее 8 символов",
+        "passwordWeak": "Пароль должен содержать заглавные, строчные буквы и цифры",
+        "passwordMismatch": "Пароли не совпадают",
+        "confirmPasswordRequired": "Пожалуйста, подтвердите ваш пароль",
+        "categoryRequired": "Пожалуйста, выберите категорию",
+        "bioRequired": "Пожалуйста, расскажите нам о себе",
+        "locationRequired": "Местоположение обязательно",
+        "serverError": "Произошла ошибка. Пожалуйста, попробуйте еще раз"
+      },
+      "success": {
+        "accountCreated": "Учетная запись успешно создана!",
+        "redirecting": "Перенаправление на проверку..."
+      }
+    },
+    "forgotPassword": {
+      "title": "Забыли пароль?",
+      "subtitle": "Введите адрес электронной почты, и мы отправим вам ссылку для сброса",
+      "email": "Адрес электронной почты",
+      "emailPlaceholder": "ваш.email@пример.ru",
+      "submit": "Отправить ссылку для сброса",
+      "errors": {
+        "emailRequired": "Электронная почта обязательна",
+        "emailInvalid": "Пожалуйста, введите действительный адрес электронной почты",
+        "requestFailed": "Не удалось отправить электронную почту",
+        "serverError": "Произошла ошибка. Пожалуйста, попробуйте еще раз"
+      },
+      "success": {
+        "title": "Электронная почта отправлена!",
+        "message": "Если учетная запись с этой электронной почтой существует, вы получите ссылку для сброса.",
+        "checkSpam": "Если вы не видите электронную почту, проверьте папку спам."
+      }
+    },
+    "resetPassword": {
+      "title": "Сбросить пароль",
+      "subtitle": "Введите новый пароль",
+      "newPassword": "Новый пароль",
+      "newPasswordPlaceholder": "Введите новый пароль",
+      "confirmPassword": "Подтвердите пароль",
+      "confirmPasswordPlaceholder": "Введите новый пароль еще раз",
+      "passwordRequirements": "Мин 8 символов с заглавными, строчными буквами и цифрами",
+      "submit": "Сбросить пароль",
+      "errors": {
+        "passwordRequired": "Пароль обязателен",
+        "passwordTooShort": "Пароль должен содержать не менее 8 символов",
+        "passwordWeak": "Пароль должен содержать заглавные, строчные буквы и цифры",
+        "confirmPasswordRequired": "Пожалуйста, подтвердите ваш пароль",
+        "passwordMismatch": "Пароли не совпадают",
+        "resetFailed": "Не удалось сбросить пароль",
+        "serverError": "Произошла ошибка. Пожалуйста, попробуйте еще раз"
+      },
+      "success": {
+        "title": "Пароль сброшен!",
+        "message": "Ваш пароль был успешно сброшен."
+      }
+    },
+    "verifyEmail": {
+      "title": "Подтвердите электронную почту",
+      "subtitle": "Мы отправили письмо с подтверждением на",
+      "checking": "Проверка вашей электронной почты...",
+      "pending": {
+        "title": "Подтвердите электронную почту",
+        "message": "Мы отправили ссылку для подтверждения на вашу электронную почту. Пожалуйста, проверьте свой почтовый ящик и нажмите на ссылку, чтобы подтвердить свою учетную запись."
+      },
+      "success": {
+        "title": "Электронная почта успешно подтверждена!",
+        "message": "Ваша электронная почта подтверждена. Теперь вы можете продолжить.",
+        "button": "Перейти к настройке профиля"
+      },
+      "error": {
+        "title": "Проверка не удалась",
+        "message": "Мы не смогли подтвердить вашу электронную почту. Пожалуйста, попробуйте еще раз или запросите новое письмо с подтверждением."
+      },
+      "expired": {
+        "title": "Ссылка для подтверждения истекла",
+        "message": "Эта ссылка для подтверждения истекла. Пожалуйста, запросите новую."
+      },
+      "resend": "Отправить повторно",
+      "resending": "Отправка...",
+      "resentSuccess": "Письмо с подтверждением отправлено!",
+      "changeEmail": "Изменить адрес электронной почты",
+      "checkSpam": "Если вы не видите электронную почту, проверьте папку спам.",
+      "maxAttempts": "Достигнуто максимальное количество попыток",
+      "cooldown": "Повторная отправка через {seconds}с",
+      "attemptsRemaining": "Отправлено писем: {count}/3",
+      "needHelp": "Нужна помощь? Свяжитесь с поддержкой",
+      "backToLogin": "Вернуться к входу"
+    },
+    "orDivider": "или",
+    "termsAgree": "Регистрируясь, вы соглашаетесь с нашими",
+    "termsLink": "Условиями обслуживания",
+    "privacyLink": "Политикой конфиденциальности",
+    "and": "и"
+  },
+  "Hub": {
+    "title": "Медиа-центр",
+    "subtitle": "Откройте для себя видео, изображения и аудио от талантливых создателей",
+    "search": {
+      "placeholder": "Поиск по названию, таланту или описанию...",
+      "clear": "Очистить поиск"
+    },
+    "categories": {
+      "title": "Категории",
+      "all": "Все",
+      "acting": "Актёрское мастерство",
+      "music": "Музыка",
+      "modeling": "Моделирование",
+      "directing": "Режиссура",
+      "writing": "Письмо",
+      "photography": "Фотография"
+    },
+    "type": {
+      "title": "Тип:",
+      "all": "Все",
+      "videos": "Видео",
+      "audio": "Аудио",
+      "images": "Изображения"
+    },
+    "filters": {
+      "button": "Фильтры",
+      "popularityTier": "Уровень популярности",
+      "viral": "Вирусный",
+      "popular": "Популярный",
+      "rising": "Растущий",
+      "fresh": "Свежий",
+      "uploadDate": "Дата загрузки",
+      "allTime": "Все время",
+      "today": "Сегодня",
+      "pastWeek": "Прошлая неделя",
+      "pastMonth": "Прошлый месяц",
+      "pastYear": "Прошлый год",
+      "sortBy": "Сортировать по",
+      "trending": "Тренды",
+      "newest": "Новейшие",
+      "mostLiked": "Популярные",
+      "alphabetical": "А-Я",
+      "oldest": "Oldest First",
+      "mostViews": "Most Views",
+      "leastViews": "Least Views",
+      "mostLikes": "Most Likes",
+      "leastLikes": "Least Likes",
+      "zToA": "Z-A",
+      "clearAll": "Очистить все фильтры",
+      "activeFilters": "Активные фильтры",
+      "search": "Поиск",
+      "category": "Категория",
+      "type": "Тип",
+      "sort": "Сортировка",
+      "showing": "Показано",
+      "results": "результат",
+      "resultsPlural": "результатов"
+    },
+    "sections": {
+      "featuredCreators": "Избранные создатели",
+      "discoverTopTalent": "Откройте для себя лучшие таланты на платформе",
+      "trendingNow": "Сейчас в тренде",
+      "hotContent": "Популярный контент сейчас",
+      "mostViewed": "Самый просматриваемый контент сейчас",
+      "featuredVideos": "Избранные видео",
+      "video": "видео",
+      "videos": "видео",
+      "viewAllVideos": "Посмотреть все видео →",
+      "featuredAudio": "Избранное аудио",
+      "audioTrack": "аудиодорожка",
+      "audioTracks": "аудиодорожки",
+      "viewAllAudio": "Посмотреть все аудио →",
+      "featuredImages": "Избранные изображения",
+      "image": "изображение",
+      "images": "изображения",
+      "viewAllImages": "Посмотреть все изображения →",
+      "latestUploads": "Последние загрузки",
+      "freshContent": "Свежий контент",
+      "mostPopular": "Самые популярные",
+      "lovedByCommunity": "Любимый сообществом"
+    },
+    "badges": {
+      "sponsored": "Спонсируется",
+      "trending": "Тренд",
+      "hot": "Популярный",
+      "new": "Новый",
+      "popular": "Популярный"
+    },
+    "pagination": {
+      "previous": "Предыдущий",
+      "next": "Следующий"
+    },
+    "empty": {
+      "title": "Контент не найден",
+      "description": "Попробуйте изменить фильтры, чтобы увидеть больше результатов"
+    }
+  },
+  "SearchResults": {
+    "noResultsTitle": "Результаты не найдены",
+    "noResultsDescription": "Попробуйте изменить критерии поиска или фильтры",
+    "clearAllFilters": "Очистить все фильтры"
+  }
+}

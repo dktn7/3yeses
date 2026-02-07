@@ -1,0 +1,589 @@
+{
+  "Navigation": {
+    "home": "Inicio",
+    "about": "Acerca de",
+    "categories": "Categorías",
+    "contact": "Contacto",
+    "news": "Noticias",
+    "resources": "Recursos",
+    "pricingPlans": "Planes de Precios",
+    "legal": "Legal",
+    "privacyPolicy": "Política de Privacidad",
+    "termsOfService": "Términos de Servicio",
+    "dashboard": "Panel",
+    "profile": "Perfil",
+    "settings": "Configuración",
+    "logout": "Cerrar Sesión",
+    "login": "Iniciar Sesión",
+    "signup": "Registrarse"
+  },
+  "Footer": {
+    "aboutUs": "Sobre nosotros",
+    "companyInfo": "Conectar talento con oportunidades en la industria del entretenimiento.",
+    "forTalent": "Para talentos",
+    "joinAsTalent": "Únete como talento",
+    "talentDashboard": "Panel de talentos",
+    "browseCategories": "Explorar categorías",
+    "pricingPlans": "Planes de precios",
+    "howItWorks": "Cómo funciona",
+    "successStories": "Historias de éxito",
+    "contactUs": "Contáctanos",
+    "email": "contact@3yeses.co.uk",
+    "phone": "+44 121 123 4567",
+    "location": "Birmingham, Reino Unido",
+    "language": "Idioma",
+    "copyright": "© 2025 3YESES. Todos los derechos reservados.",
+    "privacyPolicy": "Política de privacidad",
+    "termsOfService": "Términos de servicio"
+  },
+  "Language": {
+    "english": "Inglés",
+    "french": "Francés",
+    "german": "Alemán",
+    "spanish": "Español",
+    "italian": "Italiano",
+    "portuguese": "Portugués",
+    "russian": "Ruso",
+    "japanese": "Japonés",
+    "chinese": "Chino",
+    "arabic": "Árabe"
+  },
+  "Home": {
+    "tagline": "Conectando talento con oportunidades en la industria del entretenimiento.",
+    "welcome": {
+      "title": "Bienvenido a 3YESES",
+      "description": "Encuentra el talento perfecto para tu próximo proyecto o descubre emocionantes oportunidades en la industria del entretenimiento."
+    },
+    "forTalent": {
+      "title": "Para talentos",
+      "description": "Muestra tus habilidades y encuentra tu próxima gran oportunidad.",
+      "browse": "Explorar categorías"
+    },
+    "whyChooseTitle": "Por qué elegir",
+    "whyChooseSubtitle": "3YESES",
+    "whyChooseDescription": "Descubre qué hace de 3YESES tu plataforma preferida para encontrar y conectar con talento creativo en la industria del entretenimiento.",
+    "readyToConnectTitle": "¿Listo para conectar con talento creativo?",
+    "readyToConnectDescription": "Únete a la creciente comunidad de profesionales creativos que encuentran oportunidades en 3YESES.",
+    "features": {
+      "creativeDirectory": {
+        "title": "Directorio de Talento Creativo",
+        "description": "Explora y conecta con profesionales creativos en diversas categorías y especialidades.",
+        "benefits": [
+          "Descubrimiento fácil de talento",
+          "Búsqueda por categoría",
+          "Mensajería directa",
+          "Portafolios de trabajo"
+        ]
+      },
+      "advancedSearch": {
+        "title": "Búsqueda Avanzada y Filtros",
+        "description": "Encuentra el talento perfecto con nuestras potentes capacidades de búsqueda y filtrado.",
+        "benefits": [
+          "Búsqueda por ubicación",
+          "Filtros de habilidades y experiencia",
+          "Navegación por categorías",
+          "Perfiles detallados"
+        ]
+      },
+      "talentProfiles": {
+        "title": "Perfiles de Talento",
+        "description": "Perfiles completos que muestran habilidades, experiencia y trabajos anteriores de los talentos.",
+        "benefits": [
+          "Portafolios de trabajo",
+          "Historial de experiencia",
+          "Listas de habilidades",
+          "Información de contacto"
+        ]
+      },
+      "mobileOptimized": {
+        "title": "Optimizado para Móvil",
+        "description": "Accede a la plataforma desde cualquier dispositivo con diseño completamente responsive.",
+        "benefits": [
+          "Interfaz amigable móvil",
+          "Navegación optimizada para táctil",
+          "Diseños responsivos",
+          "Compatibilidad cross-device"
+        ]
+      },
+      "growingCommunity": {
+        "title": "Comunidad en Crecimiento",
+        "description": "Únete a una red en expansión de profesionales creativos y relaciones de la industria.",
+        "benefits": [
+          "Talentos diversos",
+          "Networking de la industria",
+          "Oportunidades creativas",
+          "Soporte comunitario"
+        ]
+      },
+      "alwaysAvailable": {
+        "title": "Acceso 24/7 a la Plataforma",
+        "description": "Busca y conecta con talento cuando lo necesites, día y noche.",
+        "benefits": [
+          "Siempre disponible",
+          "Sin restricciones de tiempo",
+          "Programación flexible",
+          "Acceso global"
+        ]
+      }
+    },
+    "headlines": {
+      "getCast": "Consigue tu próximo papel hoy",
+      "showcase": "Muestra tu talento al mundo",
+      "connect": "Conéctate con profesionales de la industria",
+      "build": "Construye tu portafolio creativo",
+      "discover": "Descubre nuevas oportunidades a diario",
+      "join": "Únete a la revolución del talento",
+      "break": "Tu próxima gran oportunidad te espera",
+      "passion": "Convierte tu pasión en éxito"
+    },
+    "mobileOptimized": "Optimizado para Móvil",
+    "support247": "Soporte 24/7"
+  },
+  "News": {
+    "title": "Noticias e Insights de la Industria",
+    "loading": "Cargando los últimos insights...",
+    "trendingTopics": "Temas en tendencia",
+    "noTrending": "No hay temas en tendencia ahora.",
+    "popularTags": "Etiquetas populares",
+    "clearTags": "Borrar etiquetas",
+    "newsletter": {
+      "title": "Mantente informado",
+      "description": "Recibe los últimos insights de la industria y análisis impulsados por IA en tu bandeja de entrada.",
+      "cta": "Suscribirse"
+    },
+    "readMore": "Leer más",
+    "readMoreAria": "Leer más sobre {title}",
+    "avatarAlt": "Avatar de {author}",
+    "activeCategory": "Categoría: {category}",
+    "clearAll": "Limpiar todo",
+    "pagination": {
+      "prev": "Anterior",
+      "next": "Siguiente"
+    },
+    "empty": "Ningún artículo coincide con los filtros actuales.",
+    "sort": {
+      "trending": "Tendencia",
+      "recent": "Más reciente",
+      "popular": "Más popular",
+      "views": "Más visto"
+    },
+    "categories": {
+      "all": "Todas las noticias",
+      "acting": "Interpretación",
+      "music": "Música",
+      "dance": "Danza",
+      "crew": "Producción",
+      "platform": "Plataforma"
+    }
+  },
+  "SignupPage": {
+    "title": "Registro de Talento",
+    "subtitle": "Crea tu cuenta y comienza tu viaje en 3 sencillos pasos.",
+    "step1": "Cuenta",
+    "step2": "Perfil",
+    "step3": "Subir",
+    "startSignup": "Comenzar Registro de Talento",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "confirmPassword": "Confirmar contraseña",
+    "submit": "Registrarse"
+  },
+  "LoginPage": {
+    "title": "Iniciar sesión",
+    "subtitle": "¡Bienvenido de vuelta! Por favor inicia sesión en tu cuenta.",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "rememberMe": "Recordarme",
+    "submit": "Iniciar sesión",
+    "noAccount": "¿No tienes una cuenta?",
+    "signUpLink": "Regístrate aquí"
+  },
+  "Auth": {
+    "signin": {
+      "title": "Bienvenido de nuevo",
+      "subtitle": "Inicia sesión en tu cuenta",
+      "email": "Correo electrónico",
+      "emailPlaceholder": "tu.email@ejemplo.com",
+      "password": "Contraseña",
+      "passwordPlaceholder": "Ingresa tu contraseña",
+      "rememberMe": "Recordarme",
+      "forgotPassword": "¿Olvidaste tu contraseña?",
+      "submit": "Iniciar sesión",
+      "signingIn": "Iniciando sesión...",
+      "noAccount": "¿No tienes una cuenta?",
+      "signUpLink": "Regístrate",
+      "orContinueWith": "o continuar con correo electrónico",
+      "continueWithGoogle": "Continuar con Google",
+      "continueWithFacebook": "Continuar con Facebook",
+      "continueWithApple": "Continuar con Apple",
+      "errors": {
+        "emailRequired": "El correo electrónico es obligatorio",
+        "emailInvalid": "Por favor ingresa un correo electrónico válido",
+        "passwordRequired": "La contraseña es obligatoria",
+        "passwordTooShort": "La contraseña debe tener al menos 6 caracteres",
+        "loginFailed": "Correo electrónico o contraseña incorrectos",
+        "serverError": "Ocurrió un error. Por favor intenta de nuevo"
+      },
+      "success": {
+        "loginSuccess": "¡Sesión iniciada con éxito!"
+      }
+    },
+    "signup": {
+      "title": "Crea tu cuenta",
+      "subtitle": "Únete a miles de profesionales creativos",
+      "startButton": "Comienza tu viaje",
+      "alreadyHaveAccount": "¿Ya tienes una cuenta?",
+      "signIn": "Iniciar sesión",
+      "back": "Atrás",
+      "next": "Siguiente paso",
+      "submit": "Completar registro",
+      "step1Title": "Información de cuenta",
+      "step1Description": "Detalles básicos",
+      "step2Title": "Tu perfil",
+      "step2Description": "Información profesional",
+      "step3Title": "Subir medios",
+      "step3Description": "Portafolio y videos",
+      "firstName": "Nombre",
+      "firstNamePlaceholder": "Juan",
+      "lastName": "Apellido",
+      "lastNamePlaceholder": "García",
+      "email": "Correo electrónico",
+      "emailPlaceholder": "tu.email@ejemplo.com",
+      "phone": "Número de teléfono",
+      "phonePlaceholder": "+34 XXX XX XX XX",
+      "password": "Contraseña",
+      "passwordPlaceholder": "Crea una contraseña segura",
+      "confirmPassword": "Confirmar contraseña",
+      "confirmPasswordPlaceholder": "Vuelve a ingresar tu contraseña",
+      "category": "Categoría principal",
+      "categoryPlaceholder": "Selecciona tu categoría principal",
+      "bio": "Biografía",
+      "bioPlaceholder": "Cuéntanos sobre ti y tu experiencia...",
+      "location": "Ubicación",
+      "locationPlaceholder": "Ciudad, País",
+      "experience": "Años de experiencia",
+      "experiencePlaceholder": "Selecciona tu nivel de experiencia",
+      "skills": "Habilidades",
+      "skillsPlaceholder": "Agrega tus habilidades",
+      "dateOfBirth": "Fecha de nacimiento",
+      "dateOfBirthPlaceholder": "Selecciona tu fecha de nacimiento",
+      "parentManagedAccount": "Cuenta administrada por los padres requerida",
+      "parentManagedAccountTitle": "Cuenta administrada por padre/tutor",
+      "parentManagedAccountDescription": "Para usuarios de 13 a 17 años, un padre o tutor debe crear y administrar esta cuenta.",
+      "parentGuardianInfo": "Información del padre/tutor",
+      "yourInformation": "Tu información",
+      "childTalentInfo": "Información del talento del niño",
+      "accountSecurity": "Seguridad de la cuenta",
+      "parentFirstName": "Nombre del padre",
+      "parentLastName": "Apellido del padre",
+      "parentEmail": "Correo electrónico del padre",
+      "parentPhone": "Número de teléfono del padre",
+      "childFirstName": "Nombre del niño",
+      "childLastName": "Apellido del niño",
+      "childDateOfBirth": "Fecha de nacimiento del niño",
+      "parentalConsentText": "Confirmo que soy el padre/tutor legal del niño mencionado anteriormente y consiento la creación de esta cuenta.",
+      "iAgreeToThe": "Acepto los",
+      "termsAndConditions": "Términos y Condiciones",
+      "and": "y la",
+      "privacyPolicy": "Política de Privacidad",
+      "gender": "Género",
+      "genderPlaceholder": "Selecciona tu género",
+      "genderMale": "Masculino",
+      "genderFemale": "Femenino",
+      "genderNonBinary": "No binario",
+      "genderPreferNotToSay": "Prefiero no decir",
+      "genderOther": "Otro",
+      "genderOtherSpecify": "Por favor especifica",
+      "ethnicity": "Etnicidad",
+      "ethnicityPlaceholder": "Selecciona tu etnicidad",
+      "ethnicityWhite": "Blanco/Caucásico",
+      "ethnicityBlack": "Negro/Africano",
+      "ethnicityAsian": "Asiático",
+      "ethnicityHispanic": "Hispano/Latino",
+      "ethnicityMiddleEastern": "Medio Oriente",
+      "ethnicityMixed": "Mixto/Multirracial",
+      "ethnicityNative": "Nativo Americano",
+      "ethnicityPacific": "Isleño del Pacífico",
+      "ethnicityPreferNotToSay": "Prefiero no decir",
+      "ethnicityOther": "Otro",
+      "ethnicityOtherSpecify": "Por favor especifica",
+      "bodyType": "Tipo de cuerpo",
+      "bodyTypePlaceholder": "Selecciona tu tipo de cuerpo",
+      "bodyTypeSlim": "Delgado",
+      "bodyTypeAverage": "Promedio",
+      "bodyTypeAthletic": "Atlético",
+      "bodyTypeCurvy": "Curvilíneo",
+      "bodyTypePlusSize": "Talla grande",
+      "bodyTypeMuscular": "Musculoso",
+      "bodyTypePreferNotToSay": "Prefiero no decir",
+      "languages": "Idiomas",
+      "languagesPlaceholder": "Agrega los idiomas que hablas",
+      "languageName": "Idioma",
+      "languageNamePlaceholder": "ej., Inglés, Español",
+      "proficiency": "Nivel",
+      "proficiencyNative": "Nativo",
+      "proficiencyFluent": "Fluido",
+      "proficiencyIntermediate": "Intermedio",
+      "proficiencyBasic": "Básico",
+      "addLanguage": "Agregar idioma",
+      "removeLanguage": "Eliminar",
+      "disability": "Discapacidad/Accesibilidad (Opcional)",
+      "disabilityDescription": "Selecciona las opciones aplicables para ayudar con oportunidades de casting inclusivo",
+      "disabilityWheelchairUser": "Usuario de silla de ruedas",
+      "disabilityMobilityImpairment": "Discapacidad de movilidad",
+      "disabilityLimbDifferenceAmputation": "Diferencia de extremidades/Amputación",
+      "disabilityDeafHardOfHearing": "Sordo/Con dificultades auditivas",
+      "disabilityBlindVisualImpairment": "Ciego/Con discapacidad visual",
+      "disabilityNeurodivergent": "Neurodivergente (Autismo, TDAH, Dislexia, etc.)",
+      "disabilitySpeechCommunicationDifference": "Diferencia de habla/comunicación",
+      "disabilityDwarfismShortStature": "Enanismo/Estatura baja",
+      "disabilityFacialDifference": "Diferencia facial",
+      "disabilityChronicPainFatigue": "Dolor crónico/Fatiga",
+      "disabilityInvisibleDisability": "Discapacidad invisible (Epilepsia, Diabetes, etc.)",
+      "disabilityOther": "Otro",
+      "disabilityOtherSpecify": "Por favor especifica",
+      "disabilityNonePreferNotToSay": "Ninguna / Prefiero no decir",
+      "optional": "opcional",
+      "profilePhoto": "Foto de perfil",
+      "uploadPhoto": "Subir foto",
+      "removePhoto": "Eliminar",
+      "portfolio": "Imágenes de portafolio",
+      "uploadPortfolio": "Subir imágenes (Máx 10)",
+      "videos": "Videos de demostración",
+      "videoUrl": "URL del video",
+      "videoUrlPlaceholder": "https://youtube.com/watch?v=...",
+      "addVideo": "Agregar video",
+      "removeVideo": "Eliminar",
+      "errors": {
+        "firstNameRequired": "El nombre es obligatorio",
+        "lastNameRequired": "El apellido es obligatorio",
+        "childFirstNameRequired": "El nombre del niño es obligatorio",
+        "childLastNameRequired": "El apellido del niño es obligatorio",
+        "minimumAge13": "Debes tener al menos 13 años para registrarte",
+        "parentalConsentRequired": "Se requiere el consentimiento de los padres",
+        "termsRequired": "Debes aceptar los Términos y Condiciones",
+        "emailRequired": "El correo electrónico es obligatorio",
+        "emailInvalid": "Por favor ingresa un correo electrónico válido",
+        "emailTaken": "Este correo electrónico ya está registrado",
+        "phoneRequired": "El número de teléfono es obligatorio",
+        "phoneInvalid": "Por favor ingresa un número de teléfono válido",
+        "passwordRequired": "La contraseña es obligatoria",
+        "passwordTooShort": "La contraseña debe tener al menos 8 caracteres",
+        "passwordWeak": "La contraseña debe contener mayúsculas, minúsculas y números",
+        "passwordMismatch": "Las contraseñas no coinciden",
+        "confirmPasswordRequired": "Por favor confirma tu contraseña",
+        "categoryRequired": "Por favor selecciona una categoría",
+        "bioRequired": "Por favor cuéntanos sobre ti",
+        "locationRequired": "La ubicación es obligatoria",
+        "serverError": "Ocurrió un error. Por favor intenta de nuevo"
+      },
+      "success": {
+        "accountCreated": "¡Cuenta creada con éxito!",
+        "redirecting": "Redirigiendo a verificación..."
+      }
+    },
+    "forgotPassword": {
+      "title": "¿Olvidaste tu contraseña?",
+      "subtitle": "Ingresa tu correo electrónico y te enviaremos un enlace de restablecimiento",
+      "email": "Correo electrónico",
+      "emailPlaceholder": "tu.email@ejemplo.com",
+      "submit": "Enviar enlace de restablecimiento",
+      "errors": {
+        "emailRequired": "El correo electrónico es obligatorio",
+        "emailInvalid": "Por favor ingresa un correo electrónico válido",
+        "requestFailed": "No se pudo enviar el correo electrónico",
+        "serverError": "Ocurrió un error. Por favor intenta de nuevo"
+      },
+      "success": {
+        "title": "¡Correo electrónico enviado!",
+        "message": "Si existe una cuenta con este correo electrónico, recibirás un enlace de restablecimiento.",
+        "checkSpam": "Si no ves el correo electrónico, revisa tu carpeta de spam."
+      }
+    },
+    "resetPassword": {
+      "title": "Restablecer contraseña",
+      "subtitle": "Ingresa tu nueva contraseña",
+      "newPassword": "Nueva contraseña",
+      "newPasswordPlaceholder": "Ingresa la nueva contraseña",
+      "confirmPassword": "Confirmar contraseña",
+      "confirmPasswordPlaceholder": "Vuelve a ingresar la nueva contraseña",
+      "passwordRequirements": "Mín 8 caracteres con mayúsculas, minúsculas y números",
+      "submit": "Restablecer contraseña",
+      "errors": {
+        "passwordRequired": "La contraseña es obligatoria",
+        "passwordTooShort": "La contraseña debe tener al menos 8 caracteres",
+        "passwordWeak": "La contraseña debe contener mayúsculas, minúsculas y números",
+        "confirmPasswordRequired": "Por favor confirma tu contraseña",
+        "passwordMismatch": "Las contraseñas no coinciden",
+        "resetFailed": "No se pudo restablecer la contraseña",
+        "serverError": "Ocurrió un error. Por favor intenta de nuevo"
+      },
+      "success": {
+        "title": "¡Contraseña restablecida!",
+        "message": "Tu contraseña ha sido restablecida con éxito."
+      }
+    },
+    "verifyEmail": {
+      "title": "Verifica tu correo electrónico",
+      "subtitle": "Hemos enviado un correo de verificación a",
+      "checking": "Verificando tu correo electrónico...",
+      "pending": {
+        "title": "Verifica tu correo electrónico",
+        "message": "Hemos enviado un enlace de verificación a tu correo electrónico. Por favor revisa tu bandeja de entrada y haz clic en el enlace para verificar tu cuenta."
+      },
+      "success": {
+        "title": "¡Correo electrónico verificado con éxito!",
+        "message": "Tu correo electrónico ha sido verificado. Ahora puedes continuar.",
+        "button": "Continuar a la configuración del perfil"
+      },
+      "error": {
+        "title": "Verificación fallida",
+        "message": "No pudimos verificar tu correo electrónico. Por favor intenta de nuevo o solicita un nuevo correo de verificación."
+      },
+      "expired": {
+        "title": "Enlace de verificación expirado",
+        "message": "Este enlace de verificación ha expirado. Por favor solicita uno nuevo."
+      },
+      "resend": "Reenviar correo electrónico",
+      "resending": "Enviando...",
+      "resentSuccess": "¡Correo de verificación enviado!",
+      "changeEmail": "Cambiar dirección de correo electrónico",
+      "checkSpam": "Si no ves el correo electrónico, revisa tu carpeta de spam.",
+      "maxAttempts": "Número máximo de intentos alcanzado",
+      "cooldown": "Reenviar en {seconds}s",
+      "attemptsRemaining": "Correos enviados: {count}/3",
+      "needHelp": "¿Necesitas ayuda? Contacta soporte",
+      "backToLogin": "Volver al inicio de sesión"
+    },
+    "orDivider": "o",
+    "termsAgree": "Al registrarte, aceptas nuestros",
+    "termsLink": "Términos de servicio",
+    "privacyLink": "Política de privacidad",
+    "and": "y"
+  },
+  "Pages": {
+    "pricing": {
+      "title": "Planes de precios",
+      "subtitle": "Elige el plan que mejor se adapte a ti"
+    },
+    "privacy": {
+      "title": "Política de privacidad",
+      "lastUpdated": "Última actualización: {date}"
+    },
+    "terms": {
+      "title": "Términos de servicio",
+      "lastUpdated": "Última actualización: {date}"
+    },
+    "about": {
+      "title": "Acerca de 3YESES",
+      "subtitle": "Conectando talento con oportunidades"
+    },
+    "contact": {
+      "title": "Contáctanos",
+      "subtitle": "Ponte en contacto con nuestro equipo"
+    }
+  },
+  "Hub": {
+    "title": "Centro de Medios",
+    "subtitle": "Descubre videos, imágenes y audio de creadores talentosos",
+    "search": {
+      "placeholder": "Buscar por título, talento o descripción...",
+      "clear": "Limpiar búsqueda"
+    },
+    "categories": {
+      "title": "Categorías",
+      "all": "Todos",
+      "acting": "Actuación",
+      "music": "Música",
+      "modeling": "Modelaje",
+      "directing": "Dirección",
+      "writing": "Escritura",
+      "photography": "Fotografía"
+    },
+    "type": {
+      "title": "Tipo:",
+      "all": "Todos",
+      "videos": "Videos",
+      "audio": "Audio",
+      "images": "Imágenes"
+    },
+    "filters": {
+      "button": "Filtros",
+      "popularityTier": "Nivel de popularidad",
+      "viral": "Viral",
+      "popular": "Popular",
+      "rising": "En auge",
+      "fresh": "Reciente",
+      "uploadDate": "Fecha de subida",
+      "allTime": "Siempre",
+      "today": "Hoy",
+      "pastWeek": "Última semana",
+      "pastMonth": "Último mes",
+      "pastYear": "Último año",
+      "sortBy": "Ordenar por",
+      "trending": "Tendencia",
+      "newest": "Más reciente",
+      "mostLiked": "Popular",
+      "alphabetical": "A-Z",
+      "oldest": "Oldest First",
+      "mostViews": "Most Views",
+      "leastViews": "Least Views",
+      "mostLikes": "Most Likes",
+      "leastLikes": "Least Likes",
+      "zToA": "Z-A",
+      "clearAll": "Borrar todos los filtros",
+      "activeFilters": "Filtros activos",
+      "search": "Búsqueda",
+      "category": "Categoría",
+      "type": "Tipo",
+      "sort": "Orden",
+      "showing": "Mostrando",
+      "results": "resultado",
+      "resultsPlural": "resultados"
+    },
+    "sections": {
+      "featuredCreators": "Creadores destacados",
+      "discoverTopTalent": "Descubre los mejores talentos de la plataforma",
+      "trendingNow": "Tendencias actuales",
+      "hotContent": "Contenido popular ahora",
+      "mostViewed": "Contenido más visto ahora",
+      "featuredVideos": "Videos destacados",
+      "video": "video",
+      "videos": "videos",
+      "viewAllVideos": "Ver todos los videos →",
+      "featuredAudio": "Audio destacado",
+      "audioTrack": "pista de audio",
+      "audioTracks": "pistas de audio",
+      "viewAllAudio": "Ver todo el audio →",
+      "featuredImages": "Imágenes destacadas",
+      "image": "imagen",
+      "images": "imágenes",
+      "viewAllImages": "Ver todas las imágenes →",
+      "latestUploads": "Últimas subidas",
+      "freshContent": "Contenido fresco",
+      "mostPopular": "Más populares",
+      "lovedByCommunity": "Amado por la comunidad"
+    },
+    "badges": {
+      "sponsored": "Patrocinado",
+      "trending": "Tendencia",
+      "hot": "Popular",
+      "new": "Nuevo",
+      "popular": "Popular"
+    },
+    "pagination": {
+      "previous": "Anterior",
+      "next": "Siguiente"
+    },
+    "empty": {
+      "title": "No se encontró contenido",
+      "description": "Intenta ajustar tus filtros para ver más resultados"
+    }
+  },
+  "SearchResults": {
+    "noResultsTitle": "No se encontraron resultados",
+    "noResultsDescription": "Intenta ajustar tus criterios de búsqueda o filtros",
+    "clearAllFilters": "Borrar todos los filtros"
+  }
+}

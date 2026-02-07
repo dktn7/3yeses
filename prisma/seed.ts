@@ -1,5 +1,5 @@
-const { PrismaClient } = require('@prisma/client');
-const bcrypt = require('bcryptjs');
+import { PrismaClient } from '@prisma/client';
+import bcryptjs from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
@@ -11,7 +11,8 @@ async function main() {
     console.log('Clearing existing data...');
     await prisma.portfolioItem.deleteMany();
     await prisma.review.deleteMany();
-    await prisma.booking.deleteMany();
+    await prisma.payment.deleteMany();
+    await prisma.subscription.deleteMany();
     await prisma.talentProfile.deleteMany();
     await prisma.user.deleteMany();
     await prisma.subcategory.deleteMany();
@@ -21,7 +22,7 @@ async function main() {
     // Create a default admin user
     console.log('Creating admin user...');
     const adminPassword = 'AdminPassword123!';
-    const adminHashedPassword = await bcrypt.hash(adminPassword, 12);
+  const adminHashedPassword = await bcryptjs.hash(adminPassword, 12);
     await prisma.user.create({
       data: {
         email: 'admin@example.com',
@@ -180,6 +181,160 @@ async function main() {
           'Fitness Instruction',
           'Sports Demonstration'
         ] 
+      },
+      { 
+        name: 'Stunts', 
+        icon: '🤸',
+        description: 'Professional stunt performers and coordinators',
+        subcategories: [
+          'Film Stunts', 
+          'TV Stunts', 
+          'Action Sequences', 
+          'Fight Choreography',
+          'Vehicle Stunts',
+          'High Falls',
+          'Wire Work'
+        ] 
+      },
+      { 
+        name: 'Magic & Illusion', 
+        icon: '🎩',
+        description: 'Professional magicians and illusionists',
+        subcategories: [
+          'Stage Magic', 
+          'Close-Up Magic', 
+          'Mentalism', 
+          'Grand Illusions',
+          'Comedy Magic',
+          'Children\'s Magic',
+          'Corporate Magic'
+        ] 
+      },
+      { 
+        name: 'Circus Arts', 
+        icon: '🎪',
+        description: 'Circus performers and acrobats',
+        subcategories: [
+          'Acrobatics', 
+          'Aerial Arts', 
+          'Juggling', 
+          'Clowning',
+          'Contortion',
+          'Fire Performance',
+          'Trapeze'
+        ] 
+      },
+      { 
+        name: 'Comedy', 
+        icon: '😂',
+        description: 'Stand-up comedians and comedy performers',
+        subcategories: [
+          'Stand-Up Comedy', 
+          'Improv Comedy', 
+          'Sketch Comedy', 
+          'Comedy Writing',
+          'Physical Comedy',
+          'Character Comedy',
+          'Corporate Comedy'
+        ] 
+      },
+      { 
+        name: 'Photography (Commercial)', 
+        icon: '📷',
+        description: 'Professional commercial photography services',
+        subcategories: [
+          'Product Photography', 
+          'Fashion Photography', 
+          'Food Photography', 
+          'Event Photography',
+          'Portrait Photography',
+          'Real Estate Photography',
+          'Corporate Photography'
+        ] 
+      },
+      { 
+        name: 'Graphic Design', 
+        icon: '🎨',
+        description: 'Professional graphic design and visual communication',
+        subcategories: [
+          'Logo Design', 
+          'Brand Identity', 
+          'Print Design', 
+          'Digital Design',
+          'Packaging Design',
+          'Illustration',
+          'UI/UX Design'
+        ] 
+      },
+      { 
+        name: 'Music Production', 
+        icon: '🎛️',
+        description: 'Music production and sound engineering',
+        subcategories: [
+          'Music Production', 
+          'Mixing & Mastering', 
+          'Beat Making', 
+          'Sound Engineering',
+          'Audio Post-Production',
+          'Podcast Production',
+          'Music Arrangement'
+        ] 
+      },
+      { 
+        name: 'Influencer/Content Creator', 
+        icon: '📱',
+        description: 'Social media influencers and content creators',
+        subcategories: [
+          'YouTube Creator', 
+          'Instagram Influencer', 
+          'TikTok Creator', 
+          'Twitch Streamer',
+          'Podcast Host',
+          'Lifestyle Blogger',
+          'Brand Ambassador'
+        ] 
+      },
+      { 
+        name: 'Hair & Makeup (Professional)', 
+        icon: '💅',
+        description: 'Professional hair and makeup artists for media',
+        subcategories: [
+          'Film & TV Makeup', 
+          'Special Effects Makeup', 
+          'Bridal Hair & Makeup', 
+          'Editorial Makeup',
+          'Theatrical Makeup',
+          'Hair Styling',
+          'Wig Styling'
+        ] 
+      },
+      { 
+        name: 'Stage Crew/Technician', 
+        icon: '🔧',
+        description: 'Technical crew for live events and productions',
+        subcategories: [
+          'Lighting Technician', 
+          'Sound Technician', 
+          'Stage Manager', 
+          'Rigging',
+          'Set Construction',
+          'Props Master',
+          'Video Technician'
+        ] 
+      },
+      { 
+        name: 'Animation', 
+        icon: '🎞️',
+        description: 'Animation and motion graphics specialists',
+        subcategories: [
+          '2D Animation', 
+          '3D Animation', 
+          'Motion Graphics', 
+          'Character Animation',
+          'Stop Motion',
+          'VFX Animation',
+          'Whiteboard Animation'
+        ] 
       }
     ];
 
@@ -201,7 +356,7 @@ async function main() {
 
     // Create sample users
     console.log('Creating sample users...');
-    const sampleUserPassword = await bcrypt.hash('password123', 10);
+  const sampleUserPassword = await bcryptjs.hash('password123', 10);
 
     // Create admin user
     await prisma.user.create({
@@ -230,9 +385,8 @@ async function main() {
             roleDescription: 'Professional Voice Over Artist',
             bio: 'Experienced voice over artist with 8+ years in commercials and e-learning. Warm, friendly tone perfect for brands targeting millennials.',
             location: 'Los Angeles, CA',
-            experience: 8,
+            experience: 'Advanced (6-10 years)',
             rating: 4.9,
-            languages: ['English', 'Spanish'],
             skills: ['Commercial Voice Over', 'E-learning Narration', 'Character Voices', 'IVR Systems'],
             categoryId: voiceOverCategory?.id,
             subcategoryId: commercialsSubcat?.id,
@@ -258,9 +412,8 @@ async function main() {
             roleDescription: 'Certified Spanish-English Translator',
             bio: 'Native bilingual translator specializing in legal and medical documents. 10+ years experience with perfect accuracy record.',
             location: 'Madrid, Spain',
-            experience: 10,
+            experience: 'Expert (10+ years)',
             rating: 4.9,
-            languages: ['Spanish', 'English', 'Portuguese'],
             skills: ['Legal Translation', 'Medical Translation', 'Technical Documentation', 'Certified Translation'],
             categoryId: translationCategory?.id,
             subcategoryId: documentSubcat?.id,

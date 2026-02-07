@@ -17,14 +17,14 @@ export default function Breadcrumbs({ items }: BreadcrumbsProps) {
       {items.map((item, index) => (
         <div key={item.label} className="flex items-center">
           {item.href ? (
-            <Link href={item.href} className="text-primary-blue hover:underline hover:text-primary-blueHover">
+            <Link href={item.href} className="text-blue-600 dark:text-red-400 hover:underline hover:text-blue-700 dark:hover:text-red-300">
               {item.label}
             </Link>
           ) : (
             <span className="font-semibold text-gray-700 dark:text-gray-200">{item.label}</span>
           )}
           {index < items.length - 1 && (
-            <ChevronRight size={16} className="mx-1" />
+            <ChevronRight size={16} className="mx-1 text-blue-600 dark:text-red-400" />
           )}
         </div>
       ))}

@@ -1,0 +1,9 @@
+<svg width="300" height="200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="300" height="200" fill="#f0f0f0"/>
+  <text x="150" y="100" text-anchor="middle" font-family="Arial" font-size="16" fill="#333">
+    Sample Ad 1
+  </text>
+  <text x="150" y="120" text-anchor="middle" font-family="Arial" font-size="12" fill="#666">
+    300x200 placeholder
+  </text>
+</svg>
