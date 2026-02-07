@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { X, ChevronLeft, ChevronRight, Play, ExternalLink, ImageIcon, Music, CheckCircle2, Flag } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, Play, ExternalLink, ImageIcon, Music, CheckCircle2, Heart, Flag } from 'lucide-react';
 import VideoPlayer from './VideoPlayer.tsx';
 import FlagButton from './FlagButton';
 import CommentsSection from './CommentsSection';
@@ -136,14 +136,14 @@ export default function GalleryViewer({ items, initialIndex, isOpen, onClose }: 
     }
   }, [isOpen, nextItem, prevItem]);
 
-  if (!isOpen) return null;
-
   const currentItem = items[currentIndex];
 
   useEffect(() => {
     setIsLiked(false);
     setLikesCount(currentItem?.likes || 0);
   }, [currentItem?.id, currentItem?.likes]);
+
+  if (!isOpen) return null;
 
   const handleLike = async () => {
     if (!currentItem?.id) return;
