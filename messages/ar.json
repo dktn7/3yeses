@@ -6,6 +6,7 @@
     "contact": "اتصل بنا",
     "news": "الأخبار",
     "resources": "الموارد",
+    "pricing": "التسعير",
     "pricingPlans": "خطط التسعير",
     "legal": "قانوني",
     "privacyPolicy": "سياسة الخصوصية",
@@ -15,11 +16,14 @@
     "settings": "الإعدادات",
     "logout": "تسجيل الخروج",
     "login": "تسجيل الدخول",
-    "signup": "التسجيل"
+    "signup": "التسجيل",
+    "support": "الدعم",
+    "whyAndHow": "لماذا وكيف",
+    "talentHub": "مركز المواهب"
   },
   "Footer": {
     "aboutUs": "نبذة عنا",
-    "companyInfo": "ربط المواهب بالفرص في صناعة الترفيه.",
+    "companyInfo": "Showcase your work to a live audience — subscribe to be discoverable and grow through views, likes, comments and shares.",
     "forTalent": "للمواهب",
     "joinAsTalent": "انضم كموهبة",
     "talentDashboard": "لوحة تحكم المواهب",
@@ -32,7 +36,7 @@
     "phone": "+44 121 123 4567",
     "location": "برمنغهام، المملكة المتحدة",
     "language": "لغة",
-    "copyright": "© 2025 3YESES. كل الحقوق محفوظة.",
+    "copyright": "© 2026 3YESES. كل الحقوق محفوظة.",
     "privacyPolicy": "سياسة الخصوصية",
     "termsOfService": "شروط الخدمة"
   },
@@ -63,17 +67,36 @@
     "expertTalentDescription": "الوصول إلى المهنيين المعتمدين مع سجلات مثبتة",
     "qualityAssured": "الجودة مضمونة",
     "qualityAssuredDescription": "جميع المواهب يتم فحصها والتحقق منها لراحة بالك",
+    "qualityAssuredDesc": "مواهب من الدرجة الأولى لمشاريعك",
     "careerGrowth": "نمو مهني",
     "careerGrowthDescription": "بناء اتصالات دائمة وتطوير مسيرتك المهنية",
+    "careerGrowthDesc": "فرص لتطوير مسيرتك المهنية",
+    "verifiedTalent": "مواهب معتمدة",
+    "verifiedTalentDesc": "جميع الملفات الشخصية يتم التحقق منها يدويًا",
     "searchPlaceholder": "البحث عن مواهب أو مهارات أو فئات...",
     "searchButton": "بحث",
     "allCategories": "كل الفئات",
     "location": "الموقع",
     "filters": "المرشحات",
+    "clearAll": "امسح الكل",
+    "applyFilters": "تطبيق التصفية",
+    "watchEyebrow": "اكتشف ما هو 3YESES",
+    "videoSectionSeeThe": "اكتشف",
+    "videoSectionExperience": "ألكلفة 3YESES",
+    "videoSectionDescription": "اكتشف كيف يتم اختيار موه بالب هذاه مديرو الاختيار يجدون المطابقة المثالية،",
+    "allCategory": "كل {name}",
+    "chipAge": "العمر: {min}-{max}",
+    "chipHeight": "الطول: {min}-{max}",
+    "chipExp": "الخبرة: {min}-{max}+سنوات",
+    "chipEyes": "العيون: {value}",
+    "chipHair": "الشعر: {value}",
+    "chipSkills": "المهارات: {value}",
+    "chipLang": "اللغة: {value}",
     "findYourNextJob": "ابحث عن وظيفتك التالية",
     "elevateYourCareer": "ارتقِ بمسيرتك المهنية",
     "joinNow": "انضم الآن",
     "learnMore": "تعلم المزيد",
+    "ctaBrowseTalent": "تصفح المواهب",
     "activeTalent": "المواهب النشطة",
     "projectsPosted": "المشاريع المنشورة",
     "successRate": "معدل النجاح",
@@ -205,6 +228,110 @@
       "platform": "المنصة"
     }
   },
+  "Categories": {
+    "search": {
+      "placeholder": "ابحث عن الفئات أو المواهب أو المهارات..."
+    },
+    "main": {
+      "title": "تصفح الفئات",
+      "description": "اكتشف المحترفين الموهوبين في مختلف الصناعات الإبداعية",
+      "searchPlaceholder": "ابحث عن الفئات أو الفئات الفرعية أو المواهب..."
+    },
+    "subcategories": {
+      "searchPlaceholder": "ابحث في الفئات الفرعية...",
+      "backToCategories": "العودة إلى الفئات"
+    },
+    "talents": {
+      "backTo": "العودة إلى {categoryName}",
+      "filters": "عوامل التصفية",
+      "reviews": "{count, plural, =0 {لا توجد شهادات} =1 {شهادة واحدة} other {# شهادات}}",
+      "experience": "{years}+ سنوات خبرة",
+      "noTalents": {
+        "title": "لم يتم العثور على مواهب",
+        "description": "لا توجد مواهب في هذه الفئة بعد. عد قريباً!"
+      }
+    },
+    "filters": {
+      "title": "عوامل تصفية متقدمة",
+      "gender": {
+        "label": "الجنس",
+        "male": "ذكر",
+        "female": "أنثى",
+        "non-binary": "غير ثنائي",
+        "other": "أخرى"
+      },
+      "ethnicity": {
+        "label": "العرق",
+        "white": "أبيض",
+        "blackafrican": "أسود/أفريقي",
+        "hispaniclatino": "إسباني/لاتيني",
+        "asian": "آسيوي",
+        "middleeastern": "شرق أوسطي",
+        "mixedrace": "مختلط",
+        "other": "أخرى"
+      },
+      "age": {
+        "label": "العمر",
+        "selected": "العمر المحدد"
+      },
+      "bodyType": {
+        "label": "نوع الجسم",
+        "slim": "نحيف",
+        "average": "متوسط",
+        "athletic": "رياضي",
+        "curvy": "ممتلئ",
+        "plussize": "مقاس كبيرة",
+        "muscular": "عضلي"
+      },
+      "experience": {
+        "label": "الخبرة (سنوات)",
+        "minPlaceholder": "أدنى",
+        "maxPlaceholder": "أقصى"
+      },
+      "location": {
+        "label": "الموقع",
+        "placeholder": "المدينة، البلد"
+      },
+      "clearAll": "مسح جميع الفلاتر"
+    },
+    "loading": "جاري تحميل المواهب...",
+    "retry": "إعادة المحاولة",
+    "pagination": {
+      "previous": "السابق",
+      "next": "التالي"
+    },
+    "emptyState": {
+      "title": "لم يتم العثور على مواهب",
+      "description": "لم يتم العثور على محترفين في {subcategoryName}. حاول تعديل الفلاتر.",
+      "defaultCategory": "هذه الفئة"
+    },
+    "errors": {
+      "failedToLoadTalents": "فشل في تحميل المواهب."
+    },
+    "names": {
+      "voiceOverDubbing": "التعليق الصوتي والدبلجة",
+      "translationLocalization": "الترجمة والتوطين",
+      "contentCreation": "إنشاء المحتوى",
+      "musicAudio": "الموسيقى والصوت",
+      "videoProduction": "إنتاج الفيديو",
+      "actingPerformance": "التمثيل والأداء",
+      "modeling": "عرض الأزياء",
+      "dancingChoreography": "الرقص وتصميم الرقصات",
+      "beautyWellness": "الجمال والعافية",
+      "sportsFitness": "الرياضة واللياقة",
+      "stunts": "الألعاب البهلوانية",
+      "magicIllusion": "السحر والخداع",
+      "circusArts": "فنون السيرك",
+      "comedy": "الكوميديا",
+      "photographyCommercial": "التصوير (التجاري)",
+      "graphicDesign": "التصميم الجرافيكي",
+      "musicProduction": "إنتاج الموسيقى",
+      "influencerContentCreator": "مؤثر/صانع محتوى",
+      "hairMakeupProfessional": "الشعر والمكياج (احترافي)",
+      "stageCrewTechnician": "طاقم المسرح/الفني",
+      "animation": "الرسوم المتحركة"
+    }
+  },
   "SignupPage": {
     "title": "تسجيل المواهب",
     "subtitle": "أنشئ حسابك وابدأ رحلتك في 3 خطوات بسيطة.",
@@ -239,10 +366,6 @@
       "rememberMe": "تذكرني",
       "forgotPassword": "هل نسيت كلمة المرور؟",
       "submit": "تسجيل الدخول",
-      "orContinueWith": "أو المتابعة بالبريد الإلكتروني",
-      "continueWithGoogle": "المتابعة باستخدام Google",
-      "continueWithFacebook": "المتابعة باستخدام Facebook",
-      "continueWithApple": "المتابعة باستخدام Apple",
       "noAccount": "ليس لديك حساب؟",
       "signUpLink": "سجل الآن",
       "errors": {
@@ -255,7 +378,12 @@
       },
       "success": {
         "loginSuccess": "تم تسجيل الدخول بنجاح!"
-      }
+      },
+      "signInButton": "Sign In",
+      "signingIn": "Signing in...",
+      "orContinueWith": "Or continue with",
+      "googleSignIn": "Continue with Google",
+      "githubSignIn": "Continue with GitHub"
     },
     "signup": {
       "title": "إنشاء حسابك",
@@ -404,12 +532,49 @@
         "categoryRequired": "يرجى اختيار فئة",
         "bioRequired": "يرجى إخبارنا عن نفسك",
         "locationRequired": "الموقع مطلوب",
-        "serverError": "حدث خطأ. يرجى المحاولة مرة أخرى"
+        "serverError": "حدث خطأ. يرجى المحاولة مرة أخرى",
+        "dateOfBirthRequired": "Date of birth is required",
+        "subcategoryRequired": "Please select a subcategory",
+        "experienceRequired": "Please select your experience level"
       },
       "success": {
         "accountCreated": "تم إنشاء الحساب بنجاح!",
         "redirecting": "إعادة التوجيه إلى التحقق..."
-      }
+      },
+      "ageVerification": {
+        "under13Title": "Parent-Managed Account Required",
+        "under13Message": "Users under 13 must have a parent or guardian manage their account. Your parent will create and control the account on your behalf.",
+        "teens13to15Title": "Account Type Selection",
+        "teens13to15Message": "Choose how you'd like to manage your account:",
+        "selfManagedTitle": "Self-Managed Account",
+        "selfManagedDescription": "Manage your own profile with parental approval",
+        "parentManagedTitle": "Parent-Managed Account",
+        "parentManagedDescription": "Your parent/guardian will manage your profile",
+        "parentInfoRequired": "Parent/Guardian Information Required",
+        "parentInfoDescription": "We'll send a consent request to your parent/guardian to approve your account.",
+        "parentName": "Parent/Guardian Name",
+        "parentNamePlaceholder": "Full name",
+        "parentEmail": "Parent/Guardian Email",
+        "parentEmailPlaceholder": "parent@example.com",
+        "parentEmailMatchError": "Parent email must be different from your email",
+        "parentEmailRequired": "Parent/guardian email is required",
+        "parentNameRequired": "Parent/guardian name is required",
+        "consentPendingNotice": "Once you complete signup, a consent request will be sent to your parent/guardian. Your account will be activated after they approve."
+      },
+      "disabilityVisualImpairmentBlindness": "Visual Impairment/Blindness",
+      "disabilityHearingImpairmentDeafness": "Hearing Impairment/Deafness",
+      "disabilitySpeechImpairment": "Speech Impairment",
+      "disabilityDwarfism": "Dwarfism",
+      "disabilityCerebralPalsy": "Cerebral Palsy",
+      "disabilityDownSyndrome": "Down Syndrome",
+      "disabilityAutismSpectrum": "Autism Spectrum",
+      "disabilityLearningDisability": "Learning Disability",
+      "disabilityMentalHealthCondition": "Mental Health Condition",
+      "disabilitySkinCondition": "Skin Condition",
+      "subcategory": "Subcategory",
+      "subcategoryPlaceholder": "Select a subcategory",
+      "disabilities": "Disabilities/Accessibility",
+      "disabilitiesDescription": "Help us understand how to best support you and match you with appropriate opportunities"
     },
     "forgotPassword": {
       "title": "هل نسيت كلمة المرور؟",
@@ -421,13 +586,18 @@
         "emailRequired": "البريد الإلكتروني مطلوب",
         "emailInvalid": "يرجى إدخال عنوان بريد إلكتروني صالح",
         "requestFailed": "فشل إرسال البريد الإلكتروني",
-        "serverError": "حدث خطأ. يرجى المحاولة مرة أخرى"
+        "serverError": "حدث خطأ. يرجى المحاولة مرة أخرى",
+        "emailNotFound": "No account found with this email"
       },
       "success": {
         "title": "تم إرسال البريد الإلكتروني!",
         "message": "إذا كان هناك حساب بهذا البريد الإلكتروني، ستتلقى رابط إعادة التعيين.",
         "checkSpam": "إذا لم تر البريد الإلكتروني، تحقق من مجلد الرسائل غير المرغوب فيها."
-      }
+      },
+      "sending": "Sending...",
+      "backToLogin": "Back to Login",
+      "orContactSupport": "Or contact support",
+      "contactSupport": "Contact Support"
     },
     "resetPassword": {
       "title": "إعادة تعيين كلمة المرور",
@@ -445,12 +615,19 @@
         "confirmPasswordRequired": "يرجى تأكيد كلمة المرور",
         "passwordMismatch": "كلمات المرور غير متطابقة",
         "resetFailed": "فشل إعادة تعيين كلمة المرور",
-        "serverError": "حدث خطأ. يرجى المحاولة مرة أخرى"
+        "serverError": "حدث خطأ. يرجى المحاولة مرة أخرى",
+        "required": "This field is required",
+        "weakPassword": "Password is too weak",
+        "invalidToken": "Invalid or expired reset link"
       },
       "success": {
         "title": "تم إعادة تعيين كلمة المرور!",
         "message": "تم إعادة تعيين كلمة المرور الخاصة بك بنجاح."
-      }
+      },
+      "password": "New Password",
+      "passwordPlaceholder": "Enter new password",
+      "resetButton": "Reset Password",
+      "resetting": "Resetting..."
     },
     "verifyEmail": {
       "title": "تحقق من بريدك الإلكتروني",
@@ -488,7 +665,55 @@
     "termsAgree": "بالتسجيل، فإنك توافق على",
     "termsLink": "شروط الخدمة",
     "privacyLink": "سياسة الخصوصية",
-    "and": "و"
+    "and": "و",
+    "parentalConsent": {
+      "title": "Parental Consent",
+      "loading": "Loading consent information...",
+      "expired": {
+        "title": "Consent Link Expired",
+        "message": "This consent link has expired. Please contact support for a new link.",
+        "expiredOn": "Expired on {date}"
+      },
+      "invalidToken": {
+        "title": "Invalid Link",
+        "message": "This consent link is invalid or has already been used."
+      },
+      "decision": {
+        "title": "Account Approval Request",
+        "greeting": "Dear {parentName},",
+        "requestMessage": "Your child, {teenName}, has requested to create a self-managed account on 3yeses. As they are under 16 years old, we require your consent before their account can become active.",
+        "whatThisMeans": "What does this mean?",
+        "benefits": {
+          "item1": "{teenName} will be able to create and manage their own talent profile",
+          "item2": "They can apply for opportunities and showcase their skills",
+          "item3": "Their profile will have enhanced safety controls",
+          "item4": "You can request access to monitor the account at any time"
+        },
+        "chooseOption": "Please choose one of the following options:",
+        "approveButton": "Approve Account",
+        "declineButton": "Decline Account",
+        "approving": "Approving...",
+        "declining": "Declining...",
+        "expiresIn": "This link expires in {hours} hours"
+      },
+      "approved": {
+        "title": "Account Approved",
+        "message": "Thank you for approving {teenName}'s account. They can now sign in and start using their profile.",
+        "teenName": "{teenName}'s account has been activated successfully."
+      },
+      "declined": {
+        "title": "Account Declined",
+        "message": "The account registration for {teenName} has been declined and removed from our system.",
+        "thankYou": "Thank you for your time."
+      },
+      "error": {
+        "title": "Something Went Wrong",
+        "message": "We couldn't process your request. Please try again or contact support.",
+        "alreadyProcessed": "This consent request has already been processed."
+      },
+      "contactSupport": "Contact Support",
+      "supportEmail": "support@3yeses.online"
+    }
   },
   "Pages": {
     "pricing": {
@@ -497,11 +722,28 @@
     },
     "privacy": {
       "title": "سياسة الخصوصية",
-      "lastUpdated": "آخر تحديث: {date}"
+      "lastUpdated": "آخر تحديث: {date}",
+      "badge": "Privacy Policy",
+      "heroTitle": "Your privacy matters",
+      "heroAccent": "How we handle your data",
+      "contents": "Contents",
+      "introP1": "This Privacy Policy explains how 3YESES (\"Platform\", \"we\", \"us\", \"our\") collects, uses, stores, and protects your personal data when you use our subscription-based talent marketplace at 3yeses.online.",
+      "introP2": "We are committed to protecting your privacy and handling your personal data in compliance with the UK General Data Protection Regulation (UK GDPR), the Data Protection Act 2018, and, where applicable, the EU General Data Protection Regulation (GDPR)."
     },
     "terms": {
       "title": "شروط الخدمة",
-      "lastUpdated": "آخر تحديث: {date}"
+      "lastUpdated": "آخر تحديث: {date}",
+      "badge": "Terms & Conditions",
+      "heroTitle": "Terms of Service",
+      "heroAccent": "",
+      "contents": "Contents",
+      "sections": {
+        "overview": {
+          "title": "Overview",
+          "p1": "These Terms and Conditions (\"Terms\") govern your use of the 3YESES platform (\"Platform\", \"we\", \"us\", \"our\"), a subscription-based talent marketplace operated at 3yeses.online. By creating an account or using any part of the Platform, you agree to be bound by these Terms.",
+          "p2": "3YESES is a platform where creative professionals — actors, musicians, models, dancers, voice artists, photographers, videographers, DJs, presenters, comedians, and other performers — create profiles, upload portfolio media (photos, videos, audio), and get discovered. The Platform includes a searchable talent directory, a media hub, analytics dashboards, and community features such as comments, likes, and content sharing."
+        }
+      }
     },
     "about": {
       "title": "حول 3YESES",
@@ -568,7 +810,8 @@
       "sort": "الترتيب",
       "showing": "عرض",
       "results": "نتيجة",
-      "resultsPlural": "نتائج"
+      "resultsPlural": "نتائج",
+      "reverseAlphabetical": "Z-A"
     },
     "sections": {
       "featuredCreators": "منشئو المحتوى المميزون",
@@ -591,7 +834,9 @@
       "latestUploads": "أحدث التحميلات",
       "freshContent": "محتوى جديد",
       "mostPopular": "الأكثر شعبية",
-      "lovedByCommunity": "محبوب من المجتمع"
+      "lovedByCommunity": "محبوب من المجتمع",
+      "exploreAll": "Explore All Content",
+      "exploreMoreDescription": "There are {count} more items to discover in our full catalog."
     },
     "badges": {
       "sponsored": "برعاية",
@@ -613,5 +858,785 @@
     "noResultsTitle": "لم يتم العثور على نتائج",
     "noResultsDescription": "حاول تعديل معايير البحث أو عوامل التصفية",
     "clearAllFilters": "مسح جميع عوامل التصفية"
+  },
+  "dashboard": {
+    "hi": "مرحبا {name}!",
+    "welcome": "مرحا، {name}!",
+    "welcomeBack": "مرحبا بعودتك، {name}!",
+    "subtitle": "إليك ما يحدث في حسابك اليوم。",
+    "newComments": "تعليقات جديدة",
+    "profile": {
+      "editProfile": "Edit Profile",
+      "subtitle": "Update your talent profile information to help you get discovered",
+      "profileUpdated": "Profile updated successfully!",
+      "failedToUpdate": "Failed to update profile",
+      "errorOccurred": "An error occurred. Please try again.",
+      "profilePicture": "Profile Picture",
+      "changeProfilePicture": "Change Profile Picture",
+      "enterImageUrl": "Enter image URL (e.g., https://example.com/image.jpg)",
+      "remove": "Remove",
+      "imageRecommendation": "Recommended: Square image, at least 400x400px. Supports JPG, PNG, GIF.",
+      "basicInfo": "Basic Information",
+      "bio": "Bio",
+      "bioPlaceholder": "Tell us about yourself, your experience, and what makes you unique...",
+      "bioCharCount": "{count} / 500 characters (minimum 50)",
+      "bioError": "Bio must be at least 50 characters",
+      "location": "Location",
+      "locationPlaceholder": "e.g., London, UK",
+      "locationError": "Location is required",
+      "yearsOfExperience": "Years of Experience",
+      "experienceError": "Experience must be a positive number",
+      "dateOfBirth": "Date of Birth",
+      "categoryAndSpecialty": "Category & Specialty",
+      "category": "Category",
+      "selectCategory": "Select a category",
+      "specialty": "Specialty",
+      "selectSpecialty": "Select a specialty",
+      "selectCategoryFirst": "Please select a category first",
+      "physicalCharacteristics": "Physical Characteristics",
+      "gender": "Gender",
+      "selectGender": "Select gender",
+      "genderMale": "Male",
+      "genderFemale": "Female",
+      "genderNonBinary": "Non-binary",
+      "genderOther": "Other",
+      "genderPreferNot": "Prefer not to say",
+      "heightCm": "Height (cm)",
+      "heightPlaceholder": "e.g., 175",
+      "ethnicity": "Ethnicity",
+      "selectEthnicity": "Select ethnicity",
+      "ethnicityWhite": "White",
+      "ethnicityBlack": "Black",
+      "ethnicityAsian": "Asian",
+      "ethnicityHispanic": "Hispanic",
+      "ethnicityMiddleEastern": "Middle Eastern",
+      "ethnicityMixed": "Mixed",
+      "ethnicityOther": "Other",
+      "bodyType": "Body Type",
+      "selectBodyType": "Select body type",
+      "bodyTypeSlim": "Slim",
+      "bodyTypeAthletic": "Athletic",
+      "bodyTypeAverage": "Average",
+      "bodyTypeMuscular": "Muscular",
+      "bodyTypeCurvy": "Curvy",
+      "bodyTypePlusSize": "Plus Size",
+      "eyeColor": "Eye Color",
+      "eyeColorPlaceholder": "e.g., Brown, Blue, Green",
+      "hairColor": "Hair Color",
+      "hairColorPlaceholder": "e.g., Black, Blonde, Brown",
+      "skillsAndExpertise": "Skills & Expertise",
+      "featuredSkills": "Featured Skills",
+      "featuredSkillsDesc": "Choose up to 4 skills to display on your profile card",
+      "featuredSkillsCount": "{count}/4 selected",
+      "featuredSkillsTip": "Tip: Select your top skills to highlight them on your profile card",
+      "socialMedia": "Social Media",
+      "instagram": "Instagram",
+      "twitterX": "Twitter / X",
+      "youtube": "YouTube",
+      "usernamePlaceholder": "@username",
+      "channelUrl": "Channel URL",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "saveChanges": "Save Changes"
+    },
+    "complete": "مكتمل",
+    "recentActivity": "النشاط الأخير",
+    "recentNotifications": "الإشعارات الأخيرة",
+    "talentInteractions": "التفاعلات مع المواهب",
+    "fullActivityFeed": "خلاصة النشاط الكاملة",
+    "savedTalents": "المواهب المحفوظة",
+    "viewedHistory": "سجل المشاهدة",
+    "viewHistory": "عرض السجل",
+    "editProfile": "تعديل الملف الشخصي",
+    "settings": {
+      "title": "Settings",
+      "subtitle": "Manage your account settings and preferences",
+      "savedSuccess": "Settings saved successfully!",
+      "saveFailed": "Failed to save settings",
+      "errorOccurred": "An error occurred",
+      "confirmDelete": "Are you sure you want to delete your account? This action cannot be undone.",
+      "confirmDeleteFinal": "This will permanently delete all your data, including your profile and portfolio. Continue?",
+      "deleteFailed": "Failed to delete account. Please try again.",
+      "deleteError": "An error occurred. Please try again.",
+      "accountInfo": "Account Information",
+      "emailAddress": "Email Address",
+      "verified": "✓ Verified",
+      "notVerified": "⚠ Not Verified",
+      "name": "Name",
+      "password": "Password",
+      "passwordChangeNotice": "To change your password, please use the \"Forgot Password\" option on the login page. This ensures secure password reset through email verification.",
+      "notificationPrefs": "Notification Preferences",
+      "emailNotifications": "Email Notifications",
+      "marketingEmails": "Marketing Emails",
+      "privacySettings": "Privacy Settings",
+      "profileVisibility": "Profile Visibility",
+      "visibilityPublic": "Public - Everyone can see my profile",
+      "visibilityMembers": "Members Only - Only logged in users",
+      "visibilityPrivate": "Private - Hidden from search",
+      "showEmail": "Show Email on Profile",
+      "showLocation": "Show Location on Profile",
+      "saving": "Saving...",
+      "saveSettings": "Save Settings",
+      "dangerZone": "Danger Zone",
+      "deleteAccount": "Delete Account",
+      "deleteAccountDesc": "Once you delete your account, there is no going back. All your data will be permanently deleted.",
+      "deleteMyAccount": "Delete My Account"
+    },
+    "viewProfile": "عرض الملف الشخصي",
+    "viewAll": "عرض الكل",
+    "profileViews": "مشاهدات الملف الشخصي",
+    "likes": "إعجابات",
+    "profileCompletion": "اكتمال الملف الشخصي",
+    "totalVisitors": "إجمالي الزوار",
+    "totalLiked": "إجمالي الإعجابات",
+    "totalUsers": "إجمالي المستخدمين",
+    "talents": "مواهب",
+    "talentsSaved": "مواهب محفوظة",
+    "talentsViewed": "مواهب تم عرضها",
+    "noSavedTalents": "لا توجد مواهب محفوظة بعد",
+    "noSavedTalentsDesc": "ابدأ في استكشاف وحفظ المواهب",
+    "startSavingTalents": "ابدأ بحفظ المواهب التي تهمك",
+    "noViewedTalents": "لا يوجد سجل مشاهدة",
+    "noViewedTalentsDesc": "ستظهر المواهب التي تشاهدها هنا",
+    "noViewHistory": "لا يوجد سجل مشاهدة حتى الآن",
+    "startBrowsingTalents": "ابدأ في تصفح المواهب",
+    "noRecentActivity": "لا يوجد نشاط أخير لعرضه",
+    "noNotifications": "لا توجد إشعارات لعرضها",
+    "quickAccess": "وصول سريع",
+    "portfolio": "معرض الأعمال",
+    "portfolioDesc": "اعرض مهاراتك وإنجازاتك",
+    "analytics": {
+      "title": "Analytics",
+      "noData": "No analytics data available yet.",
+      "dashboard": "Analytics Dashboard",
+      "days7": "7 Days",
+      "days30": "30 Days",
+      "days90": "90 Days",
+      "totalViews": "Total Views",
+      "uniqueViewers": "{count} unique viewers",
+      "portfolioViews": "Portfolio Views",
+      "engagementRate": "{rate}% engagement rate",
+      "searchPerformance": "Search Performance",
+      "ctr": "{rate}% CTR ({clicks} clicks)",
+      "profileViewsTrend": "Profile Views Trend",
+      "portfolioEngagement": "Portfolio Engagement",
+      "topPortfolioItems": "Top Portfolio Items",
+      "noPortfolioItems": "No portfolio items yet",
+      "recentProfileViews": "Recent Profile Views",
+      "viewer": "Viewer",
+      "time": "Time",
+      "anonymous": "Anonymous",
+      "noViews": "No views yet",
+      "chartTotalViews": "Total Views",
+      "chartUniqueViews": "Unique Views",
+      "chartPortfolioViews": "Portfolio Views",
+      "chartImpressions": "Impressions",
+      "chartClicks": "Clicks"
+    },
+    "analyticsDesc": "عرض الرؤى والإحصائيات التفصيلية",
+    "gallery": {
+      "title": "Gallery",
+      "subtitle": "Curate your portfolio with photos, videos, and audio",
+      "uploading": "Uploading...",
+      "uploadMedia": "Upload Media",
+      "shareWork": "Share your creative work with the world",
+      "chooseMethod": "Choose Upload Method",
+      "fromDevice": "From Device",
+      "chooseFile": "Choose a file",
+      "fromUrl": "From URL",
+      "pasteLink": "Paste a link",
+      "enterMediaUrl": "Enter Media URL",
+      "supportedFormats": "Supported: Direct image/video/audio URLs or embeds from popular platforms",
+      "mediaType": "Media Type",
+      "url": "URL",
+      "urlHttpsRequired": "Must be a complete URL starting with https://",
+      "safetyCheck": "Safety Check",
+      "safetyCheckDesc": "URLs are validated against blocked domains and malicious sites before upload.",
+      "thumbnail": "Thumbnail",
+      "framePosition": "Frame Position",
+      "extractFrame": "Extract Frame",
+      "ready": "Ready",
+      "title_field": "Title",
+      "titlePlaceholder": "Give your work an eye-catching title...",
+      "titleTip": "Make it memorable and descriptive",
+      "description": "Description",
+      "descriptionPlaceholder": "Tell the story behind your work, your inspiration, techniques used...",
+      "descriptionTip": "Help viewers appreciate your creation",
+      "imageBestPractices": "Image Best Practices",
+      "imageFormat": "Formats: JPG, PNG, WebP, GIF",
+      "imageMaxSize": "Max size: 10MB",
+      "imageRecommended": "Recommended: 1920x1080 or higher for best quality",
+      "videoBestPractices": "Video Best Practices",
+      "videoFormat": "Formats: MP4, WebM, MOV",
+      "videoMaxSize": "Max size: 500MB",
+      "videoThumbnailTip": "Add a custom thumbnail for better engagement",
+      "audioBestPractices": "Audio Best Practices",
+      "audioFormat": "Formats: MP3, WAV, OGG, AAC",
+      "audioMaxSize": "Max size: 100MB",
+      "audioCoverTip": "Add cover art thumbnail for visual appeal",
+      "total": "Total",
+      "photos": "Photos",
+      "videos": "Videos",
+      "audio": "Audio",
+      "yourMedia": "Your Media",
+      "emptyGallery": "Your gallery is empty",
+      "emptyGalleryDesc": "Start building your portfolio by uploading photos, videos, or audio files",
+      "uploadFirst": "Upload Your First Item",
+      "untitled": "Untitled",
+      "recentlyAdded": "Recently added",
+      "delete": "Delete",
+      "edit": "Edit",
+      "editMedia": "Edit Media",
+      "previewAndUpdate": "Preview and update your",
+      "preview": "Preview",
+      "extractThumbnailDesc": "Extract thumbnail from your video",
+      "selectFrame": "Select Frame",
+      "extractThumbnail": "Extract Thumbnail",
+      "thumbnailOptional": "Optional: Leave empty to keep current thumbnail or fallback",
+      "back": "Back",
+      "adding": "Adding...",
+      "addFromUrl": "Add from URL",
+      "uploadToGallery": "Upload to Gallery",
+      "deleteMedia": "Delete Media?",
+      "deleteConfirm": "Are you sure you want to delete this item? This action cannot be undone.",
+      "invalidFileType": "Invalid file type",
+      "invalidUrl": "Please enter a valid URL",
+      "mediaAdded": "Media added successfully",
+      "uploadFailed": "Upload failed",
+      "noVideoSelected": "No video selected",
+      "thumbnailExtracted": "Thumbnail extracted successfully",
+      "thumbnailFailed": "Could not extract thumbnail from video",
+      "canvasContextFailed": "Canvas context failed",
+      "videoLoadFailed": "Video failed to load",
+      "mediaUploaded": "Media uploaded successfully",
+      "mediaDeleted": "Media deleted",
+      "deleteFailed": "Delete failed",
+      "mediaUpdated": "Media updated",
+      "updateFailed": "Update failed",
+      "savingChanges": "Saving...",
+      "saveChanges": "Save Changes",
+      "cancel": "Cancel",
+      "optional": "Optional",
+      "fromVideo": "From Video",
+      "upload": "Upload",
+      "file": "File",
+      "video": "Video",
+      "image": "Image",
+      "toastUploaded": "Uploaded",
+      "toastExtracted": "Extracted",
+      "toastUpdated": "Updated",
+      "toastDeleted": "Deleted",
+      "toastSuccess": "Success!",
+      "toastError": "Error",
+      "imageTips": "Image Tips",
+      "imageDirectUrl": "Must be a direct image URL",
+      "imageSupportedFormats": "Supported formats: JPG, PNG, WebP, GIF",
+      "videoTips": "Video Tips",
+      "videoDirectUrl": "Must be a direct video URL or video platform embed",
+      "videoSupportedFormats": "Supported formats: MP4, WebM, MOV",
+      "audioTips": "Audio Tips",
+      "audioDirectUrl": "Must be a direct audio URL",
+      "audioSupportedFormats": "Supported formats: MP3, WAV, OGG, AAC"
+    },
+    "galleryDesc": "تصفح وإدارة معرض الوسائط",
+    "subscription": "الاشتراك",
+    "subscriptionDesc": "إدارة اشتراكك والفواتير",
+    "profileDesc": "إدارة معلومات الملف الشخصي",
+    "settingsDesc": "تكوين تفضيلات الحساب",
+    "backToDashboard": "العودة إلى لوحة التحكم",
+    "myPortfolio": "معرض أعمالي",
+    "noPortfolioItems": "لا توجد عناصر معرض أعمال بعد",
+    "noPortfolioItemsDesc": "قم بتحميل الصور والفيديوهات والصوتيات لعرض موهبتك",
+    "uploadNow": "تحميل الآن",
+    "unlocked": "تم فتحها",
+    "topPerforming": "عناصر معرض الأعمال الأعلى أداءً",
+    "viewFullAnalytics": "عرض التحليل الكامل",
+    "totalViews": "إجمالي المشاهدات",
+    "totalLikes": "إجمالي الإعجابات",
+    "avgEngagement": "متوسط التفاعل",
+    "thisWeek": "هذا الأسبوع",
+    "views": "مشاهدات",
+    "engagement": "تفاعل",
+    "quickActions": "إجراءات سريعة",
+    "uploadMedia": "تحميل الوسائط",
+    "searchTalents": "بحث عن المواهب",
+    "messages": "الرسائل",
+    "lastSevenDays": "آخر 7 أيام",
+    "vsLastWeek": "مقابل الأسبوع الماضي",
+    "allCategories": "جميع الفئات",
+    "allTime": "كل الوقت",
+    "today": "اليوم",
+    "thisMonth": "هذا الشهر",
+    "browseTalents": "تصفح المواهب",
+    "nav": {
+      "overview": "Overview",
+      "profile": "Profile",
+      "gallery": "Gallery",
+      "insights": "Insights",
+      "activity": "Activity",
+      "saved": "Saved",
+      "history": "History",
+      "tickets": "Tickets",
+      "billing": "Billing",
+      "settings": "Settings",
+      "dashboard": "Dashboard"
+    },
+    "tickets": {
+      "title": "Support Tickets",
+      "description": "Track and manage your submitted support tickets",
+      "newTicket": "New Ticket",
+      "noTickets": "No tickets yet",
+      "noTicketsDesc": "You haven't submitted any support tickets. If you need help, our team is ready to assist.",
+      "submitFirst": "Submit Your First Ticket",
+      "noMatch": "No tickets match the selected filter.",
+      "all": "All",
+      "updated": "Updated {date}",
+      "visitHelp": "Visit Help Centre",
+      "open": "Open",
+      "inProgress": "In Progress",
+      "resolved": "Resolved",
+      "closed": "Closed",
+      "categoryAccount": "Account",
+      "categoryBilling": "Billing",
+      "categoryPortfolio": "Portfolio",
+      "categoryCategories": "Categories",
+      "categoryNotifications": "Notifications",
+      "categorySecurity": "Security",
+      "categoryOther": "Other"
+    },
+    "activity": {
+      "title": "Activity Feed",
+      "subtitle": "Track all interactions with your profile",
+      "loading": "Loading activities...",
+      "noActivity": "No Activity Yet",
+      "noActivityDesc": "Your activity feed will appear here once people start interacting with your profile."
+    },
+    "billing": {
+      "title": "Billing & Payments",
+      "subtitle": "View your subscription details and payment history",
+      "failedToLoad": "Failed to load billing information",
+      "errorLoading": "An error occurred while loading billing information",
+      "currentSubscription": "Current Subscription",
+      "plan": "Plan",
+      "status": "Status",
+      "currentPeriod": "Current Period",
+      "na": "N/A",
+      "manageSubscription": "Manage Subscription",
+      "paymentHistory": "Payment History",
+      "invoice": "Invoice:",
+      "showingPage": "Showing page {page} of {pages} ({total} total payments)",
+      "noPaymentHistory": "No payment history found"
+    },
+    "overview": {
+      "profileViews": "Profile Views",
+      "profileLikes": "Profile Likes",
+      "savedTalents": "Saved Talents",
+      "talentsYouSaved": "Talents you've saved",
+      "lastSevenDays": "Last 7 days",
+      "topPerformingMedia": "Top Performing Media",
+      "viewFullAnalytics": "View Full Analytics →",
+      "totalViews": "Total Views",
+      "totalLikes": "Total Likes",
+      "avgEngagement": "Avg Engagement",
+      "thisWeek": "This Week",
+      "views": "views",
+      "likes": "likes",
+      "engagement": "engagement",
+      "media": "Media"
+    }
+  },
+  "settings": {
+    "emailNotifications": "إشعارات البريد الإلكتروني",
+    "emailNotificationsDesc": "تلقي تحديثات عن نشاط حسابك",
+    "theme": "السمة",
+    "themeDesc": "اختر السمة المفضلة لديك",
+    "light": "فاتح",
+    "dark": "داكن",
+    "system": "النظام"
+  },
+  "common": {
+    "save": "حفظ"
+  },
+  "WhyHow": {
+    "breadcrumb": "لماذا وكيف",
+    "eyebrow": "للمواهب",
+    "hero": {
+      "title": "موهبتك تستحق",
+      "titleAccent": "منصة",
+      "subtitle": "3yeses توفر للمؤدين والممثلين والموسيقيين والعارضين والراقصين والمبدعين ملفًا مهنيًا مع رفع غير محدود وتحليلات مدمجة وقابلية اكتشاف حقيقية."
+    },
+    "cta": {
+      "primary": "أنشئ ملفكالشخصي",
+      "secondary": "عرض الأسعار"
+    },
+    "stats": {
+      "categories": "+20",
+      "categoriesLabel": "فئات المواهب",
+      "subcategories": "+145",
+      "subcategoriesLabel": "فئات فرعية",
+      "locales": "11",
+      "localesLabel": "لغة مدعومة",
+      "price": "10 £",
+      "priceLabel": "لمدة 6 أشهر"
+    },
+    "whySection": {
+      "eyebrow": "لماذا 3yeses",
+      "title": "مصمم للمبدعين النشطين",
+      "subtitle": "لا حيل، لا عمولات لكل حجز. اشتراك واحد يفتح كل شيء."
+    },
+    "features": {
+      "portfolio": {
+        "title": "رفع غير محدود للمعرض",
+        "desc": "ارفع عددًا غير محدود من الصور والفيديوهات ومقاطع الصوت — بدون حدود تخزين."
+      },
+      "discovery": {
+        "title": "بحث وفلاتر متقدمة",
+        "desc": "يجدك العملاء عبر فلاتر مفصلة: الفئة، المهارات، الموقع، اللغة ومستوى الخبرة."
+      },
+      "analytics": {
+        "title": "تحليلات لوحة التحكم",
+        "desc": "تتبع مشاهدات الملف الشخصي، تفاعل المعرض، ظهورات البحث ومعدلات النقر."
+      },
+      "categories": {
+        "title": "+20 فئة مواهب",
+        "desc": "ممثلون، موسيقيون، عارضون، راقصون، فنانو صوت، كوميديون، DJ، مصورون وغيرهم."
+      },
+      "simple": {
+        "title": "اشتراك واحد، كل شيء مشمول",
+        "desc": "لا رسوم خفية. ادفع مرة واحدة واحصل على جميع ميزات المنصة."
+      },
+      "control": {
+        "title": "تحكم كامل بالملف الشخصي",
+        "desc": "إدارة السيرة الذاتية، المهارات، تاريخ العمل، روابط التواصل الاجتماعي وإعدادات الخصوصية."
+      }
+    },
+    "howSection": {
+      "eyebrow": "كيف يعمل",
+      "title": "ابدأ في أربع خطوات",
+      "subtitle": "من التسجيل إلى اكتشافك من قبل العملاء — هذا ما يحدث بالضبط.",
+      "tags": {
+        "uploads": "رفع غير محدود",
+        "views": "تتبع المشاهدات",
+        "likes": "إعجابات وتقييمات"
+      }
+    },
+    "steps": [
+      {
+        "title": "أنشئ حسابك",
+        "desc": "سجل باسمك، بريدك الإلكتروني وكلمة المرور. اختر دورك وتحقق من عمرك.",
+        "details": [
+          "تسجيل بالبريد الإلكتروني وكلمة المرور",
+          "تحقق من العمر (18+ أو موافقة الوالدين للفئة 13-15)",
+          "اختر نوع الحساب: موهبة أو عميل"
+        ]
+      },
+      {
+        "title": "ابنِ ملفك الشخصي",
+        "desc": "أضف كل ما يميزك: اللقب، السيرة، المهارات، اللغات والفئة.",
+        "details": [
+          "اللقب المهني، السيرة والموقع",
+          "اختر الفئة والفئة الفرعية",
+          "أضف المهارات، اللغات والخبرة"
+        ]
+      },
+      {
+        "title": "ارفع معرضك",
+        "desc": "أضف أفضل أعمالك — صور، فيديوهات، مقاطع صوتية وعرض توضيحي.",
+        "details": [
+          "ارفع صور وفيديوهات وصوتيات بدون حدود",
+          "أضف عرض شوريل أو فيديو توضيحي",
+          "توليد تلقائي للصور المصغرة للفيديوهات"
+        ]
+      },
+      {
+        "title": "اِحصل على اكتشاف",
+        "desc": "ملفك يظهر في نتائج البحث. العملاء يبحثون ويفلترون ويتواصلون مباشرة.",
+        "details": [
+          "اظهر في نتائج مفلترة حسب الفئة والموقع",
+          "تتبع المشاهدات والتفاعل في الوقت الفعلي",
+          "استلم رسائل مباشرة من العملاء"
+        ]
+      }
+    ],
+    "included": {
+      "title": "كل شيء في اشتراك واحد",
+      "subtitle": "لا ارتباك في المستويات، لا قيود. كل مشترك يحصل على المنصة كاملة.",
+      "items": {
+        "uploads": "رفع غير محدود للصور والفيديو والصوت",
+        "profile": "ملف مهني كامل مع السيرة والمهارات",
+        "analytics": "لوحة تحكم مع المشاهدات والإحصائيات",
+        "ranking": "موضع أولوية في نتائج البحث",
+        "messaging": "رسائل مباشرة مع العملاء ومديري الاختيار",
+        "views": "عداد مشاهدات في الوقت الفعلي",
+        "likes": "إعجابات وتقييمات وتعليقات على المعرض",
+        "languages": "دعم ملف متعدد اللغات (11 لغة)",
+        "secure": "دفع آمن عبر Stripe مع سجل فواتير"
+      }
+    },
+    "finalCta": {
+      "title": "مستعد لأن تُرَى؟",
+      "subtitle": "أنشئ ملفك، ارفع أعمالك، وابدأ بالاكتشاف اليوم.",
+      "button": "ابدأ",
+      "browse": "تصفح الفئات",
+      "talentButton": "Create your profile",
+      "clientButton": "Hire talent"
+    }
+  },
+  "Meta": {
+    "title": "3YESES",
+    "description": "3YESES is a subscription-based talent marketplace connecting performers with projects and industry opportunities."
+  },
+  "About": {
+    "badge": "About 3YESES",
+    "hero": {
+      "title": "Every talent deserves ",
+      "accent": "a stage.",
+      "description": "3YESES started with a simple idea: talented people everywhere should have the chance to be seen. Not just the ones with connections or big-city access — {everyone}. From diverse communities around the world, we're building a place where creatives can showcase their work, build a name for themselves, and get discovered on their own terms.",
+      "everyone": "everyone"
+    },
+    "origin": {
+      "title": "Why we built this",
+      "p1": "The creative industry has always had a visibility problem. Talented actors, musicians, models, dancers, voice artists, photographers, and performers of all kinds exist in every corner of the world — but most never get the chance to be seen beyond their local community.",
+      "p2start": "We wanted to change that. 3YESES was born from the belief that ",
+      "p2bold": "talent doesn't have a postcode",
+      "p2end": ". Whether you're a street dancer in Accra, a classical violinist in Mumbai, a voice artist in Manchester, or a model in Buenos Aires — you deserve a professional platform to showcase your work and get noticed.",
+      "p3": "We built 3YESES to be radically simple and affordable. No gatekeeping, no approval process to join, no per-booking fees. One subscription gives you everything: unlimited uploads, a full professional profile, analytics to track your growth, and priority search placement so you actually get discovered.",
+      "p4": "This is your stage. Make it count."
+    },
+    "values": {
+      "title": "What we stand for",
+      "subtitle": "The principles that guide everything we build.",
+      "openTitle": "Open to Everyone",
+      "openDesc": "No gatekeeping. No auditions to join. If you have talent, you belong here — regardless of where you come from, your background, or how much experience you have.",
+      "diversityTitle": "Diversity First",
+      "diversityDesc": "We celebrate every genre, style, and culture. From classical musicians in Tokyo to street dancers in Lagos to voice artists in São Paulo — every creative deserves a stage.",
+      "communityTitle": "Community Driven",
+      "communityDesc": "Browse, like, comment, and share. Our hub brings performances and portfolios together so creatives can inspire each other and build real connections.",
+      "fairTitle": "Fair & Affordable",
+      "fairDesc": "One simple subscription — £10 for 6 months or £20 for 12 months. No commissions, no hidden fees, no premium tiers. Everyone gets the same full access."
+    },
+    "categories": {
+      "title": "All kinds of talent. All over the world.",
+      "subtitle": "Whatever your creative discipline, there's a home for you on 3yeses."
+    },
+    "features": {
+      "title": "Everything you need to get discovered",
+      "subtitle": "One subscription. Full access. No limits.",
+      "photoTitle": "Photo Portfolio",
+      "photoDesc": "Upload unlimited high-quality images — headshots, action shots, behind-the-scenes.",
+      "videoTitle": "Video Showreels",
+      "videoDesc": "Share showreels, performance clips, and YouTube embeds directly on your profile.",
+      "audioTitle": "Audio Demos",
+      "audioDesc": "Musicians and voice artists can upload audio samples — MP3, WAV, and more.",
+      "analyticsTitle": "Analytics Dashboard",
+      "analyticsDesc": "Track who views your profile, which portfolio items perform best, and how you rank in search.",
+      "rankingTitle": "Priority Ranking",
+      "rankingDesc": "Subscribers appear higher in search results so you get discovered faster.",
+      "customTitle": "Full Customisation",
+      "customDesc": "Bio, skills, languages, work history, physical characteristics, social links — make your profile yours.",
+      "categoriesTitle": "15+ Categories",
+      "categoriesDesc": "Actors, musicians, models, dancers, DJs, voice artists, photographers, comedians, presenters and more.",
+      "verifyTitle": "Verification Badges",
+      "verifyDesc": "Complete your profile fully to earn a verified badge that builds trust and boosts visibility.",
+      "hubTitle": "Media Hub",
+      "hubDesc": "Explore trending portfolios across the platform. Filter by category, media type, and popularity."
+    },
+    "howItWorks": {
+      "title": "How it works",
+      "step1Title": "Sign up & subscribe",
+      "step1Desc": "Create your account and choose your plan — £10 for 6 months or £20 for 12 months. Payment is handled securely through Stripe.",
+      "step2Title": "Build your profile",
+      "step2Desc": "Choose your category, write your bio, add skills and languages, upload photos, videos, and audio. Our onboarding wizard guides you through every step.",
+      "step3Title": "Get discovered",
+      "step3Desc": "Your profile goes live in search results. Track views and engagement through your analytics dashboard. Share your portfolio link anywhere."
+    },
+    "cta": {
+      "title": "Ready to showcase your talent?",
+      "description": "Join creatives from around the world. Build your portfolio, track your growth, and get discovered.",
+      "getStarted": "Get Started",
+      "viewPricing": "View Pricing"
+    }
+  },
+  "Contact": {
+    "title": "Contact Details",
+    "placeholder": "This is a placeholder for contact details."
+  },
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Mark all read",
+    "clearAll": "Clear all",
+    "noNotifications": "No notifications",
+    "allCaughtUp": "You are all caught up!",
+    "systemAlerts": "System alerts",
+    "settings": "Notification Settings",
+    "profileViews": "Profile Views",
+    "profileViewsDesc": "When someone views your profile",
+    "profileSaves": "Profile Saves",
+    "profileSavesDesc": "When someone saves your profile",
+    "comments": "Comments",
+    "commentsDesc": "New comments on your videos",
+    "likesLabel": "Likes",
+    "likesDesc": "When someone likes your content",
+    "sound": "Sound",
+    "soundDesc": "Play sound for notifications",
+    "dismiss": "Dismiss",
+    "justNow": "Just now",
+    "minutesAgo": "{count}m ago",
+    "hoursAgo": "{count}h ago",
+    "daysAgo": "{count}d ago"
+  },
+  "support": {
+    "helpCentre": "Help Centre",
+    "heroTitle": "How can we",
+    "heroAccent": "help you?",
+    "heroDesc": "Browse our help topics, check the FAQ, or submit a support ticket and our team will get back to you.",
+    "searchPlaceholder": "Search help topics, FAQs, and answers…",
+    "clearSearch": "Clear search",
+    "topicsFound": "{topics} topic(s) · {faqs} FAQ(s) found",
+    "matchingFAQs": "Matching FAQs",
+    "viewAllMatching": "View all {count} matching FAQs",
+    "learnMore": "Learn more",
+    "submitTicket": "Submit a Support Ticket",
+    "submitTicketDesc": "Can't find what you need? Our team will get back to you within 48 hours.",
+    "faqTitle": "Frequently Asked Questions",
+    "secureEncrypted": "Secure & encrypted",
+    "replyTime": "Typical reply within 48h",
+    "trackedDashboard": "Tracked via your dashboard",
+    "backToHelp": "Back to Help Centre",
+    "ticketLabel": "Support Ticket",
+    "submitATicket": "Submit a",
+    "ticketAccent": "Ticket",
+    "ticketFormDesc": "Choose a category, describe your issue, and our support team will get back to you within 48 hours. You must be logged in to submit a ticket.",
+    "newSupportTicket": "New Support Ticket",
+    "trustSecure": "Secure & Encrypted",
+    "trustSecureDesc": "All data is encrypted in transit",
+    "trustTracked": "Tracked Tickets",
+    "trustTrackedDesc": "View status in your dashboard",
+    "trustReply": "48h Response Time",
+    "trustReplyDesc": "Our team responds within 48 hours",
+    "stillNeedHelp": "Still need help?",
+    "submitTicketLink": "Submit a support ticket →",
+    "relatedTopics": "Related Topics",
+    "quickGuide": "Quick Guide",
+    "topicAccount": "Account & Profile",
+    "topicBilling": "Billing & Subscriptions",
+    "topicCategories": "Categories & Discovery",
+    "topicPortfolio": "Portfolio & Media",
+    "topicNotifications": "Notifications & Alerts",
+    "topicSecurity": "Security & Privacy",
+    "accountLabel": "Account & Profile",
+    "accountTitle": "Account &",
+    "accountAccent": "Profile",
+    "accountDesc": "Registration, profile editing, physical characteristics, work history, social links, visibility settings, and account management.",
+    "billingLabel": "Billing & Subscriptions",
+    "billingTitle": "Billing &",
+    "billingAccent": "Subscriptions",
+    "billingDesc": "Pricing, payment methods, invoices, cancellation, and everything related to your subscription.",
+    "categoriesLabel": "Categories & Discovery",
+    "categoriesTitle": "Categories &",
+    "categoriesAccent": "Discovery",
+    "categoriesDesc": "Search filters, talent directory, Media Hub, grid and list views, and tips for getting discovered.",
+    "portfolioLabel": "Portfolio & Media",
+    "portfolioTitle": "Portfolio &",
+    "portfolioAccent": "Media",
+    "portfolioDesc": "Upload wizard, gallery viewer, media overlay, file types, size limits, and tips for a standout portfolio.",
+    "notificationsLabel": "Notifications & Alerts",
+    "notificationsTitle": "Notifications &",
+    "notificationsAccent": "Alerts",
+    "notificationsDesc": "Comment alerts, like notifications, profile view updates, follower activity, and managing your preferences.",
+    "securityLabel": "Security & Privacy",
+    "securityTitle": "Security &",
+    "securityAccent": "Privacy",
+    "securityDesc": "Profile visibility controls, cookie consent, content reporting, GDPR rights, and keeping your account safe.",
+    "formCategory": "Category",
+    "formCategoryAria": "Ticket category",
+    "formSubject": "Subject",
+    "formSubjectPlaceholder": "Brief summary of your issue",
+    "formDescription": "Description",
+    "formDescPlaceholder": "Describe your issue in detail. Include any relevant steps or screenshots.",
+    "formSubmit": "Submit Ticket",
+    "formSubmitting": "Submitting…",
+    "formSuccess": "Ticket Submitted",
+    "formSuccessMsg": "Your ticket ID is {ticketId}. We'll get back to you within 48 hours.",
+    "formSubmitAnother": "Submit another ticket",
+    "formError": "Failed to submit ticket. Please make sure you are logged in.",
+    "formNetworkError": "Network error — please try again.",
+    "catAccount": "Account & Profile",
+    "catBilling": "Billing & Subscriptions",
+    "catPortfolio": "Portfolio & Media",
+    "catCategories": "Categories & Discovery",
+    "catNotifications": "Notifications & Alerts",
+    "catSecurity": "Security & Privacy",
+    "catOther": "Other",
+    "catAnalytics": "Analytics",
+    "catCommunity": "Community",
+    "catSupport": "Support & Tickets",
+    "faqItems": [
+      {
+        "category": "Account & Profile",
+        "q": "How do I create an account on 3YESES?",
+        "a": "Click \"Sign Up\" and follow the 3-step process: enter your email and password, confirm your age (users under 13 need a parent-managed account; 13–17 need parental consent), then choose your subscription plan (6 or 12 months) and complete Stripe checkout. Your account activates instantly."
+      },
+      {
+        "category": "Account & Profile",
+        "q": "What can I add to my profile?",
+        "a": "Your profile includes a bio, headshot, primary talent category, physical characteristics (height, body type, eye colour, hair colour), work history, languages spoken, skills (up to 4 featured), social media links, location, and optional fields like disabilities for inclusive casting."
+      },
+      {
+        "category": "Account & Profile",
+        "q": "I forgot my password — how do I reset it?",
+        "a": "Go to the login page and click \"Forgot password\". Enter your registered email and we'll send a one-time reset link valid for 1 hour."
+      },
+      {
+        "category": "Billing & Subscriptions",
+        "q": "How much does 3YESES cost?",
+        "a": "An active subscription is required. Choose between £10 for 6 months or £20 for 12 months. Both plans include identical features. No hidden fees."
+      },
+      {
+        "category": "Billing & Subscriptions",
+        "q": "Can I cancel my subscription?",
+        "a": "Yes — cancel any time from Dashboard → Subscription. You keep full access until the end of your billing period."
+      },
+      {
+        "category": "Portfolio & Media",
+        "q": "How do I upload portfolio items?",
+        "a": "Go to Dashboard → Portfolio and click \"Add Item\". The upload wizard walks you through 4 steps. Files can be up to 50 MB. For videos, you can pick a custom thumbnail."
+      },
+      {
+        "category": "Portfolio & Media",
+        "q": "How do people view my portfolio?",
+        "a": "Visitors see your portfolio in a gallery grid on your profile. Clicking an item opens the media overlay with keyboard navigation."
+      },
+      {
+        "category": "Categories & Discovery",
+        "q": "How does talent discovery work?",
+        "a": "Visitors browse the talent directory or Media Hub with advanced filters: gender, body type, ethnicity, age range, height range, skills, languages, disabilities, and location."
+      },
+      {
+        "category": "Categories & Discovery",
+        "q": "What is the Media Hub?",
+        "a": "The Hub is a browsable feed of all portfolio content across the platform. You can filter by talent category, media type, and sort by trending, newest, or most viewed."
+      },
+      {
+        "category": "Analytics",
+        "q": "What analytics are available?",
+        "a": "Your Dashboard shows profile views, unique viewers, portfolio views, likes received, search impressions, search clicks, CTR, and engagement rate."
+      },
+      {
+        "category": "Community",
+        "q": "Can I interact with other users?",
+        "a": "Yes — you can comment on portfolio items, reply to comments, @mention other users, like portfolio items, and share profiles."
+      },
+      {
+        "category": "Support & Tickets",
+        "q": "How do I submit a support ticket?",
+        "a": "Go to the Submit a Ticket page from the Help Centre. Choose a category, provide a subject and description. You must be logged in."
+      },
+      {
+        "category": "Support & Tickets",
+        "q": "How long does it take to get a response?",
+        "a": "Support tickets are answered within 48 hours."
+      }
+    ]
   }
 }

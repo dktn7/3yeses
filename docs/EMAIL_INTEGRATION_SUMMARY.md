@@ -108,8 +108,8 @@ npm run dev
 2. Update environment variables:
    ```bash
    RESEND_API_KEY="re_production_key"
-   EMAIL_FROM="noreply@3yeses.com"
-   NEXT_PUBLIC_APP_URL="https://3yeses.com"
+   EMAIL_FROM="noreply@3yeses.online"
+   NEXT_PUBLIC_APP_URL="https://3yeses.online"
    ```
 
 ---

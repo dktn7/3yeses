@@ -5,6 +5,7 @@
     "categories": "Categories",
     "contact": "Contact",
     "resources": "Resources",
+    "pricing": "Pricing",
     "pricingPlans": "Pricing Plans",
     "legal": "Legal",
     "privacyPolicy": "Privacy Policy",
@@ -14,11 +15,14 @@
     "settings": "Settings",
     "logout": "Logout",
     "login": "Login",
-    "signup": "Sign Up"
+    "signup": "Sign Up",
+    "support": "Support",
+    "whyAndHow": "Why & How",
+    "talentHub": "Talent Hub"
   },
   "Footer": {
     "aboutUs": "About Us",
-    "companyInfo": "Connecting talent with opportunity in the entertainment industry.",
+    "companyInfo": "Showcase your work to a live audience — subscribe to be discoverable and grow through views, likes, comments and shares.",
     "forTalent": "For Talent",
     "joinAsTalent": "Join as Talent",
     "talentDashboard": "Talent Dashboard",
@@ -31,7 +35,7 @@
     "phone": "+44 121 123 4567",
     "location": "Birmingham, UK",
     "language": "Language",
-    "copyright": "© 2025 3YESES. All rights reserved.",
+    "copyright": "© 2026 3YESES. All rights reserved.",
     "privacyPolicy": "Privacy Policy",
     "termsOfService": "Terms of Service"
   },
@@ -46,6 +50,10 @@
     "portuguese": "Portuguese",
     "russian": "Russian",
     "chinese": "Chinese"
+  },
+  "Meta": {
+    "title": "3YESES",
+    "description": "3YESES is a subscription-based talent marketplace connecting performers with projects and industry opportunities."
   },
   "Home": {
     "tagline": "Connecting talent with opportunity in the entertainment industry.",
@@ -62,17 +70,38 @@
     "expertTalentDescription": "Access to verified professionals with proven track records",
     "qualityAssured": "Quality Assured",
     "qualityAssuredDescription": "All talents are vetted and verified for your peace of mind",
+    "qualityAssuredDesc": "Top-tier talent for your projects",
     "careerGrowth": "Career Growth",
     "careerGrowthDescription": "Build lasting connections and advance your career",
+    "careerGrowthDesc": "Opportunities to advance your career",
+    "verifiedTalent": "Verified Talent",
+    "verifiedTalentDesc": "All profiles are manually verified",
     "searchPlaceholder": "Search for talent, skills, or categories...",
     "searchButton": "Search",
     "allCategories": "All Categories",
     "location": "Location",
     "filters": "Filters",
+    "clearAll": "Clear All",
+    "applyFilters": "Apply Filters",
+    "watchEyebrow": "Watch what 3YESES is about",
+    "videoSectionSeeThe": "See the",
+    "videoSectionExperience": "3YESES experience",
+    "videoSectionDescription": "Discover how talents get cast and how casting directors find the perfect fit — every time.",
+    "allCategory": "All {name}",
+    "chipAge": "Age: {min}-{max}",
+    "chipHeight": "Height: {min}-{max}",
+    "chipExp": "Exp: {min}-{max}+",
+    "chipEyes": "Eyes: {value}",
+    "chipHair": "Hair: {value}",
+    "chipSkills": "Skills: {value}",
+    "chipLang": "Lang: {value}",
     "findYourNextJob": "Find Your Next Job",
     "elevateYourCareer": "Elevate Your Career",
     "joinNow": "Join Now",
     "learnMore": "Learn More",
+    "ctaBrowseTalent": "Browse Talent",
+    "visitTalentHub": "Visit the Talent Hub",
+    "talentHubIntro": "Explore the Talent Hub — curated profiles, advanced filters, verified professionals, and demo reels to help you find the perfect talent quickly.",
     "activeTalent": "Active Talent",
     "projectsPosted": "Projects Posted",
     "successRate": "Success Rate",
@@ -84,7 +113,7 @@
     "showcaseYourWork": "Showcase Your Work",
     "showcaseYourWorkDescription": "Upload your portfolio and demo reels",
     "buildYourReputation": "Build Your Reputation",
-    "buildYourReputationDescription": "Get reviews and build your network",
+    "buildYourReputationDescription": "Build your professional reputation and network",
     "joinThousands": "Join thousands of talented professionals who trust 3YESES to connect them with their dream projects.",
     "supportCreativeJourney": "From auditions to bookings, we're here to support your creative journey.",
     "whyChooseTitle": "Why Choose",
@@ -108,7 +137,7 @@
       "creativeDirectory": {
         "title": "Creative Talent Directory",
         "description": "Browse and connect with creative professionals across various categories and specializations.",
-        "benefits": ["Easy talent discovery", "Category-based search", "Direct messaging", "Portfolio galleries"]
+        "benefits": ["Easy talent discovery", "Category-based search", "Portfolio galleries", "Priority search ranking"]
       },
       "advancedSearch": {
         "title": "Advanced Search & Filters",
@@ -138,86 +167,74 @@
     }
   },
   "About": {
+    "badge": "About 3YESES",
     "hero": {
-      "title": {
-        "part1": "Connecting",
-        "talent": "Talent",
-        "part2": "with",
-        "opportunity": "Opportunity"
-      },
-      "description": "3YESES is the premier platform where creative professionals and opportunity creators come together to bring extraordinary projects to life.",
-      "trusted": "Trusted by thousands",
-      "leading": "Industry leading"
+      "title": "Every talent deserves ",
+      "accent": "a stage.",
+      "description": "3YESES started with a simple idea: talented people everywhere should have the chance to be seen. Not just the ones with connections or big-city access — {everyone}. From diverse communities around the world, we're building a place where creatives can showcase their work, build a name for themselves, and get discovered on their own terms.",
+      "everyone": "everyone"
     },
-    "stats": {
-      "title": "Our Impact in Numbers",
-      "talents": {
-        "label": "Active Talents",
-        "description": "Creative professionals showcasing their skills"
-      },
-      "clients": {
-        "label": "Happy Talents",
-        "description": "Creative professionals thriving on the platform"
-      },
-      "bookings": {
-        "label": "Successful Bookings",
-        "description": "Projects brought to life through our platform"
-      },
-      "categories": {
-        "label": "Creative Categories",
-        "description": "From acting to production and everything in between"
-      }
-    },
-    "story": {
-      "title": "Our Story",
-      "p1": "Born from the frustration of disconnected creative industries, 3YESES emerged as a revolutionary solution to bridge the gap between talent and opportunity. We recognized that the entertainment industry was ready for a digital transformation that would democratize access to opportunities and streamline the casting process.",
-      "p2": "Our founders, with decades of combined experience in entertainment production and talent management, envisioned a platform where creativity meets efficiency. Where actors, musicians, dancers, and production professionals could showcase their talents without geographical limitations, and where casting directors could discover the perfect talent for their projects.",
-      "p3": "Today, 3YESES stands as the most comprehensive talent platform in the industry, continuously evolving to meet the needs of modern creative professionals while maintaining the personal touch that makes great collaborations happen."
-    },
-    "journey": {
-      "title": "Our Journey",
-      "2023": {
-        "title": "Foundation & Launch",
-        "description": "3YESES launches with core categories: Acting, Music, and Dance. Initial beta testing with 500+ users."
-      },
-      "2024": {
-        "title1": "Major Expansion",
-        "description1": "Added Crew and Production categories. Launched mobile-responsive design and advanced search features.",
-        "title2": "AI Integration",
-        "description2": "Introduced AI-powered matching algorithms and content generation. Reached 2,000+ active users."
-      },
-      "2025": {
-        "title": "Platform Evolution",
-        "description": "Launch of social features, video hub, and community tools. Expanding internationally with multi-language support."
-      }
-    },
-    "mission": {
-      "title": "Our Mission",
-      "description": "To democratize the entertainment industry by providing equal opportunities for talent discovery, fostering meaningful connections between creative professionals and project creators, and building the most inclusive and efficient talent marketplace in the world."
-    },
-    "vision": {
-      "title": "Our Vision",
-      "description": "A world where every creative professional has the tools and platform they need to showcase their talents, connect with opportunities, and build successful careers in the entertainment industry, regardless of their background or location."
+    "origin": {
+      "title": "Why we built this",
+      "p1": "The creative industry has always had a visibility problem. Talented actors, musicians, models, dancers, voice artists, photographers, and performers of all kinds exist in every corner of the world — but most never get the chance to be seen beyond their local community.",
+      "p2start": "We wanted to change that. 3YESES was born from the belief that ",
+      "p2bold": "talent doesn't have a postcode",
+      "p2end": ". Whether you're a street dancer in Accra, a classical violinist in Mumbai, a voice artist in Manchester, or a model in Buenos Aires — you deserve a professional platform to showcase your work and get noticed.",
+      "p3": "We built 3YESES to be radically simple and affordable. No gatekeeping, no approval process to join, no per-booking fees. One subscription gives you everything: unlimited uploads, a full professional profile, analytics to track your growth, and priority search placement so you actually get discovered.",
+      "p4": "This is your stage. Make it count."
     },
     "values": {
-      "title": "Our Values",
-      "inclusivity": {
-        "title": "Inclusivity",
-        "description": "We believe every voice deserves to be heard and every talent deserves an opportunity."
-      },
-      "excellence": {
-        "title": "Excellence",
-        "description": "We maintain the highest standards in everything we do, from user experience to talent matching."
-      },
-      "community": {
-        "title": "Community",
-        "description": "We foster genuine connections and support networks that extend beyond individual projects."
-      }
+      "title": "What we stand for",
+      "subtitle": "The principles that guide everything we build.",
+      "openTitle": "Open to Everyone",
+      "openDesc": "No gatekeeping. No auditions to join. If you have talent, you belong here — regardless of where you come from, your background, or how much experience you have.",
+      "diversityTitle": "Diversity First",
+      "diversityDesc": "We celebrate every genre, style, and culture. From classical musicians in Tokyo to street dancers in Lagos to voice artists in São Paulo — every creative deserves a stage.",
+      "communityTitle": "Community Driven",
+      "communityDesc": "Browse, like, comment, and share. Our hub brings performances and portfolios together so creatives can inspire each other and build real connections.",
+      "fairTitle": "Fair & Affordable",
+      "fairDesc": "One simple subscription — £10 for 6 months or £20 for 12 months. No commissions, no hidden fees, no premium tiers. Everyone gets the same full access."
+    },
+    "categories": {
+      "title": "All kinds of talent. All over the world.",
+      "subtitle": "Whatever your creative discipline, there's a home for you on 3yeses."
+    },
+    "features": {
+      "title": "Everything you need to get discovered",
+      "subtitle": "One subscription. Full access. No limits.",
+      "photoTitle": "Photo Portfolio",
+      "photoDesc": "Upload unlimited high-quality images — headshots, action shots, behind-the-scenes.",
+      "videoTitle": "Video Showreels",
+      "videoDesc": "Share showreels, performance clips, and YouTube embeds directly on your profile.",
+      "audioTitle": "Audio Demos",
+      "audioDesc": "Musicians and voice artists can upload audio samples — MP3, WAV, and more.",
+      "analyticsTitle": "Analytics Dashboard",
+      "analyticsDesc": "Track who views your profile, which portfolio items perform best, and how you rank in search.",
+      "rankingTitle": "Priority Ranking",
+      "rankingDesc": "Subscribers appear higher in search results so you get discovered faster.",
+      "customTitle": "Full Customisation",
+      "customDesc": "Bio, skills, languages, work history, physical characteristics, social links — make your profile yours.",
+      "categoriesTitle": "15+ Categories",
+      "categoriesDesc": "Actors, musicians, models, dancers, DJs, voice artists, photographers, comedians, presenters and more.",
+      "verifyTitle": "Verification Badges",
+      "verifyDesc": "Complete your profile fully to earn a verified badge that builds trust and boosts visibility.",
+      "hubTitle": "Media Hub",
+      "hubDesc": "Explore trending portfolios across the platform. Filter by category, media type, and popularity."
+    },
+    "howItWorks": {
+      "title": "How it works",
+      "step1Title": "Sign up & subscribe",
+      "step1Desc": "Create your account and choose your plan — £10 for 6 months or £20 for 12 months. Payment is handled securely through Stripe.",
+      "step2Title": "Build your profile",
+      "step2Desc": "Choose your category, write your bio, add skills and languages, upload photos, videos, and audio. Our onboarding wizard guides you through every step.",
+      "step3Title": "Get discovered",
+      "step3Desc": "Your profile goes live in search results. Track views and engagement through your analytics dashboard. Share your portfolio link anywhere."
     },
     "cta": {
-      "title": "Join the 3YESES Community",
-      "description": "Whether you're a talented creative professional or a project creator looking for the perfect talent, there's a place for you in our community.",
-      "joinAsTalent": "Join as Talent"
+      "title": "Ready to showcase your talent?",
+      "description": "Join creatives from around the world. Build your portfolio, track your growth, and get discovered.",
+      "getStarted": "Get Started",
+      "viewPricing": "View Pricing"
     }
   },
   "Contact": {
@@ -240,8 +257,12 @@
     "talents": {
       "backTo": "Back to {categoryName}",
       "filters": "Filters",
-      "reviews": "{count, plural, =0 {No reviews} =1 {# review} other {# reviews}}",
-      "experience": "{years}+ years exp"
+      "reviews": "{count, plural, =0 {No testimonials} =1 {# testimonial} other {# testimonials}}",
+      "experience": "{years}+ years exp",
+      "noTalents": {
+        "title": "No talents found",
+        "description": "There are no talents in this category yet. Check back soon!"
+      }
     },
     "filters": {
       "title": "Advanced Filters",
@@ -299,6 +320,29 @@
     },
     "errors": {
       "failedToLoadTalents": "Failed to load talents."
+    },
+    "names": {
+      "voiceOverDubbing": "Voice Over & Dubbing",
+      "translationLocalization": "Translation & Localization",
+      "contentCreation": "Content Creation",
+      "musicAudio": "Music & Audio",
+      "videoProduction": "Video Production",
+      "actingPerformance": "Acting & Performance",
+      "modeling": "Modeling",
+      "dancingChoreography": "Dancing & Choreography",
+      "beautyWellness": "Beauty & Wellness",
+      "sportsFitness": "Sports & Fitness",
+      "stunts": "Stunts",
+      "magicIllusion": "Magic & Illusion",
+      "circusArts": "Circus Arts",
+      "comedy": "Comedy",
+      "photographyCommercial": "Photography (Commercial)",
+      "graphicDesign": "Graphic Design",
+      "musicProduction": "Music Production",
+      "influencerContentCreator": "Influencer/Content Creator",
+      "hairMakeupProfessional": "Hair & Makeup (Professional)",
+      "stageCrewTechnician": "Stage Crew/Technician",
+      "animation": "Animation"
     }
   },
   "SignupPage": {
@@ -645,7 +689,7 @@
         "alreadyProcessed": "This consent request has already been processed."
       },
       "contactSupport": "Contact Support",
-      "supportEmail": "support@3yeses.com"
+      "supportEmail": "support@3yeses.online"
     }
   },
   "Pages": {
@@ -654,12 +698,55 @@
       "subtitle": "Choose the plan that works best for you"
     },
     "privacy": {
-      "title": "Privacy Policy", 
-      "lastUpdated": "Last updated: {date}"
+      "title": "Privacy Policy",
+      "lastUpdated": "Last updated: {date}",
+      "badge": "Legal",
+      "heroTitle": "Privacy ",
+      "heroAccent": "Policy",
+      "contents": "Contents"
+      ,
+      "introP1": "This Privacy Policy explains how 3YESES (\"Platform\", \"we\", \"us\", \"our\") collects, uses, stores, and protects your personal data when you use our subscription-based talent marketplace at 3yeses.online.",
+      "introP2": "We are committed to protecting your privacy and handling your personal data in compliance with the UK GDPR, the Data Protection Act 2018, and, where applicable, the EU GDPR."
     },
     "terms": {
       "title": "Terms of Service",
-      "lastUpdated": "Last updated: {date}"
+      "lastUpdated": "Last updated: {date}",
+      "badge": "Legal",
+      "heroTitle": "Terms & ",
+      "heroAccent": "Conditions",
+      "contents": "Contents"
+      ,
+      "sections": {
+        "overview": {
+          "p1": "These Terms and Conditions (\"Terms\") govern your use of the 3YESES platform (\"Platform\", \"we\", \"us\", \"our\"). By creating an account or using any part of the Platform, you agree to be bound by these Terms.",
+          "p2": "3YESES is a platform where creative professionals — actors, musicians, models, dancers, voice artists, photographers, videographers, DJs, presenters, comedians, and other performers — create profiles, upload portfolio media (photos, videos, audio), and get discovered. The Platform includes a searchable talent directory, a media hub, analytics dashboards, and community features such as comments, likes, and content sharing."
+        },
+        "eligibility": {
+          "p1": "You must be at least 13 years old to create an account. Users aged 13–17 require parental or guardian consent. Users under 13 must have a parent-managed account where the parent or guardian registers and manages the account on their behalf.",
+          "p2": "You are responsible for maintaining the confidentiality of your login credentials and for all activity under your account. Notify us immediately if you suspect unauthorised access.",
+          "p3": "Each individual may maintain only one account. Duplicate accounts may be suspended without notice.",
+          "p4": "You must provide accurate, current information during registration and keep your profile information up to date. Fraudulent or misleading profiles may be removed."
+        },
+        "subscription": {
+          "p1": "An active subscription is required to use the Platform. You subscribe during the sign-up process. Without an active subscription, you cannot access the Platform.",
+          "plansIntro": "We offer one plan — Standard Access — with two duration options:",
+          "plans": ["6 months — £10, billed as a recurring subscription via Stripe.", "12 months — £20, billed as a recurring subscription via Stripe."],
+          "p2": "Both plans include identical features: unlimited portfolio uploads, full profile customisation, priority search ranking, and full dashboard analytics."
+        },
+        "content": {
+          "ownership": "You retain full ownership of all content you upload to the Platform. By uploading content, you grant 3YESES a non-exclusive, worldwide, royalty-free licence to display, distribute, and promote your content on the Platform and in marketing materials related to the Platform.",
+          "permitted": "You may upload images (JPEG, PNG, WebP), videos (MP4, MOV), and audio files (MP3, WAV). Individual files must not exceed 50 MB. You may also embed external video links (e.g. YouTube, Vimeo).",
+          "prohibited": [
+            "Is sexually explicit, pornographic, or depicts nudity intended to be sexual in nature.",
+            "Contains violence, gore, or content depicting harm to individuals.",
+            "Promotes hate speech, discrimination, or harassment based on race, ethnicity, religion, gender, sexual orientation, disability, or any other protected characteristic.",
+            "Infringes on the intellectual property rights of others (copyright, trademark, etc.).",
+            "Contains malware, executable files, or any form of malicious code.",
+            "Is spam, misleading, or fraudulent.",
+            "Depicts minors in inappropriate contexts."
+          ]
+        }
+      }
     },
     "about": {
       "title": "About 3YESES",
@@ -774,5 +861,695 @@
     "noResultsTitle": "No results found",
     "noResultsDescription": "Try adjusting your search criteria or filters",
     "clearAllFilters": "Clear all filters"
+  },
+  "dashboard": {
+    "hi": "Hi {name}!",
+    "welcome": "Welcome back, {name}!",
+    "welcomeBack": "Welcome back, {name}!",
+    "subtitle": "Here's what's happening with your account today.",
+    "newComments": "new comments",
+    "profile": "profile",
+    "complete": "complete",
+    "recentActivity": "Recent Activity",
+    "recentNotifications": "Recent Notifications",
+    "talentInteractions": "Talent Interactions",
+    "fullActivityFeed": "Full Activity Feed",
+    "savedTalents": "Saved Talents",
+    "viewedHistory": "Viewed History",
+    "viewHistory": "View History",
+    "editProfile": "Edit Profile",
+    "settings": "Settings",
+    "viewProfile": "View Profile",
+    "viewAll": "View All",
+    "profileViews": "Profile Views",
+    "likes": "Likes",
+    "profileCompletion": "Profile Completion",
+    "totalVisitors": "Total Visitors",
+    "totalLiked": "Total Liked",
+    "totalUsers": "Total Users",
+    "talents": "Talents",
+    "talentsSaved": "talents saved",
+    "talentsViewed": "talents viewed",
+    "noSavedTalents": "No saved talents yet",
+    "noSavedTalentsDesc": "Start exploring and save talents to see them here",
+    "startSavingTalents": "Start saving talents you're interested in to see them here",
+    "noViewedTalents": "No viewing history",
+    "noViewedTalentsDesc": "Talents you view will appear here",
+    "noViewHistory": "No viewing history yet",
+    "startBrowsingTalents": "Start browsing talents to build your view history",
+    "noRecentActivity": "No recent activity to display",
+    "noNotifications": "No notifications to display",
+    "quickAccess": "Quick Access",
+    "portfolio": "Portfolio",
+    "portfolioDesc": "Showcase your work and achievements",
+    "analytics": "Analytics",
+    "analyticsDesc": "View detailed insights and statistics",
+    "gallery": "Gallery",
+    "galleryDesc": "Browse and manage your media gallery",
+    "subscription": "Subscription",
+    "subscriptionDesc": "Manage your subscription and billing",
+    "profileDesc": "Manage your profile information and settings",
+    "settingsDesc": "Configure your account preferences",
+    "backToDashboard": "Back to Dashboard",
+    "myPortfolio": "My Portfolio",
+    "noPortfolioItems": "No portfolio items yet",
+    "noPortfolioItemsDesc": "Upload photos, videos, and audio to showcase your talent",
+    "uploadNow": "Upload Now",
+    "unlocked": "unlocked",
+    "topPerforming": "Top Performing Portfolio Items",
+    "viewFullAnalytics": "View Full Analytics",
+    "totalViews": "Total Views",
+    "totalLikes": "Total Likes",
+    "avgEngagement": "Avg Engagement",
+    "thisWeek": "This Week",
+    "views": "views",
+    "likes": "likes",
+    "engagement": "engagement",
+    "quickActions": "Quick Actions",
+    "uploadMedia": "Upload Media",
+    "searchTalents": "Search Talents",
+    "messages": "Messages",
+    "analytics": "Analytics",
+    "lastSevenDays": "Last 7 days",
+    "vsLastWeek": "vs last week",
+    
+    "allCategories": "All Categories",
+    "allTime": "All Time",
+    "today": "Today",
+    "thisWeek": "This Week",
+    "thisMonth": "This Month",
+    "browseTalents": "Browse Talents",
+    "nav": {
+      "overview": "Overview",
+      "profile": "Profile",
+      "gallery": "Gallery",
+      "insights": "Insights",
+      "activity": "Activity",
+      "saved": "Saved",
+      "history": "History",
+      "tickets": "Tickets",
+      "billing": "Billing",
+      "settings": "Settings",
+      "dashboard": "Dashboard"
+    },
+    "tickets": {
+      "title": "Support Tickets",
+      "description": "Track and manage your submitted support tickets",
+      "newTicket": "New Ticket",
+      "noTickets": "No tickets yet",
+      "noTicketsDesc": "You haven't submitted any support tickets. If you need help, our team is ready to assist.",
+      "submitFirst": "Submit Your First Ticket",
+      "noMatch": "No tickets match the selected filter.",
+      "all": "All",
+      "updated": "Updated {date}",
+      "visitHelp": "Visit Help Centre",
+      "open": "Open",
+      "inProgress": "In Progress",
+      "resolved": "Resolved",
+      "closed": "Closed",
+      "categoryAccount": "Account",
+      "categoryBilling": "Billing",
+      "categoryPortfolio": "Portfolio",
+      "categoryCategories": "Categories",
+      "categoryNotifications": "Notifications",
+      "categorySecurity": "Security",
+      "categoryOther": "Other"
+    },
+    "activity": {
+      "title": "Activity Feed",
+      "subtitle": "Track all interactions with your profile",
+      "loading": "Loading activities...",
+      "noActivity": "No Activity Yet",
+      "noActivityDesc": "Your activity feed will appear here once people start interacting with your profile."
+    },
+    "billing": {
+      "title": "Billing & Payments",
+      "subtitle": "View your subscription details and payment history",
+      "failedToLoad": "Failed to load billing information",
+      "errorLoading": "An error occurred while loading billing information",
+      "currentSubscription": "Current Subscription",
+      "plan": "Plan",
+      "status": "Status",
+      "currentPeriod": "Current Period",
+      "na": "N/A",
+      "manageSubscription": "Manage Subscription",
+      "paymentHistory": "Payment History",
+      "invoice": "Invoice:",
+      "showingPage": "Showing page {page} of {pages} ({total} total payments)",
+      "noPaymentHistory": "No payment history found"
+    },
+    "analytics": {
+      "title": "Analytics",
+      "noData": "No analytics data available yet.",
+      "dashboard": "Analytics Dashboard",
+      "days7": "7 Days",
+      "days30": "30 Days",
+      "days90": "90 Days",
+      "totalViews": "Total Views",
+      "uniqueViewers": "{count} unique viewers",
+      "portfolioViews": "Portfolio Views",
+      "engagementRate": "{rate}% engagement rate",
+      "searchPerformance": "Search Performance",
+      "ctr": "{rate}% CTR ({clicks} clicks)",
+      "profileViewsTrend": "Profile Views Trend",
+      "portfolioEngagement": "Portfolio Engagement",
+      "topPortfolioItems": "Top Portfolio Items",
+      "noPortfolioItems": "No portfolio items yet",
+      "recentProfileViews": "Recent Profile Views",
+      "viewer": "Viewer",
+      "time": "Time",
+      "anonymous": "Anonymous",
+      "noViews": "No views yet",
+      "chartTotalViews": "Total Views",
+      "chartUniqueViews": "Unique Views",
+      "chartPortfolioViews": "Portfolio Views",
+      "chartImpressions": "Impressions",
+      "chartClicks": "Clicks"
+    },
+    "settings": {
+      "title": "Settings",
+      "subtitle": "Manage your account settings and preferences",
+      "savedSuccess": "Settings saved successfully!",
+      "saveFailed": "Failed to save settings",
+      "errorOccurred": "An error occurred",
+      "confirmDelete": "Are you sure you want to delete your account? This action cannot be undone.",
+      "confirmDeleteFinal": "This will permanently delete all your data, including your profile and portfolio. Continue?",
+      "deleteFailed": "Failed to delete account. Please try again.",
+      "deleteError": "An error occurred. Please try again.",
+      "accountInfo": "Account Information",
+      "emailAddress": "Email Address",
+      "verified": "✓ Verified",
+      "notVerified": "⚠ Not Verified",
+      "name": "Name",
+      "password": "Password",
+      "passwordChangeNotice": "To change your password, please use the \"Forgot Password\" option on the login page. This ensures secure password reset through email verification.",
+      "notificationPrefs": "Notification Preferences",
+      "emailNotifications": "Email Notifications",
+      "marketingEmails": "Marketing Emails",
+      "privacySettings": "Privacy Settings",
+      "profileVisibility": "Profile Visibility",
+      "visibilityPublic": "Public - Everyone can see my profile",
+      "visibilityMembers": "Members Only - Only logged in users",
+      "visibilityPrivate": "Private - Hidden from search",
+      "showEmail": "Show Email on Profile",
+      "showLocation": "Show Location on Profile",
+      "saving": "Saving...",
+      "saveSettings": "Save Settings",
+      "dangerZone": "Danger Zone",
+      "deleteAccount": "Delete Account",
+      "deleteAccountDesc": "Once you delete your account, there is no going back. All your data will be permanently deleted.",
+      "deleteMyAccount": "Delete My Account"
+    },
+    "profile": {
+      "editProfile": "Edit Profile",
+      "subtitle": "Update your talent profile information to help you get discovered",
+      "profileUpdated": "Profile updated successfully!",
+      "failedToUpdate": "Failed to update profile",
+      "errorOccurred": "An error occurred. Please try again.",
+      "profilePicture": "Profile Picture",
+      "changeProfilePicture": "Change Profile Picture",
+      "enterImageUrl": "Enter image URL (e.g., https://example.com/image.jpg)",
+      "remove": "Remove",
+      "imageRecommendation": "Recommended: Square image, at least 400x400px. Supports JPG, PNG, GIF.",
+      "basicInfo": "Basic Information",
+      "bio": "Bio",
+      "bioPlaceholder": "Tell us about yourself, your experience, and what makes you unique...",
+      "bioCharCount": "{count} / 500 characters (minimum 50)",
+      "bioError": "Bio must be at least 50 characters",
+      "location": "Location",
+      "locationPlaceholder": "e.g., London, UK",
+      "locationError": "Location is required",
+      "yearsOfExperience": "Years of Experience",
+      "experienceError": "Experience must be a positive number",
+      "dateOfBirth": "Date of Birth",
+      "categoryAndSpecialty": "Category & Specialty",
+      "category": "Category",
+      "selectCategory": "Select a category",
+      "specialty": "Specialty",
+      "selectSpecialty": "Select a specialty",
+      "selectCategoryFirst": "Please select a category first",
+      "physicalCharacteristics": "Physical Characteristics",
+      "gender": "Gender",
+      "selectGender": "Select gender",
+      "genderMale": "Male",
+      "genderFemale": "Female",
+      "genderNonBinary": "Non-binary",
+      "genderOther": "Other",
+      "genderPreferNot": "Prefer not to say",
+      "heightCm": "Height (cm)",
+      "heightPlaceholder": "e.g., 175",
+      "ethnicity": "Ethnicity",
+      "selectEthnicity": "Select ethnicity",
+      "ethnicityWhite": "White",
+      "ethnicityBlack": "Black",
+      "ethnicityAsian": "Asian",
+      "ethnicityHispanic": "Hispanic",
+      "ethnicityMiddleEastern": "Middle Eastern",
+      "ethnicityMixed": "Mixed",
+      "ethnicityOther": "Other",
+      "bodyType": "Body Type",
+      "selectBodyType": "Select body type",
+      "bodyTypeSlim": "Slim",
+      "bodyTypeAthletic": "Athletic",
+      "bodyTypeAverage": "Average",
+      "bodyTypeMuscular": "Muscular",
+      "bodyTypeCurvy": "Curvy",
+      "bodyTypePlusSize": "Plus Size",
+      "eyeColor": "Eye Color",
+      "eyeColorPlaceholder": "e.g., Brown, Blue, Green",
+      "hairColor": "Hair Color",
+      "hairColorPlaceholder": "e.g., Black, Blonde, Brown",
+      "skillsAndExpertise": "Skills & Expertise",
+      "featuredSkills": "Featured Skills",
+      "featuredSkillsDesc": "Choose up to 4 skills to display on your profile card",
+      "featuredSkillsCount": "{count}/4 selected",
+      "featuredSkillsTip": "Tip: Select your top skills to highlight them on your profile card",
+      "socialMedia": "Social Media",
+      "instagram": "Instagram",
+      "twitterX": "Twitter / X",
+      "youtube": "YouTube",
+      "usernamePlaceholder": "@username",
+      "channelUrl": "Channel URL",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "saveChanges": "Save Changes"
+    },
+    "overview": {
+      "profileViews": "Profile Views",
+      "profileLikes": "Profile Likes",
+      "savedTalents": "Saved Talents",
+      "talentsYouSaved": "Talents you've saved",
+      "lastSevenDays": "Last 7 days",
+      "topPerformingMedia": "Top Performing Media",
+      "viewFullAnalytics": "View Full Analytics →",
+      "totalViews": "Total Views",
+      "totalLikes": "Total Likes",
+      "avgEngagement": "Avg Engagement",
+      "thisWeek": "This Week",
+      "views": "views",
+      "likes": "likes",
+      "engagement": "engagement",
+      "media": "Media"
+    },
+    "gallery": {
+      "title": "Gallery",
+      "subtitle": "Curate your portfolio with photos, videos, and audio",
+      "uploading": "Uploading...",
+      "uploadMedia": "Upload Media",
+      "shareWork": "Share your creative work with the world",
+      "chooseMethod": "Choose Upload Method",
+      "fromDevice": "From Device",
+      "chooseFile": "Choose a file",
+      "fromUrl": "From URL",
+      "pasteLink": "Paste a link",
+      "enterMediaUrl": "Enter Media URL",
+      "supportedFormats": "Supported: Direct image/video/audio URLs or embeds from popular platforms",
+      "mediaType": "Media Type",
+      "url": "URL",
+      "urlHttpsRequired": "Must be a complete URL starting with https://",
+      "safetyCheck": "Safety Check",
+      "safetyCheckDesc": "URLs are validated against blocked domains and malicious sites before upload.",
+      "thumbnail": "Thumbnail",
+      "framePosition": "Frame Position",
+      "extractFrame": "Extract Frame",
+      "ready": "Ready",
+      "title_field": "Title",
+      "titlePlaceholder": "Give your work an eye-catching title...",
+      "titleTip": "Make it memorable and descriptive",
+      "description": "Description",
+      "descriptionPlaceholder": "Tell the story behind your work, your inspiration, techniques used...",
+      "descriptionTip": "Help viewers appreciate your creation",
+      "imageBestPractices": "Image Best Practices",
+      "imageFormat": "Formats: JPG, PNG, WebP, GIF",
+      "imageMaxSize": "Max size: 10MB",
+      "imageRecommended": "Recommended: 1920x1080 or higher for best quality",
+      "videoBestPractices": "Video Best Practices",
+      "videoFormat": "Formats: MP4, WebM, MOV",
+      "videoMaxSize": "Max size: 500MB",
+      "videoThumbnailTip": "Add a custom thumbnail for better engagement",
+      "audioBestPractices": "Audio Best Practices",
+      "audioFormat": "Formats: MP3, WAV, OGG, AAC",
+      "audioMaxSize": "Max size: 100MB",
+      "audioCoverTip": "Add cover art thumbnail for visual appeal",
+      "total": "Total",
+      "photos": "Photos",
+      "videos": "Videos",
+      "audio": "Audio",
+      "yourMedia": "Your Media",
+      "emptyGallery": "Your gallery is empty",
+      "emptyGalleryDesc": "Start building your portfolio by uploading photos, videos, or audio files",
+      "uploadFirst": "Upload Your First Item",
+      "untitled": "Untitled",
+      "recentlyAdded": "Recently added",
+      "delete": "Delete",
+      "edit": "Edit",
+      "editMedia": "Edit Media",
+      "previewAndUpdate": "Preview and update your",
+      "preview": "Preview",
+      "extractThumbnailDesc": "Extract thumbnail from your video",
+      "selectFrame": "Select Frame",
+      "extractThumbnail": "Extract Thumbnail",
+      "thumbnailOptional": "Optional: Leave empty to keep current thumbnail or fallback",
+      "back": "Back",
+      "adding": "Adding...",
+      "addFromUrl": "Add from URL",
+      "uploadToGallery": "Upload to Gallery",
+      "deleteMedia": "Delete Media?",
+      "deleteConfirm": "Are you sure you want to delete this item? This action cannot be undone.",
+      "invalidFileType": "Invalid file type",
+      "invalidUrl": "Please enter a valid URL",
+      "mediaAdded": "Media added successfully",
+      "uploadFailed": "Upload failed",
+      "noVideoSelected": "No video selected",
+      "thumbnailExtracted": "Thumbnail extracted successfully",
+      "thumbnailFailed": "Could not extract thumbnail from video",
+      "canvasContextFailed": "Canvas context failed",
+      "videoLoadFailed": "Video failed to load",
+      "mediaUploaded": "Media uploaded successfully",
+      "mediaDeleted": "Media deleted",
+      "deleteFailed": "Delete failed",
+      "mediaUpdated": "Media updated",
+      "updateFailed": "Update failed",
+      "savingChanges": "Saving...",
+      "saveChanges": "Save Changes",
+      "cancel": "Cancel",
+      "optional": "Optional",
+      "fromVideo": "From Video",
+      "upload": "Upload",
+      "file": "File",
+      "video": "Video",
+      "image": "Image",
+      "toastUploaded": "Uploaded",
+      "toastExtracted": "Extracted",
+      "toastUpdated": "Updated",
+      "toastDeleted": "Deleted",
+      "toastSuccess": "Success!",
+      "toastError": "Error",
+      "imageTips": "Image Tips",
+      "imageDirectUrl": "Must be a direct image URL",
+      "imageSupportedFormats": "Supported formats: JPG, PNG, WebP, GIF",
+      "videoTips": "Video Tips",
+      "videoDirectUrl": "Must be a direct video URL or video platform embed",
+      "videoSupportedFormats": "Supported formats: MP4, WebM, MOV",
+      "audioTips": "Audio Tips",
+      "audioDirectUrl": "Must be a direct audio URL",
+      "audioSupportedFormats": "Supported formats: MP3, WAV, OGG, AAC"
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Mark all read",
+    "clearAll": "Clear all",
+    "noNotifications": "No notifications",
+    "allCaughtUp": "You are all caught up!",
+    "systemAlerts": "System alerts",
+    "settings": "Notification Settings",
+    "profileViews": "Profile Views",
+    "profileViewsDesc": "When someone views your profile",
+    "profileSaves": "Profile Saves",
+    "profileSavesDesc": "When someone saves your profile",
+    "comments": "Comments",
+    "commentsDesc": "New comments on your videos",
+    "likesLabel": "Likes",
+    "likesDesc": "When someone likes your content",
+    "sound": "Sound",
+    "soundDesc": "Play sound for notifications",
+    "dismiss": "Dismiss",
+    "justNow": "Just now",
+    "minutesAgo": "{count}m ago",
+    "hoursAgo": "{count}h ago",
+    "daysAgo": "{count}d ago"
+  },
+  "support": {
+    "helpCentre": "Help Centre",
+    "heroTitle": "How can we",
+    "heroAccent": "help you?",
+    "heroDesc": "Browse our help topics, check the FAQ, or submit a support ticket and our team will get back to you.",
+    "searchPlaceholder": "Search help topics, FAQs, and answers…",
+    "clearSearch": "Clear search",
+    "topicsFound": "{topics} topic(s) · {faqs} FAQ(s) found",
+    "matchingFAQs": "Matching FAQs",
+    "viewAllMatching": "View all {count} matching FAQs",
+    "learnMore": "Learn more",
+    "submitTicket": "Submit a Support Ticket",
+    "submitTicketDesc": "Can't find what you need? Our team will get back to you within 48 hours.",
+    "faqTitle": "Frequently Asked Questions",
+    "secureEncrypted": "Secure & encrypted",
+    "replyTime": "Typical reply within 48h",
+    "trackedDashboard": "Tracked via your dashboard",
+    "backToHelp": "Back to Help Centre",
+    "ticketLabel": "Support Ticket",
+    "submitATicket": "Submit a",
+    "ticketAccent": "Ticket",
+    "ticketFormDesc": "Choose a category, describe your issue, and our support team will get back to you within 48 hours. You must be logged in to submit a ticket.",
+    "newSupportTicket": "New Support Ticket",
+    "trustSecure": "Secure & Encrypted",
+    "trustSecureDesc": "All data is encrypted in transit",
+    "trustTracked": "Tracked Tickets",
+    "trustTrackedDesc": "View status in your dashboard",
+    "trustReply": "48h Response Time",
+    "trustReplyDesc": "Our team responds within 48 hours",
+    "stillNeedHelp": "Still need help?",
+    "submitTicketLink": "Submit a support ticket →",
+    "relatedTopics": "Related Topics",
+    "quickGuide": "Quick Guide",
+    "topicAccount": "Account & Profile",
+    "topicBilling": "Billing & Subscriptions",
+    "topicCategories": "Categories & Discovery",
+    "topicPortfolio": "Portfolio & Media",
+    "topicNotifications": "Notifications & Alerts",
+    "topicSecurity": "Security & Privacy",
+
+    "accountLabel": "Account & Profile",
+    "accountTitle": "Account &",
+    "accountAccent": "Profile",
+    "accountDesc": "Registration, profile editing, physical characteristics, work history, social links, visibility settings, and account management.",
+
+    "billingLabel": "Billing & Subscriptions",
+    "billingTitle": "Billing &",
+    "billingAccent": "Subscriptions",
+    "billingDesc": "Pricing, payment methods, invoices, cancellation, and everything related to your subscription.",
+
+    "categoriesLabel": "Categories & Discovery",
+    "categoriesTitle": "Categories &",
+    "categoriesAccent": "Discovery",
+    "categoriesDesc": "Search filters, talent directory, Media Hub, grid and list views, and tips for getting discovered.",
+
+    "portfolioLabel": "Portfolio & Media",
+    "portfolioTitle": "Portfolio &",
+    "portfolioAccent": "Media",
+    "portfolioDesc": "Upload wizard, gallery viewer, media overlay, file types, size limits, and tips for a standout portfolio.",
+
+    "notificationsLabel": "Notifications & Alerts",
+    "notificationsTitle": "Notifications &",
+    "notificationsAccent": "Alerts",
+    "notificationsDesc": "Comment alerts, like notifications, profile view updates, follower activity, and managing your preferences.",
+
+    "securityLabel": "Security & Privacy",
+    "securityTitle": "Security &",
+    "securityAccent": "Privacy",
+    "securityDesc": "Profile visibility controls, cookie consent, content reporting, GDPR rights, and keeping your account safe.",
+
+    "formCategory": "Category",
+    "formCategoryAria": "Ticket category",
+    "formSubject": "Subject",
+    "formSubjectPlaceholder": "Brief summary of your issue",
+    "formDescription": "Description",
+    "formDescPlaceholder": "Describe your issue in detail. Include any relevant steps or screenshots.",
+    "formSubmit": "Submit Ticket",
+    "formSubmitting": "Submitting…",
+    "formSuccess": "Ticket Submitted",
+    "formSuccessMsg": "Your ticket ID is {ticketId}. We'll get back to you within 48 hours.",
+    "formSubmitAnother": "Submit another ticket",
+    "formError": "Failed to submit ticket. Please make sure you are logged in.",
+    "formNetworkError": "Network error — please try again.",
+
+    "catAccount": "Account & Profile",
+    "catBilling": "Billing & Subscriptions",
+    "catPortfolio": "Portfolio & Media",
+    "catCategories": "Categories & Discovery",
+    "catNotifications": "Notifications & Alerts",
+    "catSecurity": "Security & Privacy",
+    "catOther": "Other",
+    "catAnalytics": "Analytics",
+    "catCommunity": "Community",
+    "catSupport": "Support & Tickets"
+    ,
+    "faqItems": [
+      { "category": "Account & Profile", "q": "How do I create an account on 3YESES?", "a": "Click \"Sign Up\" and follow the 3-step process: enter your email and password, confirm your age (users under 13 need a parent-managed account; 13–17 need parental consent), then choose your subscription plan (6 or 12 months) and complete Stripe checkout. Your account activates instantly." },
+      { "category": "Account & Profile", "q": "What can I add to my profile?", "a": "Your profile includes a bio, headshot, primary talent category, physical characteristics (height, body type, eye colour, hair colour), work history, languages spoken, skills (up to 4 featured), social media links, location, and optional fields like disabilities for inclusive casting." },
+      { "category": "Account & Profile", "q": "I forgot my password — how do I reset it?", "a": "Go to the login page and click \"Forgot password\". Enter your registered email and we'll send a one-time reset link valid for 1 hour." },
+      { "category": "Billing & Subscriptions", "q": "How much does 3YESES cost?", "a": "An active subscription is required. Choose between £10 for 6 months or £20 for 12 months. Both plans include identical features. No hidden fees." },
+      { "category": "Billing & Subscriptions", "q": "Can I cancel my subscription?", "a": "Yes — cancel any time from Dashboard → Subscription. You keep full access until the end of your billing period." },
+      { "category": "Portfolio & Media", "q": "How do I upload portfolio items?", "a": "Go to Dashboard → Portfolio and click \"Add Item\". The upload wizard walks you through 4 steps. Files can be up to 50 MB. For videos, you can pick a custom thumbnail." },
+      { "category": "Portfolio & Media", "q": "How do people view my portfolio?", "a": "Visitors see your portfolio in a gallery grid on your profile. Clicking an item opens the media overlay with keyboard navigation." },
+      { "category": "Categories & Discovery", "q": "How does talent discovery work?", "a": "Visitors browse the talent directory or Media Hub with advanced filters: gender, body type, ethnicity, age range, height range, skills, languages, disabilities, and location." },
+      { "category": "Categories & Discovery", "q": "What is the Media Hub?", "a": "The Hub is a browsable feed of all portfolio content across the platform. You can filter by talent category, media type, and sort by trending, newest, or most viewed." },
+      { "category": "Analytics", "q": "What analytics are available?", "a": "Your Dashboard shows profile views, unique viewers, portfolio views, likes received, search impressions, search clicks, CTR, and engagement rate." },
+      { "category": "Community", "q": "Can I interact with other users?", "a": "Yes — you can comment on portfolio items, reply to comments, @mention other users, like portfolio items, and share profiles." },
+      { "category": "Support & Tickets", "q": "How do I submit a support ticket?", "a": "Go to the Submit a Ticket page from the Help Centre. Choose a category, provide a subject and description. You must be logged in." },
+      { "category": "Support & Tickets", "q": "How long does it take to get a response?", "a": "Support tickets are answered within 48 hours." }
+    ]
+  },
+  "settings": {
+    "emailNotifications": "Email Notifications",
+    "emailNotificationsDesc": "Receive email updates about your account activity",
+    "theme": "Theme",
+    "themeDesc": "Choose your preferred theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "common": {
+    "save": "Save"
+  }
+  ,
+  "Pages": {
+    "terms": {
+      "badge": "Terms & Conditions",
+      "heroTitle": "Terms of Service",
+      "heroAccent": "",
+      "contents": "Contents",
+      "sections": {
+        "overview": {
+          "title": "Overview",
+          "p1": "These Terms and Conditions (\"Terms\") govern your use of the 3YESES platform (\"Platform\", \"we\", \"us\", \"our\"), a subscription-based talent marketplace operated at 3yeses.online. By creating an account or using any part of the Platform, you agree to be bound by these Terms.",
+          "p2": "3YESES is a platform where creative professionals — actors, musicians, models, dancers, voice artists, photographers, videographers, DJs, presenters, comedians, and other performers — create profiles, upload portfolio media (photos, videos, audio), and get discovered. The Platform includes a searchable talent directory, a media hub, analytics dashboards, and community features such as comments, likes, and content sharing."
+        }
+      }
+    },
+    "privacy": {
+      "badge": "Privacy Policy",
+      "heroTitle": "Your privacy matters",
+      "heroAccent": "How we handle your data",
+      "contents": "Contents",
+      "introP1": "This Privacy Policy explains how 3YESES (\"Platform\", \"we\", \"us\", \"our\") collects, uses, stores, and protects your personal data when you use our subscription-based talent marketplace at 3yeses.online.",
+      "introP2": "We are committed to protecting your privacy and handling your personal data in compliance with the UK General Data Protection Regulation (UK GDPR), the Data Protection Act 2018, and, where applicable, the EU General Data Protection Regulation (GDPR)."
+    }
+  },
+  "WhyHow": {
+    "breadcrumb": "Why & How",
+    "eyebrow": "For talents",
+    "hero": {
+      "title": "Your talent deserves a",
+      "titleAccent": "stage",
+      "subtitle": "3yeses gives performers, actors, musicians, models, dancers, and creatives a professional profile with unlimited uploads, built-in analytics, and real discoverability — all for one flat subscription."
+    },
+    "cta": {
+      "primary": "Create your profile",
+      "secondary": "View pricing"
+    },
+    "stats": {
+      "categories": "20+",
+      "categoriesLabel": "Talent categories",
+      "subcategories": "145+",
+      "subcategoriesLabel": "Subcategories",
+      "locales": "11",
+      "localesLabel": "Languages supported",
+      "price": "£10",
+      "priceLabel": "For 6 months"
+    },
+    "whySection": {
+      "eyebrow": "Why 3yeses",
+      "title": "Built for working creatives",
+      "subtitle": "No gimmicks, no per-booking fees. One subscription unlocks everything you need to showcase your talent and get found by the right people."
+    },
+    "features": {
+      "portfolio": {
+        "title": "Unlimited portfolio uploads",
+        "desc": "Upload as many images, videos, and audio clips as you need. Build a gallery that shows your full range — no storage limits, no file caps."
+      },
+      "discovery": {
+        "title": "Advanced search and filters",
+        "desc": "Clients find you through detailed filters: category, skills, location, language, experience level, and physical characteristics. Your profile appears where it matters."
+      },
+      "analytics": {
+        "title": "Dashboard analytics",
+        "desc": "Track profile views, portfolio engagement, search impressions, and click-through rates. See exactly how your profile is performing over time."
+      },
+      "categories": {
+        "title": "20+ talent categories",
+        "desc": "Actors, musicians, models, dancers, voice artists, comedians, DJs, photographers, and more. Find your category and subcategory to reach the right audience."
+      },
+      "simple": {
+        "title": "One subscription, everything included",
+        "desc": "No hidden fees, no per-booking charges. Pay once and get full access to every feature on the platform — profile, portfolio, analytics, and priority ranking."
+      },
+      "control": {
+        "title": "Full profile control",
+        "desc": "Manage your bio, skills, work history, social links, demo reel, and privacy settings. Choose exactly what clients see and how your profile appears."
+      }
+    },
+    "howSection": {
+      "eyebrow": "How it works",
+      "title": "Live in four steps",
+      "subtitle": "From sign-up to being discoverable by clients and casting directors — here is exactly what happens.",
+      "tags": {
+        "uploads": "Unlimited uploads",
+        "views": "View tracking",
+        "likes": "Likes & ratings"
+      }
+    },
+    "steps": [
+      {
+        "title": "Create your account",
+        "desc": "Sign up with your name, email, and password. Choose your role (talent or client), verify your age, and accept the terms of service.",
+        "details": [
+          "Email and password registration",
+          "Age verification (18+ or parental consent for 13–15)",
+          "Choose your account type: talent or client"
+        ]
+      },
+      {
+        "title": "Build your profile",
+        "desc": "Add everything that makes you stand out: your professional title, bio, skills, languages, experience level, category, and personal details.",
+        "details": [
+          "Professional title, bio, and location",
+          "Select your category and subcategory (acting, music, dance, etc.)",
+          "Add skills, languages with proficiency levels, and experience"
+        ]
+      },
+      {
+        "title": "Upload your portfolio",
+        "desc": "Add your best work — photos, videos, audio clips, and a demo reel. Each item gets its own title, description, and thumbnail.",
+        "details": [
+          "Upload images, videos, and audio with no limits",
+          "Add a showreel or demo video to your profile",
+          "Automatic thumbnail generation for video uploads"
+        ]
+      },
+      {
+        "title": "Get discovered",
+        "desc": "Your profile goes live in search results. Clients browse, filter, and reach out directly. Track your performance through your analytics dashboard.",
+        "details": [
+          "Appear in search results filtered by category, skills, and location",
+          "Track profile views, impressions, and engagement in real time",
+          "Receive messages and enquiries directly from clients"
+        ]
+      }
+    ],
+    "included": {
+      "title": "Everything in one subscription",
+      "subtitle": "No tier confusion, no feature limits. Every subscriber gets the full platform.",
+      "items": {
+        "uploads": "Unlimited image, video, and audio uploads",
+        "profile": "Full professional profile with bio, skills, and work history",
+        "analytics": "Dashboard with views, impressions, and engagement stats",
+        "ranking": "Priority placement in search results",
+        "messaging": "Direct messaging with clients and casting directors",
+        "views": "Real-time view counter on your profile",
+        "likes": "Likes, ratings, and comments on your portfolio",
+        "languages": "Multi-language profile support (11 locales)",
+        "secure": "Secure payments via Stripe with invoice history"
+      }
+    },
+    "finalCta": {
+      "title": "Ready to be seen?",
+      "subtitle": "Create your profile, upload your work, and start getting discovered by clients today.",
+      "button": "Get started",
+      "browse": "Browse categories",
+      "talentButton": "Create your profile",
+      "clientButton": "Hire talent"
+    }
   }
 }

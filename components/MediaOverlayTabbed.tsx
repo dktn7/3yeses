@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import Image from 'next/image';
@@ -14,7 +14,8 @@ import {
   Grid,
   List,
   Share2,
-  Heart
+  Wrench,
+  Flag
 } from 'lucide-react';
 import VideoPlayer from './VideoPlayer';
 import CommentsSection from './CommentsSection';
@@ -25,7 +26,7 @@ import { useAuth } from '@/contexts/AuthContext';
 interface MediaItem {
   id: string;
   title: string;
-  url: string;
+  mediaUrl: string;
   type: 'IMAGE' | 'VIDEO' | 'AUDIO';
   thumbnail?: string;
   description?: string;
@@ -41,7 +42,7 @@ interface MediaItem {
     location?: string;
   };
   views: number;
-  likes: number;
+  likeCount: number;
   isSponsored?: boolean;
   createdAt: string;
 }
@@ -63,11 +64,37 @@ export default function MediaOverlayTabbed({ media, allMedia, talents, onClose, 
   const [searchQuery, setSearchQuery] = useState('');
   const [showCopiedToast, setShowCopiedToast] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
+  const [likesCount, setLikesCount] = useState(media.likeCount);
   const [showLoginToast, setShowLoginToast] = useState(false);
+  const viewedItemsRef = useRef<Set<string>>(new Set());
 
-  // Reset like state when media changes
+  // Fetch like status and track view when media changes
   useEffect(() => {
     setIsLiked(false);
+    setLikesCount(media.likeCount);
+
+    const talentId = (media.talentProfile as any).userId ?? media.talentProfile.id;
+
+    // Fetch like status
+    fetch(`/api/talent/${talentId}/like`)
+      .then(res => res.ok ? res.json() : null)
+      .then(data => {
+        if (data) {
+          setIsLiked(data.isLiked);
+          setLikesCount(data.likeCount);
+        }
+      })
+      .catch(() => {});
+
+    // Track view (deduplicated per session)
+    if (!viewedItemsRef.current.has(media.id)) {
+      viewedItemsRef.current.add(media.id);
+      fetch('/api/analytics/portfolio-view', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ portfolioItemId: media.id }),
+      }).catch(() => {});
+    }
   }, [media.id]);
 
   const formatNumber = (num: number) => {
@@ -77,15 +104,16 @@ export default function MediaOverlayTabbed({ media, allMedia, talents, onClose, 
   };
 
   const talent = media.talentProfile;
+  const talentUserId = ((talent as any).userId ?? talent.id) as string;
 
   // Filter media for the current talent's portfolio
   const portfolioMedia = React.useMemo(() => {
-    return allMedia.filter(m => m.talentProfile.id === talent.id);
+    return allMedia.filter(m => ((m.talentProfile as any).userId ?? m.talentProfile.id) === ((talent as any).userId ?? talent.id));
   }, [allMedia, talent.id]);
 
   // Filter similar talents (excluding current)
   const similarTalents = React.useMemo(() => {
-    return talents.filter(t => t.id !== talent.id);
+    return talents.filter(t => ((t as any).userId ?? t.id) !== ((talent as any).userId ?? talent.id));
   }, [talents, talent.id]);
 
   // Handle keyboard navigation
@@ -97,7 +125,7 @@ export default function MediaOverlayTabbed({ media, allMedia, talents, onClose, 
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [onClose]);
 
   // Prevent body scroll
   useEffect(() => {
@@ -105,13 +133,33 @@ export default function MediaOverlayTabbed({ media, allMedia, talents, onClose, 
     return () => { document.body.style.overflow = 'unset'; };
   }, []);
 
-  const handleLike = () => {
+  const handleLike = async () => {
     if (!user) {
       setShowLoginToast(true);
       setTimeout(() => setShowLoginToast(false), 3000);
       return;
     }
-    setIsLiked(!isLiked);
+
+    const newLiked = !isLiked;
+    // Optimistic update
+    setIsLiked(newLiked);
+    setLikesCount(prev => newLiked ? prev + 1 : prev - 1);
+
+    try {
+      const talentId = (media.talentProfile as any).userId ?? media.talentProfile.id;
+      const res = await fetch(`/api/talent/${talentId}/like`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ like: newLiked }),
+      });
+      if (!res.ok) throw new Error('Like failed');
+      const data = await res.json();
+      setLikesCount(data.likeCount);
+    } catch {
+      // Revert on failure
+      setIsLiked(!newLiked);
+      setLikesCount(prev => newLiked ? prev - 1 : prev + 1);
+    }
   };
 
   const handleShare = async () => {
@@ -126,7 +174,7 @@ export default function MediaOverlayTabbed({ media, allMedia, talents, onClose, 
   };
 
   return (
-    <div className="fixed inset-0 z-[100] bg-gray-100 dark:bg-black flex animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-[100] bg-gray-100 dark:bg-black flex">
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0 bg-black relative overflow-y-auto scrollbar-hide">
         <div className="w-full min-h-full flex flex-col">
@@ -135,10 +183,10 @@ export default function MediaOverlayTabbed({ media, allMedia, talents, onClose, 
             {media.type === 'VIDEO' ? (
                <div className="w-full max-w-6xl aspect-video">
                  <VideoPlayer 
-                   url={media.url} 
+                   url={media.mediaUrl} 
                    className="w-full h-full"
                    talentProfile={{
-                     id: media.talentProfile.id,
+                     id: (media.talentProfile as any).userId ?? media.talentProfile.id,
                      name: media.talentProfile.user.name,
                      avatarUrl: media.talentProfile.avatarUrl
                    }}
@@ -149,9 +197,9 @@ export default function MediaOverlayTabbed({ media, allMedia, talents, onClose, 
                </div>
             ) : (
               <div className="w-full h-full flex items-center justify-center p-4">
-                {media.thumbnail || media.url ? (
+                {media.thumbnail || media.mediaUrl ? (
                   <Image
-                    src={media.thumbnail || media.url}
+                    src={media.thumbnail || media.mediaUrl}
                     alt={media.title}
                     width={1600}
                     height={1200}
@@ -187,8 +235,8 @@ export default function MediaOverlayTabbed({ media, allMedia, talents, onClose, 
                         : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700'
                     }`}
                   >
-                    <Heart className={`w-4 h-4 ${isLiked ? 'fill-current' : ''}`} />
-                    {isLiked ? 'Liked' : 'Like'}
+                    <SwoopingTick size={16} hovered={isLiked} />
+                    {isLiked ? 'Saved' : 'Save'}
                     {showLoginToast && (
                       <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-black text-white text-xs rounded-lg whitespace-nowrap animate-in fade-in slide-in-from-bottom-1 z-50 shadow-xl">
                         Sign in to like
@@ -210,7 +258,7 @@ export default function MediaOverlayTabbed({ media, allMedia, talents, onClose, 
                 </div>
               </div>
 
-              <CommentsSection mediaId={media.id} />
+              <CommentsSection mediaId={media.id} mediaOwnerId={talentUserId} />
             </div>
           </div>
         </div>
@@ -245,11 +293,30 @@ export default function MediaOverlayTabbed({ media, allMedia, talents, onClose, 
             </div>
           </div>
           <button
-            onClick={() => router.push(`/${locale}/talent/${talent.id}`)}
+            onClick={() => router.push(`/talent/${talentUserId}`)}
             className="w-full py-1.5 bg-primary-blue dark:bg-accent-red text-white text-xs font-medium rounded hover:opacity-90 transition-opacity"
           >
             View Full Profile
           </button>
+
+          {user?.role === 'admin' && (
+            <div className="mt-2 flex flex-col gap-1">
+              <button
+                onClick={() => router.push(`/admin/users/${talentUserId}`)}
+                className="w-full py-1.5 text-[11px] font-medium rounded border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center justify-center gap-1"
+              >
+                <Wrench className="w-3 h-3" />
+                Admin: User
+              </button>
+              <button
+                onClick={() => router.push(`/admin/reports?userId=${encodeURIComponent(talentUserId)}`)}
+                className="w-full py-1.5 text-[11px] font-medium rounded border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center justify-center gap-1"
+              >
+                <Flag className="w-3 h-3" />
+                Admin: Reports
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Tabs */}
@@ -310,7 +377,7 @@ export default function MediaOverlayTabbed({ media, allMedia, talents, onClose, 
                   key={t.id}
                   onClick={() => {
                     // Find first media of this talent to play
-                    const firstMedia = allMedia.find(m => m.talentProfile.id === t.id);
+                    const firstMedia = allMedia.find(m => ((m.talentProfile as any).userId ?? m.talentProfile.id) === ((t as any).userId ?? t.id));
                     if (firstMedia) onMediaSelect(firstMedia);
                   }}
                   className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-all"

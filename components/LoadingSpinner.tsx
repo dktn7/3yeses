@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import SwoopingTick from './SwoopingTick';
 
 interface LoadingSpinnerProps {
   size?: string | number;
@@ -47,7 +46,10 @@ const LoadingSpinner = ({
   if (inline) {
     return (
       <div className={`inline-flex items-center justify-center ${className}`}>
-        <SwoopingTick size={pixelSize} spinnerOnly={true} />
+        <div
+          className="rounded-full border-4 border-gray-300 dark:border-gray-700 border-t-primary-blue dark:border-t-accent-red animate-spin"
+          style={{ width: pixelSize, height: pixelSize }}
+        />
       </div>
     );
   }
@@ -55,7 +57,10 @@ const LoadingSpinner = ({
   if (fullScreen) {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-white dark:bg-gray-900 transition-colors">
-        <SwoopingTick size={pixelSize} spinnerOnly={true} />
+        <div
+          className="rounded-full border-4 border-gray-300 dark:border-gray-700 border-t-primary-blue dark:border-t-accent-red animate-spin"
+          style={{ width: pixelSize, height: pixelSize }}
+        />
       </div>
     );
   }
@@ -63,7 +68,10 @@ const LoadingSpinner = ({
   // Page-level spinner with subtle background
   return (
     <div className={`flex items-center justify-center p-4 ${className}`}>
-      <SwoopingTick size={pixelSize} spinnerOnly={true} />
+      <div
+        className="rounded-full border-4 border-gray-300 dark:border-gray-700 border-t-primary-blue dark:border-t-accent-red animate-spin"
+        style={{ width: pixelSize, height: pixelSize }}
+      />
     </div>
   );
 };

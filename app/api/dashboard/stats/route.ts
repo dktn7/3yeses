@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
         role: true,
         talentProfile: {
           select: {
-            id: true,
+            userId: true,
             viewCount: true,
             likeCount: true,
           }
@@ -46,7 +46,7 @@ export async function GET(req: NextRequest) {
 
     // Only fetch data for TALENT users
     if (user.role === 'TALENT' && user.talentProfile) {
-      const talentProfileId = user.talentProfile.id;
+      const talentProfileId = (user.talentProfile as any).userId ?? user.talentProfile.userId;
       const now = new Date();
       const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
       const sixtyDaysAgo = new Date(now.getTime() - 60 * 24 * 60 * 60 * 1000);
@@ -106,14 +106,14 @@ export async function GET(req: NextRequest) {
       stats.likes = user.talentProfile.likeCount || 0;
 
       // Get recent likes for trend
-      const recentLikes = await prisma.like.count({
+      const recentLikes = await prisma.profileLike.count({
         where: {
           talentProfileId,
           createdAt: { gte: thirtyDaysAgo }
         }
       });
 
-      const previousLikes = await prisma.like.count({
+      const previousLikes = await prisma.profileLike.count({
         where: {
           talentProfileId,
           createdAt: { gte: sixtyDaysAgo, lt: thirtyDaysAgo }

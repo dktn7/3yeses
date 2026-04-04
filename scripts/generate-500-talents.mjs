@@ -1068,11 +1068,11 @@ async function generateTalent(index, category, subcategory, passwordHash) {
   const bio = generateBio(categoryData, years, subcategory?.name);
   
   // Determine experience level based on years
-  let experience;
-  if (years <= 2) experience = 'Beginner (0-2 years)';
-  else if (years <= 5) experience = 'Intermediate (3-5 years)';
-  else if (years <= 10) experience = 'Advanced (6-10 years)';
-  else experience = 'Expert (10+ years)';
+  let experienceLevel;
+  if (years <= 2) experienceLevel = 'Beginner (0-2 years)';
+  else if (years <= 5) experienceLevel = 'Intermediate (3-5 years)';
+  else if (years <= 10) experienceLevel = 'Advanced (6-10 years)';
+  else experienceLevel = 'Expert (10+ years)';
   
   const location = getRandomItem(LOCATIONS);
   const age = getRandomInt(18, 65);
@@ -1167,7 +1167,7 @@ async function generateTalent(index, category, subcategory, passwordHash) {
   images.forEach((img, idx) => {
     portfolioItems.push({
       title: `Portfolio Image ${idx + 1}`,
-      url: img.url,
+      mediaUrl: img.url,
       type: 'IMAGE',
       thumbnail: img.thumbnail,
       description: `Professional work sample - ${img.source} photography`
@@ -1178,7 +1178,7 @@ async function generateTalent(index, category, subcategory, passwordHash) {
   videos.forEach((vid, idx) => {
     portfolioItems.push({
       title: `Performance Video ${idx + 1}`,
-      url: vid.url,
+      mediaUrl: vid.url,
       type: 'VIDEO',
       thumbnail: vid.thumbnail,
       description: `Featured ${subcategory?.name || category.name} performance`
@@ -1189,14 +1189,14 @@ async function generateTalent(index, category, subcategory, passwordHash) {
   audioDemos.forEach(audio => {
     portfolioItems.push({
       title: audio.title,
-      url: audio.url,
+      mediaUrl: audio.url,
       type: 'AUDIO',
       description: audio.description
     });
   });
   
   // Calculate metrics
-  const rating = parseFloat((Math.random() * 2 + 3).toFixed(1)); // 3.0 to 5.0
+  // ratings removed per platform decision
   const viewCount = getRandomInt(50, 10000);
   const likeCount = Math.floor(viewCount * (Math.random() * 0.1 + 0.02)); // 2-12% of views
   
@@ -1242,11 +1242,11 @@ async function generateTalent(index, category, subcategory, passwordHash) {
       userId: user.id,
       categoryId: category.id,
       subcategoryId: subcategory?.id,
-      roleDescription: subcategory?.name || category.name,
+      performerTitle: subcategory?.name || category.name,
       bio: bio,
       location: location,
-      experience: experience,
-      rating: rating,
+      experienceLevel: experienceLevel,
+      // rating removed per platform decision
       viewCount: viewCount,
       likeCount: likeCount,
       isBeginner: years <= 2,
@@ -1301,7 +1301,7 @@ async function generateTalent(index, category, subcategory, passwordHash) {
 // ============================================================================
 
 async function main() {
-  console.log('🚀 Starting generation of 100 talent profiles...');
+  console.log('🚀 Starting generation of talent profiles...');
   console.log('📡 Using APIs: Unsplash, SerpApi (images), YouTube (videos)');
   console.log('🎵 Using APIs: Freesound (audio)');
   console.log('');
@@ -1329,71 +1329,35 @@ async function main() {
   }
   console.log('');
   
-  // 1. Cleanup existing talent data (keeping admin, categories, and test talent)
-  console.log('🧹 Cleaning up existing talent profiles (preserving test talent)...');
-  
-  // Test talent to preserve
-  const TEST_TALENT_ID = 'cmlbas5620002vvc49snthhi4';
-  const TEST_USER_ID = 'cmlbas55z0000vvc43yv8au8c';
-  
-  // Delete in order to respect foreign key constraints (excluding test talent)
-  await prisma.portfolioView.deleteMany({ 
-    where: { 
-      portfolioItem: { 
-        talentProfileId: { not: TEST_TALENT_ID } 
-      } 
-    } 
-  });
-  await prisma.profileView.deleteMany({ where: { talentProfileId: { not: TEST_TALENT_ID } } });
-  await prisma.searchAppearance.deleteMany({ where: { talentProfileId: { not: TEST_TALENT_ID } } });
-  await prisma.profileStats.deleteMany({ where: { talentProfileId: { not: TEST_TALENT_ID } } });
-  await prisma.commentLike.deleteMany({ 
-    where: { 
-      comment: { 
-        OR: [
-          { talentProfileId: { not: TEST_TALENT_ID } },
-          { portfolioItem: { talentProfileId: { not: TEST_TALENT_ID } } }
-        ]
-      } 
-    } 
-  });
-  await prisma.comment.deleteMany({ 
-    where: { 
-      OR: [
-        { talentProfileId: { not: TEST_TALENT_ID } },
-        { portfolioItem: { talentProfileId: { not: TEST_TALENT_ID } } }
-      ]
-    } 
-  });
-  await prisma.report.deleteMany({ 
-    where: { 
-      OR: [
-        { reportedProfileId: { not: TEST_TALENT_ID } },
-        { reportedPortfolio: { talentProfileId: { not: TEST_TALENT_ID } } }
-      ]
-    } 
-  });
-  await prisma.like.deleteMany({ where: { talentProfileId: { not: TEST_TALENT_ID } } });
-  await prisma.review.deleteMany({ where: { talentProfileId: { not: TEST_TALENT_ID } } });
-  // Note: Subscriptions and payments are per-user, not talent-specific, so we don't delete them here
-  await prisma.language.deleteMany({ where: { talentProfileId: { not: TEST_TALENT_ID } } });
-  await prisma.workHistory.deleteMany({ where: { talentProfileId: { not: TEST_TALENT_ID } } });
-  await prisma.portfolioItem.deleteMany({ where: { talentProfileId: { not: TEST_TALENT_ID } } });
-  await prisma.profileSettings.deleteMany({ where: { talentProfileId: { not: TEST_TALENT_ID } } });
-  await prisma.talentProfile.deleteMany({ where: { id: { not: TEST_TALENT_ID } } });
-  
-  // Delete only TALENT users, keep ADMINs and test user
+  // 1. Cleanup existing talent-related data (keep admins and non-talent users)
+  console.log('🧹 Cleaning up existing talent profiles...');
+
+  // Delete in order to respect foreign key constraints
+  await prisma.portfolioView.deleteMany({});
+  await prisma.profileView.deleteMany({});
+  await prisma.searchAppearance.deleteMany({});
+  await prisma.profileStats.deleteMany({});
+  await prisma.commentLike.deleteMany({});
+  await prisma.comment.deleteMany({});
+  await prisma.contentReport.deleteMany({});
+  await prisma.profileLike.deleteMany({});
+  await prisma.language.deleteMany({});
+  await prisma.workHistory.deleteMany({});
+  await prisma.portfolioItem.deleteMany({});
+  await prisma.profileSettings.deleteMany({});
+  await prisma.talentProfile.deleteMany({});
+
+  // Delete all TALENT users; keep ADMINs and any other roles
   await prisma.user.deleteMany({
-    where: { 
-      role: 'TALENT',
-      id: { not: TEST_USER_ID }
+    where: {
+      role: 'TALENT'
     }
   });
   
   console.log('✅ Cleanup complete.');
   
   // 2. Fetch all categories with subcategories
-  const categories = await prisma.category.findMany({
+  const categories = await prisma.talentCategory.findMany({
     include: { subcategories: true }
   });
   
@@ -1406,22 +1370,22 @@ async function main() {
   
   // 3. Generate password hash once
   const passwordHash = await bcrypt.hash('password123', 10);
-  
-  // 4. Generate talents
-  const TOTAL_TALENTS = 500;
+
+  // 4. Generate talents (configurable, default 150)
+  const TOTAL_TALENTS = parseInt(process.env.TOTAL_TALENTS || '150', 10);
   const BATCH_SIZE = 10; // Process in batches for rate limiting
   
-  console.log(`\n✨ Generating ${TOTAL_TALENTS} profiles (plus 1 existing test profile = 501 total)...`);
+  console.log(`\n✨ Generating ${TOTAL_TALENTS} profiles...`);
   console.log('   (This may take a while due to API rate limits)\n');
   
   let created = 0;
   let errors = 0;
   
   // Force distribution to ensure audio categories are included
-  // Musicians (Music & Audio), Actors (Acting & Performance)
+  // Music & Audio, Acting & Performance
   const forcedCategories = [
-    { name: 'Musicians', count: Math.floor(TOTAL_TALENTS * 0.3) },
-    { name: 'Actors', count: Math.floor(TOTAL_TALENTS * 0.2) }
+    { name: 'Music & Audio', count: Math.floor(TOTAL_TALENTS * 0.3) },
+    { name: 'Acting & Performance', count: Math.floor(TOTAL_TALENTS * 0.2) }
   ];
   
   let forcedQueue = [];
@@ -1487,7 +1451,7 @@ async function main() {
         where: { subcategoryId: subcategory.id }
       });
       
-      await prisma.subcategory.update({
+      await prisma.talentSubcategory.update({
         where: { id: subcategory.id },
         data: { talentCount: count }
       });

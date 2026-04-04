@@ -3,24 +3,32 @@ import { prisma } from '@/lib/prisma';
 import { withAdminAuth } from '@/lib/middleware/adminAuth';
 
 // PATCH update category
-async function updateCategory(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+async function updateCategory(request: NextRequest, context: any) {
+  const params = context?.params ?? { id: undefined };
+  const resolvedParams = typeof (params as any)?.then === 'function' ? await (params as any) : params;
+  const id = resolvedParams?.id;
   try {
     const body = await request.json();
-    const { name } = body;
+    const { name, icon } = body;
 
-    if (!name || !name.trim()) {
+    if (!name && icon === undefined) {
       return NextResponse.json(
-        { error: 'Category name is required' },
+        { error: 'Category name or icon is required' },
         { status: 400 }
       );
     }
 
-    const category = await prisma.category.update({
-      where: { id: params.id },
-      data: { name: name.trim() },
+    if (!id) {
+      return NextResponse.json({ error: 'Missing category id' }, { status: 400 });
+    }
+
+    const data: Record<string, unknown> = {};
+    if (name && name.trim()) data.name = name.trim();
+    if (icon !== undefined) data.icon = icon || null;
+
+    const category = await prisma.talentCategory.update({
+      where: { id },
+      data,
     });
 
     return NextResponse.json({
@@ -38,38 +46,26 @@ async function updateCategory(
 }
 
 // DELETE category
-async function deleteCategory(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+async function deleteCategory(request: NextRequest, context: any) {
+  const params = context?.params ?? { id: undefined };
+  const resolvedParams = typeof (params as any)?.then === 'function' ? await (params as any) : params;
+  const id = resolvedParams?.id;
   try {
-    // Check if category has talents
-    const category = await prisma.category.findUnique({
-      where: { id: params.id },
-      include: {
-        _count: {
-          select: { talents: true },
-        },
-      },
-    });
-
-    if (!category) {
-      return NextResponse.json(
-        { error: 'Category not found' },
-        { status: 404 }
-      );
+    if (!id) {
+      return NextResponse.json({ error: 'Missing category id' }, { status: 400 });
     }
 
-    if (category._count.talents > 0) {
+    // Check if category has talents via count query
+    const talentCount = await prisma.talentProfile.count({ where: { categoryId: id } });
+
+    if (talentCount > 0) {
       return NextResponse.json(
-        { error: `Cannot delete category with ${category._count.talents} talents. Please reassign them first.` },
+        { error: `Cannot delete category with ${talentCount} talents. Please reassign them first.` },
         { status: 400 }
       );
     }
 
-    await prisma.category.delete({
-      where: { id: params.id },
-    });
+    await prisma.talentCategory.delete({ where: { id } });
 
     return NextResponse.json({
       success: true,

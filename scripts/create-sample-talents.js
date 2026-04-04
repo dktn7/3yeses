@@ -193,41 +193,11 @@ async function createSampleTalents() {
           title: `${talentData.name} - Professional Demo Reel`,
           url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
           type: 'VIDEO',
-          talentProfileId: talentProfile.id
+          talentProfileId: talentProfile.userId ?? talentProfile.id
         }
       });
 
-      // Create some sample reviews
-      const reviewers = [
-        { name: 'John Smith', rating: 5, comment: 'Absolutely fantastic performance! Highly recommended.' },
-        { name: 'Maria Garcia', rating: 4, comment: 'Professional and talented. Great to work with.' },
-        { name: 'Robert Johnson', rating: 5, comment: 'Exceeded expectations. Will definitely hire again.' }
-      ];
-
-      for (const reviewData of reviewers) {
-        // Create a sample reviewer user
-        const reviewer = await prisma.user.upsert({
-          where: { email: `${reviewData.name.toLowerCase().replace(' ', '.')}@example.com` },
-          update: {},
-          create: {
-            email: `${reviewData.name.toLowerCase().replace(' ', '.')}@example.com`,
-            password: 'hashedpassword123',
-            name: reviewData.name,
-            role: 'TALENT'
-          }
-        });
-
-        await prisma.review.create({
-          data: {
-            rating: reviewData.rating,
-            comment: reviewData.comment,
-            reviewerId: reviewer.id,
-            talentProfileId: talentProfile.id
-          }
-        });
-      }
-
-      console.log(`   ✅ Created ${talentData.name} with portfolio and reviews`);
+      console.log(`   ✅ Created ${talentData.name} with portfolio`);
     }
 
     console.log('\n🎉 Sample talent profiles created successfully!');

@@ -41,8 +41,8 @@ export const mockTalents: Talent[] = [
     videoUrl: 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4',
     avatarUrl: 'https://randomuser.me/api/portraits/women/1.jpg',
     location: 'Los Angeles, CA',
-    experience: 8,
-    rating: 4.9,
+    experienceLevel: 8,
+    // rating removed per platform decision
     languages: ['English', 'Spanish'],
     bio: 'A passionate and versatile actress with a strong background in classical and contemporary theatre.',
     gender: 'female',
@@ -54,10 +54,11 @@ export const mockTalents: Talent[] = [
     hairColor: 'Blonde',
     socialMedia: [{ platform: 'Instagram', url: 'https://instagram.com/sarahj' }],
     portfolio: [
-      { title: 'Monologue from Hamlet', url: 'https://www.youtube.com/watch?v=abc123', type: 'video' },
-      { title: 'Headshot 1', url: 'https://randomuser.me/api/portraits/women/1.jpg', type: 'image' },
+      { id: 'p1', title: 'Monologue from Hamlet', mediaUrl: 'https://www.youtube.com/watch?v=abc123', type: 'video' },
+      { id: 'p2', title: 'Headshot 1', mediaUrl: 'https://randomuser.me/api/portraits/women/1.jpg', type: 'image' },
     ],
-    reviews: [{ reviewer: 'John Doe', rating: 5, comment: 'A true professional.' }],
+    workHistory: [],
+    // reviews removed per platform decision
     isBeginner: false,
     viewCount: 2847,
     likeCount: 120,
@@ -72,8 +73,8 @@ export const mockTalents: Talent[] = [
     videoUrl: '',
     avatarUrl: '',
     location: 'San Francisco, CA',
-    experience: 4,
-    rating: 4.7,
+    experienceLevel: 4,
+    // rating removed per platform decision
     languages: ['English'],
     bio: 'Energetic non-binary performer with a love for experimental theatre.',
     gender: 'non-binary',
@@ -85,7 +86,8 @@ export const mockTalents: Talent[] = [
     hairColor: 'Black',
     socialMedia: [],
     portfolio: [],
-    reviews: [],
+    workHistory: [],
+    // reviews removed per platform decision
     isBeginner: true,
     viewCount: 1200,
     likeCount: 45,
@@ -100,8 +102,8 @@ export const mockTalents: Talent[] = [
     videoUrl: '',
     avatarUrl: '',
     location: 'Atlanta, GA',
-    experience: 6,
-    rating: 4.8,
+    experienceLevel: 6,
+    // rating removed per platform decision
     languages: ['English'],
     bio: 'Versatile male actor with experience in both drama and comedy.',
     gender: 'male',
@@ -113,7 +115,8 @@ export const mockTalents: Talent[] = [
     hairColor: 'Brown',
     socialMedia: [],
     portfolio: [],
-    reviews: [],
+    workHistory: [],
+    // reviews removed per platform decision
     isBeginner: false,
     viewCount: 2100,
     likeCount: 88,
@@ -128,8 +131,8 @@ export const mockTalents: Talent[] = [
     videoUrl: '',
     avatarUrl: '',
     location: 'Toronto, ON',
-    experience: 2,
-    rating: 4.5,
+    experienceLevel: 2,
+    // rating removed per platform decision
     languages: ['English', 'French'],
     bio: 'Young performer with a passion for musicals.',
     gender: 'female',
@@ -141,7 +144,8 @@ export const mockTalents: Talent[] = [
     hairColor: 'Brown',
     socialMedia: [],
     portfolio: [],
-    reviews: [],
+    workHistory: [],
+    // reviews removed per platform decision
     isBeginner: true,
     viewCount: 500,
     likeCount: 12,
@@ -157,7 +161,7 @@ export function filterTalents(talents: Talent[], filters: TalentFilters): Talent
             filters.ageRange ? (talent.age >= filters.ageRange.min && talent.age <= filters.ageRange.max) : true,
             filters.heightRange ? (talent.height >= filters.heightRange.min && talent.height <= filters.heightRange.max) : true,
             filters.bodyType && filters.bodyType.length > 0 ? filters.bodyType.includes(talent.bodyType) : true,
-            filters.experience ? (talent.experience >= filters.experience.min && talent.experience <= filters.experience.max) : true,
+            filters.experience ? (talent.experienceLevel >= filters.experience.min && talent.experienceLevel <= filters.experience.max) : true,
             // availability filter removed
             filters.location ? talent.location.toLowerCase().includes(filters.location.toLowerCase()) : true,
         ];
@@ -167,44 +171,17 @@ export function filterTalents(talents: Talent[], filters: TalentFilters): Talent
 
 // Enhanced getCategoryData with metadata
 export function getCategoryData(): CategoryGroup[] {
+  // Canonical current categories (used as a reliable fallback for client-side UIs)
   return [
-    {
-      id: 'actors',
-      name: 'Actors',
-      popularity: 95,
-      relevance: 90,
-      customOrder: 1,
-      subcategories: [
-        { id: 'female-actor', name: 'Female Actor', description: 'Women and femme-identifying actors', popularity: 80, relevance: 85, customOrder: 1 },
-        { id: 'male-actor', name: 'Male Actor', description: 'Men and masc-identifying actors', popularity: 75, relevance: 80, customOrder: 2 },
-        { id: 'nonbinary-actor', name: 'Non-binary Actor', description: 'Non-binary and gender-diverse actors', popularity: 60, relevance: 70, customOrder: 3 },
-        { id: 'child-actor', name: 'Child Actor', description: 'Young performers and minors', popularity: 50, relevance: 60, customOrder: 4 },
-      ],
-    },
-    {
-      id: 'musicians',
-      name: 'Musicians',
-      popularity: 85,
-      relevance: 80,
-      customOrder: 2,
-      subcategories: [
-        { id: 'singers', name: 'Singers', popularity: 70, relevance: 75, customOrder: 1 },
-        { id: 'guitarists', name: 'Guitarists', popularity: 65, relevance: 70, customOrder: 2 },
-        { id: 'producers', name: 'Producers', popularity: 60, relevance: 65, customOrder: 3 },
-      ],
-    },
-    {
-      id: 'dancers',
-      name: 'Dancers',
-      popularity: 80,
-      relevance: 75,
-      customOrder: 3,
-      subcategories: [
-        { id: 'contemporary-dancers', name: 'Contemporary Dancers', popularity: 55, relevance: 60, customOrder: 1 },
-        { id: 'ballet-dancers', name: 'Ballet Dancers', popularity: 50, relevance: 55, customOrder: 2 },
-        { id: 'hiphop-dancers', name: 'Hip Hop Dancers', popularity: 60, relevance: 65, customOrder: 3 },
-      ],
-    },
+    { id: 'acting-performance', name: 'Acting & Performance', subcategories: [] },
+    { id: 'comedy', name: 'Comedy', subcategories: [] },
+    { id: 'dancing-choreography', name: 'Dancing & Choreography', subcategories: [] },
+    { id: 'modeling', name: 'Modeling', subcategories: [] },
+    { id: 'music-audio', name: 'Music & Audio', subcategories: [] },
+    { id: 'sports-fitness', name: 'Sports & Fitness', subcategories: [] },
+    { id: 'stunts', name: 'Stunts', subcategories: [] },
+    { id: 'video-production', name: 'Video Production', subcategories: [] },
+    { id: 'voice-over-dubbing', name: 'Voice Over & Dubbing', subcategories: [] },
   ];
 }
 

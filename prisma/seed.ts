@@ -10,13 +10,12 @@ async function main() {
     // Clear existing data
     console.log('Clearing existing data...');
     await prisma.portfolioItem.deleteMany();
-    await prisma.review.deleteMany();
     await prisma.payment.deleteMany();
     await prisma.subscription.deleteMany();
     await prisma.talentProfile.deleteMany();
     await prisma.user.deleteMany();
-    await prisma.subcategory.deleteMany();
-    await prisma.category.deleteMany();
+    await prisma.talentSubcategory.deleteMany();
+    await prisma.talentCategory.deleteMany();
     console.log('Existing data cleared.');
 
     // Create a default admin user
@@ -25,6 +24,7 @@ async function main() {
   const adminHashedPassword = await bcryptjs.hash(adminPassword, 12);
     await prisma.user.create({
       data: {
+        id: 'TN1',
         email: 'admin@example.com',
         name: 'Admin User',
         password: adminHashedPassword,
@@ -40,7 +40,7 @@ async function main() {
     const categories = [
       { 
         name: 'Voice Over & Dubbing', 
-        icon: '🎙️',
+        icon: 'Mic',
         description: 'Professional voice acting and dubbing services',
         subcategories: [
           'Commercials', 
@@ -54,7 +54,7 @@ async function main() {
       },
       { 
         name: 'Translation & Localization', 
-        icon: '🌍',
+        icon: 'Globe',
         description: 'Professional translation and localization services',
         subcategories: [
           'Document Translation', 
@@ -68,7 +68,7 @@ async function main() {
       },
       { 
         name: 'Content Creation', 
-        icon: '✍️',
+        icon: 'PenTool',
         description: 'Creative writing and content development',
         subcategories: [
           'Blog & Article Writing', 
@@ -82,7 +82,7 @@ async function main() {
       },
       { 
         name: 'Music & Audio', 
-        icon: '🎵',
+        icon: 'Music',
         description: 'Music composition and audio production',
         subcategories: [
           'Pop Music', 
@@ -100,7 +100,7 @@ async function main() {
       },
       { 
         name: 'Video Production', 
-        icon: '🎬',
+        icon: 'Clapperboard',
         description: 'Video creation and editing services',
         subcategories: [
           'Video Editing', 
@@ -114,7 +114,7 @@ async function main() {
       },
       { 
         name: 'Acting & Performance', 
-        icon: '🎭',
+        icon: 'Drama',
         description: 'Professional acting and performance talent',
         subcategories: [
           'Theatre Acting',
@@ -128,7 +128,7 @@ async function main() {
       },
       { 
         name: 'Modeling', 
-        icon: '📸',
+        icon: 'Camera',
         description: 'Professional modeling services',
         subcategories: [
           'Fashion Modeling', 
@@ -142,7 +142,7 @@ async function main() {
       },
       { 
         name: 'Dancing & Choreography', 
-        icon: '💃',
+        icon: 'Users',
         description: 'Professional dance and choreography services',
         subcategories: [
           'Contemporary Dance', 
@@ -156,7 +156,7 @@ async function main() {
       },
       { 
         name: 'Beauty & Wellness', 
-        icon: '💄',
+        icon: 'Heart',
         description: 'Beauty, wellness and lifestyle services',
         subcategories: [
           'Makeup Artist', 
@@ -170,7 +170,7 @@ async function main() {
       },
       { 
         name: 'Sports & Fitness', 
-        icon: '🏃',
+        icon: 'Trophy',
         description: 'Sports and fitness talent services',
         subcategories: [
           'Personal Training', 
@@ -184,7 +184,7 @@ async function main() {
       },
       { 
         name: 'Stunts', 
-        icon: '🤸',
+        icon: 'Flame',
         description: 'Professional stunt performers and coordinators',
         subcategories: [
           'Film Stunts', 
@@ -198,7 +198,7 @@ async function main() {
       },
       { 
         name: 'Magic & Illusion', 
-        icon: '🎩',
+        icon: 'Sparkles',
         description: 'Professional magicians and illusionists',
         subcategories: [
           'Stage Magic', 
@@ -212,7 +212,7 @@ async function main() {
       },
       { 
         name: 'Circus Arts', 
-        icon: '🎪',
+        icon: 'Tent',
         description: 'Circus performers and acrobats',
         subcategories: [
           'Acrobatics', 
@@ -226,7 +226,7 @@ async function main() {
       },
       { 
         name: 'Comedy', 
-        icon: '😂',
+        icon: 'Smile',
         description: 'Stand-up comedians and comedy performers',
         subcategories: [
           'Stand-Up Comedy', 
@@ -240,7 +240,7 @@ async function main() {
       },
       { 
         name: 'Photography (Commercial)', 
-        icon: '📷',
+        icon: 'Aperture',
         description: 'Professional commercial photography services',
         subcategories: [
           'Product Photography', 
@@ -254,7 +254,7 @@ async function main() {
       },
       { 
         name: 'Graphic Design', 
-        icon: '🎨',
+        icon: 'Palette',
         description: 'Professional graphic design and visual communication',
         subcategories: [
           'Logo Design', 
@@ -268,7 +268,7 @@ async function main() {
       },
       { 
         name: 'Music Production', 
-        icon: '🎛️',
+        icon: 'Sliders',
         description: 'Music production and sound engineering',
         subcategories: [
           'Music Production', 
@@ -282,7 +282,7 @@ async function main() {
       },
       { 
         name: 'Influencer/Content Creator', 
-        icon: '📱',
+        icon: 'Smartphone',
         description: 'Social media influencers and content creators',
         subcategories: [
           'YouTube Creator', 
@@ -296,7 +296,7 @@ async function main() {
       },
       { 
         name: 'Hair & Makeup (Professional)', 
-        icon: '💅',
+        icon: 'Scissors',
         description: 'Professional hair and makeup artists for media',
         subcategories: [
           'Film & TV Makeup', 
@@ -310,7 +310,7 @@ async function main() {
       },
       { 
         name: 'Stage Crew/Technician', 
-        icon: '🔧',
+        icon: 'Wrench',
         description: 'Technical crew for live events and productions',
         subcategories: [
           'Lighting Technician', 
@@ -324,7 +324,7 @@ async function main() {
       },
       { 
         name: 'Animation', 
-        icon: '🎞️',
+        icon: 'Film',
         description: 'Animation and motion graphics specialists',
         subcategories: [
           '2D Animation', 
@@ -339,7 +339,7 @@ async function main() {
     ];
 
     for (const category of categories) {
-      const createdCategory = await prisma.category.create({
+      const createdCategory = await prisma.talentCategory.create({
         data: {
           name: category.name,
           icon: category.icon,
@@ -361,8 +361,9 @@ async function main() {
     // Create admin user
     await prisma.user.create({
       data: {
+        id: 'TN2',
         name: 'Admin User',
-        email: 'admin@3yeses.com',
+        email: 'admin@3yeses.online',
         password: sampleUserPassword,
         role: 'ADMIN',
         emailVerified: new Date()
@@ -370,11 +371,12 @@ async function main() {
     });
 
     // Create sample talent users
-    const voiceOverCategory = await prisma.category.findFirst({ where: { name: 'Voice Over & Dubbing' } });
-    const commercialsSubcat = await prisma.subcategory.findFirst({ where: { name: 'Commercials' } });
+    const voiceOverCategory = await prisma.talentCategory.findFirst({ where: { name: 'Voice Over & Dubbing' } });
+    const commercialsSubcat = await prisma.talentSubcategory.findFirst({ where: { name: 'Commercials' } });
 
     const talentUser1 = await prisma.user.create({
       data: {
+        id: 'TN3',
         name: 'Sarah Johnson',
         email: 'sarah@example.com',
         password: sampleUserPassword,
@@ -382,11 +384,11 @@ async function main() {
         emailVerified: new Date(),
         talentProfile: {
           create: {
-            roleDescription: 'Professional Voice Over Artist',
+            performerTitle: 'Professional Voice Over Artist',
             bio: 'Experienced voice over artist with 8+ years in commercials and e-learning. Warm, friendly tone perfect for brands targeting millennials.',
             location: 'Los Angeles, CA',
-            experience: 'Advanced (6-10 years)',
-            rating: 4.9,
+            experienceLevel: 'Advanced (6-10 years)',
+            // rating removed per platform decision
             skills: ['Commercial Voice Over', 'E-learning Narration', 'Character Voices', 'IVR Systems'],
             categoryId: voiceOverCategory?.id,
             subcategoryId: commercialsSubcat?.id,
@@ -397,11 +399,12 @@ async function main() {
       }
     });
 
-    const translationCategory = await prisma.category.findFirst({ where: { name: 'Translation & Localization' } });
-    const documentSubcat = await prisma.subcategory.findFirst({ where: { name: 'Document Translation' } });
+    const translationCategory = await prisma.talentCategory.findFirst({ where: { name: 'Translation & Localization' } });
+    const documentSubcat = await prisma.talentSubcategory.findFirst({ where: { name: 'Document Translation' } });
 
     const talentUser2 = await prisma.user.create({
       data: {
+        id: 'TN4',
         name: 'Carlos Rodriguez',
         email: 'carlos@example.com',
         password: sampleUserPassword,
@@ -409,11 +412,11 @@ async function main() {
         emailVerified: new Date(),
         talentProfile: {
           create: {
-            roleDescription: 'Certified Spanish-English Translator',
+            performerTitle: 'Certified Spanish-English Translator',
             bio: 'Native bilingual translator specializing in legal and medical documents. 10+ years experience with perfect accuracy record.',
             location: 'Madrid, Spain',
-            experience: 'Expert (10+ years)',
-            rating: 4.9,
+            experienceLevel: 'Expert (10+ years)',
+            // rating removed per platform decision
             skills: ['Legal Translation', 'Medical Translation', 'Technical Documentation', 'Certified Translation'],
             categoryId: translationCategory?.id,
             subcategoryId: documentSubcat?.id,
@@ -428,34 +431,7 @@ async function main() {
 
     // Skipping client users and bookings since clientProfile and clientId are removed from schema
 
-    // Create sample reviews
-    const adminUser = await prisma.user.findFirst({ where: { email: 'admin@example.com' } });
-    const talent1Profile = await prisma.talentProfile.findFirst({ where: { userId: talentUser1.id } });
-    const talent2Profile = await prisma.talentProfile.findFirst({ where: { userId: talentUser2.id } });
-
-    if (talent1Profile && adminUser) {
-      await prisma.review.create({
-        data: {
-          rating: 5,
-          comment: 'Outstanding work! Sarah delivered exactly what we needed with perfect timing and quality.',
-          reviewerId: adminUser.id,
-          talentProfileId: talent1Profile.id
-        }
-      });
-    }
-
-    if (talent2Profile && adminUser) {
-      await prisma.review.create({
-        data: {
-          rating: 5,
-          comment: 'Carlos is incredibly professional and accurate. Highly recommended for any translation work.',
-          reviewerId: adminUser.id,
-          talentProfileId: talent2Profile.id
-        }
-      });
-    }
-
-    console.log(`- Sample reviews`);
+    // Reviews and ratings removed from seeding per platform decision
 
     console.log('Database seeding completed successfully.');
   } catch (error) {

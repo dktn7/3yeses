@@ -3,10 +3,10 @@ import { prisma } from '@/lib/prisma';
 import { withAdminAuth } from '@/lib/middleware/adminAuth';
 
 // PATCH update subcategory
-async function updateSubcategory(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+async function updateSubcategory(request: NextRequest, context: any) {
+  const params = context?.params ?? { id: undefined };
+  const resolvedParams = typeof (params as any)?.then === 'function' ? await (params as any) : params;
+  const id = resolvedParams?.id;
   try {
     const body = await request.json();
     const { name } = body;
@@ -18,8 +18,10 @@ async function updateSubcategory(
       );
     }
 
-    const subcategory = await prisma.subcategory.update({
-      where: { id: params.id },
+    if (!id) return NextResponse.json({ error: 'Missing subcategory id' }, { status: 400 });
+
+    const subcategory = await prisma.talentSubcategory.update({
+      where: { id },
       data: { name: name.trim() },
     });
 
@@ -38,38 +40,22 @@ async function updateSubcategory(
 }
 
 // DELETE subcategory
-async function deleteSubcategory(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+async function deleteSubcategory(request: NextRequest, context: any) {
+  const params = context?.params ?? { id: undefined };
+  const resolvedParams = typeof (params as any)?.then === 'function' ? await (params as any) : params;
+  const id = resolvedParams?.id;
+
   try {
-    // Check if subcategory has talents
-    const subcategory = await prisma.subcategory.findUnique({
-      where: { id: params.id },
-      include: {
-        _count: {
-          select: { talents: true },
-        },
-      },
-    });
+    if (!id) return NextResponse.json({ error: 'Missing subcategory id' }, { status: 400 });
 
-    if (!subcategory) {
-      return NextResponse.json(
-        { error: 'Subcategory not found' },
-        { status: 404 }
-      );
+    // Check if subcategory has talents via count
+    const talentCount = await prisma.talentProfile.count({ where: { subcategoryId: id } });
+
+    if (talentCount > 0) {
+      return NextResponse.json({ error: `Cannot delete subcategory with ${talentCount} talents. Please reassign them first.` }, { status: 400 });
     }
 
-    if (subcategory._count.talents > 0) {
-      return NextResponse.json(
-        { error: `Cannot delete subcategory with ${subcategory._count.talents} talents. Please reassign them first.` },
-        { status: 400 }
-      );
-    }
-
-    await prisma.subcategory.delete({
-      where: { id: params.id },
-    });
+    await prisma.talentSubcategory.delete({ where: { id } });
 
     return NextResponse.json({
       success: true,

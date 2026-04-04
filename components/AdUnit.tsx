@@ -1,14 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-
-// Minimal AdUnitData type inlined to avoid missing export from '@/lib/ad-config'
-interface AdUnitData {
-  id?: string;
-  imageUrl: string;
-  linkUrl: string;
-  altText?: string;
-}
+import { AdUnit as AdUnitData } from '@/lib/ad-config';
 
 interface AdUnitProps {
   ad: AdUnitData;
@@ -20,17 +13,47 @@ const AdUnit: React.FC<AdUnitProps> = ({ ad }) => {
       href={ad.linkUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className="block mb-4 transition-transform duration-200 hover:scale-105"
+      aria-label={ad.headline}
+      className="group block mb-4 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow duration-200"
     >
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
+      {/* Photo */}
+      <div className="relative w-full h-36 bg-gray-100 dark:bg-gray-700 overflow-hidden">
         <Image
           src={ad.imageUrl}
-          alt={ad.altText || ''}
-          width={300}
-          height={200}
-          className="w-full h-auto object-cover"
+          alt={ad.altText}
+          fill
+          sizes="300px"
+          className="object-cover group-hover:scale-105 transition-transform duration-300"
           loading="lazy"
         />
+      </div>
+
+      {/* Body */}
+      <div className="p-3 space-y-1">
+        {/* Headline */}
+        <p className="text-sm font-bold leading-snug text-gray-900 dark:text-gray-100">
+          {ad.headline}
+        </p>
+
+        {/* Body copy */}
+        <p className="text-xs text-gray-600 dark:text-gray-300 leading-relaxed line-clamp-2">
+          {ad.body}
+        </p>
+
+        {/* Footer row: host + CTA + Ad badge */}
+        <div className="flex items-center justify-between pt-1">
+          <span className="text-[10px] text-green-700 dark:text-green-400 font-medium truncate max-w-[120px]">
+            {ad.host}
+          </span>
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] text-blue-700 dark:text-blue-400 font-semibold hover:underline">
+              {ad.cta}
+            </span>
+            <span className="text-[9px] font-medium text-gray-400 dark:text-gray-500 border border-gray-300 dark:border-gray-600 rounded px-1 py-px">
+              Ad
+            </span>
+          </div>
+        </div>
       </div>
     </a>
   );

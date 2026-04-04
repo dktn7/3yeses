@@ -2,31 +2,43 @@ import { NextRequest, NextResponse } from 'next/server';
 import { withAdminAuth } from '@/lib/middleware/adminAuth';
 import { prisma } from '@/lib/prisma';
 
-async function getHandler(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+async function getHandler(request: NextRequest, context: any) {
+  const params = context?.params ?? { id: undefined };
+  const resolvedParams = typeof (params as any)?.then === 'function' ? await (params as any) : params;
+  const id = resolvedParams?.id;
   try {
+    if (!id) return NextResponse.json({ error: 'Missing user id' }, { status: 400 });
+
     const user = await prisma.user.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         talentProfile: {
           include: {
-            skills: true,
-            categories: true,
-            reviews: {
-              take: 5,
-              orderBy: { createdAt: 'desc' },
-            },
-            bookings: {
-              take: 5,
+            category: true,
+            subcategory: true,
+            portfolio: {
               orderBy: { createdAt: 'desc' },
             },
           },
         },
-        bookingsAsClient: {
-          take: 5,
+        mediaAssetsUploaded: {
           orderBy: { createdAt: 'desc' },
+        },
+        subscriptions: {
+          orderBy: { createdAt: 'desc' },
+          take: 1,
+        },
+        payments: {
+          orderBy: { createdAt: 'desc' },
+          take: 5,
+        },
+        _count: {
+          select: {
+            comments: true,
+            profileLikes: true,
+            reportsCreated: true,
+            reportsReceived: true,
+          },
         },
       },
     });
@@ -51,15 +63,56 @@ async function getHandler(
   }
 }
 
-async function patchHandler(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+async function patchHandler(request: NextRequest, context: any) {
+  const params = context?.params ?? { id: undefined };
+  const resolvedParams = typeof (params as any)?.then === 'function' ? await (params as any) : params;
+  const id = resolvedParams?.id;
   try {
     const body = await request.json();
-    const { name, email, role, emailVerified } = body;
+    const { name, email, role, emailVerified, action, reason } = body;
 
-    const updateData: any = {};
+    // Handle special actions
+    if (action === 'warn' || action === 'ban' || action === 'suspend' || action === 'unban') {
+      if (!id) return NextResponse.json({ error: 'Missing user id' }, { status: 400 });
+
+      // Log the action in audit log
+      try {
+        const { createAuditLog } = await import('@/lib/admin/audit');
+        await createAuditLog({
+          action: action === 'warn' ? 'WARN_USER' : action === 'ban' ? 'BAN_USER' : action === 'suspend' ? 'SUSPEND_USER' : 'UNBAN_USER',
+          userId: context.admin?.userId || 'system',
+          details: { targetUserId: id, reason: reason || 'No reason provided' },
+        });
+      } catch {
+        // Audit log is non-critical
+      }
+
+      if (action === 'ban') {
+        // Set role to banned state by updating settings
+        await prisma.user.update({
+          where: { id },
+          data: {
+            settings: { banned: true, bannedAt: new Date().toISOString(), banReason: reason || '' },
+          },
+        });
+        return NextResponse.json({ success: true, message: 'User banned' });
+      }
+
+      if (action === 'unban') {
+        await prisma.user.update({
+          where: { id },
+          data: {
+            settings: { banned: false },
+          },
+        });
+        return NextResponse.json({ success: true, message: 'User unbanned' });
+      }
+
+      // warn and suspend are just logged
+      return NextResponse.json({ success: true, message: `User ${action}ed` });
+    }
+
+    const updateData: Record<string, unknown> = {};
     if (name !== undefined) updateData.name = name;
     if (email !== undefined) updateData.email = email;
     if (role !== undefined) updateData.role = role;
@@ -67,10 +120,9 @@ async function patchHandler(
       updateData.emailVerified = emailVerified ? new Date() : null;
     }
 
-    const user = await prisma.user.update({
-      where: { id: params.id },
-      data: updateData,
-    });
+    if (!id) return NextResponse.json({ error: 'Missing user id' }, { status: 400 });
+
+    const user = await prisma.user.update({ where: { id }, data: updateData });
 
     return NextResponse.json({
       success: true,
@@ -86,15 +138,15 @@ async function patchHandler(
   }
 }
 
-async function deleteHandler(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+async function deleteHandler(request: NextRequest, context: any) {
+  const params = context?.params ?? { id: undefined };
+  const resolvedParams = typeof (params as any)?.then === 'function' ? await (params as any) : params;
+  const id = resolvedParams?.id;
   try {
     // Check if user exists
-    const user = await prisma.user.findUnique({
-      where: { id: params.id },
-    });
+    if (!id) return NextResponse.json({ error: 'Missing user id' }, { status: 400 });
+
+    const user = await prisma.user.findUnique({ where: { id } });
 
     if (!user) {
       return NextResponse.json(
@@ -112,9 +164,7 @@ async function deleteHandler(
     }
 
     // Delete user (cascade will handle related records)
-    await prisma.user.delete({
-      where: { id: params.id },
-    });
+    await prisma.user.delete({ where: { id } });
 
     return NextResponse.json({
       success: true,

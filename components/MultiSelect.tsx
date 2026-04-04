@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
+import DropdownPanel from './DropdownPanel';
 
 type Option = { label: string; value: string };
 
@@ -40,7 +41,12 @@ export default function MultiSelect({ options, value, onChange, placeholder, all
 
   React.useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+      const target = e.target as Element
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(target) &&
+        !target.closest('.dropdown-panel')
+      ) {
         setShowOptions(false);
       }
     };
@@ -53,7 +59,7 @@ export default function MultiSelect({ options, value, onChange, placeholder, all
     <div className="relative" ref={containerRef}>
       {label && <div className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">{label}</div>}
       <div
-        className="flex flex-wrap items-center gap-1 px-2 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white cursor-text min-h-[2.5rem]"
+        className="flex flex-wrap items-center gap-1 px-3 py-2 rounded-full ring-1 ring-slate-900/8 dark:ring-white/[0.08] bg-slate-50 dark:bg-slate-900/90 text-gray-900 dark:text-white cursor-text min-h-[2.5rem] transition-all duration-200 focus-within:ring-2 focus-within:ring-[var(--brand-primary)]/30"
         onClick={() => { setShowOptions(true); inputRef.current?.focus(); }}
       >
         {value.map((val) => {
@@ -63,7 +69,7 @@ export default function MultiSelect({ options, value, onChange, placeholder, all
           return (
           <span
             key={val}
-            className="flex items-center bg-primary-blue/10 dark:bg-accent-red/20 text-primary-blue dark:text-accent-red rounded px-2 py-0.5 text-xs mr-1 mb-1"
+            className="flex items-center bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] rounded-full px-2 py-0.5 text-xs mr-1 mb-1"
           >
             {displayLabel}
             <button
@@ -106,16 +112,16 @@ export default function MultiSelect({ options, value, onChange, placeholder, all
         />
       </div>
       {showOptions && (filteredOptions.length > 0 || (allowCustom && input.trim())) && (
-        <div className="absolute z-50 mt-1 w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded shadow max-h-48 overflow-y-auto">
+        <DropdownPanel portal anchorRef={inputRef} matchWidth className="p-2">
           {filteredOptions.map((opt, i) => (
             <button
               key={opt.value}
               type="button"
               className={`block w-full text-left px-4 py-2 text-sm transition-colors ${
                 highlighted === i
-                  ? 'bg-primary-blue/10 dark:bg-accent-red/20 text-primary-blue dark:text-accent-red'
-                  : 'bg-white dark:bg-gray-900 text-gray-900 dark:text-white'
-              } hover:bg-primary-blue/10 dark:hover:bg-accent-red/10 hover:text-primary-blue dark:hover:text-accent-red`}
+                  ? 'bg-[var(--brand-primary)]/10 text-[var(--brand-primary)]'
+                  : 'text-gray-900 dark:text-gray-100'
+              } hover:bg-[var(--brand-primary)]/10 hover:text-[var(--brand-primary)]`}
               onClick={(e) => { e.preventDefault(); addValue(opt.value); }}
               onMouseEnter={() => setHighlighted(i)}
             >
@@ -125,13 +131,13 @@ export default function MultiSelect({ options, value, onChange, placeholder, all
           {allowCustom && input.trim() && !options.some(opt => opt.value === input.trim()) && !value.includes(input.trim()) && (
             <button
               type="button"
-              className="block w-full text-left px-4 py-2 text-primary-blue dark:text-accent-red text-sm bg-white dark:bg-gray-900 hover:bg-primary-blue/10 dark:hover:bg-accent-red/10 hover:text-primary-blue dark:hover:text-accent-red transition-colors"
+              className="block w-full text-left px-4 py-2 text-[var(--brand-primary)] text-sm hover:bg-[var(--brand-primary)]/10 transition-colors"
               onClick={(e) => { e.preventDefault(); addValue(input.trim()); }}
             >
               {`Add "${input.trim()}"`}
             </button>
           )}
-        </div>
+        </DropdownPanel>
       )}
     </div>
   );

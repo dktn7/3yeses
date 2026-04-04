@@ -21,6 +21,7 @@ export async function GET(request: Request) {
     const hairColor = searchParams.get('hairColor')?.split(',').filter(Boolean);
     const skills = searchParams.get('skills')?.split(',').filter(Boolean);
     const languages = searchParams.get('languages')?.split(',').filter(Boolean);
+    const sortBy = searchParams.get('sortBy') || 'relevance';
 
     const page = parseInt(searchParams.get('page') || '1');
     const pageSize = parseInt(searchParams.get('pageSize') || '12');
@@ -39,10 +40,16 @@ export async function GET(request: Request) {
     }
 
     if (query) {
+      const searchTerms = query.toLowerCase().split(' ').filter((term: string) => term.length > 0);
       whereClause.OR = [
         { user: { name: { contains: query, mode: 'insensitive' } } },
         { bio: { contains: query, mode: 'insensitive' } },
-        { roleDescription: { contains: query, mode: 'insensitive' } },
+        { performerTitle: { contains: query, mode: 'insensitive' } },
+        { skills: { hasSome: searchTerms } },
+        { category: { name: { contains: query, mode: 'insensitive' } } },
+        { subcategory: { name: { contains: query, mode: 'insensitive' } } },
+        { location: { contains: query, mode: 'insensitive' } },
+        { languages: { some: { name: { contains: query, mode: 'insensitive' } } } },
       ];
     }
 
@@ -106,27 +113,35 @@ export async function GET(request: Request) {
       whereClause.skills = { hasSome: skills };
     }
 
-    // Languages handling - assuming relation based on POST handler
+    // Languages is a relation (Language model with name/proficiency)
     if (languages && languages.length > 0) {
-      // Note: If languages is a relation, we need to check schema. 
-      // Assuming POST handler is correct about `languages` being a relation.
-      // But if it's a string array in DB, use hasSome.
-      // Let's try to be safe. If POST uses `some`, it's likely a relation.
-      // However, if we are not sure, we might break it.
-      // Given the POST handler code:
-      /*
       whereClause.languages = {
         some: {
           name: { in: languages }
         }
       };
-      */
-      // I will use the same logic.
-      whereClause.languages = {
-        some: {
-          name: { in: languages }
-        }
-      };
+    }
+
+    // Build order by clause
+    let orderBy: Record<string, unknown> | Record<string, unknown>[] = {};
+    switch (sortBy) {
+      case 'name':
+        orderBy = { user: { name: 'asc' } };
+        break;
+      case 'experience':
+        orderBy = { experienceLevel: 'desc' };
+        break;
+      case 'newest':
+        orderBy = { createdAt: 'desc' };
+        break;
+      case 'popular':
+        orderBy = { viewCount: 'desc' };
+        break;
+      default: // relevance
+        orderBy = [
+          { viewCount: 'desc' },
+          { createdAt: 'desc' }
+        ];
     }
 
     const [talents, total] = await Promise.all([
@@ -149,7 +164,7 @@ export async function GET(request: Request) {
             select: {
               id: true,
               title: true,
-              url: true,
+              mediaUrl: true,
               type: true,
               thumbnail: true,
               description: true,
@@ -161,24 +176,20 @@ export async function GET(request: Request) {
         },
         skip,
         take: pageSize,
-        orderBy: [
-          { rating: 'desc' },
-          { viewCount: 'desc' },
-          { createdAt: 'desc' }
-        ]
+        orderBy,
       }),
       prisma.talentProfile.count({ where: whereClause }),
     ]);
 
     // Transform data to match client expectation
-    const transformedTalents = talents.map(talent => ({
-      id: talent.id,
-      name: talent.user.name,
-      role: talent.roleDescription || '',
-      title: talent.roleDescription || '',
+    const transformedTalents = talents.map((talent) => ({
+      id: (talent as any).userId,
+      name: (talent as any).user?.name || '',
+      role: talent.performerTitle || '',
+      title: talent.performerTitle || '',
       description: talent.bio || '',
       location: talent.location || '',
-      rating: talent.rating || 0,
+      // rating removed per platform decision
       avatarUrl: talent.avatarUrl,
       videoUrl: talent.videoUrl,
       category: talent.category?.name || '',
@@ -189,13 +200,13 @@ export async function GET(request: Request) {
       portfolio: talent.portfolio.map(item => ({
         id: item.id,
         title: item.title,
-        url: item.url,
+        mediaUrl: item.mediaUrl,
         type: item.type,
-        thumbnail: item.thumbnail || (item.type === 'IMAGE' ? item.url : undefined),
+        thumbnail: item.thumbnail || (item.type === 'IMAGE' ? item.mediaUrl : undefined),
         description: item.description || '',
         talentProfile: {
-          id: talent.id,
-          user: { name: talent.user.name },
+          id: (talent as any).userId,
+          user: { name: (talent as any).user?.name || '' },
           avatarUrl: talent.avatarUrl,
           category: talent.category ? { name: talent.category.name } : undefined
         },
@@ -235,6 +246,7 @@ export async function POST(request: Request) {
     console.log('Talent Search POST body:', JSON.stringify(body, null, 2));
 
     const {
+      categoryId,
       subcategoryId,
       page = 1,
       pageSize = 12,
@@ -243,7 +255,7 @@ export async function POST(request: Request) {
       ageRange,
       heightRange,
       bodyType,
-      experience,
+      experienceLevel,
       location,
       eyeColor,
       hairColor,
@@ -254,6 +266,10 @@ export async function POST(request: Request) {
     const skip = (page - 1) * pageSize;
 
     const whereClause: any = {};
+
+    if (categoryId) {
+      whereClause.categoryId = categoryId;
+    }
     
     if (subcategoryId) {
       whereClause.subcategoryId = subcategoryId;
@@ -355,7 +371,7 @@ export async function POST(request: Request) {
             select: {
               id: true,
               title: true,
-              url: true,
+              mediaUrl: true,
               type: true,
               thumbnail: true,
               description: true,
@@ -369,7 +385,6 @@ export async function POST(request: Request) {
         skip,
         take: pageSize,
         orderBy: [
-          { rating: 'desc' },
           { viewCount: 'desc' },
           { createdAt: 'desc' }
         ]
@@ -381,18 +396,17 @@ export async function POST(request: Request) {
 
     // Transform data to match client expectation
     const transformedTalents = talents.map(talent => ({
-      id: talent.id,
+      id: talent.userId,
       name: talent.user.name, // For VideoTalentCard
-      role: talent.roleDescription || '', // For VideoTalentCard
-      title: talent.roleDescription || '',
+      role: talent.performerTitle || '', // For VideoTalentCard
+      title: talent.performerTitle || '',
       description: talent.bio || '',
       priceRange: '', // Not in schema
       ratePerHour: 0, // Not in schema
       location: talent.location || '',
-      experience: 0, // talent.experience is string
+      experienceLevel: 0,
       availability: '', // Not in schema
-      rating: talent.rating || 0,
-      reviewCount: 0, // talent.reviewsReceived.length (need to include)
+      
       bookingCount: 0,
       user: {
         id: talent.user.id,
@@ -417,12 +431,12 @@ export async function POST(request: Request) {
       portfolio: talent.portfolio.map(item => ({
         id: item.id,
         title: item.title,
-        url: item.url,
+        mediaUrl: item.mediaUrl,
         type: item.type,
-        thumbnail: item.thumbnail || (item.type === 'IMAGE' ? item.url : undefined),
+        thumbnail: item.thumbnail || (item.type === 'IMAGE' ? item.mediaUrl : undefined),
         description: item.description || '',
         talentProfile: {
-          id: talent.id,
+          id: talent.userId,
           user: { name: talent.user.name },
           avatarUrl: talent.avatarUrl,
           category: talent.category ? { name: talent.category.name } : undefined

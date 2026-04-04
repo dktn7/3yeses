@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import CommentInput from './CommentInput';
 import CommentList from './CommentList';
 import LoadingSpinner from '@/components/LoadingSpinner';
@@ -22,11 +22,7 @@ export default function CommentSection({
   const [totalPages, setTotalPages] = useState(1);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
-  useEffect(() => {
-    fetchComments();
-  }, [portfolioItemId, talentProfileId, page, refreshTrigger]);
-
-  const fetchComments = async () => {
+  const fetchComments = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams({
@@ -52,7 +48,11 @@ export default function CommentSection({
     } finally {
       setLoading(false);
     }
-  };
+  }, [portfolioItemId, talentProfileId, page]);
+
+  useEffect(() => {
+    fetchComments();
+  }, [fetchComments, refreshTrigger]);
 
   const handleCommentPosted = () => {
     setPage(1);

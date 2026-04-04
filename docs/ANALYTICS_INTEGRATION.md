@@ -47,7 +47,6 @@ Returns: {
     uniqueViewers: number,
     totalPortfolioViews: number,
     totalLikes: number,
-    averageRating: number,
     searchImpressions: number,
     searchClicks: number,
     searchCTR: number,
@@ -182,7 +181,7 @@ export default function ImagePortfolio({ portfolioItemId }: { portfolioItemId: s
 
 Access the analytics dashboard at `/dashboard/analytics`:
 
-- **Overview Cards**: Total views, portfolio views, search performance, rating
+-- **Overview Cards**: Total views, portfolio views, search performance
 - **Profile Views Trend**: Line chart showing daily views and unique views
 - **Portfolio Engagement**: Bar chart showing daily portfolio views
 - **Search Performance**: Line chart comparing impressions vs clicks

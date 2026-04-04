@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { X } from 'lucide-react';
+import DropdownPanel from './DropdownPanel';
 
 interface Props {
   value: string[];
@@ -15,6 +16,7 @@ export default function SkillMultiSelect({ value, onChange, placeholder }: Props
   const [allSkills, setAllSkills] = React.useState<string[]>([]);
   const [loading, setLoading] = React.useState(false);
   const inputRef = React.useRef<HTMLInputElement>(null);
+  const containerRef = React.useRef<HTMLDivElement>(null);
 
   // Fetch all available skills from database
   React.useEffect(() => {
@@ -34,6 +36,22 @@ export default function SkillMultiSelect({ value, onChange, placeholder }: Props
     };
     
     fetchSkills();
+  }, []);
+
+  // Click outside to close
+  React.useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as Element
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(target) &&
+        !target.closest('.dropdown-panel')
+      ) {
+        setShowSuggestions(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   const filteredSuggestions = allSkills.filter(
@@ -61,15 +79,15 @@ export default function SkillMultiSelect({ value, onChange, placeholder }: Props
   const removeSkill = (s: string) => onChange(value.filter(v => v !== s));
 
   return (
-    <div className="relative">
+    <div className="relative" ref={containerRef}>
       <div className="flex flex-wrap gap-1.5 mb-2">
         {value.map(s => (
-          <span key={s} className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full text-xs font-medium">
+          <span key={s} className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] rounded-full text-xs font-medium">
             {s}
             <button 
               type="button"
               onClick={() => removeSkill(s)} 
-              className="hover:bg-blue-200 dark:hover:bg-blue-800 rounded-full p-0.5 transition-colors"
+              className="hover:bg-[var(--brand-primary)]/20 rounded-full p-0.5 transition-colors"
             >
               <X className="w-3 h-3" />
             </button>
@@ -88,17 +106,17 @@ export default function SkillMultiSelect({ value, onChange, placeholder }: Props
           onFocus={() => setShowSuggestions(true)}
           onKeyDown={handleKeyDown}
           placeholder={loading ? 'Loading skills...' : (placeholder || 'Type to search skills...')}
-          className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-red-500 focus:border-transparent transition-all"
+          className="w-full px-3 py-2 ring-1 ring-slate-900/8 dark:ring-white/[0.08] rounded-full bg-slate-50 dark:bg-slate-900/90 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)]/30 transition-all"
         />
         {showSuggestions && (filteredSuggestions.length > 0 || input.trim()) && (
-          <div className="absolute top-full left-0 right-0 mt-1 z-50 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg max-h-64 overflow-y-auto">
+          <DropdownPanel portal anchorRef={inputRef} className="p-2 w-64 max-w-[90vw]">
             {filteredSuggestions.length > 0 ? (
               filteredSuggestions.map(skill => (
                 <button
                   key={skill}
                   type="button"
                   onClick={() => addSkill(skill)}
-                  className="w-full text-left px-3 py-2 hover:bg-blue-50 dark:hover:bg-blue-900/20 text-gray-900 dark:text-white text-sm transition-colors border-b border-gray-100 dark:border-gray-800 last:border-b-0"
+                  className="w-full text-left px-3 py-2 hover:bg-[var(--brand-primary)]/10 hover:text-[var(--brand-primary)] text-gray-900 dark:text-gray-100 text-sm transition-colors border-b border-gray-100 dark:border-white/[0.06] last:border-b-0"
                 >
                   {skill}
                 </button>
@@ -107,12 +125,12 @@ export default function SkillMultiSelect({ value, onChange, placeholder }: Props
               <button
                 type="button"
                 onClick={() => addSkill(input.trim())}
-                className="w-full text-left px-3 py-2 hover:bg-blue-50 dark:hover:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-sm transition-colors"
+                className="w-full text-left px-3 py-2 hover:bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] text-sm transition-colors"
               >
                 + Add "{input.trim()}" as new skill
               </button>
             ) : null}
-          </div>
+          </DropdownPanel>
         )}
       </div>
     </div>

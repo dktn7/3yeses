@@ -14,7 +14,7 @@ Request body (JSON):
   - ageRange: { min: number, max: number }
 - page: number (optional) — 1-based page number (default: 1).
 - limit: number (optional) — Number of results per page (default: 20, max: 100).
-- sortBy: string (optional) — One of `relevance` (default), `rating`, `experience`.
+- sortBy: string (optional) — One of `relevance` (default), `experience`.
 
 Example request:
 
@@ -28,7 +28,7 @@ Example request:
   },
   "page": 1,
   "limit": 20,
-  "sortBy": "rating"
+  "sortBy": "relevance"
 }
 ```
 
@@ -37,7 +37,7 @@ Response (200 OK):
 - success: boolean
 - categories: array — matching categories (id, name, description)
 - subcategories: array — matching subcategories (id, name, categoryId)
-- talents: array — paginated talent objects (id, userId, roleDescription, bio, location, experience, rating, avatarUrl, videoUrl, skills)
+- talents: array — paginated talent objects (id, userId, roleDescription, bio, location, experience, avatarUrl, videoUrl, skills)
 - pagination: { page, limit, total }
 - cached: boolean — whether the response was returned from server cache
 
@@ -49,7 +49,7 @@ Example response:
   "categories": [{ "id": "actors", "name": "Actors" }],
   "subcategories": [{ "id": "female-actor", "name": "Female Actor", "categoryId": "actors" }],
   "talents": [
-    { "id": "1", "userId": "u1", "roleDescription": "Lead Actress", "bio": "...", "location": "Los Angeles", "experience": 8, "rating": 4.9, "skills": ["Method Acting"] }
+    { "id": "1", "userId": "u1", "roleDescription": "Lead Actress", "bio": "...", "location": "Los Angeles", "experience": 8, "skills": ["Method Acting"] }
   ],
   "pagination": { "page": 1, "limit": 20, "total": 1 },
   "cached": false

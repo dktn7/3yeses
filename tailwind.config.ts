@@ -13,8 +13,16 @@ export default {
       safelist: [
         'bg-primary-blue', 'border-primary-blue', 'text-primary-blue', 'hover:bg-primary-blue/10', 'hover:bg-primary-blue/90', 'focus:ring-primary-blue',
         'bg-primary-red', 'border-primary-red', 'text-primary-red', 'hover:bg-primary-red/90', 'focus:ring-primary-red',
+        // Admin safelist
+        'admin-theme-blue', 'text-scale-1', 'text-scale-2', 'text-scale-3',
       ],
       colors: {
+        // Link utility color names to runtime CSS variables so Tailwind classes
+        // like `from-primary-blue` and `to-accent-blue` reflect the current
+        // `:root` palette (light/dark modes will switch via the .dark class).
+        'primary-blue': 'var(--brand-primary)',
+        'accent-blue': 'var(--brand-accent)',
+
         primary: {
           DEFAULT: '#2563EB', // blue
           red: '#DC2626',
@@ -37,10 +45,22 @@ export default {
           secondary: '#475569',
           muted: '#64748B',
           light: '#F8FAFC',
+        },
+        // Admin specific colors mapped to CSS variables
+        admin: {
+          bg: 'var(--admin-bg)',
+          surface: 'var(--admin-surface)',
+          border: 'var(--admin-border)',
+          primary: 'var(--admin-primary)',
+          text: 'var(--admin-text)',
+          muted: 'var(--admin-muted)',
         }
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
+      },
+      transitionTimingFunction: {
+        'spring': 'cubic-bezier(0.32, 0.72, 0, 1)',
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',

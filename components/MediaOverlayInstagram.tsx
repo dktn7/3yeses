@@ -19,7 +19,7 @@ import MediaThumbnailFallback from './MediaThumbnailFallback';
 interface MediaItem {
   id: string;
   title: string;
-  url: string;
+  mediaUrl: string;
   type: 'IMAGE' | 'VIDEO' | 'AUDIO';
   thumbnail?: string;
   description?: string;
@@ -35,7 +35,7 @@ interface MediaItem {
     location?: string;
   };
   views: number;
-  likes: number;
+  likeCount: number;
   isSponsored?: boolean;
   createdAt: string;
 }
@@ -67,13 +67,13 @@ export default function MediaOverlayInstagram({ media, allMedia, talents, onClos
       
       {/* Top Bar - Stories Style */}
       <div className="h-24 bg-black border-b border-white/10 flex items-center px-4 gap-4 overflow-x-auto scrollbar-hide flex-shrink-0">
-        {uniqueTalents.map((t) => {
-          const isActive = t.id === media.talentProfile.id;
+          {uniqueTalents.map((t) => {
+          const isActive = ((t as any).userId ?? t.id) === ((media.talentProfile as any).userId ?? media.talentProfile.id);
           return (
             <button 
               key={t.id}
               onClick={() => {
-                 const firstMedia = allMedia.find(m => m.talentProfile.id === t.id);
+                 const firstMedia = allMedia.find(m => ((m.talentProfile as any).userId ?? m.talentProfile.id) === ((t as any).userId ?? t.id));
                  if (firstMedia) onMediaSelect(firstMedia);
               }}
               className="flex flex-col items-center gap-1 min-w-[70px]"
@@ -110,19 +110,19 @@ export default function MediaOverlayInstagram({ media, allMedia, talents, onClos
           <div className="flex-1 bg-gray-900 relative flex items-center justify-center">
              {media.type === 'VIDEO' ? (
                  <VideoPlayer 
-                   url={media.url} 
+                   url={media.mediaUrl} 
                    className="w-full h-full"
                    talentProfile={{
-                     id: media.talentProfile.id,
+                     id: (media.talentProfile as any).userId ?? media.talentProfile.id,
                      name: media.talentProfile.user.name,
                      avatarUrl: media.talentProfile.avatarUrl
                    }}
                    showLogo={true}
                  />
             ) : (
-              media.thumbnail || media.url ? (
+              media.thumbnail || media.mediaUrl ? (
                 <Image
-                  src={media.thumbnail || media.url}
+                  src={media.thumbnail || media.mediaUrl}
                   alt={media.title}
                   fill
                   className="object-contain"
@@ -180,7 +180,7 @@ export default function MediaOverlayInstagram({ media, allMedia, talents, onClos
                 </div>
                 <Bookmark className="w-6 h-6 text-gray-900 dark:text-white hover:text-gray-500 cursor-pointer" />
               </div>
-              <p className="font-bold text-sm mb-1 text-gray-900 dark:text-white">{media.likes} likes</p>
+              <p className="font-bold text-sm mb-1 text-gray-900 dark:text-white">{media.likeCount} likes</p>
               <p className="text-xs text-gray-500 uppercase">DECEMBER 8</p>
             </div>
 

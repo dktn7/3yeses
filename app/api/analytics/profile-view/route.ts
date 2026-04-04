@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     // If viewer is the profile owner, do not count the view
     if (userId) {
       const profileOwner = await prisma.talentProfile.findUnique({
-        where: { id: talentProfileId },
+        where: { userId: talentProfileId },
         select: { userId: true }
       });
 
@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
 
     // Increment talent profile view count
     await prisma.talentProfile.update({
-      where: { id: talentProfileId },
+      where: { userId: talentProfileId },
       data: {
         viewCount: {
           increment: 1,

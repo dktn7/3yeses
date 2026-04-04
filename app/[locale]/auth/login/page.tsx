@@ -1,16 +1,19 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useState } from 'react';
 import Breadcrumbs from '@/components/Breadcrumbs';
+import SwoopingTick from '@/components/SwoopingTick';
 
 export default function LoginPage() {
   const t = useTranslations('LoginPage');
   const tNav = useTranslations('Navigation');
   const pathname = usePathname();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get('redirect');
   const [rememberMe, setRememberMe] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -53,6 +56,10 @@ export default function LoginPage() {
           setError('Please verify your email address before logging in. Check your inbox for the verification link.');
         } else if (data.requiresParentalConsent) {
           setError('Your account is pending parental consent approval. We\'ve sent an email to your parent/guardian.');
+        } else if (data.error === 'Invalid email address') {
+          setError('The email address you entered is not registered. Please check your email or sign up for a new account.');
+        } else if (data.error === 'Invalid password') {
+          setError('The password you entered is incorrect. Please try again or reset your password.');
         } else {
           setError(data.error || 'Login failed. Please try again.');
         }
@@ -60,9 +67,9 @@ export default function LoginPage() {
         return;
       }
 
-      // Success - redirect to dashboard
+      // Success - redirect to intended page or dashboard
       console.log('Login successful:', data.user);
-      router.push(`/${locale}/dashboard`);
+      router.push(redirectTo || `/${locale}/dashboard`);
       
     } catch (err) {
       console.error('Login error:', err);
@@ -79,6 +86,9 @@ export default function LoginPage() {
         <div className="flex items-center justify-center mt-8">
           <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
             <div className="text-center">
+              <div className="flex justify-center mb-4">
+                <SwoopingTick size={64} className="text-blue-600" />
+              </div>
               <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{t('title')}</h1>
               <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">{t('subtitle')}</p>
             </div>

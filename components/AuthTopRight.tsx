@@ -52,7 +52,7 @@ export default function AuthTopRight() {
         {t.login}
       </Link>
        <Link
-         href={`/${locale}/auth/signup/step-1`}
+         href={`/${locale}/auth/signup/steps/step-1`}
          className="text-sm font-medium px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors dark:bg-red-600 dark:hover:bg-red-700"
        >
          {t.signup}

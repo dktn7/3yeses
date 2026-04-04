@@ -1,22 +1,78 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { getCategoryData } from '@/lib/data';
+import LocationAutocomplete from '@/components/LocationAutocomplete';
 import { useParams, useRouter, usePathname } from 'next/navigation';
+import { useLocale } from 'next-intl';
 import Image from 'next/image';
 import type { Talent } from '@/types/index.ts';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import ErrorMessage from '@/components/ErrorMessage';
 import TalentCard from '@/components/TalentCard';
+import FeaturedTalentCard from '@/components/FeaturedTalentCard';
 import VideoPlayer from '@/components/VideoPlayer';
 import GalleryViewer from '@/components/GalleryViewer';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import { useAuth } from '@/contexts/AuthContext';
+import SkillMultiSelect from '@/components/SkillMultiSelect';
+import LanguageMultiSelect from '@/components/LanguageMultiSelect';
+import CharacteristicSelect from '@/components/CharacteristicSelect';
+import ProfileOnboardingGuide from '@/components/ProfileOnboardingGuide';
+import {
+  genderOptions,
+  ethnicityOptions,
+  bodyTypeOptions,
+  eyeColorOptions,
+  hairColorOptions,
+} from '@/lib/characteristics';
 import { 
   Briefcase, MapPin, Languages, Film, ImageIcon, Music, Flag, 
   Eye, Share2, Users, TrendingUp, Building2, 
   Calendar, Ruler, Palette, User, CheckCircle2, PlayCircle,
-  Sparkles, Zap, Edit2, X, Check
+  Sparkles, Zap, Edit2, X, Check,
+  Mic, Globe, PenTool, Clapperboard, Camera, UserCheck, Heart, Trophy,
+  Flame, Tent, Smile, Aperture, Sliders, Smartphone, Scissors, Wrench,
+  Star, Settings, BookOpen, Monitor, CheckCircle, ChevronDown, Drama
 } from 'lucide-react';
+
+// Helper to render Lucide icon by name (matching DB icon field)
+const getCategoryIcon = (iconName: string | null, size = 16) => {
+  const cls = `w-${size === 16 ? 4 : size === 20 ? 5 : 4} h-${size === 16 ? 4 : size === 20 ? 5 : 4} shrink-0`;
+  const name = iconName || 'CheckCircle';
+  switch (name) {
+    case 'Mic':           return <Mic className={cls} />;
+    case 'Globe':         return <Globe className={cls} />;
+    case 'PenTool':       return <PenTool className={cls} />;
+    case 'Music':         return <Music className={cls} />;
+    case 'Clapperboard':  return <Clapperboard className={cls} />;
+    case 'Drama':         return <Drama className={cls} />;
+    case 'Camera':        return <Camera className={cls} />;
+    case 'Users':         return <Users className={cls} />;
+    case 'Heart':         return <Heart className={cls} />;
+    case 'Trophy':        return <Trophy className={cls} />;
+    case 'Flame':         return <Flame className={cls} />;
+    case 'Sparkles':      return <Sparkles className={cls} />;
+    case 'Tent':          return <Tent className={cls} />;
+    case 'Smile':         return <Smile className={cls} />;
+    case 'Aperture':      return <Aperture className={cls} />;
+    case 'Palette':       return <Palette className={cls} />;
+    case 'Sliders':       return <Sliders className={cls} />;
+    case 'Smartphone':    return <Smartphone className={cls} />;
+    case 'Scissors':      return <Scissors className={cls} />;
+    case 'Wrench':        return <Wrench className={cls} />;
+    case 'Film':          return <Film className={cls} />;
+    case 'Zap':           return <Zap className={cls} />;
+    case 'UserCheck':     return <UserCheck className={cls} />;
+    case 'MapPin':        return <MapPin className={cls} />;
+    case 'Star':          return <Star className={cls} />;
+    case 'Calendar':      return <Calendar className={cls} />;
+    case 'Settings':      return <Settings className={cls} />;
+    case 'BookOpen':      return <BookOpen className={cls} />;
+    case 'Monitor':       return <Monitor className={cls} />;
+    default:              return <CheckCircle className={cls} />;
+  }
+};
 import { AnalyticsTracker } from '@/lib/analytics/tracker';
 import SafeAvatarImage from '@/components/SafeAvatarImage';
 
@@ -25,12 +81,33 @@ type TalentProfileData = {
   suggestions: Talent[];
 };
 
+type EditData = {
+  avatarUrl?: string;
+  bannerUrl?: string;
+  name: string;
+  role: string;
+  bio: string;
+  location: string;
+  skills: string[];
+  languages: string[];
+  gender: 'male' | 'female' | 'non-binary' | 'other' | string;
+  age: number | null;
+  ethnicity: string;
+  height: number | null;
+  eyeColor: string;
+  hairColor: string;
+  bodyType: 'slim' | 'athletic' | 'average' | 'curvy' | 'plus-size' | 'muscular' | string;
+  categoryId?: string | null;
+  subcategoryId?: string | null;
+  contentBackground?: string | null;
+};
+
 export default function TalentProfilePage() {
   const params = useParams();
   const router = useRouter();
   const pathname = usePathname();
   const { user } = useAuth();
-  const locale = pathname?.split('/')[1] || 'en-gb';
+  const locale = useLocale();
   const id = params?.id as string;
 
   const [data, setData] = useState<TalentProfileData | null>(null);
@@ -46,14 +123,39 @@ export default function TalentProfilePage() {
   const [viewsToday, setViewsToday] = useState(0);
   const [isOwnProfile, setIsOwnProfile] = useState(false);
   const [editMode, setEditMode] = useState(false);
-  const [editData, setEditData] = useState<any>({});
+  const [categoryOpen, setCategoryOpen] = useState(false);
+  const [categorySearch, setCategorySearch] = useState('');
+  const [categories, setCategories] = useState(() => getCategoryData());
+  const [loadingCategories, setLoadingCategories] = useState(false);
+  const [editData, setEditData] = useState<EditData>({
+    name: '',
+    role: '',
+    bio: '',
+    location: '',
+    skills: [],
+    languages: [],
+    gender: 'male',
+    age: null,
+    ethnicity: '',
+    height: null,
+    eyeColor: '',
+    hairColor: '',
+    bodyType: 'average'
+    , categoryId: null,
+    subcategoryId: null
+  });
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
+  const [profileCompletion, setProfileCompletion] = useState<number | null>(null);
+  const [missingFields, setMissingFields] = useState<string[]>([]);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [uploadingBanner, setUploadingBanner] = useState(false);
   const [showBannerPicker, setShowBannerPicker] = useState(false);
   const [newSkill, setNewSkill] = useState('');
   const [newLanguage, setNewLanguage] = useState('');
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  
+  const hideContent = false;
 
   useEffect(() => {
     if (id) {
@@ -65,9 +167,12 @@ export default function TalentProfilePage() {
           
           if (!res.ok) {
             const errorData = await res.json().catch(() => ({}));
-            throw new Error(errorData.error || `Failed to fetch talent data (${res.status})`);
+            const msg = errorData.error || `Failed to fetch talent data (${res.status})`;
+            setError(msg);
+            setLoading(false);
+            return;
           }
-          
+
           const result: TalentProfileData = await res.json();
           setData(result);
           setEditData({
@@ -78,6 +183,8 @@ export default function TalentProfilePage() {
             avatarUrl: result.talent.avatarUrl,
             bannerUrl: result.talent.bannerUrl,
             skills: result.talent.skills || [],
+            categoryId: (result as any).talent?.categoryId || null,
+            subcategoryId: (result as any).talent?.subcategoryId || null,
             gender: result.talent.gender,
             age: result.talent.age,
             ethnicity: result.talent.ethnicity,
@@ -91,8 +198,33 @@ export default function TalentProfilePage() {
           // Check if this is the user's own profile
           if (user && (user.id === id || user.id === result.talent.userId)) {
             setIsOwnProfile(true);
+            // Auto-show onboarding for incomplete profiles (only once per session)
+            const hasSeenOnboarding = sessionStorage.getItem('hasSeenOnboarding');
+            const isIncomplete = !result.talent.bio || 
+                                !result.talent.categoryId || 
+                                (result.talent.skills || []).length === 0 ||
+                                !result.talent.avatarUrl;
+            if (isIncomplete && !hasSeenOnboarding) {
+              setShowOnboarding(true);
+              sessionStorage.setItem('hasSeenOnboarding', 'true');
+            }
           } else {
             setIsOwnProfile(false);
+          }
+          // If this is the user's own profile, fetch profile completion
+          if (user && (user.id === id || user.id === result.talent.userId)) {
+            try {
+              fetch('/api/user/profile-completion', { credentials: 'include' })
+                .then(r => r.ok ? r.json() : null)
+                .then((pc) => {
+                  if (pc) {
+                    setProfileCompletion(pc.percentage ?? pc.completionPercentage ?? null);
+                    setMissingFields(pc.missingFields || []);
+                  }
+                }).catch(() => {});
+            } catch (err) {
+              // ignore
+            }
           }
         } catch (err) {
           console.error('Error in fetchData:', err);
@@ -108,6 +240,55 @@ export default function TalentProfilePage() {
     }
   }, [id, user]);
 
+  // Load categories from server for the inline dropdown
+  useEffect(() => {
+    let mounted = true;
+    const load = async () => {
+      setLoadingCategories(true);
+      try {
+        const res = await fetch('/api/categories');
+        if (!res.ok) return;
+        const json = await res.json();
+        if (mounted && json?.success && Array.isArray(json.data)) {
+          setCategories(json.data);
+        }
+      } catch (err) {
+        // keep fallback categories
+        console.error('Failed to load categories:', err);
+      } finally {
+        if (mounted) setLoadingCategories(false);
+      }
+    };
+    load();
+    return () => { mounted = false; };
+  }, []);
+
+  // Initialize editData when entering edit mode to ensure controlled inputs have values
+  useEffect(() => {
+    if (editMode && data) {
+      setEditData({
+        name: data.talent.name,
+        location: data.talent.location,
+        role: data.talent.role,
+        bio: data.talent.bio,
+        avatarUrl: data.talent.avatarUrl,
+        bannerUrl: data.talent.bannerUrl,
+        skills: data.talent.skills || [],
+        categoryId: (data as any).talent?.categoryId || null,
+        subcategoryId: (data as any).talent?.subcategoryId || null,
+        gender: data.talent.gender,
+        age: data.talent.age,
+        ethnicity: data.talent.ethnicity,
+        height: data.talent.height,
+        eyeColor: data.talent.eyeColor,
+        hairColor: data.talent.hairColor,
+        bodyType: data.talent.bodyType,
+        languages: data.talent.languages || [],
+        contentBackground: (data.talent as any).contentBackground || null,
+      });
+    }
+  }, [editMode, data]);
+
   const bannerPresets = [
     { id: 'preset-1', label: 'Ocean', gradient: 'linear-gradient(135deg, #0ea5e9 0%, #1e3a8a 100%)' },
     { id: 'preset-2', label: 'Sunset', gradient: 'linear-gradient(135deg, #f97316 0%, #be123c 100%)' },
@@ -120,6 +301,40 @@ export default function TalentProfilePage() {
     { id: 'preset-9', label: 'Blush', gradient: 'linear-gradient(135deg, #f472b6 0%, #fb7185 100%)' },
     { id: 'preset-10', label: 'Indigo', gradient: 'linear-gradient(135deg, #6366f1 0%, #1e1b4b 100%)' },
   ];
+
+  const contentBgPresets = [
+    { id: 'default', label: 'Default', color: '', gradient: '' },
+    { id: 'cbg-warm', label: 'Warm', gradient: 'linear-gradient(180deg, #fff7ed 0%, #fee2b3 100%)' },
+    { id: 'cbg-cool', label: 'Cool', gradient: 'linear-gradient(180deg, #eef2ff 0%, #dbeafe 100%)' },
+    { id: 'cbg-mint', label: 'Mint', gradient: 'linear-gradient(180deg, #ecfdf5 0%, #bbf7d0 100%)' },
+    { id: 'cbg-rose', label: 'Rose', gradient: 'linear-gradient(180deg, #fff1f2 0%, #ffd6e0 100%)' },
+    { id: 'cbg-lavender', label: 'Lavender', gradient: 'linear-gradient(180deg, #f3e8ff 0%, #e9d5ff 100%)' },
+    { id: 'cbg-peach', label: 'Peach', gradient: 'linear-gradient(180deg, #fff7ed 0%, #ffedd5 100%)' },
+    { id: 'cbg-slate', label: 'Slate', gradient: 'linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%)' },
+    { id: 'cbg-dark', label: 'Dark', gradient: 'linear-gradient(180deg, #0f172a 0%, #020617 100%)' },
+    // Patterned low-contrast options
+    { id: 'pattern-dots', label: 'Dots', pattern: 'radial-gradient(rgba(0,0,0,0.03) 1px, transparent 1px)', gradient: 'linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.4))' },
+    { id: 'pattern-hatch', label: 'Hatch', pattern: 'repeating-linear-gradient(45deg, rgba(0,0,0,0.03) 0 1px, transparent 1px 8px)', gradient: 'linear-gradient(180deg, rgba(250,250,250,0.7), rgba(240,240,255,0.6))' },
+    { id: 'pattern-grid', label: 'Grid', pattern: 'repeating-linear-gradient(0deg, rgba(0,0,0,0.03) 0 1px, transparent 1px 32px), repeating-linear-gradient(90deg, rgba(0,0,0,0.03) 0 1px, transparent 1px 32px)', gradient: 'linear-gradient(180deg, rgba(255,255,255,0.8), rgba(250,250,255,0.6))' },
+    { id: 'pattern-noise', label: 'Noise', pattern: 'linear-gradient(0deg, rgba(0,0,0,0.02), rgba(0,0,0,0.02))', gradient: 'linear-gradient(180deg, rgba(255,255,255,0.95), rgba(250,250,250,0.95))' },
+  ];
+
+  const resolveContentBgStyle = (bg?: string | null) => {
+    if (!bg) return undefined;
+    const preset = contentBgPresets.find(p => p.id === bg);
+    if (preset) {
+      if ((preset as any).pattern) {
+        const layers: string[] = [];
+        if ((preset as any).gradient) layers.push((preset as any).gradient);
+        layers.push((preset as any).pattern);
+        return { backgroundImage: layers.join(', '), backgroundSize: 'auto, 32px 32px' };
+      }
+      return (preset as any).gradient ? { backgroundImage: (preset as any).gradient } : undefined;
+    }
+    // Treat as hex color
+    if (bg.startsWith('#')) return { backgroundColor: bg };
+    return undefined;
+  };
 
   const resolveBannerStyle = (bannerUrl?: string) => {
     if (!bannerUrl) return null;
@@ -171,21 +386,26 @@ export default function TalentProfilePage() {
   };
 
   const handleSaveProfile = async () => {
-    if (!isOwnProfile) return;
     setIsSaving(true);
-    setSaveMessage(null);
     try {
+      // sanitize languages: trim, remove empties and duplicates
+      const sanitizedLanguages = Array.isArray(editData.languages)
+        ? Array.from(new Set(editData.languages.map(l => (l || '').toString().trim()).filter(Boolean)))
+        : [];
+
       const res = await fetch('/api/talent/profile', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: editData.name,
-          roleDescription: editData.role,
+          performerTitle: editData.role,
           location: editData.location,
           bio: editData.bio,
           avatarUrl: editData.avatarUrl,
           bannerUrl: editData.bannerUrl,
           skills: editData.skills,
+          categoryId: editData.categoryId,
+          subcategoryId: editData.subcategoryId,
           gender: editData.gender,
           age: editData.age,
           ethnicity: editData.ethnicity,
@@ -193,37 +413,67 @@ export default function TalentProfilePage() {
           eyeColor: editData.eyeColor,
           hairColor: editData.hairColor,
           bodyType: editData.bodyType,
-          languages: editData.languages,
+          languages: sanitizedLanguages,
+          contentBackground: editData.contentBackground,
         }),
       });
-      if (res.ok) {
-        await fetch(`/api/talent/${id}`).then(r => r.json()).then((result) => {
-          setData(result);
-          setEditData({
-            name: result.talent.name,
-            location: result.talent.location,
-            role: result.talent.role,
-            bio: result.talent.bio,
-            avatarUrl: result.talent.avatarUrl,
-            bannerUrl: result.talent.bannerUrl,
-            skills: result.talent.skills || [],
-            gender: result.talent.gender,
-            age: result.talent.age,
-            ethnicity: result.talent.ethnicity,
-            height: result.talent.height,
-            eyeColor: result.talent.eyeColor,
-            hairColor: result.talent.hairColor,
-            bodyType: result.talent.bodyType,
-            languages: result.talent.languages || [],
-          });
-          setNewSkill('');
-          setNewLanguage('');
-        });
-        setEditMode(false);
-        setSaveMessage('Saved');
-      } else {
-        setSaveMessage('Failed to save');
+
+      let putJson = null;
+      try { putJson = await res.json(); } catch (e) { /* ignore parse errors */ }
+
+      if (!res.ok) {
+        const msg = putJson?.error || putJson?.message || 'Failed to save';
+        setSaveMessage(msg);
+        setIsSaving(false);
+        return;
       }
+
+      // Fetch latest profile back from server and validate shape
+      const r2 = await fetch(`/api/talent/${id}`);
+      let profileJson = null;
+      try { profileJson = await r2.json(); } catch (e) { profileJson = null; }
+
+      if (!r2.ok) {
+        const msg = profileJson?.error || 'Saved but failed to reload profile';
+        setSaveMessage(msg);
+        setEditMode(false);
+        setIsSaving(false);
+        return;
+      }
+
+      if (!profileJson || !profileJson.talent) {
+        setSaveMessage('Saved but invalid profile data returned');
+        setEditMode(false);
+        setIsSaving(false);
+        return;
+      }
+
+      const result = profileJson;
+      setData(result);
+      setEditData({
+        name: result.talent.name,
+        location: result.talent.location,
+        role: result.talent.role,
+        bio: result.talent.bio,
+        avatarUrl: result.talent.avatarUrl,
+        bannerUrl: result.talent.bannerUrl,
+        skills: result.talent.skills || [],
+        categoryId: result.talent?.categoryId || null,
+        subcategoryId: result.talent?.subcategoryId || null,
+        gender: result.talent.gender,
+        age: result.talent.age,
+        ethnicity: result.talent.ethnicity,
+        height: result.talent.height,
+        eyeColor: result.talent.eyeColor,
+        hairColor: result.talent.hairColor,
+        bodyType: result.talent.bodyType,
+        languages: result.talent.languages || [],
+        contentBackground: result.talent.contentBackground || null,
+      });
+      setNewSkill('');
+      setNewLanguage('');
+      setEditMode(false);
+      setSaveMessage('Saved');
     } catch (error) {
       console.error('Save profile failed:', error);
       setSaveMessage('Failed to save');
@@ -349,23 +599,17 @@ export default function TalentProfilePage() {
   if (!data) return null;
 
   const { talent } = data;
+  const talentUserId = ((talent as any).userId ?? talent.id) as string;
 
   const isVisible = (setting: keyof NonNullable<Talent['profileSettings']>) => {
     return talent.profileSettings?.[setting] !== false;
   };
 
   const getSocialProofData = (talent: Talent) => {
-    const isPopular = talent.rating >= 4.5 && talent.viewCount > 100;
-    
-    let badge;
-    if (isPopular) badge = 'Top Rated';
-    else if (talent.rating >= 4.0) badge = 'Popular Choice';
-    else badge = 'Rising Star';
-    
-    return {
-      isPopular,
-      badge
-    };
+    // Rating removed — use viewCount as a simple popularity signal
+    const isPopular = (talent.viewCount || 0) > 1000;
+    const badge = isPopular ? 'Popular Choice' : 'Rising Star';
+    return { isPopular, badge };
   };
 
   const socialProof = getSocialProofData(talent);
@@ -376,7 +620,10 @@ export default function TalentProfilePage() {
 
   const breadcrumbItems = [
     { label: 'Home', href: `/${locale}` },
-    ...breadcrumbPath.map(item => ({ label: item.charAt(0).toUpperCase() + item.slice(1), href: `/${locale}/categories/${item.toLowerCase()}` })),
+    ...breadcrumbPath.map(item => {
+      const catId = editData.categoryId || (data as any)?.talent?.categoryId;
+      return { label: item.charAt(0).toUpperCase() + item.slice(1), href: catId ? `/${locale}/categories/${catId}` : `/${locale}/categories` };
+    }),
     { label: talent.name },
   ];
 
@@ -387,19 +634,62 @@ export default function TalentProfilePage() {
   };
 
   const handleSkillClick = (skill: string) => {
-    router.push(`/${locale}/hub?q=${encodeURIComponent(skill)}`);
+    if (editMode) return;
+    const params = new URLSearchParams();
+    params.set('skills', skill);
+    params.set('filter', 'talent');
+    router.push(`/${locale}/search-results?${params.toString()}`);
   };
 
   const handleLanguageClick = (language: string) => {
-    router.push(`/${locale}/hub?q=${encodeURIComponent(language)}`);
+    if (editMode) return;
+    const params = new URLSearchParams();
+    params.set('languages', language);
+    params.set('filter', 'talent');
+    router.push(`/${locale}/search-results?${params.toString()}`);
+  };
+
+  const handleCharacteristicClick = (value?: string | null, filterKey?: string) => {
+    if (editMode) return;
+    if (!value) return;
+    const params = new URLSearchParams();
+    if (filterKey) {
+      // For age, search a ±2 year range
+      if (filterKey === 'minAge') {
+        const age = parseInt(value);
+        params.set('minAge', String(Math.max(5, age - 2)));
+        params.set('maxAge', String(age + 2));
+      } else if (filterKey === 'minHeight') {
+        // For height, search a ±5cm range
+        const h = parseInt(value);
+        params.set('minHeight', String(Math.max(140, h - 5)));
+        params.set('maxHeight', String(h + 5));
+      } else {
+        params.set(filterKey, value);
+      }
+    } else {
+      params.set('q', value);
+    }
+    params.set('filter', 'talent');
+    router.push(`/${locale}/search-results?${params.toString()}`);
   };
 
   const handleLocationClick = () => {
-    router.push(`/${locale}/hub?q=${encodeURIComponent(talent.location)}`);
+    if (editMode) return;
+    const params = new URLSearchParams();
+    params.set('location', talent.location);
+    params.set('filter', 'talent');
+    router.push(`/${locale}/search-results?${params.toString()}`);
   };
 
   const handleCategoryClick = () => {
-    router.push(`/${locale}/categories/${talent.category.toLowerCase()}`);
+    if (editMode) return;
+    const categoryName = talent.category;
+    if (categoryName) {
+      router.push(`/${locale}/categories?category=${encodeURIComponent(categoryName)}`);
+    } else {
+      router.push(`/${locale}/categories`);
+    }
   };
 
   const openGallery = (index: number) => {
@@ -452,7 +742,7 @@ export default function TalentProfilePage() {
                   >
                     <Check size={18} />
                   </button>
-                  <button
+                    <button
                     onClick={() => {
                       setEditMode(false);
                       setEditData({
@@ -462,7 +752,9 @@ export default function TalentProfilePage() {
                         bio: data.talent.bio,
                         avatarUrl: data.talent.avatarUrl,
                         bannerUrl: data.talent.bannerUrl,
-                        skills: data.talent.skills,
+                        skills: data.talent.skills || [],
+                        categoryId: (data as any).talent?.categoryId || null,
+                        subcategoryId: (data as any).talent?.subcategoryId || null,
                         gender: data.talent.gender,
                         age: data.talent.age,
                         ethnicity: data.talent.ethnicity,
@@ -470,7 +762,8 @@ export default function TalentProfilePage() {
                         eyeColor: data.talent.eyeColor,
                         hairColor: data.talent.hairColor,
                         bodyType: data.talent.bodyType,
-                        languages: data.talent.languages,
+                        languages: data.talent.languages || [],
+                        contentBackground: (data.talent as any).contentBackground || null,
                       });
                       setNewSkill('');
                       setNewLanguage('');
@@ -481,12 +774,23 @@ export default function TalentProfilePage() {
                   </button>
                 </>
               ) : (
-                <button
-                  onClick={() => setEditMode(true)}
-                  className="px-4 py-2 rounded-lg font-semibold transition-colors bg-blue-600 dark:bg-red-600 text-white hover:bg-blue-700 dark:hover:bg-red-700"
-                >
-                  <Edit2 size={18} />
-                </button>
+                <>
+                  <button
+                    onClick={() => setShowOnboarding(true)}
+                    className="px-4 py-2 rounded-lg font-semibold transition-colors bg-purple-600 dark:bg-purple-700 text-white hover:bg-purple-700 dark:hover:bg-purple-800 flex items-center gap-2"
+                    title="Profile Setup Guide"
+                  >
+                    <Sparkles size={18} />
+                    Setup Guide
+                  </button>
+                  <button
+                    onClick={() => setEditMode(true)}
+                    className="px-4 py-2 rounded-lg font-semibold transition-colors bg-blue-600 dark:bg-red-600 text-white hover:bg-blue-700 dark:hover:bg-red-700 flex items-center gap-2"
+                  >
+                    <Edit2 size={18} />
+                    Edit Profile
+                  </button>
+                </>
               )}
             </div>
           )}
@@ -494,13 +798,13 @@ export default function TalentProfilePage() {
           <div className="mt-8 flex flex-col md:flex-row gap-8 items-start">
             {/* Avatar Section */}
             <div className="relative group">
-              <div className="w-40 h-40 md:w-48 md:h-48 rounded-full overflow-hidden border-4 border-gray-200 dark:border-gray-700 shadow-lg bg-gray-100 dark:bg-gray-800">
-                <SafeAvatarImage
-                  src={editMode && editData.avatarUrl ? editData.avatarUrl : talent.avatarUrl}
-                  alt={talent.name}
-                  className="w-full h-full object-cover"
-                />
-              </div>
+                <div className="w-40 h-40 md:w-48 md:h-48 rounded-full overflow-hidden border-4 border-gray-200 dark:border-gray-700 shadow-lg bg-gray-100 dark:bg-gray-800">
+                  <SafeAvatarImage
+                    src={editMode && editData.avatarUrl ? editData.avatarUrl : talent.avatarUrl}
+                    alt={talent.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
               {editMode && isOwnProfile && (
                 <div className="absolute inset-0 rounded-full bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                   <label className="cursor-pointer flex flex-col items-center gap-2">
@@ -533,9 +837,93 @@ export default function TalentProfilePage() {
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                   <div className="flex items-center gap-3 mb-2">
-                    <span className="px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-700 dark:bg-red-900/30 dark:text-red-300 uppercase tracking-wider">
-                      {talent.category}
-                    </span>
+                      {editMode && isOwnProfile ? (
+                        <div className="relative">
+                          <button
+                            onClick={() => setCategoryOpen(v => !v)}
+                            className="px-3 py-1.5 rounded-full text-xs font-bold bg-blue-100 text-blue-700 dark:bg-red-900/30 dark:text-red-300 uppercase tracking-wider flex items-center gap-2 hover:bg-blue-200 dark:hover:bg-red-900/50 transition-colors"
+                          >
+                            {(() => {
+                              const sel = categories.find(c => c.id === editData.categoryId);
+                              if (sel) {
+                                return (
+                                  <>
+                                    {getCategoryIcon((sel as any).icon)}
+                                    <span>{sel.name}</span>
+                                  </>
+                                );
+                              }
+                              return <span>Select category</span>;
+                            })()}
+                            <ChevronDown size={12} className={`transition-transform ${categoryOpen ? 'rotate-180' : ''}`} />
+                          </button>
+                          {categoryOpen && (
+                            <div className="absolute z-50 mt-2 w-72 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-xl overflow-hidden">
+                              <div className="p-2 border-b border-gray-100 dark:border-gray-800">
+                                <input
+                                  value={categorySearch}
+                                  onChange={(e) => setCategorySearch(e.target.value)}
+                                  placeholder="Search categories..."
+                                  className="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-red-500 text-gray-900 dark:text-white"
+                                  autoFocus
+                                />
+                              </div>
+                              <div className="max-h-64 overflow-auto p-1">
+                                {(categories || getCategoryData())
+                                  .filter(cat => cat.name.toLowerCase().includes(categorySearch.toLowerCase()) || cat.subcategories.some(sc => sc.name.toLowerCase().includes(categorySearch.toLowerCase())))
+                                  .map(cat => (
+                                    <div key={cat.id}>
+                                      <button
+                                        onClick={() => {
+                                          setEditData(prev => ({ ...prev, categoryId: cat.id, subcategoryId: null }));
+                                          if (cat.subcategories.length === 0) {
+                                            setCategoryOpen(false);
+                                            setCategorySearch('');
+                                          }
+                                        }}
+                                        className={`w-full text-left text-sm font-semibold px-3 py-2 rounded-lg flex items-center gap-2.5 transition-colors ${
+                                          editData.categoryId === cat.id && !editData.subcategoryId
+                                            ? 'bg-blue-50 dark:bg-red-900/30 text-blue-700 dark:text-red-300'
+                                            : 'hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-900 dark:text-white'
+                                        }`}
+                                      >
+                                        <span className="text-blue-600 dark:text-red-400">{getCategoryIcon((cat as any).icon)}</span>
+                                        <span>{cat.name}</span>
+                                      </button>
+                                      {(cat.subcategories || []).length > 0 && (
+                                        <div className="ml-4 pl-3 border-l-2 border-gray-100 dark:border-gray-800 mb-1">
+                                          {(cat.subcategories || [])
+                                            .filter(sub => !categorySearch || sub.name.toLowerCase().includes(categorySearch.toLowerCase()) || cat.name.toLowerCase().includes(categorySearch.toLowerCase()))
+                                            .map(sub => (
+                                            <button
+                                              key={sub.id}
+                                              onClick={() => {
+                                                setEditData(prev => ({ ...prev, categoryId: cat.id, subcategoryId: sub.id }));
+                                                setCategoryOpen(false);
+                                                setCategorySearch('');
+                                              }}
+                                              className={`w-full text-left text-xs px-3 py-1.5 rounded-md transition-colors ${
+                                                editData.subcategoryId === sub.id
+                                                  ? 'bg-blue-50 dark:bg-red-900/20 text-blue-700 dark:text-red-300 font-semibold'
+                                                  : 'hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400'
+                                              }`}
+                                            >
+                                              {sub.name}
+                                            </button>
+                                          ))}
+                                        </div>
+                                      )}
+                                    </div>
+                                  ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      ) : (
+                        <button onClick={handleCategoryClick} className="px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-700 dark:bg-red-900/30 dark:text-red-300 uppercase tracking-wider">
+                          {talent.category}
+                        </button>
+                      )}
                     {socialProof.isPopular && (
                       <span className="flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-700 dark:bg-red-900/30 dark:text-red-300 uppercase tracking-wider">
                         <Sparkles size={12} /> {socialProof.badge}
@@ -546,8 +934,8 @@ export default function TalentProfilePage() {
                     {editMode ? (
                       <input
                         type="text"
-                        value={editData.name || talent.name}
-                        onChange={(e) => setEditData({ ...editData, name: e.target.value })}
+                        value={editData.name}
+                        onChange={(e) => setEditData(prev => ({ ...prev, name: e.target.value }))}
                         className="bg-transparent border-b-2 border-blue-500 dark:border-red-500 outline-none w-full"
                       />
                     ) : (
@@ -555,33 +943,41 @@ export default function TalentProfilePage() {
                     )}
                   </h1>
                   <div className="flex flex-wrap items-center gap-4 mt-3 text-gray-600 dark:text-gray-400">
-                    <button onClick={handleCategoryClick} className="flex items-center gap-1.5 hover:text-blue-600 dark:hover:text-red-400 transition-colors">
-                      <Briefcase size={18} />
-                      {editMode ? (
+                    {editMode ? (
+                      <div className="flex items-center gap-1.5">
+                        <Briefcase size={18} />
                         <input
                           type="text"
-                          value={editData.role || talent.role}
-                          onChange={(e) => setEditData({ ...editData, role: e.target.value })}
-                          className="bg-transparent border-b border-blue-500 dark:border-red-500 outline-none font-medium"
+                          value={editData.role}
+                          onChange={(e) => setEditData(prev => ({ ...prev, role: e.target.value }))}
+                          className="bg-transparent border-b border-blue-500 dark:border-red-500 outline-none font-medium text-gray-900 dark:text-gray-100"
+                          placeholder="Your role / title"
                         />
-                      ) : (
-                        <span className="font-medium">{talent.role}</span>
-                      )}
-                    </button>
+                      </div>
+                    ) : (
+                      <button onClick={handleCategoryClick} className="flex items-center gap-1.5 hover:text-blue-600 dark:hover:text-red-400 transition-colors">
+                        <Briefcase size={18} />
+                        <span className="font-medium">{talent.role || talent.subcategory || talent.category || 'Talent'}</span>
+                      </button>
+                    )}
                     <span className="w-1 h-1 bg-gray-300 dark:bg-gray-600 rounded-full"></span>
-                    <button onClick={handleLocationClick} className="flex items-center gap-1.5 hover:text-blue-600 dark:hover:text-red-400 transition-colors">
-                      <MapPin size={18} />
-                      {editMode ? (
-                        <input
-                          type="text"
-                          value={editData.location || talent.location}
-                          onChange={(e) => setEditData({ ...editData, location: e.target.value })}
-                          className="bg-transparent border-b border-blue-500 dark:border-red-500 outline-none font-medium"
-                        />
-                      ) : (
+                    {editMode ? (
+                      <div className="flex items-center gap-1.5">
+                        <MapPin size={18} />
+                        <div className="w-64">
+                          <LocationAutocomplete
+                            value={editData.location}
+                            onChange={(v) => setEditData(prev => ({ ...prev, location: v }))}
+                          />
+                        </div>
+                      </div>
+                    ) : (
+                      <button onClick={handleLocationClick} className="flex items-center gap-1.5 hover:text-blue-600 dark:hover:text-red-400 transition-colors">
+                        <MapPin size={18} />
                         <span className="font-medium">{talent.location}</span>
-                      )}
-                    </button>
+                      </button>
+                    )}
+
                   </div>
                 </div>
 
@@ -610,6 +1006,25 @@ export default function TalentProfilePage() {
                       </span>
                     )}
                   </button>
+
+                  {user?.role === 'admin' && (
+                    <>
+                      <button
+                        onClick={() => router.push(`/admin/users/${talentUserId}`)}
+                        className="flex-1 md:flex-none px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-xs font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2"
+                      >
+                        <Wrench size={14} />
+                        Admin: User
+                      </button>
+                      <button
+                        onClick={() => router.push(`/admin/reports?userId=${encodeURIComponent(talentUserId)}`)}
+                        className="flex-1 md:flex-none px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-xs font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2"
+                      >
+                        <Flag size={14} />
+                        Admin: Reports
+                      </button>
+                    </>
+                  )}
                 </div>
               </div>
 
@@ -683,7 +1098,56 @@ export default function TalentProfilePage() {
       </div>
 
       {/* Main Content Grid */}
+      <div
+        className="relative transition-all duration-300"
+        style={resolveContentBgStyle(editMode ? editData.contentBackground : (data?.talent as any)?.contentBackground)}
+      >
+        {/* Content Background Picker (edit mode) */}
+        {editMode && isOwnProfile && (
+          <div className="container mx-auto px-4 pt-6 pb-2">
+            <div className="flex items-center gap-3 mb-2">
+              <Palette size={16} className="text-blue-500 dark:text-red-500" />
+              <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">Section Background</span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {contentBgPresets.map((preset) => {
+                const isActive = (editData.contentBackground === preset.id) || (!editData.contentBackground && preset.id === 'default');
+                const style: any = {};
+                if ((preset as any).pattern) {
+                  const layers: string[] = [];
+                  if ((preset as any).gradient) layers.push((preset as any).gradient);
+                  layers.push((preset as any).pattern);
+                  style.backgroundImage = layers.join(', ');
+                  style.backgroundSize = 'auto, 24px 24px';
+                } else if ((preset as any).gradient) {
+                  style.backgroundImage = (preset as any).gradient;
+                } else if (preset.id === 'default') {
+                  style.backgroundColor = '#f9fafb';
+                }
+
+                return (
+                  <button
+                    key={preset.id}
+                    onClick={() => setEditData(prev => ({ ...prev, contentBackground: preset.id === 'default' ? null : preset.id }))}
+                    className={`h-8 w-16 rounded-lg border-2 text-xs font-medium flex items-center justify-center transition-all ${
+                      isActive
+                        ? 'border-blue-500 dark:border-red-500 ring-2 ring-blue-300 dark:ring-red-400'
+                        : 'border-gray-200 dark:border-gray-700 hover:border-gray-400'
+                    }`}
+                    style={style}
+                    title={preset.label}
+                  >
+                    {preset.id === 'default' && <span className="text-gray-500">None</span>}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
       <div className="container mx-auto px-4 py-12">
+        {!hideContent && (
+        <>
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           
           {/* Left Column (Content) */}
@@ -725,14 +1189,14 @@ export default function TalentProfilePage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {talent.portfolio.map((item: Talent['portfolio'][0], index: number) => (
                         <button
-                          key={item.url}
+                          key={item.id ?? `${item.mediaUrl}-${index}`}
                           onClick={() => openGallery(index)}
                           className="group relative aspect-video rounded-2xl overflow-hidden bg-white dark:bg-gray-800 shadow-md hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-700"
                         >
                           {/* Media Content */}
                           {item.type === 'image' && (
                             <Image
-                              src={item.thumbnail || item.url}
+                              src={item.thumbnail || item.mediaUrl}
                               alt={item.title}
                               fill
                               className="object-cover group-hover:scale-105 transition-transform duration-500"
@@ -862,53 +1326,34 @@ export default function TalentProfilePage() {
                 {(editData.skills || []).map((skill, idx) => (
                   <div key={idx} className={`px-3 py-1.5 rounded-lg text-sm font-medium flex items-center gap-2 ${
                     editMode && isOwnProfile
-                      ? 'bg-blue-100 dark:bg-red-900/30 text-blue-700 dark:text-red-300 cursor-pointer hover:bg-blue-200 dark:hover:bg-red-900/50'
-                      : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-blue-100 hover:text-blue-700 dark:hover:bg-red-900/50 dark:hover:text-red-300'
+                      ? 'bg-blue-100 dark:bg-red-900/30 text-blue-700 dark:text-red-300'
+                      : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
                   } transition-colors`}>
-                    {skill}
-                    {editMode && isOwnProfile && (
-                      <button
-                        onClick={() => setEditData(prev => ({ ...prev, skills: prev.skills?.filter(s => s !== skill) }))}
-                        className="ml-1 text-lg leading-none opacity-70 hover:opacity-100"
-                      >
-                        ×
+                    {editMode && isOwnProfile ? (
+                      <>
+                        <span>{skill}</span>
+                        <button
+                          onClick={() => setEditData(prev => ({ ...prev, skills: prev.skills?.filter(s => s !== skill) }))}
+                          className="ml-1 text-lg leading-none opacity-70 hover:opacity-100"
+                        >
+                          ×
+                        </button>
+                      </>
+                    ) : (
+                      <button onClick={() => handleSkillClick(skill)} className="text-left">
+                        {skill}
                       </button>
                     )}
                   </div>
                 ))}
               </div>
               {editMode && isOwnProfile && (
-                <div className="flex gap-2 mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
-                  <input
-                    type="text"
-                    value={newSkill}
-                    onChange={(e) => setNewSkill(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && newSkill.trim()) {
-                        setEditData(prev => ({
-                          ...prev,
-                          skills: [...(prev.skills || []), newSkill.trim()]
-                        }));
-                        setNewSkill('');
-                      }
-                    }}
-                    placeholder="Add skill (Enter to add)"
-                    className="flex-1 px-3 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-red-500"
+                <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
+                  <SkillMultiSelect
+                    value={editData.skills || []}
+                    onChange={(vals) => setEditData(prev => ({ ...prev, skills: vals }))}
+                    placeholder="Add or search skills..."
                   />
-                  <button
-                    onClick={() => {
-                      if (newSkill.trim()) {
-                        setEditData(prev => ({
-                          ...prev,
-                          skills: [...(prev.skills || []), newSkill.trim()]
-                        }));
-                        setNewSkill('');
-                      }
-                    }}
-                    className="px-3 py-2 text-sm font-semibold bg-blue-600 dark:bg-red-600 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-red-700 transition-colors"
-                  >
-                    Add
-                  </button>
                 </div>
               )}
             </div>
@@ -929,19 +1374,19 @@ export default function TalentProfilePage() {
                 <div className="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-700">
                   <span className="text-gray-500 dark:text-gray-400">Gender</span>
                   {editMode && isOwnProfile ? (
-                    <select
-                      value={editData.gender || ''}
-                      onChange={(e) => setEditData(prev => ({ ...prev, gender: e.target.value }))}
-                      className="px-3 py-1 text-sm border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-red-500"
-                    >
-                      <option value="">Select</option>
-                      <option value="MALE">Male</option>
-                      <option value="FEMALE">Female</option>
-                      <option value="NON_BINARY">Non-Binary</option>
-                      <option value="PREFER_NOT_TO_SAY">Prefer Not To Say</option>
-                    </select>
+                    <div className="w-48">
+                      <CharacteristicSelect
+                        options={genderOptions}
+                        value={editData.gender}
+                        onChange={(v) => setEditData(prev => ({ ...prev, gender: (v as string) || '' }))}
+                        placeholder="Select gender"
+                        multi={false}
+                      />
+                    </div>
                   ) : (
-                    <span className="font-medium text-gray-900 dark:text-white capitalize">{talent.gender || '-'}</span>
+                    <button onClick={() => handleCharacteristicClick(talent.gender, 'gender')} className="font-medium text-gray-900 dark:text-white capitalize text-left hover:text-blue-600 dark:hover:text-red-400 transition-colors cursor-pointer">
+                      {talent.gender || '-'}
+                    </button>
                   )}
                 </div>
 
@@ -958,7 +1403,7 @@ export default function TalentProfilePage() {
                       max="100"
                     />
                   ) : (
-                    <span className="font-medium text-gray-900 dark:text-white">{talent.age ? `${talent.age} Years` : '-'}</span>
+                    <button onClick={() => talent.age ? handleCharacteristicClick(String(talent.age), 'minAge') : undefined} className="font-medium text-gray-900 dark:text-white text-left hover:text-blue-600 dark:hover:text-red-400 transition-colors cursor-pointer">{talent.age ? `${talent.age} Years` : '-'}</button>
                   )}
                 </div>
 
@@ -967,20 +1412,19 @@ export default function TalentProfilePage() {
                   <div className="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-700">
                     <span className="text-gray-500 dark:text-gray-400">Ethnicity</span>
                     {editMode && isOwnProfile ? (
-                      <select
-                        value={editData.ethnicity || ''}
-                        onChange={(e) => setEditData(prev => ({ ...prev, ethnicity: e.target.value }))}
-                        className="px-3 py-1 text-sm border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-red-500"
-                      >
-                        <option value="">Select</option>
-                        <option value="WHITE_CAUCASIAN">White / Caucasian</option>
-                        <option value="BLACK_AFRICAN">Black / African</option>
-                        <option value="ASIAN">Asian</option>
-                        <option value="HISPANIC_LATINO">Hispanic / Latino</option>
-                        <option value="MIXED_MULTIRACIAL">Mixed / Multiracial</option>
-                      </select>
+                      <div className="w-48">
+                        <CharacteristicSelect
+                          options={ethnicityOptions}
+                          value={editData.ethnicity}
+                          onChange={(v) => setEditData(prev => ({ ...prev, ethnicity: (v as string) || '' }))}
+                          placeholder="Select ethnicity"
+                          multi={false}
+                        />
+                      </div>
                     ) : (
-                      <span className="font-medium text-gray-900 dark:text-white capitalize">{talent.ethnicity?.replace('_', ' ') || '-'}</span>
+                      <button onClick={() => handleCharacteristicClick(talent.ethnicity, 'ethnicity')} className="font-medium text-gray-900 dark:text-white text-left hover:text-blue-600 dark:hover:text-red-400 transition-colors cursor-pointer">
+                        {talent.ethnicity || '-'}
+                      </button>
                     )}
                   </div>
                 ) : null}
@@ -1002,7 +1446,7 @@ export default function TalentProfilePage() {
                         <span className="text-sm text-gray-600 dark:text-gray-400">cm</span>
                       </div>
                     ) : (
-                      <span className="font-medium text-gray-900 dark:text-white">{talent.height && talent.height > 0 ? `${talent.height} cm` : '-'}</span>
+                      <button onClick={() => talent.height && talent.height > 0 ? handleCharacteristicClick(String(talent.height), 'minHeight') : undefined} className="font-medium text-gray-900 dark:text-white text-left hover:text-blue-600 dark:hover:text-red-400 transition-colors cursor-pointer">{talent.height && talent.height > 0 ? `${talent.height} cm` : '-'}</button>
                     )}
                   </div>
                 ) : null}
@@ -1012,15 +1456,19 @@ export default function TalentProfilePage() {
                   <div className="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-700">
                     <span className="text-gray-500 dark:text-gray-400">Eye Color</span>
                     {editMode && isOwnProfile ? (
-                      <input
-                        type="text"
-                        value={editData.eyeColor || ''}
-                        onChange={(e) => setEditData(prev => ({ ...prev, eyeColor: e.target.value }))}
-                        placeholder="e.g., Brown"
-                        className="px-3 py-1 text-sm border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-red-500"
-                      />
+                      <div className="w-48">
+                        <CharacteristicSelect
+                          options={eyeColorOptions}
+                          value={editData.eyeColor}
+                          onChange={(v) => setEditData(prev => ({ ...prev, eyeColor: (v as string) || '' }))}
+                          placeholder="Select eye color"
+                          multi={false}
+                        />
+                      </div>
                     ) : (
-                      <span className="font-medium text-gray-900 dark:text-white capitalize">{talent.eyeColor || '-'}</span>
+                      <button onClick={() => handleCharacteristicClick(talent.eyeColor, 'eyeColor')} className="font-medium text-gray-900 dark:text-white text-left hover:text-blue-600 dark:hover:text-red-400 transition-colors cursor-pointer">
+                        {talent.eyeColor || '-'}
+                      </button>
                     )}
                   </div>
                 ) : null}
@@ -1030,15 +1478,19 @@ export default function TalentProfilePage() {
                   <div className="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-700 last:border-0">
                     <span className="text-gray-500 dark:text-gray-400">Hair Color</span>
                     {editMode && isOwnProfile ? (
-                      <input
-                        type="text"
-                        value={editData.hairColor || ''}
-                        onChange={(e) => setEditData(prev => ({ ...prev, hairColor: e.target.value }))}
-                        placeholder="e.g., Black"
-                        className="px-3 py-1 text-sm border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-red-500"
-                      />
+                      <div className="w-48">
+                        <CharacteristicSelect
+                          options={hairColorOptions}
+                          value={editData.hairColor}
+                          onChange={(v) => setEditData(prev => ({ ...prev, hairColor: (v as string) || '' }))}
+                          placeholder="Select hair color"
+                          multi={false}
+                        />
+                      </div>
                     ) : (
-                      <span className="font-medium text-gray-900 dark:text-white capitalize">{talent.hairColor || '-'}</span>
+                      <button onClick={() => handleCharacteristicClick(talent.hairColor, 'hairColor')} className="font-medium text-gray-900 dark:text-white text-left hover:text-blue-600 dark:hover:text-red-400 transition-colors cursor-pointer">
+                        {talent.hairColor || '-'}
+                      </button>
                     )}
                   </div>
                 ) : null}
@@ -1048,21 +1500,19 @@ export default function TalentProfilePage() {
                   <div className="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-700 last:border-0">
                     <span className="text-gray-500 dark:text-gray-400">Body Type</span>
                     {editMode && isOwnProfile ? (
-                      <select
-                        value={editData.bodyType || ''}
-                        onChange={(e) => setEditData(prev => ({ ...prev, bodyType: e.target.value }))}
-                        className="px-3 py-1 text-sm border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-red-500"
-                      >
-                        <option value="">Select</option>
-                        <option value="SLIM">Slim</option>
-                        <option value="ATHLETIC">Athletic</option>
-                        <option value="CURVY">Curvy</option>
-                        <option value="AVERAGE">Average</option>
-                        <option value="MUSCULAR">Muscular</option>
-                        <option value="PLUS_SIZE">Plus Size</option>
-                      </select>
+                      <div className="w-48">
+                        <CharacteristicSelect
+                          options={bodyTypeOptions}
+                          value={editData.bodyType}
+                          onChange={(v) => setEditData(prev => ({ ...prev, bodyType: (v as string) || '' }))}
+                          placeholder="Select body type"
+                          multi={false}
+                        />
+                      </div>
                     ) : (
-                      <span className="font-medium text-gray-900 dark:text-white capitalize">{talent.bodyType?.toLowerCase().replace('_', ' ') || '-'}</span>
+                      <button onClick={() => handleCharacteristicClick(talent.bodyType, 'bodyType')} className="font-medium text-gray-900 dark:text-white text-left capitalize hover:text-blue-600 dark:hover:text-red-400 transition-colors cursor-pointer">
+                        {talent.bodyType || '-'}
+                      </button>
                     )}
                   </div>
                 ) : null}
@@ -1140,59 +1590,41 @@ export default function TalentProfilePage() {
                       key={idx}
                       className={`w-full flex items-center justify-between p-3 rounded-xl transition-colors ${
                         editMode && isOwnProfile
-                          ? 'bg-blue-50 dark:bg-red-900/20 hover:bg-blue-100 dark:hover:bg-red-900/30'
-                          : 'bg-gray-50 dark:bg-gray-700/50 hover:bg-blue-50 dark:hover:bg-red-900/20'
+                          ? 'bg-blue-50 dark:bg-red-900/20'
+                          : 'bg-gray-50 dark:bg-gray-700/50'
                       }`}
                     >
-                      <span className={`font-medium ${editMode && isOwnProfile ? 'text-blue-700 dark:text-red-300' : 'text-gray-700 dark:text-gray-300'}`}>
-                        {language}
-                      </span>
-                      <div className="flex items-center gap-2">
-                        <CheckCircle2 size={16} className="text-green-500" />
-                        {editMode && isOwnProfile && (
-                          <button
-                            onClick={() => setEditData(prev => ({ ...prev, languages: prev.languages?.filter(l => l !== language) }))}
-                            className="text-lg leading-none opacity-70 hover:opacity-100 text-red-500 ml-2"
-                          >
-                            ×
-                          </button>
-                        )}
-                      </div>
+                      {editMode && isOwnProfile ? (
+                        <>
+                          <span className={`font-medium text-blue-700 dark:text-red-300`}>{language}</span>
+                          <div className="flex items-center gap-2">
+                            <CheckCircle2 size={16} className="text-green-500" />
+                            <button
+                              onClick={() => setEditData(prev => ({ ...prev, languages: prev.languages?.filter(l => l !== language) }))}
+                              className="text-lg leading-none opacity-70 hover:opacity-100 text-red-500 ml-2"
+                            >
+                              ×
+                            </button>
+                          </div>
+                        </>
+                      ) : (
+                        <button onClick={() => handleLanguageClick(language)} className="w-full text-left font-medium text-gray-700 dark:text-gray-300">
+                          <div className="flex items-center justify-between">
+                            <span>{language}</span>
+                            <CheckCircle2 size={16} className="text-green-500" />
+                          </div>
+                        </button>
+                      )}
                     </div>
                   ))}
                 </div>
                 {editMode && isOwnProfile && (
-                  <div className="flex gap-2 pt-4 border-t border-gray-100 dark:border-gray-700">
-                    <input
-                      type="text"
-                      value={newLanguage}
-                      onChange={(e) => setNewLanguage(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' && newLanguage.trim()) {
-                          setEditData(prev => ({
-                            ...prev,
-                            languages: [...(prev.languages || []), newLanguage.trim()]
-                          }));
-                          setNewLanguage('');
-                        }
-                      }}
-                      placeholder="Add language (Enter to add)"
-                      className="flex-1 px-3 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-red-500"
+                  <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
+                    <LanguageMultiSelect
+                      value={editData.languages || []}
+                      onChange={(vals) => setEditData(prev => ({ ...prev, languages: vals }))}
+                      placeholder="Select languages"
                     />
-                    <button
-                      onClick={() => {
-                        if (newLanguage.trim()) {
-                          setEditData(prev => ({
-                            ...prev,
-                            languages: [...(prev.languages || []), newLanguage.trim()]
-                          }));
-                          setNewLanguage('');
-                        }
-                      }}
-                      className="px-3 py-2 text-sm font-semibold bg-blue-600 dark:bg-red-600 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-red-700 transition-colors"
-                    >
-                      Add
-                    </button>
                   </div>
                 )}
               </div>
@@ -1214,16 +1646,65 @@ export default function TalentProfilePage() {
               </button>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {data.suggestions.map((suggestion) => (
-                <TalentCard key={suggestion.id} talent={suggestion} />
-              ))}
+              {data.suggestions.map((suggestion) => {
+                const ftTalent = {
+                  id: suggestion.id,
+                  user: { name: suggestion.name },
+                  avatarUrl: suggestion.avatarUrl,
+                  category: { name: suggestion.role || suggestion.category || 'Talent' },
+                  skills: suggestion.skills || [],
+                  featuredSkills: (suggestion as any).featuredSkills || []
+                };
+                const mediaItems = ((suggestion as any).mediaItems || suggestion.portfolio || []).map((m: any) => ({
+                  id: m.id || m.mediaUrl,
+                  title: m.title || m.id || '',
+                  mediaUrl: m.mediaUrl || m.videoUrl || m.thumbnail || '',
+                  type: (m.type || m.mediaType || m.kind || 'IMAGE').toString().toUpperCase(),
+                  thumbnail: m.thumbnail || m.thumbnailUrl || undefined
+                }));
+
+                return (
+                  <FeaturedTalentCard
+                    key={suggestion.id}
+                    talent={ftTalent}
+                    mediaItems={mediaItems}
+                    onMediaClick={(item) => window.open(item.mediaUrl, '_blank')}
+                    onProfileClick={() => router.push(`/talent/${suggestion.id}`)}
+                    onSkillClick={(s) => router.push(`/${locale}/hub?q=${encodeURIComponent(s)}`)}
+                  />
+                );
+              })}
             </div>
           </div>
         )}
+        </>
+        )}
       </div>
+      </div> {/* End content background wrapper */}
+
+      {/* Profile Onboarding Guide */}
+      {isOwnProfile && (
+        <ProfileOnboardingGuide
+          isOpen={showOnboarding}
+          onClose={() => setShowOnboarding(false)}
+          onStartEdit={() => setEditMode(true)}
+          profileData={{
+            name: editData.name,
+            role: editData.role,
+            location: editData.location,
+            bio: editData.bio,
+            avatarUrl: editData.avatarUrl,
+            bannerUrl: editData.bannerUrl,
+            categoryId: editData.categoryId,
+            subcategoryId: editData.subcategoryId,
+            skills: editData.skills,
+            languages: editData.languages,
+          }}
+        />
+      )}
 
       {/* Gallery Viewer */}
-      {talent.portfolio && (
+      {!hideContent && talent.portfolio && (
         <GalleryViewer
           isOpen={galleryOpen}
           onClose={() => setGalleryOpen(false)}

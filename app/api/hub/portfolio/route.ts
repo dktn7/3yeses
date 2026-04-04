@@ -58,7 +58,7 @@ export async function GET(req: NextRequest) {
 
     if (categoryId && categoryId !== 'all') {
       // Check if it's a parent category
-      const category = await prisma.category.findUnique({
+      const category = await prisma.talentCategory.findUnique({
         where: { id: categoryId },
         include: { subcategories: true }
       });
@@ -74,7 +74,7 @@ export async function GET(req: NextRequest) {
       } else {
         // It might be a subcategory ID directly (though usually we pass parent ID)
         // Or if the ID passed is actually a subcategory ID
-        const subcategory = await prisma.subcategory.findUnique({
+        const subcategory = await prisma.talentSubcategory.findUnique({
           where: { id: categoryId }
         });
         
@@ -88,12 +88,12 @@ export async function GET(req: NextRequest) {
 
     if (search) {
       // First, check if the search term matches a category or subcategory name
-      const matchingCategory = await prisma.category.findFirst({
+      const matchingCategory = await prisma.talentCategory.findFirst({
         where: { name: { contains: search, mode: 'insensitive' } },
         include: { subcategories: true }
       });
       
-      const matchingSubcategory = await prisma.subcategory.findFirst({
+      const matchingSubcategory = await prisma.talentSubcategory.findFirst({
         where: { name: { contains: search, mode: 'insensitive' } }
       });
       
@@ -284,7 +284,7 @@ export async function GET(req: NextRequest) {
               },
               _count: {
                 select: {
-                  likes: true
+                  profileLikes: true
                 }
               }
             },
@@ -327,21 +327,21 @@ export async function GET(req: NextRequest) {
       return {
         id: item.id,
         title: item.title,
-        url: item.url,
+        mediaUrl: item.mediaUrl,
         type: item.type,
-        thumbnail: undefined, // Thumbnails should be stored separately, not the video URL
+        thumbnail: item.thumbnail || undefined,
         talentProfile: {
-          id: item.talentProfile.id,
+          id: (item.talentProfile as any).userId ?? (item.talentProfile as any).id,
           user: {
-            name: item.talentProfile.user.name,
+            name: (item.talentProfile as any).user?.name || 'Unknown',
           },
           avatarUrl: item.talentProfile.avatarUrl,
           bio: includeBio ? item.talentProfile.bio : undefined,
           category: item.talentProfile.category,
           subcategory: item.talentProfile.subcategory,
         },
-        views: item._count.views,
-        likes: item.talentProfile._count.likes,
+        views: (item._count as any)?.views ?? (item._count as any)?.profileViews ?? 0,
+        likeCount: (item.talentProfile as any)?._count?.likes ?? (item.talentProfile as any)?._count?.profileLikes ?? 0,
         isSponsored: false, // Can add this field to schema later
         createdAt: item.createdAt || new Date(),
       };

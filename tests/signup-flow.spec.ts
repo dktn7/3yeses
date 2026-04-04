@@ -17,7 +17,7 @@ test.describe('Signup Flow - Complete Journey', () => {
   
   test.beforeEach(async ({ page }) => {
     // Navigate to Step 1
-    await page.goto(`${BASE_URL}/${LOCALE}/auth/signup/step-1`);
+    await page.goto(`${BASE_URL}/${LOCALE}/auth/signup/steps/step-1`);
     await page.waitForLoadState('networkidle');
   });
 
@@ -136,7 +136,7 @@ test.describe('Signup Flow - Complete Journey', () => {
       await page.click('button[type="submit"]');
       
       // Should navigate to Step 2
-      await page.waitForURL(`**/${LOCALE}/auth/signup/step-2`);
+      await page.waitForURL(`**/${LOCALE}/auth/signup/steps/step-2`);
       expect(page.url()).toContain('/step-2');
     });
 
@@ -165,7 +165,7 @@ test.describe('Signup Flow - Complete Journey', () => {
       await page.click('button[type="submit"]');
       
       // Should navigate to Step 2
-      await page.waitForURL(`**/${LOCALE}/auth/signup/step-2`);
+      await page.waitForURL(`**/${LOCALE}/auth/signup/steps/step-2`);
       expect(page.url()).toContain('/step-2');
     });
   });
@@ -182,7 +182,7 @@ test.describe('Signup Flow - Complete Journey', () => {
       await page.fill('input[name="password"]', 'TestPass123!');
       await page.check('input[type="checkbox"][name="termsAccepted"]');
       await page.click('button[type="submit"]');
-      await page.waitForURL(`**/${LOCALE}/auth/signup/step-2`);
+      await page.waitForURL(`**/${LOCALE}/auth/signup/steps/step-2`);
     });
 
     test('should display all 21 categories', async ({ page }) => {
@@ -207,7 +207,7 @@ test.describe('Signup Flow - Complete Journey', () => {
 
     test('should show subcategories when category selected', async ({ page }) => {
       // Select Acting category
-      await page.selectOption('select', { label: /Acting/i });
+      await page.selectOption('select', { label: /Acting/i } as any);
       
       // Wait for subcategories to load
       await page.waitForTimeout(500);
@@ -288,7 +288,7 @@ test.describe('Signup Flow - Complete Journey', () => {
       await page.click('button[type="submit"]:has-text("Next")');
       
       // Should navigate to Step 3
-      await page.waitForURL(`**/${LOCALE}/auth/signup/step-3`, { timeout: 5000 });
+      await page.waitForURL(`**/${LOCALE}/auth/signup/steps/step-3`, { timeout: 5000 });
       expect(page.url()).toContain('/step-3');
     });
 
@@ -331,7 +331,7 @@ test.describe('Signup Flow - Complete Journey', () => {
       await page.click('button[type="submit"]');
       
       // Step 2
-      await page.waitForURL(`**/${LOCALE}/auth/signup/step-2`);
+      await page.waitForURL(`**/${LOCALE}/auth/signup/steps/step-2`);
       await page.waitForTimeout(1000);
       await page.selectOption('select', { index: 1 });
       await page.waitForTimeout(500);
@@ -339,7 +339,7 @@ test.describe('Signup Flow - Complete Journey', () => {
       await page.selectOption('select[name*="experience" i]', { index: 1 });
       await page.click('button[type="submit"]:has-text("Next")');
       
-      await page.waitForURL(`**/${LOCALE}/auth/signup/step-3`);
+      await page.waitForURL(`**/${LOCALE}/auth/signup/steps/step-3`);
     });
 
     test('should show required indicator for profile photo', async ({ page }) => {
@@ -374,7 +374,7 @@ test.describe('Signup Flow - Complete Journey', () => {
     test('should show audio upload for music categories', async ({ page }) => {
       // Go back to step 2
       await page.click('button:has-text("Back")');
-      await page.waitForURL(`**/${LOCALE}/auth/signup/step-2`);
+      await page.waitForURL(`**/${LOCALE}/auth/signup/steps/step-2`);
       
       // Select a music category
       await page.waitForTimeout(500);
@@ -382,7 +382,7 @@ test.describe('Signup Flow - Complete Journey', () => {
       
       // Try to select Music & Audio category
       try {
-        await categorySelect.selectOption({ label: /Music.*Audio/i });
+        await categorySelect.selectOption({ label: /Music.*Audio/i } as any);     
       } catch {
         await categorySelect.selectOption({ index: 4 }); // Usually Music is 4th
       }
@@ -392,7 +392,7 @@ test.describe('Signup Flow - Complete Journey', () => {
       await page.selectOption('select[name*="experience" i]', { index: 1 });
       await page.click('button[type="submit"]:has-text("Next")');
       
-      await page.waitForURL(`**/${LOCALE}/auth/signup/step-3`);
+      await page.waitForURL(`**/${LOCALE}/auth/signup/steps/step-3`);
       
       // Should see audio upload section
       const audioSection = page.locator('text=/Audio/i, text=/🎵/');
@@ -429,7 +429,7 @@ test.describe('Signup Flow - Complete Journey', () => {
       const testEmail = `e2e-adult-${timestamp}@test.com`;
       
       // === STEP 1 ===
-      await page.goto(`${BASE_URL}/${LOCALE}/auth/signup/step-1`);
+      await page.goto(`${BASE_URL}/${LOCALE}/auth/signup/steps/step-1`);
       await page.waitForLoadState('networkidle');
       
       // Fill adult account
@@ -444,7 +444,7 @@ test.describe('Signup Flow - Complete Journey', () => {
       await page.click('button[type="submit"]');
       
       // === STEP 2 ===
-      await page.waitForURL(`**/${LOCALE}/auth/signup/step-2`);
+      await page.waitForURL(`**/${LOCALE}/auth/signup/steps/step-2`);
       await page.waitForTimeout(1000);
       
       // Select category
@@ -467,7 +467,7 @@ test.describe('Signup Flow - Complete Journey', () => {
       await page.click('button[type="submit"]:has-text("Next")');
       
       // === STEP 3 ===
-      await page.waitForURL(`**/${LOCALE}/auth/signup/step-3`);
+      await page.waitForURL(`**/${LOCALE}/auth/signup/steps/step-3`);
       
       // Note: File upload requires actual file interaction
       // For now, we'll check that the page loaded correctly
@@ -486,7 +486,7 @@ test.describe('Signup Flow - Complete Journey', () => {
       const parentEmail = `e2e-parent-${timestamp}@test.com`;
       
       // === STEP 1 ===
-      await page.goto(`${BASE_URL}/${LOCALE}/auth/signup/step-1`);
+      await page.goto(`${BASE_URL}/${LOCALE}/auth/signup/steps/step-1`);
       await page.waitForLoadState('networkidle');
       
       // Fill minor account (15 years old)
@@ -509,7 +509,7 @@ test.describe('Signup Flow - Complete Journey', () => {
       await page.click('button[type="submit"]');
       
       // === STEP 2 ===
-      await page.waitForURL(`**/${LOCALE}/auth/signup/step-2`);
+      await page.waitForURL(`**/${LOCALE}/auth/signup/steps/step-2`);
       await page.waitForTimeout(1000);
       
       await page.selectOption('select', { index: 1 });
@@ -519,7 +519,7 @@ test.describe('Signup Flow - Complete Journey', () => {
       await page.click('button[type="submit"]:has-text("Next")');
       
       // === STEP 3 ===
-      await page.waitForURL(`**/${LOCALE}/auth/signup/step-3`);
+      await page.waitForURL(`**/${LOCALE}/auth/signup/steps/step-3`);
       expect(page.url()).toContain('/step-3');
       
       console.log(`✅ Minor signup flow completed successfully for ${parentEmail}`);
@@ -542,7 +542,7 @@ test.describe('Signup Flow - Complete Journey', () => {
       await page.click('button[type="submit"]');
       
       // Complete Step 2
-      await page.waitForURL(`**/${LOCALE}/auth/signup/step-2`);
+      await page.waitForURL(`**/${LOCALE}/auth/signup/steps/step-2`);
       await page.waitForTimeout(1000);
       await page.selectOption('select', { index: 1 });
       await page.waitForTimeout(500);
@@ -551,11 +551,11 @@ test.describe('Signup Flow - Complete Journey', () => {
       await page.click('button[type="submit"]:has-text("Next")');
       
       // Go to Step 3
-      await page.waitForURL(`**/${LOCALE}/auth/signup/step-3`);
+      await page.waitForURL(`**/${LOCALE}/auth/signup/steps/step-3`);
       
       // Navigate back to Step 2
       await page.click('button:has-text("Back")');
-      await page.waitForURL(`**/${LOCALE}/auth/signup/step-2`);
+      await page.waitForURL(`**/${LOCALE}/auth/signup/steps/step-2`);
       
       // Check if location is still filled
       const locationInput = page.locator('input[placeholder*="location" i]');
@@ -564,7 +564,7 @@ test.describe('Signup Flow - Complete Journey', () => {
       
       // Navigate back to Step 1
       await page.click('button:has-text("Back")');
-      await page.waitForURL(`**/${LOCALE}/auth/signup/step-1`);
+      await page.waitForURL(`**/${LOCALE}/auth/signup/steps/step-1`);
       
       // Check if email is still filled
       const emailInput = page.locator('input[name="email"]');

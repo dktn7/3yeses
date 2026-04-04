@@ -1,17 +1,16 @@
 'use client';
 
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
-import { Heart, User, Play, Music, Image as ImageIcon, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { User, Play, Music, Image as ImageIcon, ChevronLeft, ChevronRight } from 'lucide-react';
 import SwoopingTick from './SwoopingTick';
 import { isAudioUrl, shouldBeUnoptimized } from '@/lib/image-utils';
 import MediaThumbnailFallback from './MediaThumbnailFallback';
-
 interface MediaItem {
   id: string;
   title: string;
-  url: string;
+  mediaUrl: string;
   type: 'IMAGE' | 'VIDEO' | 'AUDIO';
   thumbnail?: string;
 }
@@ -40,6 +39,8 @@ interface FeaturedTalentCardProps {
 
 export default function FeaturedTalentCard({ talent, mediaItems, onMediaClick, onProfileClick, onSkillClick, priority = false }: FeaturedTalentCardProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+  const [isFeatured, setIsFeatured] = useState(false);
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollContainerRef.current) {
@@ -71,13 +72,13 @@ export default function FeaturedTalentCard({ talent, mediaItems, onMediaClick, o
     
     const type = item.type.toUpperCase();
     if (type === 'VIDEO') {
-      const embedMatch = item.url.match(/youtube\.com\/embed\/([a-zA-Z0-9_-]+)/);
+      const embedMatch = item.mediaUrl.match(/youtube\.com\/embed\/([a-zA-Z0-9_-]+)/);
       if (embedMatch && embedMatch[1]) return `https://img.youtube.com/vi/${embedMatch[1]}/hqdefault.jpg`;
       
-      const watchMatch = item.url.match(/youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/);
+      const watchMatch = item.mediaUrl.match(/youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/);
       if (watchMatch && watchMatch[1]) return `https://img.youtube.com/vi/${watchMatch[1]}/hqdefault.jpg`;
 
-      const shortMatch = item.url.match(/youtu\.be\/([a-zA-Z0-9_-]+)/);
+      const shortMatch = item.mediaUrl.match(/youtu\.be\/([a-zA-Z0-9_-]+)/);
       if (shortMatch && shortMatch[1]) return `https://img.youtube.com/vi/${shortMatch[1]}/hqdefault.jpg`;
 
       // Return undefined if we can't extract a thumbnail from the video URL
@@ -85,13 +86,13 @@ export default function FeaturedTalentCard({ talent, mediaItems, onMediaClick, o
     }
     
     // Don't return audio URLs as thumbnails
-    if (isAudioUrl(item.url)) return undefined;
+    if (isAudioUrl(item.mediaUrl)) return undefined;
     
-    return item.url;
+    return item.mediaUrl;
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl overflow-hidden border-2 border-gray-100 dark:border-gray-700 flex flex-col w-full aspect-[4/5] hover:scale-[1.02] transition-transform duration-300">
+    <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl overflow-hidden border-2 border-gray-100 dark:border-gray-700 flex flex-col w-full max-w-xs min-h-[320px] hover:scale-[1.01] transition-transform duration-300">
       {/* Header */}
       <div className="p-5 flex items-center gap-4 border-b border-gray-100 dark:border-gray-700">
         <button
@@ -137,8 +138,13 @@ export default function FeaturedTalentCard({ talent, mediaItems, onMediaClick, o
             {talent.category?.name || 'Talent'}
           </p>
         </div>
-        <button className="p-2 text-gray-400 hover:text-red-500 transition-colors rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
-          <Heart className="w-5 h-5" />
+        <button
+          type="button"
+          onClick={() => setIsFeatured((prev) => !prev)}
+          aria-pressed={isFeatured}
+          className="p-2 text-gray-400 hover:text-red-500 transition-colors rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+        >
+          <SwoopingTick size={20} hovered={isFeatured} variant="toggle" />
         </button>
       </div>
 
@@ -168,7 +174,7 @@ export default function FeaturedTalentCard({ talent, mediaItems, onMediaClick, o
       })()}
 
       {/* Media Carousel */}
-      <div className="relative group/carousel bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900/50 dark:to-gray-800/50 flex-1 overflow-hidden">
+      <div className="relative group/carousel bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900/50 dark:to-gray-800/50 flex-none h-[210px] overflow-hidden">
         {/* Left Arrow */}
         <button 
           onClick={(e) => { e.preventDefault(); scroll('left'); }}
@@ -186,7 +192,7 @@ export default function FeaturedTalentCard({ talent, mediaItems, onMediaClick, o
           {mediaItems.map((item, index) => {
             const TypeIcon = getTypeIcon(item.type);
             const isVideo = item.type.toUpperCase() === 'VIDEO';
-            const isYouTube = isVideo && (item.url.includes('youtube.com') || item.url.includes('youtu.be'));
+            const isYouTube = isVideo && (item.mediaUrl.includes('youtube.com') || item.mediaUrl.includes('youtu.be'));
             const thumbnail = getThumbnail(item);
 
             return (
@@ -197,7 +203,7 @@ export default function FeaturedTalentCard({ talent, mediaItems, onMediaClick, o
               >
                 {isVideo && !isYouTube ? (
                   <video
-                    src={item.url}
+                    src={item.mediaUrl}
                     poster={item.thumbnail}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                     muted
@@ -241,13 +247,17 @@ export default function FeaturedTalentCard({ talent, mediaItems, onMediaClick, o
 
       {/* Footer */}
       <div className="p-4 border-t border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800">
-        <Link
-          href={`/talent/${talent.id}`}
+        <button
+          onClick={() => {
+            if (onProfileClick) return onProfileClick(talent as any);
+            return router.push(`/talent/${(talent as any).userId ?? talent.id}`);
+          }}
           className="block w-full py-2 bg-gradient-to-r from-primary-blue to-blue-600 dark:from-accent-red dark:to-red-600 text-white text-center font-semibold rounded-full hover:shadow-lg transition-all text-sm"
         >
           View Full Profile
-        </Link>
+        </button>
       </div>
+
     </div>
   );
 }

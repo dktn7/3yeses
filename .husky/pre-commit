@@ -1,0 +1,5 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh" || true
+
+# Run local secret scan before committing
+npm run secret-scan:local

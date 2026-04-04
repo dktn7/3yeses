@@ -26,13 +26,12 @@ export async function GET() {
         },
       },
       orderBy: [
-        { rating: 'desc' },
         { viewCount: 'desc' },
       ],
     });
 
     // Fetch categories with talent counts
-    const categories = await prisma.category.findMany({
+    const categories = await prisma.talentCategory.findMany({
       include: {
         _count: {
           select: {
@@ -52,15 +51,15 @@ export async function GET() {
     });
 
     const landingData = {
-      featuredTalent: featuredTalent.map(talent => ({
-        id: talent.id,
-        userId: talent.userId || talent.user?.id,
-        name: talent.user?.name || null,
-        roleDescription: talent.roleDescription,
+      featuredTalent: featuredTalent.map((talent) => ({
+        id: (talent as any).id ?? (talent as any).userId,
+        userId: (talent as any).userId ?? (talent as any).user?.id,
+        name: (talent as any).user?.name || null,
+        performerTitle: talent.performerTitle,
         bio: talent.bio,
         location: talent.location,
-        experience: talent.experience,
-        rating: talent.rating,
+        experienceLevel: talent.experienceLevel,
+        
         avatarUrl: talent.avatarUrl,
         skills: talent.skills,
         category: talent.category?.name,

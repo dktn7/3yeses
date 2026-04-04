@@ -13,11 +13,16 @@ interface CountryOption {
   code: string;
 }
 
+import Image from 'next/image';
+
 const CountryFlag = ({ country }: { country: Country }) => (
-  <img
+  <Image
     src={`https://purecatamphetamine.github.io/country-flag-icons/3x2/${country}.svg`}
     alt={country}
-    className="w-5 h-3.5 rounded-sm object-cover"
+    width={20}
+    height={14}
+    unoptimized
+    className="rounded-sm object-cover"
   />
 );
 
@@ -185,7 +190,7 @@ export default function CustomPhoneInput({
         placeholder={placeholder}
         className={`flex-1 px-4 py-3 rounded-r-lg border ${
           error ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
-        } bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all border-l-0`}
+        } bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-red-500 focus:border-blue-500 dark:focus:border-red-500 transition-all border-l-0`}
       />
     </div>
   );

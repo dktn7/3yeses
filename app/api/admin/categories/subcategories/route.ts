@@ -23,7 +23,7 @@ async function createSubcategory(request: NextRequest) {
     }
 
     // Check if subcategory already exists in this category
-    const existing = await prisma.subcategory.findFirst({
+    const existing = await prisma.talentSubcategory.findFirst({
       where: {
         name: name.trim(),
         categoryId,
@@ -37,7 +37,7 @@ async function createSubcategory(request: NextRequest) {
       );
     }
 
-    const subcategory = await prisma.subcategory.create({
+    const subcategory = await prisma.talentSubcategory.create({
       data: {
         name: name.trim(),
         categoryId,

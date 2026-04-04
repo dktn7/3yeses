@@ -9,11 +9,11 @@ import CommentsSection from './CommentsSection';
 
 interface GalleryItem {
   id: string;
-  url: string;
+  mediaUrl: string;
   title: string;
   type: 'video' | 'image' | 'audio';
   thumbnail?: string;
-  likes?: number;
+  likeCount?: number;
 }
 
 interface GalleryViewerProps {
@@ -140,8 +140,8 @@ export default function GalleryViewer({ items, initialIndex, isOpen, onClose }: 
 
   useEffect(() => {
     setIsLiked(false);
-    setLikesCount(currentItem?.likes || 0);
-  }, [currentItem?.id, currentItem?.likes]);
+    setLikesCount(currentItem?.likeCount || 0);
+  }, [currentItem?.id, currentItem?.likeCount]);
 
   if (!isOpen) return null;
 
@@ -158,7 +158,7 @@ export default function GalleryViewer({ items, initialIndex, isOpen, onClose }: 
       });
       if (res.ok) {
         const data = await res.json();
-        if (typeof data.likes === 'number') setLikesCount(data.likes);
+        if (typeof data.likeCount === 'number') setLikesCount(data.likeCount);
       }
     } catch (error) {
       console.error('Failed to like portfolio item:', error);
@@ -174,26 +174,26 @@ export default function GalleryViewer({ items, initialIndex, isOpen, onClose }: 
     switch (currentItem.type) {
       case 'video':
         return (
-          <div key={`video-${currentIndex}`} className="w-full h-full flex items-center justify-center">
-            <VideoPlayer url={currentItem.url} type="VIDEO" />
+          <div key={`video-${currentIndex}`} className="flex items-center justify-center max-w-full max-h-full">
+            <VideoPlayer url={currentItem.mediaUrl} type="VIDEO" />
           </div>
         );
       case 'image':
         return (
-          <div key={`image-${currentIndex}`} className="w-full h-full flex items-center justify-center">
+          <div key={`image-${currentIndex}`} className="flex items-center justify-center max-w-full max-h-full">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={currentItem.url}
+              src={currentItem.mediaUrl}
               alt={currentItem.title}
-              className="max-w-[95%] max-h-[95%] w-auto h-auto object-contain rounded-lg shadow-lg"
+              className="max-w-full max-h-[85vh] w-auto h-auto object-contain rounded-lg shadow-lg"
             />
           </div>
         );
       case 'audio':
         return (
-          <div key={`audio-${currentIndex}`} className="w-full h-full flex flex-col items-center justify-center px-4 sm:px-6 md:px-8">
+          <div key={`audio-${currentIndex}`} className="flex flex-col items-center justify-center px-4 sm:px-6 md:px-8 max-w-full max-h-full">
             <VideoPlayer
-              url={currentItem.url}
+              url={currentItem.mediaUrl}
               type="AUDIO"
               talentProfile={{ id: 'gallery', name: currentItem.title }}
             />
@@ -211,7 +211,7 @@ export default function GalleryViewer({ items, initialIndex, isOpen, onClose }: 
       case 'image':
         return <ImageIcon size={16} className="text-green-600" />;
       case 'audio':
-        return <Music size={16} className="text-purple-600" />;
+        return <Music size={16} className="text-blue-600" />;
       default:
         return null;
     }
@@ -232,7 +232,7 @@ export default function GalleryViewer({ items, initialIndex, isOpen, onClose }: 
         </div>
         <div className="flex items-center gap-1">
           <button
-            onClick={() => window.open(currentItem.url, '_blank')}
+            onClick={() => window.open(currentItem.mediaUrl, '_blank')}
             className="p-1.5 hover:bg-gray-700 rounded-lg transition-colors"
             title="Open in new tab"
           >
@@ -294,7 +294,7 @@ export default function GalleryViewer({ items, initialIndex, isOpen, onClose }: 
             <div className="flex gap-2 sm:gap-3 max-w-full overflow-x-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent thumbnail-scroll scroll-smooth">
               {items.map((item, index) => (
                 <button
-                  key={`${item.url}-${index}`}
+                  key={`${item.mediaUrl}-${index}`}
                   onClick={() => goToItem(index)}
                   className={`flex-shrink-0 w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-lg overflow-hidden border-2 transition-colors duration-200 ${
                     index === currentIndex
@@ -307,14 +307,14 @@ export default function GalleryViewer({ items, initialIndex, isOpen, onClose }: 
                     {item.thumbnail || item.type === 'image' ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
-                        src={item.thumbnail || item.url}
+                        src={item.thumbnail || item.mediaUrl}
                         alt={item.title}
                         className="block w-full h-full object-cover scale-100"
                       />
                     ) : (
                       <div className="flex flex-col items-center justify-center gap-1.5 text-white bg-gradient-to-br from-gray-700/50 to-gray-900/50 w-full h-full backdrop-blur-sm">
                         <div className={`p-2 rounded-full ${
-                          item.type === 'video' ? 'bg-blue-500/20' : 'bg-purple-500/20'
+                          item.type === 'video' ? 'bg-blue-500/20' : 'bg-blue-500/20'
                         }`}>
                           {getItemIcon(item.type)}
                         </div>

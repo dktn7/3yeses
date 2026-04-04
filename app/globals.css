@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Space+Grotesk:wght@300;400;600;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -6,6 +7,51 @@
   --background: #ffffff;
   --foreground: #171717;
   --progress-color: #3b82f6;
+  /* Brand/theme variables (light mode: blue primary, red accent) */
+  --brand-from: #2727FE; /* deeper blue chosen by user */
+  --brand-to: #1e1cff; /* deeper stop for richer blue */
+  --brand-ring: #93c5fd;
+  --brand-ring-bg: rgba(39,39,254,0.10);
+  --brand-border: rgba(39,39,254,0.10);
+  --brand-700: #1d4ed8; /* blue-700 */
+  --brand-accent: #6B78FF; /* lighter accent derived from true blue */
+  --brand-glow: rgba(39,39,254,0.22);
+  --brand-contrast: #ffffff; /* text on brand gradients */
+  --brand-contrast-inv: #0f172a; /* dark text for light brand surfaces */
+  /* Explicit blue/red anchors for mixed colourways */
+  --brand-blue: #2727FE; /* user-selected deep blue */
+  --brand-blue-glow: rgba(39,39,254,0.18);
+  --brand-red: #ef4444;
+  --brand-red-glow: rgba(239,68,68,0.12);
+  --sparkline-positive: #a7f3d0;
+  --sparkline-negative: #fecaca;
+  /* Landing page base bg — light mode: blue-tinted white */
+  --landing-bg: linear-gradient(180deg,#f0f8ff 0%,#e8f0ff 100%);
+  /* Hero video overlay — light mode (blue-tinted) */
+  --hero-overlay-from: rgba(240,248,255,0.90);
+  --hero-overlay-to: rgba(232,240,255,0.70);
+
+  /* Theme role aliases - light mode: blue primary, accent */
+  --brand-primary: var(--brand-from);
+  --brand-accent: #6B78FF;
+
+  /* Dropdown tokens */
+  --dropdown-bg: #ffffff;
+  --dropdown-ring: rgba(15,23,42,0.08);
+  --dropdown-shadow: 0 18px 48px rgba(15,23,42,0.14);
+  --dropdown-radius: 1.5rem;
+  --dropdown-z: 60;
+
+  /* Admin Theme Defaults (Light Mode: Blue Accents) */
+  --admin-bg: #f8fafc;        /* Slate 50 */
+  --admin-surface: #ffffff;   /* White */
+  --admin-border: #e2e8f0;    /* Slate 200 */
+  --admin-primary: #2727FE;   /* True blue - aligned with brand */
+  --admin-text: #0f172a;      /* Slate 900 */
+  --admin-muted: #64748b;     /* Slate 500 */
+  --admin-accent: #6B78FF;    /* Accent aligned with brand-accent */
+  --admin-glass: rgba(255, 255, 255, 0.8);
+  --admin-glass-border: rgba(226, 232, 240, 0.7);
 }
 
 /* Class-based dark mode (for next-themes) */
@@ -13,6 +59,58 @@
   --background: #111827;
   --foreground: #ededed;
   --progress-color: #ef4444;
+  /* Dark mode: red theme */
+  --brand-from: var(--brand-red); /* use bright brand red */
+  --brand-to: var(--brand-red);
+  --brand-ring: #fb7185;
+  --brand-ring-bg: rgba(255,255,255,0.06);
+  --brand-border: rgba(255,255,255,0.04);
+  --brand-700: var(--brand-red);
+  --brand-accent: var(--brand-red);
+  --brand-glow: var(--brand-red-glow);
+  --brand-contrast: #ffffff;
+  --brand-contrast-inv: #0f172a;
+  --brand-blue: #66a3ff;
+  --brand-red: #D30000;
+  --brand-blue-glow: rgba(102,163,255,0.18);
+  --brand-red-glow: rgba(211,0,0,0.22);
+  --sparkline-positive: #fecaca;
+  --sparkline-negative: #a7f3d0;
+  /* Landing page base bg — dark mode: near-black */
+  --landing-bg: #06080f;
+  /* Hero video overlay — dark mode (deep navy) */
+  --hero-overlay-from: rgba(6,8,15,0.88);
+  --hero-overlay-to: rgba(6,8,15,0.65);
+
+  /* Theme role aliases - dark mode: red primary, blue accent */
+  --brand-primary: var(--brand-red);
+  --brand-accent: var(--brand-primary);
+
+  /* Admin Dark Theme (Professional Red) */
+    --admin-bg: #020617;        /* Slate 950 */
+    --admin-surface: #0f172a;   /* Slate 900 */
+    --admin-border: #1e293b;    /* Slate 800 */
+    --admin-primary: #D30000;   /* Red 500 */
+    --admin-text: #f8fafc;      /* Slate 50 */
+    --admin-muted: #94a3b8;     /* Slate 400 */
+    --admin-accent: #dc2626;    /* Red 600 */
+    --admin-glass: rgba(15, 23, 42, 0.7);
+    --admin-glass-border: rgba(30, 41, 59, 0.6);
+  }
+  
+  /* Admin Utility Classes */
+  .admin-glass {
+  background: var(--admin-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--admin-glass-border);
+}
+
+.admin-gradient-text {
+  background: linear-gradient(to right, var(--admin-primary), var(--admin-accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 /* Fallback for prefers-color-scheme when no theme is set */
@@ -26,7 +124,28 @@
 html, body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+}
+
+/* Headings, prominent titles, category headers and talent names use Space Grotesk */
+h1, h2, h3, h4, h5, h6,
+.category-header,
+.category-title,
+.talent-name,
+.profile-name,
+.talent-card__name {
+  font-family: 'Space Grotesk', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+}
+
+/* UI and body text (filters, descriptions, labels) use Inter for high legibility */
+body, p, span, label, input, button, select, textarea,
+.ui-text,
+.filter-label,
+.filter-description,
+.description,
+.lead,
+.muted {
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
 }
 
 /* Custom animations */
@@ -45,6 +164,36 @@ html, body {
   animation: fadeIn 0.3s ease-out forwards;
 }
 
+/* Brand utility classes to ensure good contrast */
+.brand-foreground {
+  color: var(--brand-contrast) !important;
+}
+.brand-foreground-inv {
+  color: var(--brand-contrast-inv) !important;
+}
+
+/* Strong card surfaces for better legibility on busy backgrounds */
+.card-surface {
+  background-color: rgba(255,255,255,0.95);
+  box-shadow: 0 10px 30px rgba(15,23,42,0.10);
+}
+.dark .card-surface {
+  background-color: rgba(15,23,42,0.82);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.55);
+}
+
+/* Brand-mix gradient shows blue -> red regardless of theme */
+.brand-mix-gradient {
+  background-image: linear-gradient(90deg, var(--brand-blue), var(--brand-red));
+}
+
+.brand-mix-text {
+  background-image: linear-gradient(90deg, var(--brand-blue), var(--brand-red));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
 /* Background patterns */
 .bg-grid-pattern {
   background-image: 
@@ -55,6 +204,37 @@ html, body {
 
 .bg-noise-pattern {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* Landing background utility: use the full background shorthand so gradients work */
+.landing-bg {
+  background: var(--landing-bg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+/* Scoped utility to force the brand red to a true, vivid red for marketing/legal/home pages */
+.brand-true-red {
+  /* marker class — intentionally lightweight in light mode so original blue theme remains */
+  --brand-true-red-enabled: 1;
+}
+
+/* Apply the true red variables only when dark mode is active */
+.dark .brand-true-red {
+  --brand-red: #D30000;
+  --brand-red-glow: rgba(211,0,0,0.22);
+  /* force brand role aliases to true red family in dark mode */
+  --brand-from: #D30000;
+  --brand-to: #8B0000; /* darker stop to give depth */
+  --brand-accent: #FF4D3A;
+  --brand-primary: var(--brand-from);
+  --brand-glow: var(--brand-red-glow);
+  /* landing background gradient for marketing/legal pages */
+  --landing-bg: linear-gradient(180deg, rgba(211,0,0,0.22) 0%, rgba(211,0,0,0.12) 30%, rgba(139,0,0,0.06) 60%, rgba(10,6,6,0.92) 100%);
+  /* hero overlay tweaks to preserve legibility */
+  --hero-overlay-from: rgba(211,0,0,0.12);
+  --hero-overlay-to: rgba(139,0,0,0.06);
 }
 
 /* Phone Input Styling - Modern Design */

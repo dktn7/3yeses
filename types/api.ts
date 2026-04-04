@@ -4,13 +4,12 @@ export interface TalentProfile {
   id: string;
   userId: string;
   name: string;
-  roleDescription: string | null;
+  performerTitle: string | null;
   bio: string | null;
   location: string | null;
-  rating: number;
   avatarUrl: string | null;
   videoUrl: string | null;
-  experience: number | null;
+  experienceLevel: number | null;
   skills: string[];
   availability: string;
   gender: string | null;
@@ -24,7 +23,6 @@ export interface TalentProfile {
     name: string;
   } | null;
   portfolio: PortfolioItem[];
-  reviewCount: number;
   viewCount: number;
   isBeginner: boolean;
   joinedAt: Date;
@@ -33,7 +31,7 @@ export interface TalentProfile {
 export interface PortfolioItem {
   id: string;
   title: string;
-  url: string;
+  mediaUrl: string;
   type: string;
 }
 
@@ -84,13 +82,12 @@ export interface TalentProfile {
   id: string;
   userId: string;
   name: string;
-  roleDescription: string | null;
+  performerTitle: string | null;
   bio: string | null;
   location: string | null;
-  rating: number;
   avatarUrl: string | null;
   videoUrl: string | null;
-  experience: number | null;
+  experienceLevel: number | null;
   skills: string[];
   availability: string;
   gender: string | null;
@@ -104,7 +101,6 @@ export interface TalentProfile {
     name: string;
   } | null;
   portfolio: PortfolioItem[];
-  reviewCount: number;
   viewCount: number;
   isBeginner: boolean;
   joinedAt: Date;
@@ -113,7 +109,7 @@ export interface TalentProfile {
 export interface PortfolioItem {
   id: string;
   title: string;
-  url: string;
+  mediaUrl: string;
   type: string;
 }
 
@@ -177,7 +173,7 @@ export interface Subcategory {
 }
 
 export interface SubscriptionRequest {
-  plan: 'FREE' | 'BASIC' | 'PROFESSIONAL' | 'ENTERPRISE';
+  plan: 'STANDARD';
   paymentMethodId?: string;
 }
 

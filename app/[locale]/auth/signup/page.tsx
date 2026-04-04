@@ -1,12 +1,13 @@
 import { redirect } from 'next/navigation';
 
 type Props = {
-  params: {
+  params: Promise<{
     locale: string;
-  };
+  }>;
 };
 
-export default function SignupPage({ params }: Props) {
-  // Redirect directly to step-1
-  redirect(`/${params.locale}/auth/signup/step-1`);
+export default async function SignupPage({ params }: Props) {
+  const { locale } = await params;
+  // Redirect directly to the multi-step signup flow
+  redirect(`/${locale}/auth/signup/steps/step-1`);
 }

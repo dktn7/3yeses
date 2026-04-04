@@ -33,13 +33,13 @@ export default function DynamicHeadline() {
     }, 3000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [headlines.length]);
 
   return (
     <h2 className={`text-4xl md:text-6xl font-bold text-gray-800 dark:text-gray-100 mb-8 leading-tight transition-opacity duration-600 ${
       isVisible ? 'opacity-100' : 'opacity-0'
     }`}>
-      <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-blue to-accent-blue dark:from-accent-red dark:to-primary-red">
+      <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-blue via-accent-blue to-indigo-500 dark:from-accent-red dark:via-primary-red dark:to-orange-500">
         {headlines[currentIndex]}
       </span>
     </h2>

@@ -1,23 +1,9 @@
 import { NextResponse } from 'next/server';
-import * as jwt from 'jsonwebtoken';
 import prisma from '@/lib/prisma';
+import { authenticateUser } from '@/lib/auth/middleware';
 
 // Ensure only the owner of the media (talent profile's user) can edit/delete
-async function getUserIdFromRequest(req: Request): Promise<string | null> {
-  try {
-    // Read cookie header
-    const cookieHeader = req.headers.get('cookie') || '';
-    const match = cookieHeader.match(/accessToken=([^;]+)/);
-    const token = match ? decodeURIComponent(match[1]) : null;
-    if (!token) return null;
-
-    const JWT_SECRET = process.env.JWT_SECRET || 'your-super-secret-jwt-key';
-    const decoded = jwt.verify(token, JWT_SECRET) as any;
-    return decoded?.userId ?? null;
-  } catch {
-    return null;
-  }
-}
+import { NextRequest } from 'next/server';
 
 async function isOwner(userId: string, portfolioItemId: string): Promise<boolean> {
   const item = await prisma.portfolioItem.findUnique({
@@ -28,14 +14,18 @@ async function isOwner(userId: string, portfolioItemId: string): Promise<boolean
   return item.talentProfile?.userId === userId;
 }
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: NextRequest, context: any) {
+  const params = (context && context.params) || { id: undefined };
   try {
-    const userId = await getUserIdFromRequest(req);
-    if (!userId) {
+    const auth = await authenticateUser(req);
+    if (!auth.authenticated || !auth.user) {
       return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
     }
+    const userId = auth.user.userId;
 
-    const id = params.id;
+    // Unwrap params in case it's a Promise in this runtime
+    const resolvedParams: any = typeof (params as any)?.then === 'function' ? await (params as any) : params;
+    const id = resolvedParams?.id;
     if (!id) return NextResponse.json({ success: false, error: 'Missing id' }, { status: 400 });
 
     const owns = await isOwner(userId, id);
@@ -55,7 +45,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
         id: true,
         title: true,
         description: true,
-        url: true,
+        mediaUrl: true,
         type: true,
         thumbnail: true,
         createdAt: true,
@@ -68,14 +58,16 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   }
 }
 
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, context: any) {
   try {
-    const userId = await getUserIdFromRequest(req);
-    if (!userId) {
+    const auth = await authenticateUser(req);
+    if (!auth.authenticated || !auth.user) {
       return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
     }
-
-    const id = params.id;
+    const userId = auth.user.userId;
+    const params = (context && context.params) || { id: undefined };
+    const resolvedParams: any = typeof (params as any)?.then === 'function' ? await (params as any) : params;
+    const id = resolvedParams?.id;
     if (!id) return NextResponse.json({ success: false, error: 'Missing id' }, { status: 400 });
 
     const owns = await isOwner(userId, id);

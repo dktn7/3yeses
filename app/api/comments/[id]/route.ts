@@ -5,8 +5,9 @@ import { AuthService } from '@/lib/auth/auth-service';
 // Like/unlike a comment
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
     // Get user from token
     const accessToken = request.cookies.get('accessToken')?.value;
@@ -17,7 +18,7 @@ export async function POST(
       );
     }
 
-    const decoded = AuthService.verifyJWT(accessToken);
+    const decoded = await AuthService.verifyJWT(accessToken);
     if (!decoded) {
       return NextResponse.json(
         { error: 'Invalid token' },
@@ -30,7 +31,7 @@ export async function POST(
       where: {
         userId_commentId: {
           userId: decoded.userId,
-          commentId: params.id,
+          commentId: id,
         },
       },
     });
@@ -43,7 +44,7 @@ export async function POST(
 
       // Decrement likes count
       await prisma.comment.update({
-        where: { id: params.id },
+        where: { id: id },
         data: {
           likesCount: {
             decrement: 1,
@@ -61,13 +62,13 @@ export async function POST(
       await prisma.commentLike.create({
         data: {
           userId: decoded.userId,
-          commentId: params.id,
+          commentId: id,
         },
       });
 
       // Increment likes count
       await prisma.comment.update({
-        where: { id: params.id },
+        where: { id: id },
         data: {
           likesCount: {
             increment: 1,
@@ -90,11 +91,94 @@ export async function POST(
   }
 }
 
+// Edit own comment
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
+  try {
+    const accessToken = request.cookies.get('accessToken')?.value;
+    if (!accessToken) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 }
+      );
+    }
+
+    const decoded = await AuthService.verifyJWT(accessToken);
+    if (!decoded) {
+      return NextResponse.json(
+        { error: 'Invalid token' },
+        { status: 401 }
+      );
+    }
+
+    const body = await request.json();
+    const { content } = body;
+
+    if (!content || content.trim().length === 0) {
+      return NextResponse.json(
+        { error: 'Comment content is required' },
+        { status: 400 }
+      );
+    }
+
+    const comment = await prisma.comment.findUnique({
+      where: { id },
+    });
+
+    if (!comment) {
+      return NextResponse.json(
+        { error: 'Comment not found' },
+        { status: 404 }
+      );
+    }
+
+    // Only the comment author can edit
+    if (comment.userId !== decoded.userId) {
+      return NextResponse.json(
+        { error: 'You can only edit your own comments' },
+        { status: 403 }
+      );
+    }
+
+    const updated = await prisma.comment.update({
+      where: { id },
+      data: { content: content.trim() },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            talentProfile: {
+              select: { avatarUrl: true },
+            },
+          },
+        },
+      },
+    });
+
+    return NextResponse.json({
+      success: true,
+      comment: updated,
+      message: 'Comment updated successfully',
+    });
+  } catch (error) {
+    console.error('Comment edit error:', error);
+    return NextResponse.json(
+      { error: 'Failed to edit comment' },
+      { status: 500 }
+    );
+  }
+}
+
 // Delete own comment
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
     // Get user from token
     const accessToken = request.cookies.get('accessToken')?.value;
@@ -105,7 +189,7 @@ export async function DELETE(
       );
     }
 
-    const decoded = AuthService.verifyJWT(accessToken);
+    const decoded = await AuthService.verifyJWT(accessToken);
     if (!decoded) {
       return NextResponse.json(
         { error: 'Invalid token' },
@@ -115,7 +199,7 @@ export async function DELETE(
 
     // Check if comment belongs to user
     const comment = await prisma.comment.findUnique({
-      where: { id: params.id },
+      where: { id: id },
     });
 
     if (!comment) {
@@ -134,7 +218,7 @@ export async function DELETE(
 
     // Delete comment
     await prisma.comment.delete({
-      where: { id: params.id },
+      where: { id: id },
     });
 
     return NextResponse.json({

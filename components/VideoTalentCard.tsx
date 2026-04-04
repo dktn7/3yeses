@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react';
-import { MapPin, Star, Clock, Heart, Play } from 'lucide-react';
+import { MapPin, Clock, Play } from 'lucide-react';
+import SwoopingTick from './SwoopingTick';
 import type { Talent } from '@/types/index.ts';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -9,7 +10,6 @@ export interface VideoTalentCardProps {
   readonly title?: string;
   readonly subtitle?: string;
   readonly thumbnailUrl?: string;
-  readonly rating?: number;
   readonly projects?: number;
   readonly experience?: string;
   readonly talent?: Talent;
@@ -33,7 +33,6 @@ export default function VideoTalentCard({
   title, 
   subtitle, 
   thumbnailUrl, 
-  rating, 
   projects, 
   experience,
   talent,
@@ -62,9 +61,8 @@ export default function VideoTalentCard({
     displayThumbnail = getYouTubeThumbnail(youtubeId);
   }
 
-  const displayRating = talent?.rating || rating || 4.9;
   const displayProjects = talent?.portfolio?.length || projects || 32;
-  const displayExperience = talent?.experience ? `${talent.experience} yrs` : experience || '5 yrs';
+  const displayExperience = talent?.experienceLevel ? `${talent.experienceLevel} yrs` : experience || '5 yrs';
   const displayLocation = talent?.location || 'London, UK';
   const talentId = talent?.id || '1';
 
@@ -74,7 +72,7 @@ export default function VideoTalentCard({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <Link href={`/${locale}/talent/${talentId}`} className="absolute inset-0 z-10" aria-label={displayTitle} />
+      <Link href={`/talent/${(talentId as any)}`} className="absolute inset-0 z-10" aria-label={displayTitle} />
       {/* Profile Image Section */}
       <div className="relative aspect-[4/3] overflow-hidden bg-gray-100 dark:bg-gray-800">
           {/* Show video on hover if available, otherwise show image */}
@@ -121,12 +119,9 @@ export default function VideoTalentCard({
           }}
           className="absolute top-4 right-4 p-2 rounded-full bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm shadow-lg hover:scale-110 transition-all duration-200 z-20"
         >
-          <Heart 
-            className={`w-5 h-5 transition-colors ${
-              isFavorited 
-                ? 'text-red-500 fill-red-500' 
-                : 'text-gray-600 dark:text-gray-300'
-            }`} 
+          <SwoopingTick 
+            size={20}
+            hovered={isFavorited}
           />
         </button>
 
@@ -147,10 +142,7 @@ export default function VideoTalentCard({
             <h3 className="font-bold text-lg text-gray-900 dark:text-white line-clamp-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
               {displayTitle}
             </h3>
-            <div className="flex items-center space-x-1 bg-yellow-50 dark:bg-yellow-900/20 px-2 py-0.5 rounded-full">
-              <Star className="w-3.5 h-3.5 text-yellow-500 fill-yellow-500" />
-              <span className="text-xs font-bold text-yellow-700 dark:text-yellow-500">{displayRating}</span>
-            </div>
+            {/* Rating removed per platform decision */}
           </div>
           <p className="text-sm text-gray-500 dark:text-gray-400 font-medium line-clamp-1">{displaySubtitle}</p>
         </div>

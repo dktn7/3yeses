@@ -5,7 +5,7 @@ const generateEmail = () => `test-${Date.now()}@example.com`;
 
 test.describe('Parental Consent - Manual Testing Scenarios', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto(`${BASE_URL}/auth/signup/step-1`);
+    await page.goto(`${BASE_URL}/auth/signup/steps/step-1`);
     // Wait for the date input to be visible instead of networkidle
     await page.locator('input[type="date"]').waitFor({ state: 'visible', timeout: 10000 });
   });
@@ -184,7 +184,7 @@ test.describe('Visual Verification Tests', () => {
   test('Complete adult signup flow - Visual check', async ({ page }) => {
     console.log('📸 Visual Test: Adult complete flow');
     
-    await page.goto(`${BASE_URL}/auth/signup/step-1`);
+    await page.goto(`${BASE_URL}/auth/signup/steps/step-1`);
     await page.locator('input[type="date"]').waitFor({ state: 'visible', timeout: 10000 });
 
     // Step 1

@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import { sendVerificationEmail, sendParentalConsentEmail, sendWelcomeEmail } from '@/lib/email/emailService';
+import { generateNextUserId } from '@/lib/id-generator';
 
 const prisma = new PrismaClient();
 
@@ -147,9 +148,14 @@ export async function POST(request: Request) {
     const verificationToken = generateVerificationToken();
     const verificationTokenExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
 
+    // === GENERATE USER ID ===
+    
+    const userId = await generateNextUserId();
+    
     // === CREATE USER ===
     
     const userData: any = {
+      id: userId,
       email: primaryEmail,
       role: 'TALENT', // All signups through this flow are talent
       accountType,
@@ -302,7 +308,7 @@ export async function POST(request: Request) {
       message: successMessage,
       data: {
         userId: user.id,
-        talentProfileId: talentProfile.id,
+        talentProfileId: talentProfile.userId,
         email: responseEmail,
         accountType,
         requiresParentalConsent: accountType === 'SELF_WITH_CONSENT' || accountType === 'PARENT_MANAGED',

@@ -1,0 +1,66 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug Agent Server",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/agent-runtime/agent-server/index.js",
+      "cwd": "${workspaceFolder}/agent-runtime/agent-server",
+      "console": "integratedTerminal",
+      "restart": true,
+      "runtimeArgs": ["--inspect"],
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "name": "Debug Agent Server (attach)",
+      "type": "node",
+      "request": "attach",
+      "port": 9229,
+      "restart": true,
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "name": "Debug Next.js",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/node_modules/.bin/next",
+      "args": ["dev", "-p", "3002"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "env": {
+        "NODE_OPTIONS": "--inspect",
+        "NODE_ENV": "development"
+      },
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "name": "Debug Next.js (attach)",
+      "type": "node",
+      "request": "attach",
+      "port": 9230,
+      "restart": true,
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "name": "Debug Next.js + Agent Server",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/agent-runtime/agent-server/index.js",
+      "cwd": "${workspaceFolder}/agent-runtime/agent-server",
+      "console": "integratedTerminal",
+      "preLaunchTask": "Run Next.js dev server",
+      "skipFiles": ["<node_internals>/**"]
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Full Stack: Next.js + Agent",
+      "configurations": ["Debug Next.js", "Debug Agent Server"],
+      "stopAll": true
+    }
+  ]
+}

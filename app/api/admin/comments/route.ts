@@ -23,7 +23,7 @@ async function handler(request: NextRequest) {
     where.parentCommentId = null;
 
     // Get comments with pagination
-    const [comments, totalCount] = await Promise.all([
+    const [comments, totalCount, pendingCount, flaggedCount, approvedTodayCount] = await Promise.all([
       prisma.comment.findMany({
         where,
         skip,
@@ -74,13 +74,28 @@ async function handler(request: NextRequest) {
         },
       }),
       prisma.comment.count({ where }),
+      prisma.comment.count({ where: { status: 'PENDING' } }),
+      prisma.comment.count({ where: { status: 'FLAGGED' } }),
+      prisma.comment.count({
+        where: {
+          status: 'APPROVED',
+          createdAt: { gte: new Date(new Date().setHours(0, 0, 0, 0)) },
+        },
+      }),
     ]);
 
+    const totalAll = await prisma.comment.count();
     const totalPages = Math.ceil(totalCount / limit);
 
     return NextResponse.json({
       success: true,
       comments,
+      stats: {
+        total: totalAll,
+        pending: pendingCount,
+        flagged: flaggedCount,
+        approvedToday: approvedTodayCount,
+      },
       pagination: {
         page,
         limit,

@@ -104,7 +104,7 @@ export default function CommentItem({
       <div className="flex gap-3">
         {/* Profile Picture */}
         <div className="flex-shrink-0">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white font-semibold">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-red-500 dark:from-red-500 dark:to-blue-500 flex items-center justify-center text-white font-semibold">
             {comment.user.name?.charAt(0).toUpperCase() || 'U'}
           </div>
         </div>

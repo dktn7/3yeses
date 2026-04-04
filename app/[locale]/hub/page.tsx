@@ -1,6 +1,7 @@
 ﻿'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { use, useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import Breadcrumbs from '@/components/Breadcrumbs';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import {
@@ -24,20 +25,22 @@ import {
   Briefcase,
   Flame,
   Clock,
-  X
+  X,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 import PropellerAd from '@/components/PropellerAd';
 import Image from 'next/image';
 import { getCategoryData } from '@/lib/data';
 import MediaOverlay from '@/components/MediaOverlay';
 import FeaturedTalentCard from '@/components/FeaturedTalentCard';
-import SwoopingTick from '@/components/SwoopingTick';
 import MediaThumbnailFallback from '@/components/MediaThumbnailFallback';
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 interface PortfolioItem {
   id: string;
   title: string;
-  url: string;
+  mediaUrl: string;
   type: 'IMAGE' | 'VIDEO' | 'AUDIO';
   thumbnail?: string;
   description?: string;
@@ -52,7 +55,7 @@ interface PortfolioItem {
     };
   };
   views: number;
-  likes: number;
+  likeCount: number;
   isSponsored?: boolean;
   createdAt: string;
 }
@@ -61,7 +64,8 @@ export default function HubPage({ params }: { params: { locale: string } }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const locale = params.locale || 'en-gb';
+  // Determine locale from router or default
+  const locale = (router && (router as any).locale) || 'en-gb';
   const t = useTranslations('Hub');
 
   const [loading, setLoading] = useState(true);
@@ -88,50 +92,107 @@ export default function HubPage({ params }: { params: { locale: string } }) {
     subcategories?: Array<{ id: string; name: string; description: string | null }>;
   }>>([]);
 
-  // Sync URL with selectedMediaItem
-  useEffect(() => {
-    const mediaId = searchParams.get('mediaId');
-    
-    if (!mediaId) {
-      if (selectedMediaItem) setSelectedMediaItem(null);
-      return;
-    }
+  // Category scroll refs and state
+  const categoryScrollRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
 
-    // If we already have the correct item selected, do nothing
-    if (selectedMediaItem?.id === mediaId) return;
+  const updateScrollButtons = useCallback(() => {
+    const el = categoryScrollRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 4);
+    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 4);
+  }, []);
+
+  useEffect(() => {
+    const el = categoryScrollRef.current;
+    if (!el) return;
+    updateScrollButtons();
+    el.addEventListener('scroll', updateScrollButtons, { passive: true });
+    const ro = new ResizeObserver(updateScrollButtons);
+    ro.observe(el);
+    return () => { el.removeEventListener('scroll', updateScrollButtons); ro.disconnect(); };
+  }, [updateScrollButtons]);
+
+  const scrollCategories = useCallback((dir: 'left' | 'right') => {
+    const el = categoryScrollRef.current;
+    if (!el) return;
+    el.scrollBy({ left: dir === 'left' ? -200 : 200, behavior: 'smooth' });
+  }, []);
+
+  // Drag-to-scroll for category row
+  const isDragging = useRef(false);
+  const dragStartX = useRef(0);
+  const dragScrollLeft = useRef(0);
+
+  const onDragStart = useCallback((e: React.MouseEvent) => {
+    const el = categoryScrollRef.current;
+    if (!el) return;
+    isDragging.current = true;
+    dragStartX.current = e.pageX - el.offsetLeft;
+    dragScrollLeft.current = el.scrollLeft;
+    el.style.cursor = 'grabbing';
+    el.style.userSelect = 'none';
+  }, []);
+
+  const onDragMove = useCallback((e: React.MouseEvent) => {
+    if (!isDragging.current) return;
+    const el = categoryScrollRef.current;
+    if (!el) return;
+    e.preventDefault();
+    const x = e.pageX - el.offsetLeft;
+    el.scrollLeft = dragScrollLeft.current - (x - dragStartX.current);
+  }, []);
+
+  const onDragEnd = useCallback(() => {
+    isDragging.current = false;
+    const el = categoryScrollRef.current;
+    if (el) { el.style.cursor = ''; el.style.userSelect = ''; }
+  }, []);
+
+  // Deep-link: restore overlay from URL on mount and after items load
+  const deepLinkSyncedRef = useRef(false);
+  useEffect(() => {
+    const mediaId = new URLSearchParams(window.location.search).get('mediaId');
+    if (!mediaId) { deepLinkSyncedRef.current = true; return; }
+    if (selectedMediaItem?.id === mediaId) { deepLinkSyncedRef.current = true; return; }
 
     const item = allItems.find(i => i.id === mediaId);
     if (item) {
       setSelectedMediaItem(item);
-    } else {
-      // Fetch individual item if not found in loaded items (e.g. direct link to older item)
-      const fetchSingleItem = async () => {
-        try {
-          const res = await fetch(`/api/hub/portfolio/${mediaId}`);
-          if (res.ok) {
-            const fetchedItem = await res.json();
-            setSelectedMediaItem(fetchedItem);
-          }
-        } catch (e) {
-          console.error("Failed to fetch single item", e);
-        }
-      };
-      fetchSingleItem();
+      deepLinkSyncedRef.current = true;
+    } else if (!loading && !deepLinkSyncedRef.current) {
+      deepLinkSyncedRef.current = true;
+      fetch(`/api/hub/portfolio/${mediaId}`)
+        .then(r => r.ok ? r.json() : null)
+        .then(fetched => fetched && setSelectedMediaItem(fetched))
+        .catch(() => {});
     }
-  }, [searchParams, allItems, selectedMediaItem]);
+  }, [allItems, loading]);
+
+  // Close overlay on browser Back when mediaId is removed from URL
+  useEffect(() => {
+    const handlePopstate = () => {
+      const mediaId = new URLSearchParams(window.location.search).get('mediaId');
+      if (!mediaId) setSelectedMediaItem(null);
+    };
+    window.addEventListener('popstate', handlePopstate);
+    return () => window.removeEventListener('popstate', handlePopstate);
+  }, []);
 
   const handleMediaSelect = (item: PortfolioItem) => {
     setSelectedMediaItem(item);
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(window.location.search);
     params.set('mediaId', item.id);
-    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+    window.history.pushState(null, '', `${pathname}?${params.toString()}`);
   };
 
   const handleMediaClose = () => {
     setSelectedMediaItem(null);
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(window.location.search);
     params.delete('mediaId');
-    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+    const qs = params.toString();
+    window.history.replaceState(null, '', qs ? `${pathname}?${qs}` : pathname);
   };
 
   // Search State
@@ -201,7 +262,7 @@ export default function HubPage({ params }: { params: { locale: string } }) {
     });
     
     return filters;
-  }, [allItems.length, dbCategories, categoryCounts, allCategoryCount, totalFiltered]);
+  }, [dbCategories, categoryCounts, allCategoryCount, totalFiltered]);
 
   const typeFilters = [
     { id: 'all', name: 'All', icon: MoreHorizontal },
@@ -302,7 +363,7 @@ export default function HubPage({ params }: { params: { locale: string } }) {
         setTrendingItems(sortedByViews.slice(0, 10));
 
         // Extract unique talents for featured section
-        const uniqueTalents = Array.from(new Map(fetchedItems.map((item: PortfolioItem) => [item.talentProfile.id, item.talentProfile])).values());
+        const uniqueTalents = Array.from(new Map(fetchedItems.map((item: PortfolioItem) => [ (item.talentProfile as any).userId ?? item.talentProfile.id, item.talentProfile])).values());
         setFeaturedTalents(uniqueTalents.slice(0, 5));
 
       } catch (e) {
@@ -373,27 +434,20 @@ export default function HubPage({ params }: { params: { locale: string } }) {
     
     const lowerSearch = searchValue.toLowerCase();
     
-    // Check if search matches a category name (exact or close match)
-    const matchingCategory = dbCategories.find(cat => 
-      cat.name.toLowerCase() === lowerSearch ||
-      cat.name.toLowerCase().includes(lowerSearch) ||
-      lowerSearch.includes(cat.name.toLowerCase())
+    // Check if search matches a category name (exact match only)
+    const matchingCategory = dbCategories.find(cat =>
+      cat.name.toLowerCase() === lowerSearch
     );
     
-    // Check if search matches a subcategory name
+    // Check if search matches a subcategory name (exact match only)
     const matchingSubcategory = dbCategories
       .flatMap(cat => (cat.subcategories || []).map(sub => ({ ...sub, parentId: cat.id })))
-      .find(sub => 
-        sub.name.toLowerCase() === lowerSearch ||
-        sub.name.toLowerCase().includes(lowerSearch) ||
-        lowerSearch.includes(sub.name.toLowerCase())
+      .find(sub =>
+        sub.name.toLowerCase() === lowerSearch
       );
     
-    // If exact or close match to a subcategory, switch to that subcategory filter
-    if (matchingSubcategory && (
-      matchingSubcategory.name.toLowerCase() === lowerSearch ||
-      lowerSearch.includes(matchingSubcategory.name.toLowerCase())
-    )) {
+    // If exact match to a subcategory name, switch to that subcategory filter
+    if (matchingSubcategory) {
       setActiveCategory(matchingSubcategory.id);
       setSearchQuery('');
       setSearchInputValue('');
@@ -402,11 +456,8 @@ export default function HubPage({ params }: { params: { locale: string } }) {
       return;
     }
     
-    // If exact or close match to a category, switch to that category filter
-    if (matchingCategory && (
-      matchingCategory.name.toLowerCase() === lowerSearch ||
-      lowerSearch.includes(matchingCategory.name.toLowerCase())
-    )) {
+    // If exact match to a category name, switch to that category filter
+    if (matchingCategory) {
       setActiveCategory(matchingCategory.id);
       setSearchQuery('');
       setSearchInputValue('');
@@ -467,7 +518,7 @@ export default function HubPage({ params }: { params: { locale: string } }) {
   
   const mostPopular = useMemo(() => {
     return [...allItems]
-      .sort((a, b) => b.likes - a.likes)
+      .sort((a, b) => b.likeCount - a.likeCount)
       .slice(0, 10);
   }, [allItems]);
 
@@ -524,20 +575,20 @@ export default function HubPage({ params }: { params: { locale: string } }) {
     if (item.thumbnail && !isAudioUrl(item.thumbnail)) return item.thumbnail;
     
     if (item.type === 'VIDEO') {
-      const embedMatch = item.url.match(/youtube\.com\/embed\/([^?]+)/);
+      const embedMatch = item.mediaUrl.match(/youtube\.com\/embed\/([^?]+)/);
       if (embedMatch && embedMatch[1]) return `https://img.youtube.com/vi/${embedMatch[1]}/hqdefault.jpg`;
       
-      const watchMatch = item.url.match(/youtube\.com\/watch\?v=([^&]+)/);
+      const watchMatch = item.mediaUrl.match(/youtube\.com\/watch\?v=([^&]+)/);
       if (watchMatch && watchMatch[1]) return `https://img.youtube.com/vi/${watchMatch[1]}/hqdefault.jpg`;
 
-      const shortMatch = item.url.match(/youtu\.be\/([^?]+)/);
+      const shortMatch = item.mediaUrl.match(/youtu\.be\/([^?]+)/);
       if (shortMatch && shortMatch[1]) return `https://img.youtube.com/vi/${shortMatch[1]}/hqdefault.jpg`;
     }
     
     // Don't return audio URLs as thumbnails
-    if (isAudioUrl(item.url)) return null;
+    if (isAudioUrl(item.mediaUrl)) return null;
     
-    return item.url;
+    return item.mediaUrl;
   };
 
   // FallbackImage replaced with MediaThumbnailFallback component
@@ -554,8 +605,12 @@ export default function HubPage({ params }: { params: { locale: string } }) {
         />
       )}
 
-      <section className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40 shadow-sm">
-        <div className="max-w-screen-2xl mx-auto px-6 py-4">
+      <div className="max-w-screen-2xl mx-auto px-6 pt-4">
+        <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Talent Hub' }]} />
+      </div>
+
+      <section className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-16 z-30 shadow-sm">
+        <div className="max-w-screen-2xl mx-auto px-6 pt-6 pb-4">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div className="flex items-center gap-8">
               <div>
@@ -645,8 +700,29 @@ export default function HubPage({ params }: { params: { locale: string } }) {
               </div>
               
               {/* Parent Categories */}
-              <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide">
-                {categoryFilters.filter(f => !f.isSub).map((filter) => {
+              <div className="relative">
+                {/* Left scroll arrow */}
+                {canScrollLeft && (
+                  <button
+                    onClick={() => scrollCategories('left')}
+                    className="absolute left-0 top-0 bottom-0 z-10 w-10 flex items-center justify-center bg-gradient-to-r from-white via-white/95 to-transparent dark:from-gray-900 dark:via-gray-900/95"
+                    aria-label="Scroll categories left"
+                  >
+                    <div className="w-8 h-8 rounded-full bg-white dark:bg-gray-800 shadow-md border border-gray-200 dark:border-gray-700 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                      <ChevronLeft className="w-4 h-4 text-gray-700 dark:text-gray-200" />
+                    </div>
+                  </button>
+                )}
+
+                <div
+                  ref={categoryScrollRef}
+                  onMouseDown={onDragStart}
+                  onMouseMove={onDragMove}
+                  onMouseUp={onDragEnd}
+                  onMouseLeave={onDragEnd}
+                  className="flex items-center gap-2 overflow-x-auto pb-3 scroll-smooth cursor-grab px-1 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent"
+                >
+                  {categoryFilters.filter(f => !f.isSub).map((filter) => {
                   const CategoryIcon = filter.icon;
                   const isActive = activeCategory === filter.id || categoryFilters.find(f => f.id === activeCategory && f.parentId === filter.id);
                   
@@ -674,6 +750,20 @@ export default function HubPage({ params }: { params: { locale: string } }) {
                     </button>
                   );
                 })}
+              </div>
+
+                {/* Right scroll arrow */}
+                {canScrollRight && (
+                  <button
+                    onClick={() => scrollCategories('right')}
+                    className="absolute right-0 top-0 bottom-0 z-10 w-10 flex items-center justify-center bg-gradient-to-l from-white via-white/95 to-transparent dark:from-gray-900 dark:via-gray-900/95"
+                    aria-label="Scroll categories right"
+                  >
+                    <div className="w-8 h-8 rounded-full bg-white dark:bg-gray-800 shadow-md border border-gray-200 dark:border-gray-700 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                      <ChevronRight className="w-4 h-4 text-gray-700 dark:text-gray-200" />
+                    </div>
+                  </button>
+                )}
               </div>
 
               {/* Subcategories (only show if parent is active or if "All" is not active) */}
@@ -937,18 +1027,65 @@ export default function HubPage({ params }: { params: { locale: string } }) {
             </div>
           )}
         </div>
-      </section>      <div className="max-w-screen-2xl mx-auto px-6 py-8 space-y-12 relative min-h-[400px]">
+
+        {/* Active Filters — shown inside sticky header so they're always visible */}
+        {hasActiveFilters && (
+          <div className="max-w-screen-2xl mx-auto px-6 py-2 border-t border-gray-200 dark:border-gray-700 bg-primary-blue/5 dark:bg-accent-red/5">
+            <div className="flex items-center gap-3 flex-wrap">
+              <div className="flex items-center gap-1.5 text-xs font-semibold text-primary-blue dark:text-accent-red shrink-0">
+                <Filter className="w-3.5 h-3.5" />
+                {t('filters.activeFilters')}:
+              </div>
+              <div className="flex items-center gap-2 flex-wrap flex-1">
+                {searchQuery && (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full text-xs font-medium text-gray-700 dark:text-gray-300">
+                    🔍 "{searchQuery}"
+                  </span>
+                )}
+                {activeCategory !== 'all' && (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full text-xs font-medium text-gray-700 dark:text-gray-300">
+                    🎭 {categoryFilters.find(c => c.id === activeCategory)?.name || activeCategory}
+                  </span>
+                )}
+                {activeType !== 'all' && (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full text-xs font-medium text-gray-700 dark:text-gray-300">
+                    🎥 {activeType === 'VIDEO' ? t('type.videos') : activeType === 'AUDIO' ? t('type.audio') : t('type.images')}
+                  </span>
+                )}
+                {sortBy !== 'trending' && (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full text-xs font-medium text-gray-700 dark:text-gray-300">
+                    🔄 {sortBy === 'recent' ? t('filters.newest') : sortBy === 'oldest' ? t('filters.oldest') : sortBy === 'popular' ? t('filters.mostLiked') : t('filters.trending')}
+                  </span>
+                )}
+              </div>
+              <div className="flex items-center gap-3 shrink-0">
+                <span className="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                  <span className="font-semibold text-primary-blue dark:text-accent-red">{totalFiltered}</span> {totalFiltered !== 1 ? t('filters.resultsPlural') : t('filters.results')}
+                </span>
+                <button
+                  onClick={() => { setSearchQuery(''); setActiveCategory('all'); setActiveType('all'); setPopularityTier('all'); setDateRange('all'); setSortBy('trending'); }}
+                  className="inline-flex items-center gap-1 px-3 py-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400 hover:border-red-300 transition-colors"
+                >
+                  <X className="w-3 h-3" />
+                  {t('filters.clearAll')}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </section>
+      <div className="max-w-screen-2xl mx-auto px-6 py-8 space-y-12 relative min-h-[400px]">
         {/* Content Loading Overlay */}
         {loading && (
           <div className="absolute inset-0 bg-white/40 dark:bg-gray-900/40 z-10 flex items-start justify-center pt-32 animate-in fade-in duration-100">
-            <div className="animate-spin sticky top-48">
-              <SwoopingTick size={64} />
+            <div className="sticky top-48">
+              <LoadingSpinner size={64} inline />
             </div>
           </div>
         )}
         
-        {/* Active Filters Banner */}
-        {hasActiveFilters && (
+        {/* Active Filters Banner — kept for context but collapsed since the sticky header now shows filters */}
+        {false && hasActiveFilters && (
           <div className="bg-gradient-to-r from-primary-blue/10 to-accent-red/10 dark:from-primary-blue/5 dark:to-accent-red/5 border-l-4 border-primary-blue dark:border-accent-red rounded-lg p-4 mb-6">
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1">
@@ -1039,17 +1176,18 @@ export default function HubPage({ params }: { params: { locale: string } }) {
             <div className="flex gap-6 overflow-x-auto pb-6 px-1 -mx-1">
               {featuredTalents.map((talent) => {
                 // Get media items for this talent
-                const talentMedia = allItems.filter(item => item.talentProfile.id === talent.id);
+                const talentId = (talent as any).userId ?? talent.id;
+                const talentMedia = allItems.filter(item => ((item.talentProfile as any).userId ?? item.talentProfile.id) === talentId);
                 
                 return (
-                  <div key={talent.id} className="min-w-[300px] w-[300px] flex-shrink-0">
+                  <div key={(talent as any).userId ?? talent.id} className="min-w-[300px] w-[300px] flex-shrink-0">
                     <FeaturedTalentCard
                       talent={talent}
                       mediaItems={talentMedia}
                       onMediaClick={(item) => handleMediaSelect(item as any)}
                       onProfileClick={(profile) => {
                         // Open profile in new window/tab
-                        window.open(`/talent/${profile.id}`, '_blank');
+                        window.open(`/talent/${(profile as any).userId ?? profile.id}`, '_blank');
                       }}
                     />
                   </div>
@@ -1074,7 +1212,7 @@ export default function HubPage({ params }: { params: { locale: string } }) {
               </div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-              {trendingItems.map((item) => (
+              {trendingItems.slice(0, 5).map((item) => (
                 <a
                   key={`trending-${item.id}`}
                   href={`/hub/media/${item.id}`}
@@ -1083,7 +1221,7 @@ export default function HubPage({ params }: { params: { locale: string } }) {
                 >
                   {getThumbnail(item) ? (
                     <Image
-                      src={getThumbnail(item)}
+                      src={getThumbnail(item) || ''}
                       alt={item.title}
                       fill
                       className="object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
@@ -1117,7 +1255,7 @@ export default function HubPage({ params }: { params: { locale: string } }) {
                       </span>
                       <span className="flex items-center gap-1">
                         <Heart className="w-3 h-3" />
-                        {item.likes}
+                        {item.likeCount}
                       </span>
                     </div>
                   </div>
@@ -1156,7 +1294,7 @@ export default function HubPage({ params }: { params: { locale: string } }) {
               )}
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
-              {videoItems.slice(0, 10).map((item) => {
+              {videoItems.slice(0, 5).map((item) => {
                 const TypeIcon = getTypeIcon(item.type);
                 const thumbnail = getThumbnail(item);
                 return (
@@ -1237,7 +1375,7 @@ export default function HubPage({ params }: { params: { locale: string } }) {
                           </span>
                           <span className="flex items-center gap-1 font-medium">
                             <Heart className="w-3.5 h-3.5" />
-                            {item.likes}
+                            {item.likeCount}
                           </span>
                         </div>
                         <span className="text-xs">{new Date(item.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
@@ -1273,7 +1411,7 @@ export default function HubPage({ params }: { params: { locale: string } }) {
               )}
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
-              {audioItems.slice(0, 10).map((item) => {
+              {audioItems.slice(0, 5).map((item) => {
                 const TypeIcon = getTypeIcon(item.type);
                 const thumbnail = getThumbnail(item);
                 return (
@@ -1354,7 +1492,7 @@ export default function HubPage({ params }: { params: { locale: string } }) {
                           </span>
                           <span className="flex items-center gap-1 font-medium">
                             <Heart className="w-3.5 h-3.5" />
-                            {item.likes}
+                            {item.likeCount}
                           </span>
                         </div>
                         <span className="text-xs">{new Date(item.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
@@ -1390,7 +1528,7 @@ export default function HubPage({ params }: { params: { locale: string } }) {
               )}
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
-              {imageItems.slice(0, 10).map((item) => {
+              {imageItems.slice(0, 5).map((item) => {
                 const TypeIcon = getTypeIcon(item.type);
                 const thumbnail = getThumbnail(item);
                 return (
@@ -1471,7 +1609,7 @@ export default function HubPage({ params }: { params: { locale: string } }) {
                           </span>
                           <span className="flex items-center gap-1 font-medium">
                             <Heart className="w-3.5 h-3.5" />
-                            {item.likes}
+                            {item.likeCount}
                           </span>
                         </div>
                         <span className="text-xs">{new Date(item.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
@@ -1565,7 +1703,7 @@ export default function HubPage({ params }: { params: { locale: string } }) {
                               </span>
                               <span className="flex items-center gap-1 font-medium">
                                 <Heart className="w-3.5 h-3.5" />
-                                {item.likes}
+                                {item.likeCount}
                               </span>
                             </div>
                             <span className="text-xs">{new Date(item.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
@@ -1620,7 +1758,7 @@ export default function HubPage({ params }: { params: { locale: string } }) {
             ) : (
               <div className="text-center py-12">
                 <div className="flex justify-center mb-4">
-                  <SwoopingTick size={64} />
+                  <LoadingSpinner size={48} inline />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
                   {t('empty.title')}
@@ -1653,7 +1791,7 @@ export default function HubPage({ params }: { params: { locale: string } }) {
           {!hasActiveFilters && totalFiltered === 0 && !loading && (
             <div className="text-center py-12">
               <div className="flex justify-center mb-4">
-                <SwoopingTick size={64} />
+                <LoadingSpinner size={48} inline />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
                 {t('empty.title')}

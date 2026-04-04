@@ -1,7 +1,9 @@
 'use client';
 
-import { useState, useCallback, useRef } from 'react';
-import { Upload, X, CheckCircle2, AlertCircle, Loader2, File, Image, Video, Music } from 'lucide-react';
+import { useState, useRef, useCallback } from 'react';
+import { Upload, X, CheckCircle2, AlertCircle, Loader2, File as LucideFile, Image as LucideImage, Video, Music } from 'lucide-react';
+import NextImage from 'next/image';
+import { upload as imagekitUpload } from '@imagekit/next';
 
 interface FileUploadProps {
   onUploadComplete?: (urls: string[]) => void;
@@ -9,6 +11,14 @@ interface FileUploadProps {
   maxFiles?: number;
   maxSizeMB?: number;
   multiple?: boolean;
+  folder?: string;
+}
+
+interface ImageKitAuth {
+  token: string;
+  expire: number;
+  signature: string;
+  publicKey: string;
 }
 
 interface UploadFile {
@@ -18,6 +28,7 @@ interface UploadFile {
   status: 'pending' | 'uploading' | 'success' | 'error';
   error?: string;
   url?: string;
+  fileId?: string;
 }
 
 export default function FileUpload({
@@ -26,6 +37,7 @@ export default function FileUpload({
   maxFiles = 10,
   maxSizeMB = 100,
   multiple = true,
+  folder,
 }: FileUploadProps) {
   const [files, setFiles] = useState<UploadFile[]>([]);
   const [isDragging, setIsDragging] = useState(false);
@@ -52,10 +64,10 @@ export default function FileUpload({
   };
 
   const getFileIcon = (type: string) => {
-    if (type.startsWith('image/')) return <Image className="w-6 h-6" />;
+    if (type.startsWith('image/')) return <LucideImage className="w-6 h-6" />;
     if (type.startsWith('video/')) return <Video className="w-6 h-6" />;
     if (type.startsWith('audio/')) return <Music className="w-6 h-6" />;
-    return <File className="w-6 h-6" />;
+    return <LucideFile className="w-6 h-6" />;
   };
 
   const formatFileSize = (bytes: number) => {
@@ -67,13 +79,11 @@ export default function FileUpload({
   };
 
   const validateFile = (file: File): string | null => {
-    // Check file size
     const sizeMB = file.size / (1024 * 1024);
     if (sizeMB > maxSizeMB) {
       return `File size exceeds ${maxSizeMB}MB`;
     }
 
-    // Check file type
     const fileType = getFileType(file);
     if (accept !== 'all' && fileType !== accept) {
       return `Invalid file type. Expected ${accept}`;
@@ -82,48 +92,75 @@ export default function FileUpload({
     return null;
   };
 
-  const handleFiles = useCallback(
-    (selectedFiles: FileList | null) => {
-      if (!selectedFiles) return;
+  // Fetch auth parameters from our server for ImageKit client-side upload
+  const fetchAuthParams = useCallback(async (): Promise<ImageKitAuth> => {
+    const res = await fetch('/api/imagekit/auth');
+    if (!res.ok) throw new Error('Failed to get upload authentication');
+    return res.json();
+  }, []);
 
-      const newFiles: UploadFile[] = [];
-      const currentFileCount = files.length;
+  // Determine the ImageKit folder based on file type
+  const getUploadFolder = useCallback(
+    (file: File): string => {
+      if (folder) return folder;
+      const fileType = getFileType(file);
+      switch (fileType) {
+        case 'image':
+          return '/portfolio';
+        case 'video':
+          return '/videos';
+        case 'audio':
+          return '/audio';
+        default:
+          return '/uploads';
+      }
+    },
+    [folder]
+  );
 
-      for (let i = 0; i < selectedFiles.length; i++) {
-        if (currentFileCount + newFiles.length >= maxFiles) {
-          alert(`Maximum ${maxFiles} files allowed`);
-          break;
-        }
+  function handleFiles(selectedFiles: FileList | null) {
+    if (!selectedFiles) return;
 
-        const file = selectedFiles[i];
-        const error = validateFile(file);
+    const newFiles: UploadFile[] = [];
 
-        const uploadFile: UploadFile = {
-          file,
-          progress: 0,
-          status: error ? 'error' : 'pending',
-          error: error || undefined,
-        };
-
-        // Create preview for images
-        if (file.type.startsWith('image/')) {
-          uploadFile.preview = URL.createObjectURL(file);
-        }
-
-        newFiles.push(uploadFile);
+    for (let i = 0; i < selectedFiles.length; i++) {
+      if (newFiles.length >= maxFiles) {
+        alert(`Maximum ${maxFiles} files allowed`);
+        break;
       }
 
-      setFiles((prev) => [...prev, ...newFiles]);
+      const file = selectedFiles[i];
+      const error = validateFile(file);
+
+      const uploadFile: UploadFile = {
+        file,
+        progress: 0,
+        status: error ? 'error' : 'pending',
+        error: error || undefined,
+      };
+
+      // Create preview for images
+      if (file.type.startsWith('image/')) {
+        uploadFile.preview = URL.createObjectURL(file);
+      }
+
+      newFiles.push(uploadFile);
+    }
+
+    setFiles((prev) => {
+      const startIndex = prev.length;
+      const updated = [...prev, ...newFiles];
 
       // Auto-upload valid files
-      newFiles.forEach((uploadFile, index) => {
+      newFiles.forEach((uploadFile, idx) => {
         if (uploadFile.status === 'pending') {
-          uploadSingleFile(files.length + index, uploadFile);
+          void uploadSingleFile(startIndex + idx, uploadFile);
         }
       });
-    },
-    [files, maxFiles]
-  );
+
+      return updated;
+    });
+  }
 
   const uploadSingleFile = async (index: number, uploadFile: UploadFile) => {
     try {
@@ -134,59 +171,48 @@ export default function FileUpload({
         return updated;
       });
 
-      const formData = new FormData();
-      formData.append('file', uploadFile.file);
-      
-      const fileType = getFileType(uploadFile.file);
-      formData.append('type', fileType === 'image' ? 'portfolio' : fileType);
+      // Get fresh auth params for each upload
+      const auth = await fetchAuthParams();
+      const uploadFolder = getUploadFolder(uploadFile.file);
 
-      const xhr = new XMLHttpRequest();
-
-      // Track upload progress
-      xhr.upload.addEventListener('progress', (e) => {
-        if (e.lengthComputable) {
-          const progress = Math.round((e.loaded / e.total) * 100);
-          setFiles((prev) => {
-            const updated = [...prev];
-            updated[index] = { ...updated[index], progress };
-            return updated;
-          });
-        }
+      // Upload directly to ImageKit from the browser
+      const response = await imagekitUpload({
+        file: uploadFile.file,
+        fileName: uploadFile.file.name,
+        token: auth.token,
+        signature: auth.signature,
+        expire: auth.expire,
+        publicKey: auth.publicKey,
+        folder: uploadFolder,
+        onProgress: (event) => {
+          if (event.type === 'progress' && event.loaded != null && event.total != null) {
+            const progress = Math.round((event.loaded / event.total) * 100);
+            setFiles((prev) => {
+              const updated = [...prev];
+              updated[index] = { ...updated[index], progress };
+              return updated;
+            });
+          }
+        },
       });
 
-      xhr.addEventListener('load', () => {
-        if (xhr.status === 200) {
-          const response = JSON.parse(xhr.responseText);
-          setFiles((prev) => {
-            const updated = [...prev];
-            updated[index] = {
-              ...updated[index],
-              status: 'success',
-              progress: 100,
-              url: response.url || response.urls?.[0],
-            };
-            return updated;
-          });
-        } else {
-          throw new Error('Upload failed');
-        }
-      });
+      // Upload succeeded — response contains url, fileId, name, etc.
+      const imageKitUrl = response.url;
+      const imageKitFileId = response.fileId;
 
-      xhr.addEventListener('error', () => {
-        setFiles((prev) => {
-          const updated = [...prev];
-          updated[index] = {
-            ...updated[index],
-            status: 'error',
-            error: 'Upload failed',
-          };
-          return updated;
-        });
+      setFiles((prev) => {
+        const updated = [...prev];
+        updated[index] = {
+          ...updated[index],
+          status: 'success',
+          progress: 100,
+          url: imageKitUrl,
+          fileId: imageKitFileId,
+        };
+        return updated;
       });
-
-      xhr.open('POST', '/api/upload');
-      xhr.send(formData);
     } catch (error) {
+      console.error('ImageKit upload error:', error);
       setFiles((prev) => {
         const updated = [...prev];
         updated[index] = {
@@ -295,10 +321,13 @@ export default function FileUpload({
                 {/* Icon/Preview */}
                 <div className="flex-shrink-0">
                   {uploadFile.preview ? (
-                    <img
+                    <NextImage
                       src={uploadFile.preview}
                       alt="Preview"
-                      className="w-12 h-12 object-cover rounded"
+                      width={48}
+                      height={48}
+                      unoptimized
+                      className="object-cover rounded"
                     />
                   ) : (
                     <div className="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded flex items-center justify-center text-gray-500 dark:text-gray-400">

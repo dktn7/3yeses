@@ -111,7 +111,6 @@ async function main() {
   console.log('🧹 Cleaning up existing talent profiles...');
   await prisma.workHistory.deleteMany();
   await prisma.portfolioItem.deleteMany();
-  await prisma.review.deleteMany();
   await prisma.payment.deleteMany();
   await prisma.subscription.deleteMany();
   await prisma.talentProfile.deleteMany();
@@ -124,7 +123,7 @@ async function main() {
   console.log('✅ Cleanup complete.');
 
   // 2. Fetch Categories
-  const categories = await prisma.category.findMany({
+  const categories = await prisma.talentCategory.findMany({
     include: { subcategories: true }
   });
 
@@ -166,7 +165,7 @@ async function main() {
     for (let j = 1; j <= 3; j++) {
       portfolioItems.push({
         title: `Portfolio Image ${j}`,
-        url: `https://loremflickr.com/800/600/${getRandomItem(imageKeywords)}?lock=${i}${j}`,
+        mediaUrl: `https://loremflickr.com/800/600/${getRandomItem(imageKeywords)}?lock=${i}${j}`,
         type: 'IMAGE',
         thumbnail: `https://loremflickr.com/800/600/${getRandomItem(imageKeywords)}?lock=${i}${j}`,
         description: 'A highlight from my recent work.'
@@ -176,7 +175,7 @@ async function main() {
     // 2. Add Video (as portfolio item too)
     portfolioItems.push({
       title: 'Featured Video',
-      url: videoUrl,
+      mediaUrl: videoUrl,
       type: 'VIDEO',
       thumbnail: `https://img.youtube.com/vi/${videoUrl.split('v=')[1]}/0.jpg`,
       description: 'My featured performance/reel.'
@@ -187,7 +186,7 @@ async function main() {
       const audioUrl = getRandomItem(categoryMedia.audio);
       portfolioItems.push({
         title: 'Audio Demo',
-        url: audioUrl,
+        mediaUrl: audioUrl,
         type: 'AUDIO',
         description: 'Listen to my demo reel.'
       });
@@ -210,11 +209,11 @@ async function main() {
         userId: user.id,
         categoryId: category.id,
         subcategoryId: subcategory?.id,
-        roleDescription: subcategory ? subcategory.name : category.name,
+        performerTitle: subcategory ? subcategory.name : category.name,
         bio: `I am a passionate ${subcategory ? subcategory.name : category.name} based in ${location}. I have been working in the industry for several years and I am always looking for new challenges.`,
         location: location,
-        experience: `${getRandomInt(1, 20)} years`, // String format as per schema
-        rating: parseFloat((Math.random() * 2 + 3).toFixed(1)), // 3.0 to 5.0
+        experienceLevel: `${getRandomInt(1, 20)} years`, // String format as per schema
+        // rating removed per platform decision
         viewCount: getRandomInt(10, 5000),
         likeCount: getRandomInt(0, 500),
         isBeginner: Math.random() > 0.8,
@@ -236,7 +235,7 @@ async function main() {
         // Media
         avatarUrl: `https://i.pravatar.cc/400?u=${user.id}`,
         videoUrl: videoUrl,
-        portfolioImages: portfolioItems.filter(p => p.type === 'IMAGE').map(p => p.url),
+        portfolioImages: portfolioItems.filter(p => p.type === 'IMAGE').map(p => p.mediaUrl),
         videoUrls: [videoUrl],
         
         // Create related records

@@ -1,4 +1,5 @@
 import nextIntlPlugin from 'next-intl/plugin';
+import './lib/tracing.js'; // Initialize tracing at the start of the application
 
 const withNextIntl = nextIntlPlugin('./i18n.ts');
 
@@ -82,7 +83,7 @@ const nextConfig = {
             },
             {
                 protocol: 'https',
-                hostname: 'res.cloudinary.com',
+                hostname: 'ik.imagekit.io',
                 port: '',
                 pathname: '/**',
             },
@@ -171,6 +172,20 @@ const nextConfig = {
                 hostname: 'cdn.prod.website-files.com',
                 pathname: '/**',
             },
+            // External site used in Hub/featured cards
+            {
+                protocol: 'https',
+                hostname: 'www.tradeway.co.za',
+                port: '',
+                pathname: '/**',
+            },
+            // Seed/example images used in hub/featured cards
+            {
+                protocol: 'https',
+                hostname: 'example.com',
+                port: '',
+                pathname: '/**',
+            },
             // Local uploads (development and self-hosted)
             {
                 protocol: 'http',
@@ -187,6 +202,12 @@ const nextConfig = {
                 protocol: 'https',
                 hostname: 'localhost',
                 pathname: '/uploads/**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'encrypted-tbn0.gstatic.com',
+                port: '',
+                pathname: '/images/**',
             },
         ],
         formats: ['image/avif', 'image/webp'],

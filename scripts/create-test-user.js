@@ -7,7 +7,7 @@ async function createTestUser() {
   try {
     // Check if user already exists
     const existing = await prisma.user.findFirst({
-      where: { email: 'test@3yeses.com' }
+      where: { email: 'test@3yeses.online' }
     });
 
     if (existing) {
@@ -22,7 +22,7 @@ async function createTestUser() {
       const hashedPassword = await bcrypt.hash('Test123!', 12);
       const user = await prisma.user.create({
         data: {
-          email: 'test@3yeses.com',
+          email: 'test@3yeses.online',
           password: hashedPassword,
           name: 'Test User',
           role: 'TALENT',
@@ -33,7 +33,7 @@ async function createTestUser() {
     }
 
     console.log('\n=== Test Account ===');
-    console.log('Email: test@3yeses.com');
+    console.log('Email: test@3yeses.online');
     console.log('Password: Test123!');
     console.log('====================\n');
 

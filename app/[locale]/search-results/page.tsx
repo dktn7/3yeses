@@ -1,5 +1,6 @@
 import SearchResultsClient from './SearchResultsClient';
 
-export default function SearchResultsPage({ params }: { params: { locale: string } }) {
-  return <SearchResultsClient locale={params.locale} />;
+export default async function SearchResultsPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  return <SearchResultsClient locale={locale} />;
 }

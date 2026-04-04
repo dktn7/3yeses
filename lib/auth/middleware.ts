@@ -41,7 +41,7 @@ export async function authenticateUser(request: Request): Promise<{
     }
 
     // Verify JWT token
-    const decoded = AuthService.verifyJWT(token);
+    const decoded = await AuthService.verifyJWT(token);
 
     if (!decoded) {
       return {
@@ -183,7 +183,7 @@ export async function getOptionalUser(request: Request): Promise<AuthenticatedUs
     if ('cookies' in request) {
       const req = request as CookieRequest;
       if (req.cookies && typeof req.cookies.get === 'function') {
-        token = req.cookies.get('auth-token')?.value;
+        token = req.cookies.get('auth-token')?.value || req.cookies.get('accessToken')?.value;
       }
     }
     
@@ -191,7 +191,7 @@ export async function getOptionalUser(request: Request): Promise<AuthenticatedUs
       return null;
     }
 
-    const decoded = AuthService.verifyJWT(token);
+    const decoded = await AuthService.verifyJWT(token);
     
     if (!decoded) {
       return null;
@@ -207,4 +207,28 @@ export async function getOptionalUser(request: Request): Promise<AuthenticatedUs
     console.error('Optional user extraction error:', error);
     return null;
   }
+}
+
+/**
+ * Helper to require admin access in API routes.
+ * Returns a NextResponse with an error if unauthorized, or undefined if authorized.
+ */
+export async function requireAdmin(request: Request): Promise<NextResponse | undefined> {
+  const authResult = await authenticateUser(request);
+  
+  if (!authResult.authenticated || !authResult.user) {
+    return NextResponse.json(
+      { success: false, message: 'Authentication required' },
+      { status: 401 }
+    );
+  }
+
+  if (authResult.user.role !== 'ADMIN') {
+    return NextResponse.json(
+      { success: false, message: 'Insufficient permissions' },
+      { status: 403 }
+    );
+  }
+
+  return undefined;
 }

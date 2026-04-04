@@ -3,10 +3,8 @@ import { getPrisma } from '@/lib/prisma';
 import AuthService from '@/lib/auth/auth-service';
 import { cookies } from 'next/headers';
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function POST(request: NextRequest, context: any) {
+  const params = (context && context.params) || { id: undefined };
   const prisma = getPrisma();
   try {
     const cookieStore = await cookies();
@@ -16,7 +14,7 @@ export async function POST(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const decoded = AuthService.verifyJWT(accessToken);
+    const decoded = await AuthService.verifyJWT(accessToken);
     if (!decoded) {
       return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
     }
@@ -26,11 +24,11 @@ export async function POST(
 
     const updated = await prisma.portfolioItem.update({
       where: { id: params.id },
-      data: { likes: { increment: delta } },
-      select: { id: true, likes: true },
+      data: { likeCount: { increment: delta } },
+      select: { id: true, likeCount: true },
     });
 
-    return NextResponse.json({ success: true, likes: updated.likes });
+    return NextResponse.json({ success: true, likeCount: updated.likeCount });
   } catch (error) {
     console.error('Portfolio like error:', error);
     return NextResponse.json(

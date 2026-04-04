@@ -12,10 +12,10 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String    @id
   email         String    @unique
   password      String
-  role          Role      @default(TALENT)
+  role          UserRole  @default(TALENT)
   name          String
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -45,31 +45,47 @@ model User {
   talentProfile TalentProfile?
   subscriptions Subscription[]
   payments      Payment[]
-  reviewsGiven  Review[]
-  likes         Like[]
+  profileLikes  ProfileLike[]
   comments      Comment[]
   commentLikes  CommentLike[]
 
   // Reports
-  reportsCreated  Report[] @relation("ReportedBy")
-  reportsReceived Report[] @relation("ReportedUser")
-  reportsHandled  Report[] @relation("ReportHandler")
+  reportsCreated  ContentReport[] @relation("ReportedBy")
+  reportsReceived ContentReport[] @relation("ReportedUser")
+  reportsHandled  ContentReport[] @relation("ReportHandler")
 
   // Analytics
   profileViews   ProfileView[]
   portfolioViews PortfolioView[]
+  
+  // Advanced Admin Features
+  authoredContent ContentVersion[]
+  userSessions    UserSession[]
+  activityLogs    ActivityLog[]
+  emailLogs       EmailLog[]
+
+  // Financials & Verification
+  transactions    FinancialTransaction[]
+  handledVerificationRequests VerificationRequest[]
+
+  // Support & Operations
+  supportTicketsCreated SupportTicket[] @relation("TicketCreator")
+  supportTicketsAssigned SupportTicket[] @relation("TicketAssignee")
+  kbArticlesAuthored KnowledgeBaseArticle[]
+  mediaAssetsUploaded MediaAsset[]
+
+  // Admin Notification State
+  adminNotifState AdminNotificationState? @relation("AdminNotifState")
 }
 
 model TalentProfile {
-  id     String @id @default(cuid())
   user   User   @relation(fields: [userId], references: [id])
   userId String @unique
 
-  roleDescription String? // e.g., "Lead Actress"
+  performerTitle String? @map("roleDescription") // e.g., "Lead Actress"
   bio             String?
   location        String?
-  experience      String? // Changed to String for "Beginner (0-2 years)", etc.
-  rating          Float   @default(0)
+  experienceLevel String? @map("experience") // "Beginner (0-2 years)", etc.
 
   // Detailed characteristics
   dateOfBirth    DateTime? // Added for age calculation
@@ -83,7 +99,7 @@ model TalentProfile {
   eyeColor       String?
   hairColor      String?
 
-  languages      Language[] // Changed to relation for proficiency levels
+  languages      SpokenLanguage[] // Relation for proficiency levels
   skills         String[]
   featuredSkills String[]   @default([]) // User-selected skills to display on card (max 4)
 
@@ -91,8 +107,11 @@ model TalentProfile {
   disabilities    String[] @default([]) // Array of disability types
   disabilityOther String? // Custom disability specification
 
-  avatarUrl       String?
-  bannerUrl       String?
+  avatarSource    String? // New field to specify the source of the avatar (e.g., 'url', 'upload', etc.)
+  bannerSource    String? // New field to specify the source of the banner (e.g., 'url', 'upload', etc.)
+  avatarUrl       String? // Updated to support multiple sources
+  bannerUrl       String? // Updated to support multiple sources
+  contentBackground String? // Customizable background for content section (preset id or hex color)
   videoUrl        String?
   portfolioImages String[] @default([]) // Array of image URLs
   videoUrls       String[] @default([]) // Array of video URLs (YouTube, Vimeo, etc.)
@@ -100,12 +119,11 @@ model TalentProfile {
   socialMedia     Json? // [{ platform: "Instagram", url: "..." }]
   portfolio       PortfolioItem[]
   workHistory     WorkHistory[]
-  reviewsReceived Review[]
   comments        Comment[]
 
   viewCount  Int     @default(0)
   likeCount  Int     @default(0)
-  likes      Like[]
+  profileLikes ProfileLike[]
   isBeginner Boolean @default(false)
 
   // Profile completion
@@ -114,16 +132,16 @@ model TalentProfile {
   // Profile visibility settings
   profileSettings ProfileSettings?
 
-  category      Category?    @relation(fields: [categoryId], references: [id])
+  category      TalentCategory?    @relation(fields: [categoryId], references: [id])
   categoryId    String?
-  subcategory   Subcategory? @relation(fields: [subcategoryId], references: [id])
+  subcategory   TalentSubcategory? @relation(fields: [subcategoryId], references: [id])
   subcategoryId String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   // Reports
-  reports Report[]
+  reports ContentReport[]
 
   // Analytics
   profileViews      ProfileView[]
@@ -131,7 +149,14 @@ model TalentProfile {
   profileStats      ProfileStats[]
 
   // Notifications
-  notifications Notification[]
+  notifications TalentNotification[]
+
+  // Verification & Background Checks
+  verified             Boolean               @default(false)
+  verificationRequests VerificationRequest[]
+  backgroundChecks     BackgroundCheck[]
+
+  featuredItems        FeaturedItem[]
 
   @@index([categoryId])
   @@index([subcategoryId])
@@ -143,7 +168,6 @@ model TalentProfile {
   @@index([age])
   @@index([height])
   @@index([location])
-  @@index([rating])
   @@index([viewCount])
   @@index([createdAt])
   @@index([skills])
@@ -151,7 +175,7 @@ model TalentProfile {
 
 model ProfileSettings {
   id              String        @id @default(cuid())
-  talentProfile   TalentProfile @relation(fields: [talentProfileId], references: [id], onDelete: Cascade)
+  talentProfile   TalentProfile @relation(fields: [talentProfileId], references: [userId], onDelete: Cascade)
   talentProfileId String        @unique
 
   // Visibility settings
@@ -159,8 +183,6 @@ model ProfileSettings {
   showExperienceLevel Boolean @default(true)
   showLocation        Boolean @default(true)
   showLanguages       Boolean @default(true)
-  showRating          Boolean @default(true)
-  showReviewCount     Boolean @default(true)
   showWorkHistory     Boolean @default(true)
   showSocialMedia     Boolean @default(true)
   showContactInfo     Boolean @default(true)
@@ -181,48 +203,52 @@ enum ProfileVisibility {
   CONTACTS_ONLY
 }
 
-model Language {
-  id          String      @id @default(cuid())
+model SpokenLanguage {
+  id          String              @id @default(cuid())
   name        String // e.g., "English", "Spanish"
-  proficiency Proficiency // Native, Fluent, Intermediate, Basic
+  proficiency LanguageProficiency // Native, Fluent, Intermediate, Basic
 
-  talentProfile   TalentProfile @relation(fields: [talentProfileId], references: [id], onDelete: Cascade)
+  talentProfile   TalentProfile @relation(fields: [talentProfileId], references: [userId], onDelete: Cascade)
   talentProfileId String
 
   createdAt DateTime @default(now())
 
   @@unique([talentProfileId, name])
+  @@map("Language")
 }
 
-enum Proficiency {
+enum LanguageProficiency {
   NATIVE
   FLUENT
   INTERMEDIATE
   BASIC
 }
 
-model Category {
-  id             String          @id @default(cuid())
-  name           String          @unique
+model TalentCategory {
+  id             String              @id @default(cuid())
+  name           String              @unique
   description    String?
   icon           String?
-  subcategories  Subcategory[]
+  subcategories  TalentSubcategory[]
   talentProfiles TalentProfile[]
+
+  @@map("Category")
 }
 
-model Subcategory {
+model TalentSubcategory {
   id          String  @id @default(cuid())
   name        String
   description String?
   talentCount Int     @default(0)
 
-  category   Category @relation(fields: [categoryId], references: [id])
+  category   TalentCategory @relation(fields: [categoryId], references: [id])
   categoryId String
 
   // subSubcategories field removed
   talentProfiles TalentProfile[]
 
   @@unique([categoryId, name])
+  @@map("Subcategory")
 }
 
 model WorkHistory {
@@ -234,50 +260,98 @@ model WorkHistory {
   isCurrent   Boolean   @default(false)
   description String?
 
-  talentProfile   TalentProfile @relation(fields: [talentProfileId], references: [id], onDelete: Cascade)
+  talentProfile   TalentProfile @relation(fields: [talentProfileId], references: [userId], onDelete: Cascade)
   talentProfileId String
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Growth & Promotion
+model AdBanner {
+  id          String   @id @default(cuid())
+  title       String
+  imageUrl    String
+  linkUrl     String?
+  position    AdPosition @default(SIDEBAR)
+  
+  startDate   DateTime?
+  endDate     DateTime?
+  active      Boolean  @default(true)
+  
+  // Basic stats
+  impressions Int      @default(0)
+  clicks      Int      @default(0)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([position, active])
+  @@index([startDate, endDate])
+}
+
+enum AdPosition {
+  HEADER
+  SIDEBAR
+  FOOTER
+  FEED
+  HERO
+}
+
+model FeaturedItem {
+  id              String        @id @default(cuid())
+  
+  // Can feature a profile or a portfolio item
+  talentProfile   TalentProfile? @relation(fields: [talentProfileId], references: [userId], onDelete: Cascade)
+  talentProfileId String?
+  
+  portfolioItem   PortfolioItem? @relation(fields: [portfolioItemId], references: [id], onDelete: Cascade)
+  portfolioItemId String?
+  
+  title           String?       // Override title if needed
+  description     String?       // Override description
+  
+  slot            String        // e.g., "HOMEPAGE_HERO", "CATEGORY_TOP"
+  priority        Int           @default(0) // Higher shows first
+  
+  startDate       DateTime?
+  endDate         DateTime?
+  active          Boolean       @default(true)
+  
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([slot, active])
+  @@index([priority])
 }
 
 // SubSubcategory model removed
 model PortfolioItem {
-  id          String            @id @default(cuid())
-  title       String
-  url         String
-  type        PortfolioItemType
-  thumbnail   String?
-  likes       Int               @default(0)
-  description String?
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @default(now()) @updatedAt
+  id              String            @id @default(cuid())
+  title           String
+  mediaUrl        String            @map("url")
+  type            PortfolioItemType
+  thumbnail       String?
+  imagekitFileId  String?
+  likeCount       Int               @default(0) @map("likes")
+  description     String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @default(now()) @updatedAt
 
-  talentProfile   TalentProfile @relation(fields: [talentProfileId], references: [id])
+  talentProfile   TalentProfile @relation(fields: [talentProfileId], references: [userId])
   talentProfileId String
 
   comments Comment[]
-  reports  Report[]
+  reports  ContentReport[]
   views    PortfolioView[]
+  
+  featuredItems FeaturedItem[]
 
   @@index([type])
   @@index([talentProfileId])
   @@index([createdAt])
 }
 
-model Review {
-  id      String  @id @default(cuid())
-  rating  Int
-  comment String?
-
-  reviewer   User   @relation(fields: [reviewerId], references: [id])
-  reviewerId String
-
-  talentProfile   TalentProfile @relation(fields: [talentProfileId], references: [id])
-  talentProfileId String
-
-  createdAt DateTime @default(now())
-}
 
 model Subscription {
   id     String @id @default(cuid())
@@ -301,6 +375,8 @@ model Subscription {
   currentPeriodStart DateTime?
   currentPeriodEnd   DateTime?
 
+  transactions FinancialTransaction[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -315,7 +391,7 @@ model Payment {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   amount   Int // in cents
-  currency String        @default("usd")
+  currency String        @default("gbp")
   status   PaymentStatus @default(PENDING)
 
   // Stripe payment info
@@ -325,6 +401,8 @@ model Payment {
   description String?
   metadata    Json? // Flexible storage for additional payment data
 
+  transactions FinancialTransaction[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -333,19 +411,20 @@ model Payment {
   @@index([createdAt])
 }
 
-model Like {
+model ProfileLike {
   id              String        @id @default(cuid())
   user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId          String
-  talentProfile   TalentProfile @relation(fields: [talentProfileId], references: [id], onDelete: Cascade)
+  talentProfile   TalentProfile @relation(fields: [talentProfileId], references: [userId], onDelete: Cascade)
   talentProfileId String
 
   createdAt DateTime @default(now())
 
   @@unique([userId, talentProfileId]) // Prevent duplicate likes
+  @@map("Like")
 }
 
-enum Role {
+enum UserRole {
   TALENT
   ADMIN
 }
@@ -390,7 +469,6 @@ enum PortfolioItemType {
 }
 
 enum SubscriptionPlan {
-  FREE
   STANDARD
 }
 
@@ -417,9 +495,9 @@ enum CommentStatus {
 }
 
 // Notifications persisted for each talent profile
-model Notification {
+model TalentNotification {
   id              String           @id @default(cuid())
-  talentProfile   TalentProfile    @relation(fields: [talentProfileId], references: [id], onDelete: Cascade)
+  talentProfile   TalentProfile    @relation(fields: [talentProfileId], references: [userId], onDelete: Cascade)
   talentProfileId String
   type            NotificationType
   title           String
@@ -432,6 +510,7 @@ model Notification {
 
   @@index([talentProfileId, createdAt])
   @@index([talentProfileId, read, dismissed])
+  @@map("Notification")
 }
 
 enum NotificationType {
@@ -447,6 +526,8 @@ model Comment {
   content    String
   status     CommentStatus @default(APPROVED)
   likesCount Int           @default(0)
+  isPinned   Boolean       @default(false)
+  pinnedAt   DateTime?
   createdAt  DateTime      @default(now())
   updatedAt  DateTime      @updatedAt
 
@@ -457,7 +538,7 @@ model Comment {
   portfolioItem   PortfolioItem? @relation(fields: [portfolioItemId], references: [id], onDelete: Cascade)
   portfolioItemId String?
 
-  talentProfile   TalentProfile? @relation(fields: [talentProfileId], references: [id], onDelete: Cascade)
+  talentProfile   TalentProfile? @relation(fields: [talentProfileId], references: [userId], onDelete: Cascade)
   talentProfileId String?
 
   // Support for threaded comments (replies)
@@ -466,7 +547,7 @@ model Comment {
   replies         Comment[] @relation("CommentReplies")
 
   likes   CommentLike[]
-  reports Report[]
+  reports ContentReport[]
 
   @@index([userId])
   @@index([portfolioItemId])
@@ -490,45 +571,49 @@ model CommentLike {
   @@index([commentId])
 }
 
-model Report {
-  id          String       @id @default(cuid())
-  type        ReportType
-  reason      String
-  description String?
-  status      ReportStatus @default(PENDING)
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-
-  // Reporter
-  reporter   User   @relation("ReportedBy", fields: [reporterId], references: [id], onDelete: Cascade)
-  reporterId String
-
-  // Reported content (one of these will be set)
-  reportedUser   User?   @relation("ReportedUser", fields: [reportedUserId], references: [id], onDelete: Cascade)
-  reportedUserId String?
-
-  reportedProfile   TalentProfile? @relation(fields: [reportedProfileId], references: [id], onDelete: Cascade)
+model ContentReport {
+  id               String         @id @default(cuid())
+  
+  // Who reported (required)
+  reportedBy       User           @relation("ReportedBy", fields: [reportedById], references: [id], onDelete: Cascade)
+  reportedById     String
+  
+  // What was reported (can be a talent profile, portfolio item, or comment)
+  reportedProfile  TalentProfile? @relation(fields: [reportedProfileId], references: [userId], onDelete: Cascade)
   reportedProfileId String?
+  
+  portfolioItem    PortfolioItem? @relation(fields: [portfolioItemId], references: [id], onDelete: Cascade)
+  portfolioItemId  String?
+  
+  comment          Comment?       @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  commentId        String?
+  
+  // Who the report is about (can be the talent owner or comment author)
+  reportedUser     User           @relation("ReportedUser", fields: [reportedUserId], references: [id], onDelete: Cascade)
+  reportedUserId   String
+  
+  // Who handled the report (admin)
+  handler          User?          @relation("ReportHandler", fields: [handlerId], references: [id], onDelete: SetNull)
+  handlerId        String?
+  
+  // Report details
+  type             ReportType
+  reason           String
+  status           ReportStatus   @default(PENDING)
+  resolution       String?        // Resolution notes from admin
+  
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
 
-  reportedComment   Comment? @relation(fields: [reportedCommentId], references: [id], onDelete: Cascade)
-  reportedCommentId String?
-
-  reportedPortfolio   PortfolioItem? @relation(fields: [reportedPortfolioId], references: [id], onDelete: Cascade)
-  reportedPortfolioId String?
-
-  // Admin who handled the report
-  handledBy   User?     @relation("ReportHandler", fields: [handledById], references: [id], onDelete: SetNull)
-  handledById String?
-  handledAt   DateTime?
-  adminNotes  String?
-
-  @@index([reporterId])
-  @@index([reportedUserId])
+  @@index([reportedById])
   @@index([reportedProfileId])
-  @@index([reportedCommentId])
-  @@index([reportedPortfolioId])
+  @@index([portfolioItemId])
+  @@index([commentId])
+  @@index([reportedUserId])
+  @@index([handlerId])
   @@index([status])
   @@index([type])
+  @@map("Report")
 }
 
 enum ReportType {
@@ -556,7 +641,7 @@ model ProfileView {
   viewerId String?
 
   // Viewed profile
-  talentProfile   TalentProfile @relation(fields: [talentProfileId], references: [id], onDelete: Cascade)
+  talentProfile   TalentProfile @relation(fields: [talentProfileId], references: [userId], onDelete: Cascade)
   talentProfileId String
 
   // Metadata
@@ -600,7 +685,7 @@ model SearchAppearance {
   searchFilters Json? // Store filter criteria
 
   // Profile that appeared in results
-  talentProfile   TalentProfile @relation(fields: [talentProfileId], references: [id], onDelete: Cascade)
+  talentProfile   TalentProfile @relation(fields: [talentProfileId], references: [userId], onDelete: Cascade)
   talentProfileId String
 
   // Position in search results
@@ -617,7 +702,7 @@ model ProfileStats {
   date DateTime @db.Date
 
   // Profile
-  talentProfile   TalentProfile @relation(fields: [talentProfileId], references: [id], onDelete: Cascade)
+  talentProfile   TalentProfile @relation(fields: [talentProfileId], references: [userId], onDelete: Cascade)
   talentProfileId String
 
   // Daily aggregated stats
@@ -632,4 +717,431 @@ model ProfileStats {
   @@unique([talentProfileId, date])
   @@index([talentProfileId])
   @@index([date])
+}
+
+// User Analytics & Sessions
+model UserSession {
+  id        String   @id @default(cuid())
+  
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId    String?
+  
+  ipAddress String?
+  userAgent String?
+  
+  startedAt    DateTime @default(now())
+  lastActiveAt DateTime @default(now())
+  
+  duration     Int      @default(0) // in seconds
+  
+  deviceType   String?  // "mobile", "desktop"
+  browser      String?
+  os           String?
+  
+  path         String?  // Landing path
+  
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  @@index([userId])
+  @@index([startedAt])
+  @@index([ipAddress])
+}
+
+// Activity Logging (Audit Trail)
+model ActivityLog {
+  id        String   @id @default(cuid())
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  
+  action    String   // e.g., "LOGIN", "PROFILE_UPDATE", "PASSWORD_CHANGE"
+  details   Json?    // e.g., { field: "bio", oldValue: "...", newValue: "..." }
+  
+  ipAddress String?
+  userAgent String?
+  
+  createdAt DateTime @default(now())
+  
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
+}
+
+// Email Logs (Integration with Resend)
+model EmailLog {
+  id        String   @id @default(cuid())
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  
+  // Resend specific fields
+  providerMessageId String? @unique // Resend ID
+  
+  templateId String?
+  type      String   // e.g., "WELCOME", "RESET_PASSWORD", "MARKETING"
+  subject   String?
+  
+  status    EmailStatus @default(SENT)
+  error     String?
+  
+  openedAt  DateTime?
+  clickedAt DateTime?
+  
+  createdAt DateTime @default(now())
+  
+  @@index([userId])
+  @@index([type])
+  @@index([status])
+  @@index([providerMessageId])
+  @@index([createdAt])
+}
+
+enum EmailStatus {
+  QUEUED
+  SENT
+  DELIVERED
+  FAILED
+  BOUNCED
+  SPAM_COMPLAINT
+}
+
+// System Monitoring
+model SystemMetric {
+  id        String   @id @default(cuid())
+  type      SystemMetricType
+  value     Float    // duration in ms, or count
+  name      String   // e.g., "api_request_duration", "db_query_duration"
+  tags      Json?    // e.g., { path: "/api/users", method: "GET" }
+  createdAt DateTime @default(now())
+
+  @@index([type, createdAt])
+}
+
+enum SystemMetricType {
+  API_REQUEST
+  DB_QUERY
+  ERROR_LOG
+  SYSTEM_HEALTH
+}
+
+// CMS (Content Management System)
+model ContentPage {
+  slug        String   @id // e.g., "terms-of-service"
+  internalNote String?  @map("description") // Internal note: "Legal terms page"
+  
+  versions    ContentVersion[]
+  published   PublishedContent[] 
+}
+
+// Stores the pointer to the currently active version for a specific locale
+model PublishedContent {
+  id        String      @id @default(cuid())
+  
+  page      ContentPage @relation(fields: [pageSlug], references: [slug], onDelete: Cascade)
+  pageSlug  String
+  
+  locale    String      // e.g., "en", "es", "fr"
+  
+  version   ContentVersion @relation(fields: [versionId], references: [id])
+  versionId String
+  
+  @@unique([pageSlug, locale]) // Only one published version per page per locale
+}
+
+model ContentVersion {
+  id          String      @id @default(cuid())
+  
+  page        ContentPage @relation(fields: [pageSlug], references: [slug], onDelete: Cascade)
+  pageSlug    String
+  
+  locale      String      // Language of this specific version
+  title       String      // Localized title
+  content     String      @db.Text // HTML or Markdown
+  changeNote  String?     @map("changelog") // "Updated pricing section"
+  
+  authorId    String
+  author      User     @relation(fields: [authorId], references: [id])
+  
+  createdAt   DateTime @default(now())
+  
+  // Back-relation to see if this version is published
+  publishedEntry PublishedContent[]
+}
+
+// Communications System
+model EmailTemplate {
+  id            String   @id // e.g., "welcome-email"
+  name          String
+  subject       String
+  body          String   @db.Text // HTML with {{variables}}
+  preheaderText String?  // Short text shown in inbox preview
+  variables     String[] // List of available variables for this template
+  lastUpdated   DateTime @updatedAt
+}
+
+model GlobalNotification {
+  id          String   @id @default(cuid())
+  title       String
+  message     String
+  type        GlobalNotificationType // INFO, WARNING, CRITICAL
+  targetRole  UserRole? // Null = All, or specific role
+  active      Boolean  @default(true)
+  expiresAt   DateTime?
+  createdAt   DateTime @default(now())
+}
+
+enum GlobalNotificationType {
+  INFO
+  WARNING
+  CRITICAL
+}
+
+// Financials
+model FinancialTransaction {
+  id              String                    @id @default(cuid())
+  user            User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId          String
+  
+  type            FinancialTransactionType
+  amount          Int                       // in cents
+  currency        String                    @default("gbp")
+  status          FinancialTransactionStatus @default(COMPLETED)
+  
+  // Links
+  subscription    Subscription?             @relation(fields: [subscriptionId], references: [id])
+  subscriptionId  String?
+  
+  payment         Payment?                  @relation(fields: [paymentId], references: [id])
+  paymentId       String?
+  
+  // External references
+  stripeId        String?                   // PaymentIntent ID or Refund ID
+  invoiceId       String?
+  
+  description     String?
+  metadata        Json?
+  
+  createdAt       DateTime                  @default(now())
+  updatedAt       DateTime                  @updatedAt
+
+  @@index([userId])
+  @@index([type])
+  @@index([createdAt])
+  @@index([subscriptionId])
+  @@index([paymentId])
+}
+
+enum FinancialTransactionType {
+  PAYMENT
+  REFUND
+  ADJUSTMENT
+  CREDIT
+}
+
+enum FinancialTransactionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+// Verification
+model VerificationRequest {
+  id              String             @id @default(cuid())
+  talentProfile   TalentProfile      @relation(fields: [talentProfileId], references: [userId], onDelete: Cascade)
+  talentProfileId String
+  
+  type            VerificationType
+  status          VerificationStatus @default(PENDING)
+  
+  // Data
+  documents       String[]           // URLs to uploaded documents
+  notes           String?            // Admin internal notes
+  rejectionReason String?            // Reason sent to user
+  
+  // Admin handling
+  handler         User?              @relation(fields: [handlerId], references: [id])
+  handlerId       String?
+  
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  @@index([talentProfileId])
+  @@index([status])
+  @@index([type])
+  @@index([handlerId])
+}
+
+enum VerificationType {
+  IDENTITY
+  PROFESSIONAL // e.g., union status, qualifications
+}
+
+enum VerificationStatus {
+  PENDING
+  IN_REVIEW
+  APPROVED
+  REJECTED
+}
+
+model BackgroundCheck {
+  id              String                @id @default(cuid())
+  talentProfile   TalentProfile         @relation(fields: [talentProfileId], references: [userId], onDelete: Cascade)
+  talentProfileId String
+  
+  provider        String?               // e.g., "Checkr"
+  providerId      String?               // External ID
+  
+  status          BackgroundCheckStatus @default(PENDING)
+  result          String?               // "CLEAR", "CONSIDER", etc.
+  reportUrl       String?
+  
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+
+  @@index([talentProfileId])
+  @@index([status])
+}
+
+enum BackgroundCheckStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+}
+
+
+
+// --- Support System ---
+
+model SupportTicket {
+  id          String   @id @default(cuid())
+  subject     String
+  message     String   @db.Text
+  status      SupportTicketStatus @default(OPEN)
+  priority    SupportTicketPriority @default(MEDIUM)
+  category    SupportTicketCategory @default(OTHER)
+  
+  // Creator (authenticated users only)
+  user        User?    @relation("TicketCreator", fields: [userId], references: [id], onDelete: SetNull)
+  userId      String?
+  guestEmail  String?  // Legacy field, kept for migration compatibility
+
+  // Assignment
+  assignedTo  User?    @relation("TicketAssignee", fields: [assignedToId], references: [id], onDelete: SetNull)
+  assignedToId String?
+
+  // Internal
+  tags        String[] // ["billing", "technical"]
+  internalNotes String? @db.Text
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+  @@index([status])
+  @@index([priority])
+  @@index([category])
+  @@index([assignedToId])
+}
+
+enum SupportTicketStatus {
+  OPEN
+  IN_PROGRESS
+  WAITING_FOR_USER
+  RESOLVED
+  CLOSED
+}
+
+enum SupportTicketPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum SupportTicketCategory {
+  ACCOUNT
+  BILLING
+  PORTFOLIO
+  CATEGORIES
+  NOTIFICATIONS
+  SECURITY
+  OTHER
+}
+
+model KnowledgeBaseArticle {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  content     String   @db.Text
+  category    String   // e.g., "Getting Started", "Billing"
+  tags        String[]
+  
+  isPublished Boolean  @default(false)
+  viewCount   Int      @default(0)
+  
+  author      User     @relation(fields: [authorId], references: [id])
+  authorId    String
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([category])
+  @@index([slug])
+  @@index([isPublished])
+}
+
+// --- CMS System ---
+
+model MediaAsset {
+  id          String   @id @default(cuid())
+  filename    String
+  url         String
+  type        MediaType // IMAGE, VIDEO, DOCUMENT
+  mimeType    String?
+  size        Int?     // in bytes
+  
+  uploadedBy  User?    @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
+  uploadedById String?
+  
+  altText     String?
+  folder      String?  // e.g., "/avatars", "/posts"
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([type])
+  @@index([uploadedById])
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+  DOCUMENT
+  OTHER
+}
+
+model SeoMetadata {
+  id          String   @id @default(cuid())
+  route       String   @unique // e.g., "/", "/pricing", "/talent/[id]"
+  
+  title       String
+  description String?
+  keywords    String[]
+  ogImage     String?
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model AdminNotificationState {
+  id            String   @id @default(cuid())
+  adminId       String   @unique
+  admin         User     @relation("AdminNotifState", fields: [adminId], references: [id], onDelete: Cascade)
+  lastClearedAt DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([adminId])
 }

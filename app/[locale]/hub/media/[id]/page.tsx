@@ -20,7 +20,7 @@ import MediaThumbnailFallback from '@/components/MediaThumbnailFallback';
 interface MediaItem {
   id: string;
   title: string;
-  url: string;
+  mediaUrl: string;
   type: 'IMAGE' | 'VIDEO' | 'AUDIO';
   thumbnail?: string;
   description?: string;
@@ -157,7 +157,7 @@ export default function MediaViewerPage() {
             </div>
           </div>
           <button
-            onClick={() => router.push(`/${locale}/talent/${talent.id}`)}
+            onClick={() => router.push(`/talent/${(talent as any).userId ?? talent.id}`)}
             className="w-full px-3 py-2 bg-primary-blue dark:bg-accent-red text-white text-sm font-medium rounded-lg hover:shadow-lg transition-all"
           >
             View Full Profile
@@ -193,7 +193,7 @@ export default function MediaViewerPage() {
             <div className="space-y-2">
               {allMedia
                 .filter(media => {
-                  if (media.talentProfile.id !== talent.id) return false;
+                  if (((media.talentProfile as any).userId ?? media.talentProfile.id) !== ((talent as any).userId ?? talent.id)) return false;
                   if (playerFilter !== 'all' && media.type.toLowerCase() !== playerFilter) return false;
                   if (searchQuery && !media.title.toLowerCase().includes(searchQuery.toLowerCase())) return false;
                   return true;
@@ -232,9 +232,9 @@ export default function MediaViewerPage() {
                             <Play className="w-5 h-5 text-white" fill="currentColor" />
                           </div>
                         </>
-                      ) : media.thumbnail || media.url ? (
+                      ) : media.thumbnail || media.mediaUrl ? (
                         <Image
-                          src={media.thumbnail || media.url}
+                          src={media.thumbnail || media.mediaUrl}
                           alt={media.title}
                           fill
                           className="object-cover"
@@ -261,9 +261,9 @@ export default function MediaViewerPage() {
         {/* Image Display */}
         <div className="flex-1 flex items-center justify-center bg-gray-200 dark:bg-black p-6">
           <div className="relative w-full h-full flex items-center justify-center">
-            {currentMedia.thumbnail || currentMedia.url ? (
+            {currentMedia.thumbnail || currentMedia.mediaUrl ? (
               <Image
-                src={currentMedia.thumbnail || currentMedia.url}
+                src={currentMedia.thumbnail || currentMedia.mediaUrl}
                 alt={currentMedia.title}
                 width={1600}
                 height={1200}
@@ -274,11 +274,11 @@ export default function MediaViewerPage() {
             )}
 
             {/* Navigation Arrows */}
-            {allMedia.filter(m => m.talentProfile.id === talent.id && m.type === 'IMAGE').length > 1 && (
+            {allMedia.filter(m => ((m.talentProfile as any).userId ?? m.talentProfile.id) === ((talent as any).userId ?? talent.id) && m.type === 'IMAGE').length > 1 && (
               <>
                 <button
                   onClick={() => {
-                    const imageMedia = allMedia.filter(m => m.talentProfile.id === talent.id && m.type === 'IMAGE');
+                    const imageMedia = allMedia.filter(m => ((m.talentProfile as any).userId ?? m.talentProfile.id) === ((talent as any).userId ?? talent.id) && m.type === 'IMAGE');
                     const currentIdx = imageMedia.findIndex(m => m.id === currentMedia.id);
                     const prevIdx = (currentIdx - 1 + imageMedia.length) % imageMedia.length;
                     router.push(`/${locale}/hub/media/${imageMedia[prevIdx].id}`);
@@ -289,7 +289,7 @@ export default function MediaViewerPage() {
                 </button>
                 <button
                   onClick={() => {
-                    const imageMedia = allMedia.filter(m => m.talentProfile.id === talent.id && m.type === 'IMAGE');
+                    const imageMedia = allMedia.filter(m => ((m.talentProfile as any).userId ?? m.talentProfile.id) === ((talent as any).userId ?? talent.id) && m.type === 'IMAGE');
                     const currentIdx = imageMedia.findIndex(m => m.id === currentMedia.id);
                     const nextIdx = (currentIdx + 1) % imageMedia.length;
                     router.push(`/${locale}/hub/media/${imageMedia[nextIdx].id}`);

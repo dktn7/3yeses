@@ -10,8 +10,6 @@ interface ProfileSettings {
   showExperienceLevel: boolean;
   showLocation: boolean;
   showLanguages: boolean;
-  showRating: boolean;
-  showReviewCount: boolean;
   showWorkHistory: boolean;
   showSocialMedia: boolean;
   showContactInfo: boolean;
@@ -26,8 +24,6 @@ const defaultSettings: ProfileSettings = {
   showExperienceLevel: true,
   showLocation: true,
   showLanguages: true,
-  showRating: true,
-  showReviewCount: true,
   showWorkHistory: true,
   showSocialMedia: true,
   showContactInfo: true,
@@ -201,8 +197,6 @@ export default function ProfileSettings() {
                 { key: 'showExperienceLevel', label: 'Experience Level', desc: 'Show beginner badge and experience info' },
                 { key: 'showLocation', label: 'Location', desc: 'Show your city and country' },
                 { key: 'showLanguages', label: 'Languages', desc: 'Show languages you speak' },
-                { key: 'showRating', label: 'Rating & Comments', desc: 'Show your star rating' },
-                { key: 'showReviewCount', label: 'Comment Count', desc: 'Show number of comments received' },
                 { key: 'showWorkHistory', label: 'Work History', desc: 'Show your past work and achievements' },
                 { key: 'showSocialMedia', label: 'Social Media Links', desc: 'Show your social media profiles' },
                 { key: 'showContactInfo', label: 'Contact Information', desc: 'Show contact details for inquiries' },

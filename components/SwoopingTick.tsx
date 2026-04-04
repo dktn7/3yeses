@@ -5,13 +5,15 @@ interface SwoopingTickProps {
   readonly className?: string;
   readonly hovered?: boolean;
   readonly spinnerOnly?: boolean; // New prop for clean spinner without checkmark
+  readonly variant?: 'brand' | 'toggle'; // toggle: grey by default, coloured when hovered=true
 }
 
 export default function SwoopingTick({ 
   size = 48, 
   className = '', 
   hovered = false,
-  spinnerOnly = false 
+  spinnerOnly = false,
+  variant = 'brand',
 }: Readonly<SwoopingTickProps>) {
   
   // Pure spinning circle loader
@@ -72,7 +74,11 @@ export default function SwoopingTick({
         stroke="#3B82F6"
         strokeWidth="4"
         fill="transparent"
-        className={`transition-all duration-300 ${hovered ? 'stroke-blue-600' : 'stroke-blue-500'}`}
+        className={`transition-all duration-300 ${
+          variant === 'toggle'
+            ? (hovered ? 'stroke-blue-500' : 'stroke-gray-400 dark:stroke-gray-500')
+            : (hovered ? 'stroke-blue-600' : 'stroke-blue-500')
+        }`}
       />
       
       {/* Swooping Check Mark */}
@@ -83,7 +89,11 @@ export default function SwoopingTick({
         strokeLinecap="round"
         strokeLinejoin="round"
         fill="none"
-        className={`transition-all duration-300 ${hovered ? 'stroke-red-600' : 'stroke-red-500'}`}
+        className={`transition-all duration-300 ${
+          variant === 'toggle'
+            ? (hovered ? 'stroke-red-500' : 'stroke-gray-400 dark:stroke-gray-500')
+            : (hovered ? 'stroke-red-600' : 'stroke-red-500')
+        }`}
         style={{
           filter: 'drop-shadow(0 1px 2px rgba(239, 68, 68, 0.3))'
         }}

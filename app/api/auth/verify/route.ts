@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Verify the token
-    const decoded = AuthService.verifyJWT(accessToken);
+    const decoded = await AuthService.verifyJWT(accessToken);
 
     if (!decoded) {
       return NextResponse.json(
@@ -33,8 +33,8 @@ export async function GET(request: NextRequest) {
       include: {
         talentProfile: {
           select: {
-            id: true,
-            roleDescription: true,
+            userId: true,
+            performerTitle: true,
             profileComplete: true,
             avatarUrl: true,
           }
@@ -63,8 +63,8 @@ export async function GET(request: NextRequest) {
         avatarUrl: user.talentProfile?.avatarUrl || null,
         talentProfile: user.talentProfile
           ? {
-              id: user.talentProfile.id,
-              roleDescription: user.talentProfile.roleDescription,
+              userId: user.talentProfile.userId,
+              performerTitle: user.talentProfile.performerTitle,
             }
           : null,
       }

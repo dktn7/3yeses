@@ -84,16 +84,8 @@ async function handler(request: NextRequest) {
       return acc;
     }, []);
 
-    // Get review statistics
-    const reviewStats = await prisma.review.groupBy({
-      by: ['rating'],
-      _count: true,
-    });
-
-    const formattedReviewStats = reviewStats.map(stat => ({
-      rating: stat.rating,
-      count: stat._count,
-    }));
+    // Review statistics removed from platform — return empty stats to keep response shape
+    const formattedReviewStats: any[] = [];
 
     // Get top categories by talent count
     const categoryTalent = await prisma.talentProfile.groupBy({
@@ -114,7 +106,7 @@ async function handler(request: NextRequest) {
 
     // Get category names
     const categoryIds = categoryTalent.map(c => c.categoryId).filter((id): id is string => id !== null);
-    const categories = await prisma.category.findMany({
+    const categories = await prisma.talentCategory.findMany({
       where: {
         id: {
           in: categoryIds,
@@ -141,7 +133,7 @@ async function handler(request: NextRequest) {
       },
       take: 5,
       select: {
-        id: true,
+        userId: true,
         viewCount: true,
         likeCount: true,
         user: {
@@ -152,10 +144,11 @@ async function handler(request: NextRequest) {
       },
     });
 
-    const formattedTopTalent = topTalent.map(talent => ({
-      name: talent.user.name || 'Unknown',
-      views: talent.viewCount,
-      likes: talent.likeCount,
+    const formattedTopTalent = topTalent.map((talent) => ({
+      name: (talent as any).user?.name || 'Unknown',
+      views: (talent as any).viewCount ?? 0,
+      likes: (talent as any).likeCount ?? 0,
+      id: (talent as any).userId || undefined,
     }));
 
     const analytics = {

@@ -31,7 +31,7 @@ export interface SignupData {
   professionalRole?: string;
   bio?: string;
   location?: string;
-  experience?: number;
+  experienceLevel?: number;
   skills?: string[];
   languages?: string[];
   
@@ -64,11 +64,19 @@ export function AuthProvider({ children }: Readonly<{ children: ReactNode }>) {
         if (response.ok) {
           const data = await response.json();
           if (data.success && data.user) {
+            const backendRole: string | undefined = data.user.role;
+            const normalizedRole: User['role'] =
+              backendRole === 'talent' || backendRole === 'TALENT'
+                ? 'talent'
+                : backendRole === 'admin' || backendRole === 'ADMIN'
+                  ? 'admin'
+                  : 'client';
+
             const userData: User = {
               id: data.user.id,
               name: `${data.user.firstName || ''} ${data.user.lastName || ''}`.trim() || data.user.email,
               email: data.user.email,
-              role: data.user.role === 'talent' ? 'talent' : 'client',
+              role: normalizedRole,
               profileComplete: data.user.profileComplete || false,
               avatarUrl: data.user.avatarUrl || undefined,
             };
@@ -101,14 +109,22 @@ export function AuthProvider({ children }: Readonly<{ children: ReactNode }>) {
       const data = await response.json();
 
       if (data.success && data.user) {
+        const backendRole: string | undefined = data.user.role;
+        const normalizedRole: User['role'] =
+          backendRole === 'talent' || backendRole === 'TALENT'
+            ? 'talent'
+            : backendRole === 'admin' || backendRole === 'ADMIN'
+              ? 'admin'
+              : 'client';
+
         const userData: User = {
           id: data.user.id,
           name: `${data.user.firstName} ${data.user.lastName}`.trim(),
           email: data.user.email,
-          role: data.user.role === 'talent' ? 'talent' : 'client',
+          role: normalizedRole,
           profileComplete: data.user.profileComplete || false,
         };
-        
+
         setUser(userData);
         // Remove localStorage usage since we're using HTTP-only cookies
         return { success: true };

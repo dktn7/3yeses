@@ -1,4 +1,4 @@
-import { PrismaClient, Gender, Ethnicity, BodyType, Role } from '@prisma/client';
+import { PrismaClient, Gender, Ethnicity, BodyType, UserRole } from '@prisma/client';
 import * as bcryptjs from 'bcryptjs';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -92,7 +92,7 @@ async function main() {
   const profileImageUrl = await copyProfileImage();
   
   // Get categories for assignment
-  const categories = await prisma.category.findMany({
+  const categories = await prisma.talentCategory.findMany({
     include: { subcategories: true }
   });
   
@@ -117,19 +117,20 @@ async function main() {
         : null;
       
       const user = await prisma.user.create({
+        // Cast to any in this helper script to avoid strict Prisma create typings
         data: {
           email,
           password: hashedPassword,
           name,
-          role: Role.TALENT,
+          role: UserRole.TALENT,
           emailVerified: new Date(),
           talentProfile: {
             create: {
-              roleDescription: randomElement(['Actor', 'Model', 'Performer', 'Voice Artist', 'Dancer']),
+              performerTitle: randomElement(['Actor', 'Model', 'Performer', 'Voice Artist', 'Dancer']),
               bio: generateBio(),
               location: randomElement(locations),
-              experience: randomElement(['0-2', '2-5', '5-10', '10+']),
-              rating: parseFloat((Math.random() * 2 + 3).toFixed(1)), // 3.0 - 5.0
+              experienceLevel: randomElement(['0-2', '2-5', '5-10', '10+']),
+              // rating removed per platform decision
               gender: randomElement([Gender.MALE, Gender.FEMALE, Gender.NON_BINARY]),
               ethnicity: randomElement([
                 Ethnicity.ASIAN,
@@ -158,7 +159,7 @@ async function main() {
               subcategoryId: subcategory?.id,
             }
           }
-        }
+        } as any
       });
       
       successCount++;
@@ -187,8 +188,9 @@ async function main() {
   });
   
   if (firstTalent?.talentProfile) {
-    console.log(`\nFirst talent ID: ${firstTalent.talentProfile.id}`);
-    console.log(`Test API: GET /api/talent/${firstTalent.talentProfile.id}`);
+    const firstTalentId = (firstTalent.talentProfile as any).userId ?? (firstTalent.talentProfile as any).id; 
+    console.log(`\nFirst talent ID: ${firstTalentId}`);
+    console.log(`Test API: GET /api/talent/${firstTalentId}`);
   }
 }
 

@@ -73,22 +73,22 @@ export default function LanguageSwitcherModal() {
             </button>
 
             {isOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                <div className="fixed inset-0 z-[150] flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm">
                     <div
                         ref={modalRef}
-                        className="bg-white dark:bg-gray-900 rounded-lg shadow-xl p-6 w-full max-w-md mx-4"
+                        className="bg-white dark:bg-gray-900 rounded-t-2xl sm:rounded-2xl shadow-2xl p-5 w-full max-w-xs mx-auto animate-in slide-in-from-bottom-4 sm:slide-in-from-bottom-0 fade-in duration-200"
                     >
                         <div className="flex justify-between items-center mb-4">
-                            <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
+                            <h2 className="text-base font-semibold text-gray-800 dark:text-white">
                                 Select Language
                             </h2>
                             <button
                                 onClick={() => setIsOpen(false)}
-                                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                                className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
                                 aria-label="Close language switcher"
                             >
                                 <svg
-                                    className="w-6 h-6"
+                                    className="w-5 h-5"
                                     fill="none"
                                     stroke="currentColor"
                                     viewBox="0 0 24 24"
@@ -103,26 +103,27 @@ export default function LanguageSwitcherModal() {
                                 </svg>
                             </button>
                         </div>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                        <div className="grid grid-cols-5 gap-2 justify-items-center">
                             {languages.map((lang) => (
                                 <button
                                     key={lang.code}
                                     onClick={() => handleLanguageChange(lang.code)}
-                                    className={`flex items-center p-3 rounded-lg transition-colors ${
+                                    className={`relative group/lang flex items-center justify-center w-12 h-12 rounded-xl transition-all ${
                                         locale === lang.code
-                                            ? 'bg-blue-100 dark:bg-blue-900'
-                                            : 'hover:bg-gray-100 dark:hover:bg-gray-800'
+                                            ? 'bg-blue-100 dark:bg-blue-900 ring-2 ring-blue-500 dark:ring-blue-400 scale-110'
+                                            : 'hover:bg-gray-100 dark:hover:bg-gray-800 hover:scale-105'
                                     }`}
+                                    title={lang.name}
                                 >
                                     <Image
                                         src={lang.flag}
                                         alt={lang.name}
                                         width={28}
                                         height={28}
-                                        className="rounded-full mr-3"
+                                        className="rounded-full"
                                         unoptimized
                                     />
-                                    <span className="text-gray-800 dark:text-white font-medium">
+                                    <span className="absolute -bottom-7 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-[10px] font-medium rounded-md opacity-0 group-hover/lang:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10 shadow-lg">
                                         {lang.name}
                                     </span>
                                 </button>

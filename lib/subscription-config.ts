@@ -13,15 +13,14 @@ export interface PricingPlan {
 
 export const SUBSCRIPTION_FEATURES = {
   FREE: [
-    'Basic profile',
-    'Limited portfolio (5 items)',
-    'Standard search visibility',
+    'No platform access',
+    'Subscription required at sign-up',
   ],
   STANDARD: [
     'Full Profile Customization',
     'Unlimited Portfolio Uploads',
-    'Direct Messaging',
     'Priority Search Ranking',
+    'Full Dashboard Analytics',
   ],
 };
 
@@ -48,7 +47,7 @@ export const PRICING_PLANS: Record<string, PricingPlan> = {
   },
 };
 
-export const DEFAULT_PLAN = 'FREE';
+export const DEFAULT_PLAN = null; // No subscription by default
 
 export function getPlanByDuration(duration: SubscriptionDuration): PricingPlan {
   return duration === '6_months' ? PRICING_PLANS.STANDARD_6M : PRICING_PLANS.STANDARD_12M;

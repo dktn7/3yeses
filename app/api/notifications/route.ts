@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ notifications: [], unreadCount: 0 }, { status: 401 });
     }
 
-    const decoded = AuthService.verifyJWT(accessToken);
+    const decoded = await AuthService.verifyJWT(accessToken);
     if (!decoded) {
       return NextResponse.json({ notifications: [], unreadCount: 0 }, { status: 401 });
     }
@@ -22,15 +22,15 @@ export async function GET(request: NextRequest) {
 
     const user = await prisma.user.findUnique({
       where: { id: decoded.userId },
-      select: { talentProfile: { select: { id: true } } },
+      select: { talentProfile: { select: { userId: true } } },
     });
 
-    const talentProfileId = user?.talentProfile?.id;
+    const talentProfileId = user?.talentProfile?.userId;
     if (!talentProfileId) {
       return NextResponse.json({ notifications: [], unreadCount: 0 }, { status: 200 });
     }
 
-    const notifications = await prisma.notification.findMany({
+    const notifications = await prisma.talentNotification.findMany({
       where: { talentProfileId, dismissed: false },
       orderBy: { createdAt: 'desc' },
       take: 50,
@@ -39,6 +39,7 @@ export async function GET(request: NextRequest) {
         type: true,
         title: true,
         message: true,
+        metadata: true,
         read: true,
         dismissed: true,
         createdAt: true,
@@ -53,6 +54,7 @@ export async function GET(request: NextRequest) {
       type: n.type.toLowerCase(),
       title: n.title,
       message: n.message,
+      metadata: n.metadata || null,
       timestamp: n.createdAt,
       read: n.read,
       dismissed: n.dismissed,
@@ -77,19 +79,19 @@ export async function POST(request: Request) {
     const accessToken = cookieStore.get('accessToken')?.value;
     if (!accessToken) return NextResponse.json({ message: 'Not authenticated' }, { status: 401 });
 
-    const decoded = AuthService.verifyJWT(accessToken);
+    const decoded = await AuthService.verifyJWT(accessToken);
     if (!decoded) return NextResponse.json({ message: 'Invalid token' }, { status: 401 });
 
     const prisma = getPrisma();
     const user = await prisma.user.findUnique({
       where: { id: decoded.userId },
-      select: { talentProfile: { select: { id: true } } },
+      select: { talentProfile: { select: { userId: true } } },
     });
-    const talentProfileId = user?.talentProfile?.id;
+    const talentProfileId = user?.talentProfile?.userId;
     if (!talentProfileId) return NextResponse.json({ message: 'No profile' }, { status: 400 });
 
     if (markAllAsRead) {
-      await prisma.notification.updateMany({
+      await prisma.talentNotification.updateMany({
         where: { talentProfileId, dismissed: false },
         data: { read: true },
       });
@@ -97,7 +99,7 @@ export async function POST(request: Request) {
     }
 
     if (notificationIds && Array.isArray(notificationIds) && notificationIds.length > 0) {
-      await prisma.notification.updateMany({
+      await prisma.talentNotification.updateMany({
         where: { id: { in: notificationIds }, talentProfileId, dismissed: false },
         data: { read: true },
       });

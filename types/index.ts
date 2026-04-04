@@ -14,14 +14,15 @@ export type Talent = {
     name: string;
     role: string;
     category: string;
+    categoryId?: string | null;
     subcategory: string;
+    subcategoryId?: string | null;
     skills: string[];
     videoUrl?: string;
     avatarUrl?: string;
     bannerUrl?: string;
     location: string;
-    experience: number;
-    rating: number;
+    experienceLevel: number;
     languages: string[];
     bio: string;
     // Enhanced filtering properties
@@ -41,17 +42,13 @@ export type Talent = {
     portfolio: {
         id: string;
         title: string;
-        url: string;
+        mediaUrl: string;
         type: 'image' | 'video' | 'audio';
         thumbnail?: string;
-        likes?: number;
+        likeCount?: number;
     }[];
     workHistory: WorkHistoryItem[];
-    reviews?: {
-        reviewer: string;
-        rating: number;
-        comment: string;
-    }[];
+    // reviews removed from platform
     isBeginner: boolean;
     viewCount: number;
     likeCount: number;
@@ -61,8 +58,6 @@ export type Talent = {
         showExperienceLevel: boolean;
         showLocation: boolean;
         showLanguages: boolean;
-        showRating: boolean;
-        showReviewCount: boolean;
         showWorkHistory: boolean;
         showSocialMedia: boolean;
         showContactInfo: boolean;

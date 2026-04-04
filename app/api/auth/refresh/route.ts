@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import * as jwt from 'jsonwebtoken';
-
-const JWT_SECRET = process.env.JWT_SECRET || 'your-super-secret-jwt-key';
-const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'your-refresh-secret';
+import { AuthService } from '@/lib/auth/auth-service';
+import { prisma } from '@/lib/prisma';
 
 /**
  * POST /api/auth/refresh
@@ -22,33 +20,34 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verify refresh token
-    let decoded: any;
-    try {
-      decoded = jwt.verify(refreshToken, JWT_REFRESH_SECRET, {
-        issuer: '3yeses-platform',
-        audience: '3yeses-users'
-      });
-    } catch (error) {
-      console.error('Refresh token verification failed:', error);
+    // Verify refresh token using AuthService (jose-based, Edge-compatible)
+    const decoded = await AuthService.verifyRefreshToken(refreshToken);
+    if (!decoded) {
       return NextResponse.json(
         { error: 'Invalid refresh token' },
         { status: 401 }
       );
     }
 
-    // Generate new access token
-    const payload = {
-      userId: decoded.userId,
-      email: decoded.email,
-      role: decoded.role,
-      name: decoded.name,
-    };
+    // Look up the user to get current email, role, name
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.userId },
+      select: { id: true, email: true, role: true, name: true },
+    });
 
-    const newAccessToken = jwt.sign(payload, JWT_SECRET, {
-      expiresIn: '24h',
-      issuer: '3yeses-platform',
-      audience: '3yeses-users'
+    if (!user) {
+      return NextResponse.json(
+        { error: 'User not found' },
+        { status: 401 }
+      );
+    }
+
+    // Generate new access token using AuthService
+    const newAccessToken = await AuthService.generateJWT({
+      userId: user.id,
+      email: user.email,
+      role: user.role,
+      name: user.name || '',
     });
 
     // Set new access token cookie

@@ -7,7 +7,7 @@ The 3yeses platform uses a paid-only subscription model with a single **Standard
 
 | Tier | Duration | Price | Features |
 |------|----------|-------|----------|
-| Standard | 6 Months | £10 | Full customization, unlimited uploads, direct messaging, priority search |
+| Standard | 6 Months | £10 | Full customization, unlimited uploads, priority search, full analytics |
 | Standard | 12 Months | £20 | Same features (auto-renew or yearly product) |
 
 ## Architecture
@@ -113,8 +113,8 @@ STRIPE_WEBHOOK_SECRET="whsec_..."
 #### STANDARD (Paid)
 - ✅ Full Profile Customization
 - ✅ Unlimited Portfolio Uploads
-- ✅ Direct Messaging
 - ✅ Priority Search Ranking
+- ✅ Full Dashboard Analytics
 
 ## Implementation in Code
 
@@ -273,4 +273,4 @@ For Stripe integration issues:
 - [Stripe Support](https://support.stripe.com)
 
 For platform issues:
-- Contact: support@3yeses.com
+- Contact: support@3yeses.online

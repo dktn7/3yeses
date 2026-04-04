@@ -22,7 +22,7 @@ export async function warmCaches() {
   
   try {
     // Pre-load categories
-    const categories = await prisma.category.findMany({
+    const categories = await prisma.talentCategory.findMany({
       include: {
         subcategories: {
           orderBy: { name: 'asc' },

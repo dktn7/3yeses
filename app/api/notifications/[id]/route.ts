@@ -4,24 +4,27 @@ import AuthService from '@/lib/auth/auth-service';
 import { getPrisma } from '@/lib/prisma';
 
 // DELETE - Soft-dismiss a notification for the authenticated user
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+import { NextRequest } from 'next/server';
+
+export async function DELETE(req: NextRequest, context: any) {
+  const params = (context && context.params) || { id: undefined };
   try {
     const cookieStore = await cookies();
     const accessToken = cookieStore.get('accessToken')?.value;
     if (!accessToken) return NextResponse.json({ message: 'Not authenticated' }, { status: 401 });
 
-    const decoded = AuthService.verifyJWT(accessToken);
+    const decoded = await AuthService.verifyJWT(accessToken);
     if (!decoded) return NextResponse.json({ message: 'Invalid token' }, { status: 401 });
 
     const prisma = getPrisma();
     const user = await prisma.user.findUnique({
       where: { id: decoded.userId },
-      select: { talentProfile: { select: { id: true } } },
+      select: { talentProfile: { select: { userId: true } } },
     });
-    const talentProfileId = user?.talentProfile?.id;
+    const talentProfileId = user?.talentProfile?.userId;
     if (!talentProfileId) return NextResponse.json({ message: 'No profile' }, { status: 400 });
 
-    const updated = await prisma.notification.updateMany({
+    const updated = await prisma.talentNotification.updateMany({
       where: { id: params.id, talentProfileId },
       data: { dismissed: true, read: true },
     });

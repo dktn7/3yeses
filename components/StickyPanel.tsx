@@ -29,7 +29,7 @@ export default function StickyPanel() {
         {/* Toggle Button */}
         <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="w-full flex items-center justify-center p-2 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 dark:from-red-500 dark:to-pink-500 text-white hover:shadow-lg transition-all duration-200 mb-3"
+          className="w-full flex items-center justify-center p-2 rounded-xl bg-gradient-to-r from-blue-500 to-red-500 dark:from-red-500 dark:to-blue-500 text-white hover:shadow-lg transition-all duration-200 mb-3"
           aria-label={isExpanded ? 'Collapse panel' : 'Expand panel'}
         >
           {isExpanded ? (

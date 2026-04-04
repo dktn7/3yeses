@@ -2,13 +2,20 @@
 // Implements secure authentication with JWT, bcrypt, and rate limiting
 
 import * as bcrypt from 'bcryptjs';
-import * as jwt from 'jsonwebtoken';
-import { randomBytes } from 'crypto';
+import { SignJWT, jwtVerify } from 'jose';
 import type { AuditLog } from '../database/schemas.ts';
 
 // Configuration constants
-const JWT_SECRET = process.env.JWT_SECRET || 'your-super-secret-jwt-key';
-const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'your-refresh-secret';
+const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
+
+if (!JWT_SECRET || !JWT_REFRESH_SECRET) {
+  throw new Error('Missing JWT_SECRET or JWT_REFRESH_SECRET environment variables. Set them before starting the server.');
+}
+
+// Encode secrets for jose
+const ENCODED_JWT_SECRET = new TextEncoder().encode(JWT_SECRET);
+const ENCODED_JWT_REFRESH_SECRET = new TextEncoder().encode(JWT_REFRESH_SECRET);
 const ACCESS_TOKEN_EXPIRY = '24h'; // Activity-based sliding window
 const REFRESH_TOKEN_EXPIRY = '7d'; // Long-term refresh token
 const PASSWORD_SALT_ROUNDS = 12; // Strong password hashing
@@ -48,37 +55,42 @@ class AuthService {
   /**
    * Generate JWT access token
    */
-  static generateJWT(payload: { userId: string; email: string; role: string; name: string }): string {
-    return jwt.sign(payload, JWT_SECRET, {
-      expiresIn: ACCESS_TOKEN_EXPIRY,
-      issuer: '3yeses-platform',
-      audience: '3yeses-users'
-    });
+  static async generateJWT(payload: { userId: string; email: string; role: string; name: string }): Promise<string> {
+    return new SignJWT(payload)
+      .setProtectedHeader({ alg: 'HS256' })
+      .setIssuedAt()
+      .setIssuer('3yeses-platform')
+      .setAudience('3yeses-users')
+      .setExpirationTime(ACCESS_TOKEN_EXPIRY)
+      .sign(ENCODED_JWT_SECRET);
   }
 
   /**
    * Generate JWT refresh token
    */
-  static generateRefreshToken(payload: { userId: string }): string {
-    return jwt.sign(payload, JWT_REFRESH_SECRET, { 
-      expiresIn: REFRESH_TOKEN_EXPIRY,
-      issuer: '3yeses-platform',
-      audience: '3yeses-users'
-    });
+  static async generateRefreshToken(payload: { userId: string }): Promise<string> {
+    return new SignJWT(payload)
+      .setProtectedHeader({ alg: 'HS256' })
+      .setIssuedAt()
+      .setIssuer('3yeses-platform')
+      .setAudience('3yeses-users')
+      .setExpirationTime(REFRESH_TOKEN_EXPIRY)
+      .sign(ENCODED_JWT_REFRESH_SECRET);
   }
 
   /**
    * Verify JWT access token
    */
-  static verifyJWT(token: string): { userId: string; email: string; role: string; name: string } | null {
+  static async verifyJWT(token: string): Promise<{ userId: string; email: string; role: string; name: string } | null> {
+    // verifyJWT: do not log sensitive payloads in production
     try {
-      const decoded = jwt.verify(token, JWT_SECRET, {
+      const { payload } = await jwtVerify(token, ENCODED_JWT_SECRET, {
         issuer: '3yeses-platform',
         audience: '3yeses-users'
-      }) as { userId: string; email: string; role: string; name: string };
-      return decoded;
+      });
+      return payload as unknown as { userId: string; email: string; role: string; name: string };
     } catch (error) {
-      console.error('JWT verification error:', (error as Error).message);
+      console.error('[AuthService] JWT verification error:', (error as Error).message);
       return null;
     }
   }
@@ -86,13 +98,13 @@ class AuthService {
   /**
    * Verify JWT refresh token
    */
-  static verifyRefreshToken(token: string): { userId: string } | null {
+  static async verifyRefreshToken(token: string): Promise<{ userId: string } | null> {
     try {
-      const decoded = jwt.verify(token, JWT_REFRESH_SECRET, {
+      const { payload } = await jwtVerify(token, ENCODED_JWT_REFRESH_SECRET, {
         issuer: '3yeses-platform',
         audience: '3yeses-users'
-      }) as { userId: string };
-      return decoded;
+      });
+      return payload as unknown as { userId: string };
     } catch (error: any) {
       console.error('Refresh token verification error:', error.message);
       return null;
@@ -103,7 +115,17 @@ class AuthService {
    * Generate secure random token for email verification, password reset, etc.
    */
   static generateSecureToken(): string {
-    return randomBytes(32).toString('hex');
+    // Use Web Crypto API which is supported in both Edge and modern Node.js
+    if (typeof globalThis !== 'undefined' && globalThis.crypto && globalThis.crypto.getRandomValues) {
+      const buf = new Uint8Array(32);
+      globalThis.crypto.getRandomValues(buf);
+      return Array.from(buf).map((b) => b.toString(16).padStart(2, '0')).join('');
+    }
+    
+    // Fallback for environments without crypto.getRandomValues (extremely unlikely in modern Next.js)
+    console.warn('[AuthService] Web Crypto not available, using Math.random fallback');
+    const fallback = Array.from({ length: 32 }, () => Math.floor(Math.random() * 256));
+    return fallback.map((b) => b.toString(16).padStart(2, '0')).join('');
   }
 
   /**
@@ -224,7 +246,15 @@ class AuthService {
    * Generate session token
    */
   static generateSessionToken(): string {
-    return randomBytes(64).toString('hex');
+    if (typeof globalThis !== 'undefined' && globalThis.crypto && globalThis.crypto.getRandomValues) {
+      const buf = new Uint8Array(64);
+      globalThis.crypto.getRandomValues(buf);
+      return Array.from(buf).map((b) => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    console.warn('[AuthService] Web Crypto not available for session token, using Math.random fallback');
+    const fallback = Array.from({ length: 64 }, () => Math.floor(Math.random() * 256));
+    return fallback.map((b) => b.toString(16).padStart(2, '0')).join('');
   }
 
   /**
@@ -271,9 +301,9 @@ class AuthService {
    */
   static sanitizeInput(input: string): string {
     return input
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
+      .replace(/</g, '<')
+      .replace(/>/g, '>')
+      .replace(/"/g, '"')
       .replace(/'/g, '&#x27;')
       .replace(/\//g, '&#x2F;')
       .trim();

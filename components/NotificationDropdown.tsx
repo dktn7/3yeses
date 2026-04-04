@@ -1,18 +1,29 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { Bell, BellOff, Eye, Heart, Settings, Volume2, VolumeX, X, MessageSquare, ChevronLeft } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { Bell, BellOff, Eye, Settings, Volume2, VolumeX, X, MessageSquare, ChevronLeft, AlertTriangle, Info } from 'lucide-react';
+import SwoopingTick from './SwoopingTick';
 import { apiClient } from '@/lib/api-client';
 
 interface Notification {
   id: string;
-  type: 'profile_view' | 'profile_save' | 'comment' | 'like' | 'message';
+  type: 'profile_view' | 'profile_save' | 'comment' | 'like' | 'message' | string;
   title: string;
   message: string;
-  timestamp: Date;
+  timestamp: Date | string;
   read: boolean;
   userId?: string;
   userAvatar?: string;
+  metadata?: any;
+}
+
+interface SystemAlert {
+  id: string;
+  title: string;
+  message: string;
+  type: 'INFO' | 'WARNING' | 'CRITICAL';
 }
 
 interface NotificationSettings {
@@ -34,12 +45,16 @@ const defaultSettings: NotificationSettings = {
 };
 
 export default function NotificationDropdown() {
+  const t = useTranslations('notifications');
   const [isOpen, setIsOpen] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [systemAlerts, setSystemAlerts] = useState<SystemAlert[]>([]);
   const [settings, setSettings] = useState<NotificationSettings>(defaultSettings);
   const [unreadCount, setUnreadCount] = useState(0);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+  const locale = (router && (router as any).locale) || 'en';
 
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -60,8 +75,26 @@ export default function NotificationDropdown() {
       }
     };
 
+    const fetchSystemAlerts = async () => {
+      try {
+        const response = await apiClient.get('/api/communications/alerts');
+        if (response.ok && Array.isArray(response.data)) {
+          setSystemAlerts(response.data as SystemAlert[]);
+        } else {
+          setSystemAlerts([]);
+        }
+      } catch (error) {
+        console.error('Error fetching system alerts:', error);
+        setSystemAlerts([]);
+      }
+    };
+
     fetchNotifications();
-    const interval = setInterval(fetchNotifications, 30000);
+    fetchSystemAlerts();
+    const interval = setInterval(() => {
+      fetchNotifications();
+      fetchSystemAlerts();
+    }, 30000);
     return () => clearInterval(interval);
   }, []);
 
@@ -107,6 +140,44 @@ export default function NotificationDropdown() {
       }
     } catch (error) {
       console.error('Error marking notification as read:', error);
+    }
+  };
+
+  const handleNotificationClick = async (notification: Notification) => {
+    try {
+      await markAsRead(notification.id);
+    } catch (err) {
+      console.error('Error marking as read before navigation', err);
+    }
+
+    // Navigate based on metadata if present
+    try {
+      const meta = notification.metadata;
+      if (meta) {
+        if (meta.path) {
+          // ensure locale is present in the path
+          const path: string = meta.path;
+          const target = path.startsWith(`/${locale}`) ? path : `/${locale}${path}`;
+          router.push(target);
+          setIsOpen(false);
+          return;
+        }
+        if (meta.kind === 'achievement') {
+          // Achievements feature removed — route to notifications list instead
+          router.push(`/${locale}/dashboard/notifications`);
+          setIsOpen(false);
+          return;
+        }
+        if (meta.kind === 'talent' && meta.talentId) {
+          router.push(`/talent/${meta.talentId}`);
+          setIsOpen(false);
+          return;
+        }
+      }
+      // Fallback: just close the dropdown
+      setIsOpen(false);
+    } catch (err) {
+      console.error('Navigation error after notification click', err);
     }
   };
 
@@ -160,23 +231,35 @@ export default function NotificationDropdown() {
   const getNotificationIcon = (type: string) => {
     switch (type) {
       case 'profile_view': return <Eye size={16} className="text-blue-500" />;
-      case 'profile_save': return <Heart size={16} className="text-red-500" />;
+      case 'profile_save': return <SwoopingTick size={16} />;
       case 'comment': return <MessageSquare size={16} className="text-green-500" />;
-      case 'like': return <Heart size={16} className="text-pink-500" />;
+      case 'like': return <SwoopingTick size={16} />;
       default: return <Bell size={16} className="text-gray-500" />;
     }
   };
 
-  const getTimeAgo = (timestamp: Date) => {
+  const getTimeAgo = (timestamp: string | Date) => {
     const now = new Date();
     const diff = now.getTime() - new Date(timestamp).getTime();
     const minutes = Math.floor(diff / 60000);
     const hours = Math.floor(diff / 3600000);
     const days = Math.floor(diff / 86400000);
-    if (days > 0) return `${days}d ago`;
-    if (hours > 0) return `${hours}h ago`;
-    if (minutes > 0) return `${minutes}m ago`;
-    return 'Just now';
+    if (days > 0) return t('daysAgo', { count: days });
+    if (hours > 0) return t('hoursAgo', { count: hours });
+    if (minutes > 0) return t('minutesAgo', { count: minutes });
+    return t('justNow');
+  };
+
+  const getAlertIcon = (type: SystemAlert['type']) => {
+    switch (type) {
+      case 'CRITICAL':
+        return <AlertTriangle size={16} className="text-red-500" />;
+      case 'WARNING':
+        return <AlertTriangle size={16} className="text-yellow-500" />;
+      case 'INFO':
+      default:
+        return <Info size={16} className="text-blue-500" />;
+    }
   };
 
   return (
@@ -195,32 +278,60 @@ export default function NotificationDropdown() {
             <>
               <div className="p-4 border-b border-gray-200 dark:border-gray-700">
                 <div className="flex items-center justify-between">
-                  <h3 className="font-medium text-gray-900 dark:text-white">Notifications</h3>
+                  <h3 className="font-medium text-gray-900 dark:text-white">{t('title')}</h3>
                   <div className="flex items-center gap-2">
-                    <button onClick={() => setShowSettings(true)} className="p-1 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300" aria-label="Notification settings">
+                    <button onClick={() => setShowSettings(true)} className="p-1 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300" aria-label={t('settings')}>
                       <Settings size={16} />
                     </button>
                     {notifications.length > 0 && (
                       <>
                         {unreadCount > 0 && (
-                          <button onClick={markAllAsRead} className="text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 hover:underline">Mark all read</button>
+                          <button onClick={markAllAsRead} className="text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 hover:underline">{t('markAllRead')}</button>
                         )}
-                        <button onClick={clearAllNotifications} className="text-sm text-red-600 hover:text-red-700 dark:text-red-400 hover:underline">Clear all</button>
+                        <button onClick={clearAllNotifications} className="text-sm text-red-600 hover:text-red-700 dark:text-red-400 hover:underline">{t('clearAll')}</button>
                       </>
                     )}
                   </div>
                 </div>
               </div>
               <div className="max-h-96 overflow-y-auto">
+                {systemAlerts.length > 0 && (
+                  <div className="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/40">
+                    <div className="px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                      {t('systemAlerts')}
+                    </div>
+                    {systemAlerts.map((alert) => (
+                      <div key={alert.id} className="px-4 py-3 flex items-start gap-3">
+                        <div className="mt-0.5">
+                          {getAlertIcon(alert.type)}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-0.5">
+                            <span className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                              {alert.type}
+                            </span>
+                            <span className="text-sm font-medium text-gray-900 dark:text-white line-clamp-1">
+                              {alert.title}
+                            </span>
+                          </div>
+                          <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-2">
+                            {alert.message}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
                 {notifications.length === 0 ? (
                   <div className="p-8 text-center text-gray-500 dark:text-gray-400">
                     <Bell size={48} className="mx-auto mb-4 opacity-30" />
-                    <p className="font-medium mb-1">No notifications</p>
-                    <p className="text-sm">You are all caught up!</p>
+                    <p className="font-medium mb-1">{t('noNotifications')}</p>
+                    <p className="text-sm">{t('allCaughtUp')}</p>
                   </div>
                 ) : (
                   notifications.map((notification) => (
-                    <div key={notification.id} className={`group relative p-4 border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors ${!notification.read ? 'bg-blue-50 dark:bg-blue-900/20' : ''}`} onClick={() => markAsRead(notification.id)}>
+                    <div key={notification.id} className={`group relative p-4 border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors ${!notification.read ? 'bg-blue-50 dark:bg-blue-900/20' : ''}`} onClick={() => handleNotificationClick(notification)}>
                       <div className="flex items-start gap-3">
                         <div className="flex-shrink-0 mt-1">{getNotificationIcon(notification.type)}</div>
                         <div className="flex-1 min-w-0 pr-6">
@@ -228,7 +339,7 @@ export default function NotificationDropdown() {
                           <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">{notification.message}</p>
                           <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">{getTimeAgo(notification.timestamp)}</p>
                         </div>
-                        <button onClick={(e) => dismissNotification(notification.id, e)} className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-opacity" aria-label="Dismiss">
+                        <button onClick={(e) => dismissNotification(notification.id, e)} className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-opacity" aria-label={t('dismiss')}>
                           <X size={16} />
                         </button>
                         {!notification.read && (<div className="absolute top-5 right-3 w-2 h-2 bg-blue-500 rounded-full"></div>)}
@@ -245,16 +356,16 @@ export default function NotificationDropdown() {
                   <button onClick={() => setShowSettings(false)} className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
                     <ChevronLeft className="w-5 h-5" />
                   </button>
-                  <h3 className="font-medium text-gray-900 dark:text-white">Notification Settings</h3>
+                  <h3 className="font-medium text-gray-900 dark:text-white">{t('settings')}</h3>
                 </div>
               </div>
               <div className="p-4 space-y-4">
                 <div className="space-y-3">
                   {[
-                    { key: 'profileViews', label: 'Profile Views', desc: 'When someone views your profile' },
-                    { key: 'profileSaves', label: 'Profile Saves', desc: 'When someone saves your profile' },
-                    { key: 'comments', label: 'Comments', desc: 'New comments on your videos' },
-                    { key: 'likes', label: 'Likes', desc: 'When someone likes your content' },
+                    { key: 'profileViews', label: t('profileViews'), desc: t('profileViewsDesc') },
+                    { key: 'profileSaves', label: t('profileSaves'), desc: t('profileSavesDesc') },
+                    { key: 'comments', label: t('comments'), desc: t('commentsDesc') },
+                    { key: 'likes', label: t('likesLabel'), desc: t('likesDesc') },
                   ].map(({ key, label, desc }) => (
                     <div key={key} className="flex items-center justify-between">
                       <div className="flex-1">
@@ -281,8 +392,8 @@ export default function NotificationDropdown() {
                   <div className="flex items-center gap-2">
                     {settings.soundEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
                     <div>
-                      <p className="text-sm font-medium text-gray-900 dark:text-white">Sound</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">Play sound for notifications</p>
+                      <p className="text-sm font-medium text-gray-900 dark:text-white">{t('sound')}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">{t('soundDesc')}</p>
                     </div>
                   </div>
                   <button

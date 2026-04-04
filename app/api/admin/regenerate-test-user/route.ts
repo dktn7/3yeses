@@ -8,24 +8,25 @@ export async function POST() {
     const hashedPassword = await AuthService.hashPassword('Test123!');
 
     // Upsert test user
-    const email = 'test@3yeses.com';
+    const email = 'test@3yeses.online';
     const user = await prisma.user.upsert({
       where: { email },
       update: {
         name: 'Dabs Test',
         emailVerified: new Date(),
       },
+      // Cast create payload to any to satisfy generator types in this dev-only helper
       create: {
         email,
         name: 'Dabs Test',
         password: hashedPassword,
         role: 'TALENT',
         emailVerified: new Date(),
-      },
+      } as any,
     });
 
     // Find Actor category
-    const actorCategory = await prisma.category.findFirst({
+    const actorCategory = await prisma.talentCategory.findFirst({
       where: { name: { contains: 'Actor', mode: 'insensitive' } },
     });
 
@@ -33,33 +34,34 @@ export async function POST() {
     const profile = await prisma.talentProfile.upsert({
       where: { userId: user.id },
       update: {
-        roleDescription: 'Actor',
+        performerTitle: 'Actor',
         location: 'Birmingham',
-        experience: 'Beginner',
+        experienceLevel: 'Beginner',
         isBeginner: true,
         categoryId: actorCategory?.id || null,
       },
       create: {
         userId: user.id,
-        roleDescription: 'Actor',
+        performerTitle: 'Actor',
         location: 'Birmingham',
-        experience: 'Beginner',
+        experienceLevel: 'Beginner',
         isBeginner: true,
         categoryId: actorCategory?.id || null,
       },
     });
 
     // Ensure at least one portfolio item exists
+    const profileId = (profile as any).id ?? (profile as any).userId;
     const existingItems = await prisma.portfolioItem.count({
-      where: { talentProfileId: profile.id },
+      where: { talentProfileId: profileId },
     });
     if (existingItems === 0) {
       await prisma.portfolioItem.create({
         data: {
           title: 'Sample Audio',
-          url: 'https://samplelib.com/lib/preview/mp3/sample-3s.mp3',
+          mediaUrl: 'https://samplelib.com/lib/preview/mp3/sample-3s.mp3',
           type: 'AUDIO',
-          talentProfileId: profile.id,
+          talentProfileId: profileId,
         },
       });
     }
@@ -67,7 +69,7 @@ export async function POST() {
     return NextResponse.json({ 
       success: true, 
       userId: user.id, 
-      profileId: profile.id,
+      profileId: profileId,
       email: email,
       password: 'Test123!',
       message: 'Test user regenerated: Dabs Test from Birmingham, Beginner Actor'

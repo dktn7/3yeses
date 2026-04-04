@@ -8,7 +8,6 @@ async function main() {
 
   // Clear existing data
   await prisma.portfolioItem.deleteMany();
-  await prisma.review.deleteMany();
   await prisma.booking.deleteMany();
   await prisma.talentProfile.deleteMany();
   await prisma.user.deleteMany();
@@ -202,7 +201,7 @@ async function main() {
   await prisma.user.create({
     data: {
       name: 'Admin User',
-      email: 'admin@3yeses.com',
+      email: 'admin@3yeses.online',
       password: sampleUserPassword,
       role: 'ADMIN',
       emailVerified: new Date()
@@ -226,7 +225,7 @@ async function main() {
           bio: 'Experienced voice over artist with 8+ years in commercials and e-learning. Warm, friendly tone perfect for brands targeting millennials.',
           location: 'Los Angeles, CA',
           experience: 8,
-          rating: 4.9,
+          // rating removed per platform decision
           languages: ['English', 'Spanish'],
           skills: ['Commercial Voice Over', 'E-learning Narration', 'Character Voices', 'IVR Systems'],
           categoryId: voiceOverCategory?.id,
@@ -254,7 +253,7 @@ async function main() {
           bio: 'Native bilingual translator specializing in legal and medical documents. 10+ years experience with perfect accuracy record.',
           location: 'Madrid, Spain',
           experience: 10,
-          rating: 4.9,
+          // rating removed per platform decision
           languages: ['Spanish', 'English', 'Portuguese'],
           skills: ['Legal Translation', 'Medical Translation', 'Technical Documentation', 'Certified Translation'],
           categoryId: translationCategory?.id,
@@ -268,34 +267,7 @@ async function main() {
 
   // Skipping client users and bookings since clientProfile and clientId are removed from schema
 
-  // Create sample reviews
-  const adminUser = await prisma.user.findFirst({ where: { email: 'admin@example.com' } });
-  const talent1Profile = await prisma.talentProfile.findFirst({ where: { userId: talentUser1.id } });
-  const talent2Profile = await prisma.talentProfile.findFirst({ where: { userId: talentUser2.id } });
-
-  if (talent1Profile && adminUser) {
-    await prisma.review.create({
-      data: {
-        rating: 5,
-        comment: 'Outstanding work! Sarah delivered exactly what we needed with perfect timing and quality.',
-        reviewerId: adminUser.id,
-        talentProfileId: talent1Profile.id
-      }
-    });
-  }
-
-  if (talent2Profile && adminUser) {
-    await prisma.review.create({
-      data: {
-        rating: 5,
-        comment: 'Carlos is incredibly professional and accurate. Highly recommended for any translation work.',
-        reviewerId: adminUser.id,
-        talentProfileId: talent2Profile.id
-      }
-    });
-  }
-
-  console.log(`- Sample reviews`);
+  // Reviews and ratings removed from seeding per platform decision
 }
 
 main()

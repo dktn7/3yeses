@@ -11,7 +11,10 @@ import {
   User,
   BarChart3,
   Upload,
-  Activity
+  Activity,
+  LayoutDashboard,
+  Users,
+  FileText
 } from 'lucide-react';
 
 interface UserData {
@@ -20,6 +23,14 @@ interface UserData {
   email: string;
   role: 'TALENT' | 'ADMIN';
   avatarUrl?: string;
+}
+
+interface MenuItem {
+  icon: typeof Settings;
+  label: string;
+  href: string | null;
+  separator: boolean;
+  action?: () => void;
 }
 
 interface ProfileDropdownProps {
@@ -34,9 +45,24 @@ export default function ProfileDropdown({ user, onLogout }: Readonly<ProfileDrop
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const pathname = usePathname();
-  
-  // Get current locale from pathname
-  const locale = pathname?.split('/')[1] || 'en-gb';
+  // Supported locale files in `messages/` (map lowercase -> canonical)
+  const supportedLocalesMap: Record<string, string> = {
+    'ar': 'ar',
+    'de-de': 'de-DE',
+    'en-gb': 'en-gb',
+    'en': 'en',
+    'es-es': 'es-ES',
+    'fr-fr': 'fr-FR',
+    'it-it': 'it-IT',
+    'ja-jp': 'ja-JP',
+    'pt-pt': 'pt-PT',
+    'ru-ru': 'ru-RU',
+    'zh-cn': 'zh-CN'
+  };
+
+  const first = pathname?.split('/')[1];
+  const firstKey = first ? first.toLowerCase() : undefined;
+  const locale = firstKey && supportedLocalesMap[firstKey] ? supportedLocalesMap[firstKey] : 'en-gb';
 
   // Fetch profile completion
   useEffect(() => {
@@ -88,7 +114,8 @@ export default function ProfileDropdown({ user, onLogout }: Readonly<ProfileDrop
 
   if (!user) return null;
 
-  const menuItems = [
+  // Base menu for regular talent users
+  const talentBaseMenuItems: MenuItem[] = [
     {
       icon: User,
       label: 'Dashboard',
@@ -98,7 +125,7 @@ export default function ProfileDropdown({ user, onLogout }: Readonly<ProfileDrop
     {
       icon: Edit3,
       label: 'Profile',
-      href: `/dashboard/profile`,
+      href: `/talent/${user.id}`,
       separator: false,
     },
     {
@@ -125,10 +152,14 @@ export default function ProfileDropdown({ user, onLogout }: Readonly<ProfileDrop
       href: `/dashboard/settings`,
       separator: false,
     },
+  ];
+
+  // For admins, hide normal talent dashboard/profile options and only keep shared items
+  const sharedMenuItems: MenuItem[] = [
     {
       icon: HelpCircle,
       label: 'Help & Support',
-      href: `/${locale}/contact`,
+      href: `/${locale}/support`,
       separator: true,
     },
     {
@@ -139,6 +170,36 @@ export default function ProfileDropdown({ user, onLogout }: Readonly<ProfileDrop
       separator: false,
     },
   ];
+
+  const baseMenuItems: MenuItem[] = user.role === 'ADMIN'
+    ? sharedMenuItems
+    : [...talentBaseMenuItems, ...sharedMenuItems];
+
+
+  const adminMenuItems: MenuItem[] = user.role === 'ADMIN'
+    ? [
+        {
+          icon: LayoutDashboard,
+          label: 'Admin Control Center',
+          href: `/admin`,
+          separator: false,
+        },
+        {
+          icon: Users,
+          label: 'Admin Users',
+          href: `/admin/users`,
+          separator: false,
+        },
+        {
+          icon: FileText,
+          label: 'Admin Reports',
+          href: `/admin/reports`,
+          separator: true,
+        },
+      ]
+    : [];
+
+  const menuItems: MenuItem[] = [...adminMenuItems, ...baseMenuItems];
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -157,7 +218,7 @@ export default function ProfileDropdown({ user, onLogout }: Readonly<ProfileDrop
               className="rounded-full object-cover"
             />
           ) : (
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-red-500 dark:from-red-500 dark:to-blue-500 rounded-full flex items-center justify-center">
               <span className="text-white text-sm font-medium">
                 {user.name.charAt(0).toUpperCase()}
               </span>
@@ -210,7 +271,7 @@ export default function ProfileDropdown({ user, onLogout }: Readonly<ProfileDrop
                     className="rounded-full object-cover"
                   />
                 ) : (
-                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-red-500 dark:from-red-500 dark:to-blue-500 rounded-full flex items-center justify-center">
                     <span className="text-white font-medium">
                       {user.name.charAt(0).toUpperCase()}
                     </span>
@@ -243,13 +304,25 @@ export default function ProfileDropdown({ user, onLogout }: Readonly<ProfileDrop
                 <p className="text-xs font-medium text-blue-900 dark:text-blue-200 mb-1">
                   Complete your profile
                 </p>
-                <p className="text-xs text-blue-700 dark:text-blue-300">
-                  {missingFields.slice(0, 2).join(', ')}
-                  {missingFields.length > 2 && ` +${missingFields.length - 2} more`}
+                <p className="text-xs text-blue-700 dark:text-blue-300 leading-relaxed">
+                  {missingFields.length === 1 ? (
+                    missingFields[0]
+                  ) : missingFields.length === 2 ? (
+                    `${missingFields[0]}, ${missingFields[1]}`
+                  ) : (
+                    <>
+                      {missingFields.slice(0, 2).join(', ')}
+                      {missingFields.length > 2 && (
+                        <span className="block mt-0.5 text-blue-600 dark:text-blue-400 font-medium">
+                          +{missingFields.length - 2} more item{missingFields.length - 2 > 1 ? 's' : ''}
+                        </span>
+                      )}
+                    </>
+                  )}
                 </p>
                 <button
                   onClick={() => handleNavigation('/dashboard/profile')}
-                  className="mt-2 text-xs font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+                  className="mt-2 text-xs font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
                 >
                   Complete now →
                 </button>

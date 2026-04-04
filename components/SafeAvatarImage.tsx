@@ -39,15 +39,17 @@ export default function SafeAvatarImage({
   const isValidImageUrl = src && !isAudioUrl(src);
   
   if (isValidImageUrl) {
+    // Use fill so large avatar containers render crisply without relying on width/height
     return (
-      <Image
-        src={src}
-        alt={alt}
-        width={size}
-        height={size}
-        className={className}
-        unoptimized={shouldBeUnoptimized(src)}
-      />
+      <div className="relative w-full h-full">
+        <Image
+          src={src!}
+          alt={alt}
+          fill
+          className={className}
+          unoptimized={shouldBeUnoptimized(src!)}
+        />
+      </div>
     );
   }
   

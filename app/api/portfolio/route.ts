@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const decoded = AuthService.verifyJWT(accessToken);
+    const decoded = await AuthService.verifyJWT(accessToken);
     if (!decoded) {
       return NextResponse.json(
         { error: 'Invalid token' },
@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
 
     // Get portfolio items
     const items = await prisma.portfolioItem.findMany({
-      where: { talentProfileId: talentProfile.id },
+      where: { talentProfileId: talentProfile.userId },
       orderBy: { id: 'desc' },
     });
 
@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const decoded = AuthService.verifyJWT(accessToken);
+    const decoded = await AuthService.verifyJWT(accessToken);
     if (!decoded) {
       return NextResponse.json(
         { error: 'Invalid token' },
@@ -83,9 +83,9 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { title, url, type } = body;
+    const { title, url: mediaUrl, type } = body;
 
-    if (!title || !url || !type) {
+    if (!title || !mediaUrl || !type) {
       return NextResponse.json(
         { error: 'Title, URL, and type are required' },
         { status: 400 }
@@ -103,9 +103,9 @@ export async function POST(request: NextRequest) {
     const item = await prisma.portfolioItem.create({
       data: {
         title,
-        url,
+        mediaUrl,
         type,
-        talentProfileId: talentProfile.id,
+        talentProfileId: talentProfile.userId,
       },
     });
 

@@ -1,5 +1,5 @@
 /**
- * Email Service for 3yeses Platform
+ * Email Service for 3YESES Platform
  * 
  * This module handles all email sending functionality.
  * Currently using console logging for development.
@@ -27,7 +27,7 @@ export async function sendEmail(options: EmailOptions): Promise<boolean> {
     // Example with Resend:
     // const resend = new Resend(process.env.RESEND_API_KEY);
     // await resend.emails.send({
-    //   from: 'noreply@3yeses.com',
+    //   from: 'noreply@3yeses.online',
     //   to: options.to,
     //   subject: options.subject,
     //   html: options.html,
@@ -67,7 +67,7 @@ export async function sendParentalConsentEmail(
   const approveUrl = `${baseUrl}/auth/parental-consent/${consentToken}?action=approve`;
   const declineUrl = `${baseUrl}/auth/parental-consent/${consentToken}?action=decline`;
   
-  const subject = `Parental Consent Required: ${teenName} wants to join 3yeses`;
+  const subject = `Parental Consent Required: ${teenName} wants to join 3YESES`;
   
   const html = `
 <!DOCTYPE html>
@@ -86,7 +86,7 @@ export async function sendParentalConsentEmail(
           <!-- Header -->
           <tr>
             <td style="background: linear-gradient(135deg, #9333EA 0%, #3B82F6 100%); padding: 40px; text-align: center; border-radius: 8px 8px 0 0;">
-              <h1 style="color: #ffffff; margin: 0; font-size: 28px;">3yeses</h1>
+              <h1 style="color: #ffffff; margin: 0; font-size: 28px;">3YESES</h1>
               <p style="color: #ffffff; margin: 10px 0 0 0; font-size: 16px; opacity: 0.9;">Talent Platform</p>
             </td>
           </tr>
@@ -101,7 +101,7 @@ export async function sendParentalConsentEmail(
               </p>
               
               <p style="color: #4b5563; font-size: 16px; line-height: 1.6; margin: 0 0 16px 0;">
-                Your child, <strong>${teenName}</strong> (age ${teenAge}), has requested to create a self-managed account on 3yeses, our talent platform.
+                Your child, <strong>${teenName}</strong> (age ${teenAge}), has requested to create a self-managed account on 3YESES, our talent platform.
               </p>
               
               <p style="color: #4b5563; font-size: 16px; line-height: 1.6; margin: 0 0 16px 0;">
@@ -111,7 +111,7 @@ export async function sendParentalConsentEmail(
               <div style="background-color: #eff6ff; border-left: 4px solid: #3b82f6; padding: 16px; margin: 24px 0; border-radius: 4px;">
                 <h3 style="color: #1e40af; margin: 0 0 8px 0; font-size: 18px;">What does this mean?</h3>
                 <ul style="color: #1e40af; margin: 0; padding-left: 20px; font-size: 14px; line-height: 1.6;">
-                  <li>${teenName} will be able to create and manage their own talent profile</li>
+                    <li>${teenName} will be able to create and manage their own talent profile</li>
                   <li>They can apply for opportunities and showcase their skills</li>
                   <li>Their profile will have enhanced safety controls</li>
                   <li>You can request access to monitor the account at any time</li>
@@ -145,7 +145,7 @@ export async function sendParentalConsentEmail(
               </p>
               
               <p style="color: #6b7280; font-size: 14px; line-height: 1.6; margin: 16px 0 0 0;">
-                If you have any questions or concerns, please contact our support team at <a href="mailto:support@3yeses.com" style="color: #3b82f6;">support@3yeses.com</a>
+                If you have any questions or concerns, please contact our support team at <a href="mailto:support@3yeses.online" style="color: #3b82f6;">support@3yeses.online</a>
               </p>
             </td>
           </tr>
@@ -154,7 +154,7 @@ export async function sendParentalConsentEmail(
           <tr>
             <td style="background-color: #f9fafb; padding: 24px; text-align: center; border-radius: 0 0 8px 8px; border-top: 1px solid #e5e7eb;">
               <p style="color: #6b7280; font-size: 12px; margin: 0 0 8px 0;">
-                © ${new Date().getFullYear()} 3yeses. All rights reserved.
+                © ${new Date().getFullYear()} 3YESES. All rights reserved.
               </p>
               <p style="color: #9ca3af; font-size: 11px; margin: 0;">
                 This email was sent to ${parentEmail} because your child requested to create an account.
@@ -175,7 +175,7 @@ Parental Consent Required
 
 Dear ${parentName},
 
-Your child, ${teenName} (age ${teenAge}), has requested to create a self-managed account on 3yeses, our talent platform.
+Your child, ${teenName} (age ${teenAge}), has requested to create a self-managed account on 3YESES, our talent platform.
 
 As they are under 16 years old, we require your consent before their account can become active.
 
@@ -184,9 +184,9 @@ To decline this account, visit: ${declineUrl}
 
 This consent link will expire in 48 hours.
 
-If you have any questions, please contact support@3yeses.com
+If you have any questions, please contact support@3yeses.online
 
-© ${new Date().getFullYear()} 3yeses
+© ${new Date().getFullYear()} 3YESES
   `;
   
   return await sendEmail({
@@ -231,7 +231,7 @@ export async function sendConsentApprovedEmail(
           <tr>
             <td style="padding: 40px;">
               <p style="color: #4b5563; font-size: 16px;">Hi ${teenName},</p>
-              <p style="color: #4b5563; font-size: 16px;">Great news! Your parent/guardian has approved your 3yeses account. You can now start building your talent profile and exploring opportunities!</p>
+              <p style="color: #4b5563; font-size: 16px;">Great news! Your parent/guardian has approved your 3YESES account. You can now start building your talent profile and exploring opportunities!</p>
               <p style="text-align: center; margin: 32px 0;">
                 <a href="${loginUrl}" style="display: inline-block; background-color: #3b82f6; color: #ffffff; text-decoration: none; padding: 14px 32px; border-radius: 6px; font-size: 16px; font-weight: bold;">
                   Sign In Now
@@ -251,6 +251,6 @@ export async function sendConsentApprovedEmail(
     to: teenEmail,
     subject,
     html,
-    text: `Hi ${teenName}, Your parent/guardian has approved your 3yeses account! Sign in at ${loginUrl}`,
+    text: `Hi ${teenName}, Your parent/guardian has approved your 3YESES account! Sign in at ${loginUrl}`,
   });
 }

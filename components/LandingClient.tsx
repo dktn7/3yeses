@@ -1,20 +1,59 @@
 'use client'
 
-import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import { getCategoryData } from '@/lib/data.ts'
-import { Search, MapPin, ChevronDown, Users, Star, TrendingUp, UserPlus, Image as LucideImage, BarChart3 } from 'lucide-react'
+import { Search, MapPin, ChevronDown, Check, Users, Star, TrendingUp, UserPlus } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 
 import SwoopingTick from './SwoopingTick.tsx'
 import DynamicHeadline from './DynamicHeadline.tsx'
-import VideoHero from './VideoHero'
+import VideoPlayer from './VideoPlayer'
 import RangeSlider from './RangeSlider.tsx'
 import MultiSelect from './MultiSelect.tsx'
-import FeatureHighlights from './FeatureHighlights.tsx'
 import HeroSlideshow from './HeroSlideshow.tsx'
 import TalentFilterPanel, { TalentFilters, defaultFilters } from './TalentFilterPanel'
+import CategoryReel from './CategoryReel'
+import DropdownPanel from './DropdownPanel'
+
+const CITY_SUGGESTIONS = [
+  'London, UK', 'Paris, France', 'Berlin, Germany', 'New York, USA',
+  'Los Angeles, USA', 'Toronto, Canada', 'Sydney, Australia', 'Tokyo, Japan',
+  'Dubai, UAE', 'Cape Town, South Africa', 'Madrid, Spain', 'Rome, Italy',
+  'Amsterdam, Netherlands', 'Barcelona, Spain', 'Vancouver, Canada',
+  'Mexico City, Mexico', 'Buenos Aires, Argentina', 'Melbourne, Australia',
+  'Seoul, South Korea', 'Bangkok, Thailand', 'Singapore, Singapore', 'Mumbai, India',
+  'Delhi, India', 'Shanghai, China', 'Istanbul, Turkey', 'São Paulo, Brazil',
+]
+
+function HomeBgDecoration() {
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0" aria-hidden="true">
+      <svg className="w-full h-full" preserveAspectRatio="none" viewBox="0 0 1440 900" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="v2bg" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stopColor="var(--brand-from, #FFFFFF)" stopOpacity="0.16" />
+            <stop offset="100%" stopColor="transparent" />
+          </linearGradient>
+          <linearGradient id="homeWaveOne" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0%" stopColor="var(--brand-from)" stopOpacity="0.28" />
+            <stop offset="100%" stopColor="var(--brand-to)" stopOpacity="0.10" />
+          </linearGradient>
+          <linearGradient id="homeWaveTwo" x1="1" x2="0" y1="0" y2="1">
+            <stop offset="0%" stopColor="var(--brand-to)" stopOpacity="0.18" />
+            <stop offset="100%" stopColor="var(--brand-from)" stopOpacity="0.08" />
+          </linearGradient>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#v2bg)" />
+        <path d="M0 520 C240 420 480 580 720 500 C960 420 1200 540 1440 480 L1440 900 L0 900 Z" fill="url(#homeWaveOne)" />
+        <path d="M0 600 C320 530 560 650 800 580 C1040 510 1280 620 1440 560 L1440 900 L0 900 Z" fill="url(#homeWaveTwo)" />
+        <path d="M0 700 C200 660 440 740 720 690 C1000 640 1200 720 1440 680 L1440 900 L0 900 Z" fill="var(--brand-from)" opacity="0.08" />
+        <path d="M0 80 C360 140 720 40 1080 100 C1260 130 1380 90 1440 110 L1440 0 L0 0 Z" fill="var(--brand-from)" opacity="0.10" />
+      </svg>
+    </div>
+  )
+}
 
 export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: { t?: any; locale?: string }) {
   // State declarations
@@ -101,6 +140,11 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
   const [skills, setSkills] = useState<string>('')
   const [languages, setLanguages] = useState<string>('')
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [isSubcategoryOpen, setIsSubcategoryOpen] = useState(false)
+  const [showLocSuggestions, setShowLocSuggestions] = useState(false)
+  const categoryAnchorRef = useRef<HTMLButtonElement | null>(null)
+  const subcategoryAnchorRef = useRef<HTMLButtonElement | null>(null)
+  const locationAnchorRef = useRef<HTMLInputElement | null>(null)
   // Removed isProfileOpen and isNotificationOpen, now handled globally
   const [isFiltersOpen, setIsFiltersOpen] = useState(false)
   const [hoveredTick, setHoveredTick] = useState<number | null>(null)
@@ -163,17 +207,23 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
     }
   }, [selectedSubcategory, subcategoryGenderMap]);
 
-  // Close dropdowns when clicking outside (only for category dropdown now)
+  // Close dropdowns when clicking outside (category/subcategory/location)
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Element
-      if (!target.closest('.dropdown-container')) {
+      if (!target.closest('.dropdown-container') && !target.closest('.dropdown-panel')) {
         setIsDropdownOpen(false)
+      }
+      if (!target.closest('.subcategory-container') && !target.closest('.dropdown-panel')) {
+        setIsSubcategoryOpen(false)
+      }
+      if (!target.closest('.location-container') && !target.closest('.dropdown-panel')) {
+        setShowLocSuggestions(false)
       }
     }
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [setIsDropdownOpen])
+  }, [setIsDropdownOpen, setIsSubcategoryOpen])
 
   // Use real categories from API
   const [realCategories, setRealCategories] = useState<any[]>([])
@@ -296,183 +346,222 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
   ]
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300 relative overflow-hidden">
+    <div className="min-h-screen bg-[var(--landing-bg)] transition-colors duration-300 relative overflow-hidden">
       <main>
-      {/* Background Elements - Optimized for Performance */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-        {/* Floating shapes - reduced opacity and blur for better performance, respect motion preferences */}
-        <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-primary-blue/15 to-accent-blue/25 rounded-full blur-lg motion-safe:animate-move-random-1"></div>
-        <div className="absolute top-40 right-20 w-48 h-48 bg-gradient-to-r from-accent-red/15 to-primary-red/25 rounded-full blur-lg motion-safe:animate-move-random-2"></div>
-        <div className="absolute bottom-32 left-1/4 w-64 h-64 bg-gradient-to-r from-primary-blue/8 to-accent-red/15 rounded-full blur-lg motion-safe:animate-move-random-3"></div>
-        <div className="absolute top-1/3 right-1/3 w-40 h-40 bg-gradient-to-r from-accent-blue/15 to-primary-blue/25 rounded-full blur-lg motion-safe:animate-move-random-4"></div>
-        
-        {/* Grid pattern overlay */}
-        <div className="absolute inset-0 bg-grid-pattern opacity-3 dark:opacity-8"></div>
-        
-        {/* Subtle noise texture - dark mode only */}
-        <div className="absolute inset-0 bg-noise-pattern opacity-0 dark:opacity-3"></div>
-      </div>
+      {/* Background Elements */}
+      <HomeBgDecoration />
 
-      {/* Hero Section */}
-      <div className="relative z-10 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary-blue/10 via-transparent to-primary-red/10 dark:from-primary-blue/20 dark:to-primary-red/20"></div>
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-56">
+      {/* ─── Hero Section — full-bleed visual (no background video) ─── */}
+      <section className="relative min-h-[100dvh] flex items-center justify-center isolate">
 
-          <div className="text-center pt-16 pb-24">
-            <h1 className="text-5xl md:text-7xl font-bold text-gray-900 dark:text-white mb-8 leading-tight">
-              3<span className="text-primary-blue dark:text-accent-red">YES</span>ES
+        {/* Content layer */}
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 md:py-40">
+          <div className="text-center mb-16">
+            {/* Eyebrow tag */}
+            <span className="inline-flex items-center gap-2 rounded-full px-5 py-2 text-[10px] uppercase tracking-[0.22em] font-semibold text-[var(--brand-primary)] ring-1 ring-black/10 dark:ring-white/10 bg-white/72 dark:bg-white/[0.08] mb-10 shadow-sm backdrop-blur-md transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]">
+              <SwoopingTick className="w-4 h-4" />
+              {t('forTalent.title')}
+            </span>
+
+              <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold text-gray-900 dark:text-white mb-8 leading-[1.02] tracking-tighter">
+                3<span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-blue via-accent-blue to-indigo-500 dark:from-accent-red dark:via-primary-red dark:to-orange-500">YES</span>ES
             </h1>
 
-            {/* Welcome video hero */}
-            <VideoHero url="/videos/Welcome.mp4" />
-            
-            {/* Animated Ticks Section - Now above the dynamic headline */}
-            <div className="flex items-center justify-center space-x-6 mb-12">
+            {/* Dynamic Headline */}
+            <DynamicHeadline />
+
+            <p className="text-lg md:text-xl text-gray-600 dark:text-gray-200 mb-14 max-w-2xl mx-auto leading-relaxed">
+              {t('tagline')}
+            </p>
+
+            {/* Animated tick features */}
+            <div className="flex items-center justify-center gap-6 md:gap-10 mb-16">
               {tickFeatures.map((feature, index) => (
                 <button
                   key={`tick-${feature.title.replace(/\s+/g, '-').toLowerCase()}`}
                   type="button"
                   aria-label={`Learn more about ${feature.title}`}
-                  className="relative group bg-transparent border-none p-0 cursor-pointer transition-transform duration-300 hover:scale-110"
+                  className="relative group bg-transparent border-none p-0 cursor-pointer transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:scale-110 active:scale-[0.97]"
                   onMouseEnter={() => setHoveredTick(index)}
                   onMouseLeave={() => setHoveredTick(null)}
                 >
-                  <SwoopingTick 
-                    size={56}
+                  <SwoopingTick
+                    size={52}
                     hovered={hoveredTick === index}
-                    className={`transition-all duration-300 ${
-                      hoveredTick === index ? 'scale-125 rotate-12' : ''
-                    }`}
+                    className={`transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${hoveredTick === index ? 'scale-125 rotate-12' : ''}`}
                   />
                   {hoveredTick === index && (
-                    <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-lg p-4 shadow-xl z-[70] w-64 animate-fadeIn border border-primary-blue/20 dark:border-gray-600">
-                      <div className="flex items-center space-x-3 mb-2">
-                        <div className="text-primary-blue dark:text-accent-red">{feature.icon}</div>
-                        <h4 className="font-semibold text-gray-900 dark:text-white">{feature.title}</h4>
+                    <div className="absolute bottom-20 left-1/2 -translate-x-1/2 rounded-2xl p-5 z-[70] w-64 animate-fadeIn ring-1 ring-black/5 dark:ring-white/10 bg-white dark:bg-slate-900 shadow-[0_16px_48px_rgba(0,0,0,0.12)] dark:shadow-[0_16px_48px_rgba(0,0,0,0.60)]">
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className="text-[var(--brand-primary)]">{feature.icon}</div>
+                        <h4 className="font-semibold text-gray-900 dark:text-white text-sm tracking-tight">{feature.title}</h4>
                       </div>
-                      <p className="text-sm text-gray-600 dark:text-gray-300">{feature.description}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-300 leading-relaxed">{feature.description}</p>
                     </div>
                   )}
                 </button>
               ))}
             </div>
+          </div>
 
-            {/* Dynamic Headline */}
-            <DynamicHeadline />
-
-            <p className="text-xl md:text-2xl text-gray-700 dark:text-gray-300 mb-12 max-w-3xl mx-auto">
-              {t('tagline')}
-            </p>
-
-            {/* Advanced Search Form - streamlined */}
-            <form onSubmit={handleSearch} className="max-w-4xl mx-auto">
-              <div className="bg-white/10 dark:bg-black/20 backdrop-blur-md rounded-2xl p-6 shadow-2xl border border-primary-blue/30 dark:border-gray-600">
-                {/* Main Search Bar */}
-                <div className="flex items-center bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-200 dark:border-gray-700 p-2 mb-4">
-                  <div className="flex-1 flex items-center gap-2 px-4">
-                    <Search className="text-gray-400 h-5 w-5" />
+          {/* ─── Double-Bezel search container (outer shell → inner core) ─── */}
+          <form onSubmit={handleSearch} className="max-w-4xl mx-auto">
+            {/* Outer shell */}
+            <div className="rounded-[2.5rem] bg-white/58 dark:bg-white/[0.04] ring-1 ring-black/[0.06] dark:ring-white/[0.08] backdrop-blur-xl p-2 md:p-2.5 transition-shadow duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[0_24px_64px_rgba(0,0,0,0.06)] dark:hover:shadow-[0_24px_64px_rgba(0,0,0,0.3)]">
+              {/* Inner core */}
+              <div className="rounded-[calc(2.5rem-0.5rem)] bg-white dark:bg-slate-950 shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)] p-6 sm:p-8">
+                {/* Main search bar */}
+                <div className="flex items-center gap-2 bg-slate-50 dark:bg-slate-900/90 rounded-full ring-1 ring-slate-900/8 dark:ring-white/[0.08] p-1.5 mb-5 transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] focus-within:ring-2 focus-within:ring-[var(--brand-primary)]/30 focus-within:shadow-[0_0_0_4px_rgba(var(--brand-primary-rgb,37,99,235),0.06)]">
+                  <div className="flex-1 flex items-center gap-3 pl-4">
+                    <Search className="text-gray-400 h-5 w-5 shrink-0" />
                     <input
                       type="text"
                       placeholder={t('searchPlaceholder')}
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="flex-1 bg-transparent outline-none text-gray-900 dark:text-white placeholder-gray-500 text-lg"
+                      className="flex-1 bg-transparent outline-none text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 text-base"
                     />
                   </div>
+                  {/* Button-in-button CTA */}
                   <button
                     type="submit"
-                    className="bg-primary-blue dark:bg-accent-red text-white px-6 py-3 rounded-md hover:bg-primary-blueHover dark:hover:bg-accent-red/80 transition-colors font-medium"
+                    className="group relative flex items-center gap-2 bg-gradient-to-r from-primary-blue to-accent-blue dark:from-accent-blue dark:to-primary-blue text-white rounded-full pl-5 pr-1.5 py-2 font-semibold text-sm shadow-lg transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-xl active:scale-[0.97]"
                   >
-                    {t('searchButton')}
+                    <span>{t('searchButton')}</span>
+                    <span className="flex items-center justify-center w-8 h-8 rounded-full bg-white/15 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-0.5 group-hover:-translate-y-px group-hover:scale-105">
+                      <Search className="w-4 h-4" />
+                    </span>
                   </button>
                 </div>
 
-                {/* Category, Location, Filters button */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center mb-2">
-                  {/* Category & Subcategory Dropdowns */}
+                {/* Category, Location, Filters row */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 items-center mb-3">
+                  {/* Category dropdown */}
                   <div className="relative dropdown-container flex flex-col gap-2">
-                    {/* Main Category Dropdown */}
-                    <div>
-                      <button
-                        type="button"
-                        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                        className="w-full flex items-center justify-between px-4 py-3 rounded-md border-0 bg-white/90 dark:bg-gray-800/90 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-blue focus:outline-none"
-                      >
-                        <span className={selectedCategory ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-400'}>
-                          {selectedCategory
-                            ? realCategories.find(cat => cat.id === selectedCategory)?.name || selectedCategory
-                            : t('allCategories')}
-                        </span>
-                        <ChevronDown className={`h-5 w-5 transition-transform text-gray-600 dark:text-gray-300 ${isDropdownOpen ? 'rotate-180' : ''}`} />
-                      </button>
-                      {isDropdownOpen && (
-                        <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 rounded-md shadow-xl border border-gray-200 dark:border-gray-700 z-[60] max-h-[60vh] overflow-y-auto scrollbar-thin scrollbar-thumb-primary-blue/40 scrollbar-track-transparent">
-                          <div className="p-2">
+                    <button
+                      ref={categoryAnchorRef}
+                      type="button"
+                      onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                      className="w-full flex items-center justify-between px-4 py-2.5 rounded-full ring-1 ring-slate-900/8 dark:ring-white/[0.08] bg-slate-50 dark:bg-slate-900/90 text-gray-900 dark:text-white text-sm shadow-sm focus:ring-2 focus:ring-[var(--brand-primary)] focus:outline-none transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]"
+                      aria-expanded={isDropdownOpen}
+                      aria-haspopup="listbox"
+                    >
+                      <span className={selectedCategory ? 'text-gray-900 dark:text-white font-medium' : 'text-gray-500 dark:text-gray-300'}>
+                        {selectedCategory
+                          ? realCategories.find(cat => cat.id === selectedCategory)?.name || selectedCategory
+                          : t('allCategories')}
+                      </span>
+                      <ChevronDown className={`h-4 w-4 text-gray-500 dark:text-gray-300 transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${isDropdownOpen ? 'rotate-180' : ''}`} />
+                    </button>
+                    {isDropdownOpen && (
+                      <DropdownPanel portal anchorRef={categoryAnchorRef} matchWidth className="p-2">
+                        <div className="p-0">
+                          <button
+                            type="button"
+                            onClick={() => { setSelectedCategory(''); setSelectedSubcategory(''); setIsDropdownOpen(false) }}
+                            className={`w-full flex items-center justify-between gap-3 text-left px-4 py-3 rounded-xl text-sm transition-colors duration-200 ${selectedCategory === '' ? 'bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] dark:bg-[var(--brand-primary)]/16 dark:text-white font-semibold' : 'text-gray-700 dark:text-gray-100 hover:bg-slate-100 dark:hover:bg-white/[0.06]'}`}
+                          >
+                            <span>{t('allCategories')}</span>
+                            {selectedCategory === '' && <Check className="h-4 w-4" />}
+                          </button>
+                          {realCategories.map((cat) => (
                             <button
+                              key={cat.id}
                               type="button"
-                              onClick={() => { setSelectedCategory(''); setSelectedSubcategory(''); setIsDropdownOpen(false) }}
-                              className="w-full text-left px-4 py-2 hover:bg-primary-blue/10 dark:hover:bg-gray-700 text-gray-900 dark:text-white rounded-md text-sm font-medium"
+                              onClick={() => { setSelectedCategory(cat.id); setSelectedSubcategory(''); setIsDropdownOpen(false) }}
+                              className={`w-full flex items-center justify-between gap-3 text-left px-4 py-3 rounded-xl text-sm transition-colors duration-200 ${selectedCategory === cat.id ? 'bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] dark:bg-[var(--brand-primary)]/16 dark:text-white font-semibold' : 'text-gray-700 dark:text-gray-100 hover:bg-slate-100 dark:hover:bg-white/[0.06]'}`}
                             >
-                              {t('allCategories')}
+                              <span>{cat.name}</span>
+                              {selectedCategory === cat.id && <Check className="h-4 w-4" />}
                             </button>
-                            {realCategories.map((cat) => (
-                              <button
-                                key={cat.id}
-                                type="button"
-                                onClick={() => { setSelectedCategory(cat.id); setSelectedSubcategory(''); setIsDropdownOpen(false) }}
-                                className="w-full text-left px-4 py-2 hover:bg-primary-blue/10 dark:hover:bg-gray-700 text-gray-900 dark:text-white rounded-md text-sm"
-                              >
-                                {cat.name}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                    {/* Subcategory Dropdown (shows only if category selected and has subcategories) */}
-                    {selectedCatObj && selectedCatObj.subcategories && selectedCatObj.subcategories.length > 0 && (
-                      <div className="relative">
-                        <select
-                          className="w-full px-4 py-3 rounded-md border-0 bg-white/90 dark:bg-gray-800/90 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-blue focus:outline-none mt-1"
-                          value={selectedSubcategory}
-                          onChange={e => setSelectedSubcategory(e.target.value)}
-                        >
-                          <option value="">All {selectedCatObj.name}</option>
-                          {selectedCatObj.subcategories.map((sub: any) => (
-                            <option key={sub.id} value={sub.id}>{sub.name}</option>
                           ))}
-                        </select>
+                        </div>
+                      </DropdownPanel>
+                    )}
+                    {selectedCatObj && selectedCatObj.subcategories && selectedCatObj.subcategories.length > 0 && (
+                      <div className="relative subcategory-container">
+                        <button
+                          ref={subcategoryAnchorRef}
+                          type="button"
+                          onClick={() => setIsSubcategoryOpen((current) => !current)}
+                          className="w-full flex items-center justify-between px-4 py-2.5 rounded-full ring-1 ring-slate-900/8 dark:ring-white/[0.08] bg-slate-50 dark:bg-slate-900/90 text-gray-900 dark:text-white text-sm shadow-sm focus:ring-2 focus:ring-[var(--brand-primary)] focus:outline-none transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] mt-1"
+                          aria-expanded={isSubcategoryOpen}
+                          aria-haspopup="listbox"
+                        >
+                          <span className={selectedSubcategory ? 'text-gray-900 dark:text-white font-medium' : 'text-gray-500 dark:text-gray-300'}>
+                            {selectedSubcategory
+                              ? selectedCatObj.subcategories.find((sub: any) => sub.id === selectedSubcategory)?.name || selectedSubcategory
+                              : `All ${selectedCatObj.name}`}
+                          </span>
+                          <ChevronDown className={`h-4 w-4 text-gray-500 dark:text-gray-300 transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${isSubcategoryOpen ? 'rotate-180' : ''}`} />
+                        </button>
+                        {isSubcategoryOpen && (
+                          <DropdownPanel portal anchorRef={subcategoryAnchorRef} matchWidth className="p-2">
+                            <div className="p-0">
+                              <button
+                                type="button"
+                                className={`w-full flex items-center justify-between text-left px-4 py-3 rounded-xl text-sm transition-colors ${selectedSubcategory === '' ? 'bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] dark:bg-[var(--brand-primary)]/16 dark:text-white font-semibold' : 'text-gray-700 dark:text-gray-100 hover:bg-slate-100 dark:hover:bg-white/[0.06]'}`}
+                                onClick={() => { setSelectedSubcategory(''); setIsSubcategoryOpen(false) }}
+                              >
+                                <span>All {selectedCatObj.name}</span>
+                              </button>
+                              {selectedCatObj.subcategories.map((sub: any) => (
+                                <button
+                                  key={sub.id}
+                                  type="button"
+                                  className={`w-full flex items-center justify-between text-left px-4 py-3 rounded-xl text-sm transition-colors ${selectedSubcategory === sub.id ? 'bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] dark:bg-[var(--brand-primary)]/16 dark:text-white font-semibold' : 'text-gray-700 dark:text-gray-100 hover:bg-slate-100 dark:hover:bg-white/[0.06]'}`}
+                                  onClick={() => { setSelectedSubcategory(sub.id); setIsSubcategoryOpen(false) }}
+                                >
+                                  <span>{sub.name}</span>
+                                  {selectedSubcategory === sub.id && <Check className="h-4 w-4" />}
+                                </button>
+                              ))}
+                            </div>
+                          </DropdownPanel>
+                        )}
                       </div>
                     )}
                   </div>
+
                   {/* Location */}
-                  <div className="relative flex items-center gap-2">
-                    <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5" />
+                  <div className="relative location-container">
+                    <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 h-4 w-4 pointer-events-none z-10" />
                     <input
+                      ref={locationAnchorRef}
                       type="text"
-                      list="city-suggestions"
                       placeholder={t('location')}
                       value={location}
-                      onChange={(e) => setLocation(e.target.value)}
-                      className="w-full pl-12 pr-12 py-3 rounded-md border-0 bg-white/90 dark:bg-gray-800/90 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-primary-blue focus:outline-none"
+                      onChange={(e) => { setLocation(e.target.value); setShowLocSuggestions(true); }}
+                      onFocus={() => setShowLocSuggestions(true)}
+                      className="w-full pl-10 pr-10 py-2.5 rounded-full ring-1 ring-slate-900/8 dark:ring-white/[0.08] bg-slate-50 dark:bg-slate-900/90 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-300 text-sm shadow-sm focus:ring-2 focus:ring-[var(--brand-primary)]/30 focus:outline-none transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]"
                       autoComplete="off"
                     />
-                    <datalist id="city-suggestions">
-                      <option value="London, UK" />
-                      <option value="Paris, France" />
-                      <option value="Berlin, Germany" />
-                      <option value="New York, USA" />
-                      <option value="Los Angeles, USA" />
-                      <option value="Toronto, Canada" />
-                      <option value="Sydney, Australia" />
-                      <option value="Tokyo, Japan" />
-                      <option value="Dubai, UAE" />
-                      <option value="Cape Town, South Africa" />
-                    </datalist>
+                    {showLocSuggestions && (() => {
+                      const sug = CITY_SUGGESTIONS.filter(c =>
+                        !location || c.toLowerCase().includes(location.toLowerCase())
+                      ).slice(0, 9);
+                      return sug.length > 0 ? (
+                        <DropdownPanel portal anchorRef={locationAnchorRef} matchWidth className="p-2">
+                          <div className="p-0">
+                            {sug.map((city) => (
+                              <button
+                                key={city}
+                                type="button"
+                                onMouseDown={() => { setLocation(city); setShowLocSuggestions(false); }}
+                                className="w-full flex items-center gap-3 text-left px-4 py-3 rounded-xl text-sm transition-colors duration-200 text-gray-700 dark:text-gray-100 hover:bg-slate-100 dark:hover:bg-white/[0.06]"
+                              >
+                                <MapPin className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                                {city}
+                              </button>
+                            ))}
+                          </div>
+                        </DropdownPanel>
+                      ) : null;
+                    })()}
                     <button
                       type="button"
                       aria-label="Use my location"
-                      className="absolute right-2 top-1/2 -translate-y-1/2 bg-primary-blue/10 dark:bg-accent-red/10 rounded-full p-2 hover:bg-primary-blue/20 dark:hover:bg-accent-red/20 transition-colors"
+                      className="absolute right-1.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-[var(--brand-primary)]/10 flex items-center justify-center hover:bg-[var(--brand-primary)]/20 transition-colors duration-300"
                       onClick={async () => {
                         if (navigator.geolocation) {
                           navigator.geolocation.getCurrentPosition(async (pos) => {
@@ -490,27 +579,29 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
                         }
                       }}
                     >
-                      <MapPin className="h-5 w-5 text-primary-blue dark:text-accent-red" />
+                      <MapPin className="h-3.5 w-3.5 text-[var(--brand-primary)]" />
                     </button>
                   </div>
-                  {/* Filters button */}
+
+                  {/* Filters toggle */}
                   <div className="flex md:justify-end">
                     <button
                       type="button"
                       onClick={() => setIsFiltersOpen((v) => !v)}
-                      className="w-full md:w-auto px-4 py-3 rounded-md border border-primary-blue dark:border-accent-red bg-white/90 dark:bg-gray-800/90 text-primary-blue dark:text-accent-red hover:bg-primary-blue/10 dark:hover:bg-accent-red/10 flex items-center justify-center gap-2 font-semibold shadow"
+                      className="group w-full md:w-auto flex items-center justify-center gap-2 px-5 py-2.5 rounded-full ring-1 ring-[var(--brand-primary)]/20 text-[var(--brand-primary)] dark:text-white text-sm font-semibold bg-[var(--brand-primary)]/[0.04] dark:bg-white/[0.04] hover:bg-[var(--brand-primary)]/[0.08] dark:hover:bg-white/[0.08] transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-[0.97]"
                       aria-expanded={isFiltersOpen}
                     >
                       <span>{t('filters')}</span>
                       {chips.length > 0 && (
-                        <span className="ml-1 inline-flex items-center justify-center min-w-6 h-6 text-xs rounded-full bg-primary-blue text-white px-2">{chips.length}</span>
+                        <span className="inline-flex items-center justify-center min-w-5 h-5 text-[10px] rounded-full bg-[var(--brand-primary)] text-white px-1.5">{chips.length}</span>
                       )}
                     </button>
                   </div>
                 </div>
-                {/* Expanded advanced filters section */}
+
+                {/* Expanded filter panel */}
                 {isFiltersOpen && (
-                  <div className="w-full mt-4">
+                  <div className="w-full mt-4 rounded-[1.25rem] overflow-hidden ring-1 ring-black/[0.06] dark:ring-white/[0.08]">
                     <TalentFilterPanel
                       filters={advancedFilters}
                       onFiltersChange={setAdvancedFilters}
@@ -521,137 +612,147 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
                   </div>
                 )}
 
-                {/* Active Filters Indicator */}
-                <div className="flex flex-wrap gap-2 mt-3">
-                  {chips.map((chip) => (
-                    <span
-                      key={chip.k}
-                      className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-white/90 dark:bg-gray-800/90 border border-gray-200 dark:border-gray-700 text-xs text-gray-700 dark:text-gray-300"
-                    >
-                      {chip.label}
-                      <button type="button" onClick={chip.onRemove} className="ml-1 text-gray-500 hover:text-gray-800 dark:hover:text-gray-200">×</button>
-                    </span>
-                  ))}
-                  {hasAnyFilter && (
-                    <button
-                      type="button"
-                      onClick={clearAllFilters}
-                      className="text-xs underline text-primary-blue dark:text-accent-red"
-                    >
-                      {t('clearAll')}
-                    </button>
-                  )}
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-
-      {/* Welcome Video Section - Backstage Inspired */}
-      <div className="relative py-24 bg-gradient-to-r from-primary-blue/8 to-primary-red/8 dark:from-primary-blue/20 dark:to-primary-red/20 backdrop-blur-sm z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center pt-12" >
-            <div className="text-gray-900 dark:text-white flex flex-col justify-start h-full min-h-[320px] pl-2 md:pl-6 lg:pl-8 mt-12">
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6 pl-2 md:pl-4 lg:pl-8">
-                {t('findYourNextJob')}{' '}
-                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-primary-blue to-accent-blue dark:from-accent-red dark:to-primary-red">
-                  {t('elevateYourCareer')}
-                </span>
-              </h2>
-              <p className="text-xl text-gray-700 dark:text-gray-300 mb-8 leading-relaxed">
-                {t('joinThousands')}{' '}
-                {t('supportCreativeJourney')}
-              </p>
-              <div className="flex flex-wrap gap-4">
-                <button className="bg-gradient-to-r from-primary-blue to-accent-blue dark:from-accent-red dark:to-primary-red hover:from-primary-blueHover hover:to-primary-blue dark:hover:from-primary-red dark:hover:to-accent-red text-white font-semibold py-3 px-8 rounded-xl transition-all duration-300 transform hover:scale-105">
-                  {t('joinNow')}
-                </button>
-                <button className="border-2 border-primary-blue/50 dark:border-accent-red/50 hover:border-primary-blue dark:hover:border-accent-red text-gray-800 dark:text-white font-semibold py-3 px-8 rounded-xl transition-all duration-300 hover:bg-primary-blue/10 dark:hover:bg-accent-red/10">
-                  {t('learnMore')}
-                </button>
+                {/* Active filter chips */}
+                {(chips.length > 0 || hasAnyFilter) && (
+                  <div className="flex flex-wrap gap-2 mt-4">
+                    {chips.map((chip) => (
+                      <span
+                        key={chip.k}
+                        className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-50 dark:bg-slate-900/90 ring-1 ring-slate-900/8 dark:ring-white/[0.08] text-xs text-gray-700 dark:text-gray-100"
+                      >
+                        {chip.label}
+                        <button type="button" onClick={chip.onRemove} className="text-gray-400 hover:text-gray-700 dark:hover:text-gray-100 transition-colors">×</button>
+                      </span>
+                    ))}
+                    {hasAnyFilter && (
+                      <button
+                        type="button"
+                        onClick={clearAllFilters}
+                        className="text-xs font-medium text-[var(--brand-primary)] hover:underline"
+                      >
+                        {t('clearAll')}
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
-            
-            <HeroSlideshow />
-          </div>
+          </form>
         </div>
-      </div>
+      </section>
 
-      {/* Stats Section */}
-      <div className="py-16 bg-gradient-to-r from-primary-blue/5 to-primary-red/5 dark:from-primary-blue/10 dark:to-primary-red/10 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div className="group">
-              <div className="text-4xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-primary-blue dark:group-hover:text-accent-red transition-colors">10K+</div>
-              <div className="text-gray-600 dark:text-gray-300">{t('activeTalent')}</div>
-            </div>
-            <div className="group">
-              <div className="text-4xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-accent-blue dark:group-hover:text-primary-red transition-colors">500+</div>
-              <div className="text-gray-600 dark:text-gray-300">{t('projectsPosted')}</div>
-            </div>
-            <div className="group">
-              <div className="text-4xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-primary-blue dark:group-hover:text-accent-red transition-colors">95%</div>
-              <div className="text-gray-600 dark:text-gray-300">{t('successRate')}</div>
-            </div>
-            <div className="group">
-              <div className="text-4xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-accent-blue dark:group-hover:text-primary-red transition-colors">24/7</div>
-              <div className="text-gray-600 dark:text-gray-300">{t('support')}</div>
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* ─── Dynamic Category Reel ─── */}
+      <CategoryReel categories={realCategories} locale={locale} />
 
-      {/* How It Works */}
-      <div className="py-24 bg-gradient-to-br from-primary-blue/8 via-transparent to-primary-red/8 dark:from-primary-blue/20 dark:via-transparent dark:to-primary-red/20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">{t('howItWorksTitle')}</h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-              {t('howItWorksDescription')}
+      {/* ─── 3YESES Video Player Section (with CTAs) ─── */}
+      <div className="relative z-10 py-20 md:py-28">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Section heading */}
+          <div className="text-center mb-14">
+            <span className="inline-flex items-center gap-2 rounded-full px-5 py-2 text-[10px] uppercase tracking-[0.22em] font-semibold text-[var(--brand-accent)] ring-1 ring-black/10 dark:ring-white/10 bg-white/72 dark:bg-white/[0.08] mb-6 shadow-sm backdrop-blur-md">
+              <SwoopingTick className="w-4 h-4" />
+              Watch what 3YESES is about
+            </span>
+            <h2 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-5 leading-[1.05] tracking-tighter">
+              See the{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--brand-primary)] to-[var(--brand-accent)]">
+                3YESES experience
+              </span>
+            </h2>
+            <p className="text-lg text-gray-600 dark:text-gray-200 max-w-2xl mx-auto leading-relaxed">
+              Discover how talents get cast and how casting directors find the perfect fit — every time.
             </p>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                step: "01",
-                icon: <UserPlus className="h-12 w-12" />,
-                title: t('createYourProfile'),
-                description: t('createYourProfileDescription')
-              },
-              {
-                step: "02",
-                icon: <LucideImage className="h-12 w-12" />,
-                title: t('showcaseYourWork'),
-                description: t('showcaseYourWorkDescription')
-              },
-              {
-                step: "03",
-                icon: <BarChart3 className="h-12 w-12" />,
-                title: t('buildYourReputation'),
-                description: t('buildYourReputationDescription')
-              }
-            ].map((item) => (
-              <div key={`step-${item.step}-${item.title.replace(/\s+/g, '-').toLowerCase()}`} className="text-center group">
-                <div className="bg-gradient-to-br from-primary-blue/20 to-primary-red/20 rounded-2xl p-8 backdrop-blur-sm border border-primary-blue/20 hover:border-accent-red/50 dark:hover:border-primary-blue/50 transition-all duration-300 group-hover:scale-105">
-                  <div className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-blue to-accent-blue dark:from-accent-red dark:to-primary-red mb-4 group-hover:from-accent-blue group-hover:to-primary-blue dark:group-hover:from-primary-red dark:group-hover:to-accent-red transition-all duration-300">
-                    {item.step}
-                  </div>
-                  <div className="flex justify-center mb-4 text-primary-blue dark:text-accent-red group-hover:text-accent-blue dark:group-hover:text-primary-red transition-colors">
-                    {item.icon}
-                  </div>
-                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">{item.title}</h3>
-                  <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{item.description}</p>
-                </div>
-              </div>
-            ))}
+
+          {/* Double-Bezel video player shell */}
+          <div className="rounded-[2.5rem] bg-white/58 dark:bg-white/[0.04] ring-1 ring-black/[0.06] dark:ring-white/[0.08] backdrop-blur-xl p-2 md:p-2.5 shadow-[0_20px_60px_rgba(0,0,0,0.06)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.3)]">
+            <div className="aspect-video rounded-[calc(2.5rem-0.375rem)] overflow-hidden bg-gray-950 shadow-[inset_0_1px_1px_rgba(255,255,255,0.08)]">
+              <VideoPlayer
+                url="/videos/Welcome.mp4"
+                showLogo={false}
+                className="w-full h-full"
+              />
+            </div>
+          </div>
+
+          {/* CTA row below the player (Talent Hub intro + CTAs) */}
+          <div className="mt-8 max-w-3xl mx-auto text-center">
+            <p className="text-base text-gray-600 dark:text-gray-300 mb-4 leading-relaxed">
+              {t('talentHubIntro')}
+            </p>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <a
+                href={`/${locale}/search-results`}
+                className="group relative flex items-center gap-2 text-white rounded-full pl-6 pr-2 py-3 font-semibold text-base shadow-lg transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-xl active:scale-[0.97]"
+                style={{ background: 'linear-gradient(90deg, var(--brand-primary), var(--brand-accent))' }}
+              >
+                <span>{t('visitTalentHub') || 'Visit the Talent Hub'}</span>
+                <span className="flex items-center justify-center w-9 h-9 rounded-full bg-white/15 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-0.5 group-hover:-translate-y-px group-hover:scale-105">
+                  <UserPlus className="w-4 h-4" />
+                </span>
+              </a>
+
+              <a
+                href={`/${locale}/search-results`}
+                className="group flex items-center gap-2 px-6 py-3 rounded-full ring-1 font-semibold text-base bg-white/72 dark:bg-white/[0.06] transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-[0.97]"
+                style={{ color: 'var(--brand-primary)', boxShadow: 'none' }}
+              >
+                <Users className="w-4 h-4" />
+                <span>{t('ctaBrowseTalent') || 'Browse Talent'}</span>
+              </a>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Feature Highlights Section */}
-      <FeatureHighlights />
+      {/* Welcome / Pitch Section */}
+      <div className="relative z-10 pb-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="rounded-[2.5rem] bg-slate-50 dark:bg-slate-900 border border-gray-200/80 dark:border-white/[0.08] shadow-[0_16px_48px_rgba(0,0,0,0.08)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.5)] px-6 md:px-10 lg:px-14 py-12 md:py-16">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+              <div className="flex flex-col justify-start h-full min-h-[320px]">
+                <h2 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-7 leading-[1.05] tracking-tighter">
+                  {t('findYourNextJob')}{' '}
+                  <span className="block text-transparent bg-clip-text bg-gradient-to-r from-primary-blue via-accent-blue to-indigo-500 dark:from-accent-red dark:via-primary-red dark:to-orange-500">
+                    {t('elevateYourCareer')}
+                  </span>
+                </h2>
+                <p className="text-lg text-gray-600 dark:text-gray-300 mb-10 leading-relaxed max-w-md">
+                  {t('joinThousands')}{' '}
+                  {t('supportCreativeJourney')}
+                </p>
+                <div className="flex flex-wrap gap-3">
+                  {/* Primary CTA — filled gradient pill */}
+                  <a
+                    href={`/${locale}/signup`}
+                    className="group relative inline-flex items-center gap-2 text-white rounded-full pl-7 pr-2 py-3.5 font-semibold text-base shadow-lg transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-xl active:scale-[0.98]"
+                    style={{ background: 'linear-gradient(90deg, var(--brand-primary), var(--brand-accent))' }}
+                  >
+                    <span>{t('joinNow')}</span>
+                    <span className="flex items-center justify-center w-9 h-9 rounded-full bg-white/15 transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-0.5 group-hover:scale-105">
+                      <UserPlus className="w-4 h-4" />
+                    </span>
+                  </a>
+                  {/* Secondary CTA — visible ghost */}
+                  <a
+                    href={`/${locale}/search-results`}
+                    className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full ring-2 ring-[var(--brand-primary)] font-semibold text-base text-[var(--brand-primary)] dark:text-white dark:ring-white/25 bg-transparent hover:bg-[var(--brand-primary)]/[0.06] transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-[0.98]"
+                  >
+                    <Users className="w-4 h-4" />
+                    <span>{t('learnMore')}</span>
+                  </a>
+                </div>
+              </div>
+            
+              <div className="rounded-[2rem] overflow-hidden border border-gray-200/60 dark:border-white/10 shadow-[0_12px_40px_rgba(0,0,0,0.08)] dark:shadow-[0_12px_40px_rgba(0,0,0,0.3)] bg-gray-100 dark:bg-slate-800/60 p-3">
+                <HeroSlideshow />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </main>
   </div>
   )

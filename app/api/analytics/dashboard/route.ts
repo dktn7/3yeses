@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const decoded = AuthService.verifyJWT(accessToken);
+    const decoded = await AuthService.verifyJWT(accessToken);
     if (!decoded) {
       return NextResponse.json(
         { error: 'Invalid token' },
@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
     // Get daily stats
     const dailyStats = await prisma.profileStats.findMany({
       where: {
-        talentProfileId: talentProfile.id,
+        talentProfileId: (talentProfile as any).userId ?? talentProfile.userId,
         date: {
           gte: startDate,
         },
@@ -53,13 +53,13 @@ export async function GET(request: NextRequest) {
 
     // Get total stats
     const totalViews = await prisma.profileView.count({
-      where: { talentProfileId: talentProfile.id },
+      where: { talentProfileId: (talentProfile as any).userId ?? talentProfile.userId },
     });
 
     const uniqueViewers = await prisma.profileView.groupBy({
       by: ['viewerId'],
       where: {
-        talentProfileId: talentProfile.id,
+        talentProfileId: (talentProfile as any).userId ?? talentProfile.userId,
         viewerId: { not: null },
       },
     });
@@ -67,25 +67,25 @@ export async function GET(request: NextRequest) {
     const totalPortfolioViews = await prisma.portfolioView.count({
       where: {
         portfolioItem: {
-          talentProfileId: talentProfile.id,
+          talentProfileId: (talentProfile as any).userId ?? talentProfile.userId,
         },
       },
     });
 
     const totalSearchImpressions = await prisma.searchAppearance.count({
-      where: { talentProfileId: talentProfile.id },
+      where: { talentProfileId: (talentProfile as any).userId ?? talentProfile.userId },
     });
 
     const totalSearchClicks = await prisma.searchAppearance.count({
       where: {
-        talentProfileId: talentProfile.id,
+        talentProfileId: (talentProfile as any).userId ?? talentProfile.userId,
         clicked: true,
       },
     });
 
     // Get top portfolio items by views
     const topPortfolioItems = await prisma.portfolioItem.findMany({
-      where: { talentProfileId: talentProfile.id },
+      where: { talentProfileId: (talentProfile as any).userId ?? talentProfile.userId },
       include: {
         _count: {
           select: { views: true },
@@ -101,7 +101,7 @@ export async function GET(request: NextRequest) {
 
     // Get recent views (last 10)
     const recentViews = await prisma.profileView.findMany({
-      where: { talentProfileId: talentProfile.id },
+      where: { talentProfileId: (talentProfile as any).userId ?? talentProfile.userId },
       include: {
         viewer: {
           select: {
@@ -122,7 +122,7 @@ export async function GET(request: NextRequest) {
 
     // Calculate engagement rate
     const engagementRate = totalViews > 0
-      ? ((totalPortfolioViews + talentProfile.likeCount + (await prisma.comment.count({ where: { talentProfileId: talentProfile.id } }))) / totalViews) * 100
+      ? ((totalPortfolioViews + talentProfile.likeCount + (await prisma.comment.count({ where: { talentProfileId: (talentProfile as any).userId ?? talentProfile.userId } }))) / totalViews) * 100
       : 0;
 
     return NextResponse.json({
@@ -133,7 +133,6 @@ export async function GET(request: NextRequest) {
           uniqueViewers: uniqueViewers.length,
           totalPortfolioViews,
           totalLikes: talentProfile.likeCount,
-          averageRating: talentProfile.rating,
           searchImpressions: totalSearchImpressions,
           searchClicks: totalSearchClicks,
           searchCTR: totalSearchImpressions > 0 ? (totalSearchClicks / totalSearchImpressions) * 100 : 0,

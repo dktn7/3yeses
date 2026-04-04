@@ -31,7 +31,7 @@ export async function POST(req: Request) {
             userId: user.id,
             // Provide minimal required fields
             location: 'Not set',
-            experience: '0',
+            experienceLevel: '0',
           },
         })
       )

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import {
@@ -18,7 +18,7 @@ import MediaThumbnailFallback from './MediaThumbnailFallback';
 interface MediaItem {
   id: string;
   title: string;
-  url: string;
+  mediaUrl: string;
   type: 'IMAGE' | 'VIDEO' | 'AUDIO';
   thumbnail?: string;
   description?: string;
@@ -34,7 +34,7 @@ interface MediaItem {
     location?: string;
   };
   views: number;
-  likes: number;
+  likeCount: number;
   isSponsored?: boolean;
   createdAt: string;
 }
@@ -52,15 +52,15 @@ export default function MediaOverlayTikTok({ media, allMedia, onClose, onMediaSe
   // Find next/prev media
   const currentIndex = allMedia.findIndex(m => m.id === media.id);
   
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     const nextIndex = (currentIndex + 1) % allMedia.length;
     onMediaSelect(allMedia[nextIndex]);
-  };
+  }, [currentIndex, allMedia, onMediaSelect]);
 
-  const handlePrev = () => {
+  const handlePrev = useCallback(() => {
     const prevIndex = (currentIndex - 1 + allMedia.length) % allMedia.length;
     onMediaSelect(allMedia[prevIndex]);
-  };
+  }, [currentIndex, allMedia, onMediaSelect]);
 
   // Keyboard nav
   useEffect(() => {
@@ -71,7 +71,7 @@ export default function MediaOverlayTikTok({ media, allMedia, onClose, onMediaSe
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [media.id]);
+  }, [handleNext, handlePrev, onClose]);
 
   // Prevent body scroll
   useEffect(() => {
@@ -95,19 +95,19 @@ export default function MediaOverlayTikTok({ media, allMedia, onClose, onMediaSe
         <div className="absolute inset-0 bg-gray-900">
             {media.type === 'VIDEO' ? (
                  <VideoPlayer 
-                   url={media.url} 
+                   url={media.mediaUrl} 
                    className="w-full h-full object-cover"
                    talentProfile={{
-                     id: media.talentProfile.id,
+                     id: (media.talentProfile as any).userId ?? media.talentProfile.id,
                      name: media.talentProfile.user.name,
                      avatarUrl: media.talentProfile.avatarUrl
                    }}
                    showLogo={true}
                  />
             ) : (
-              media.thumbnail || media.url ? (
+              media.thumbnail || media.mediaUrl ? (
                 <Image
-                  src={media.thumbnail || media.url}
+                  src={media.thumbnail || media.mediaUrl}
                   alt={media.title}
                   fill
                   className="object-cover"
@@ -142,7 +142,7 @@ export default function MediaOverlayTikTok({ media, allMedia, onClose, onMediaSe
             <button className="p-2 bg-white/10 rounded-full hover:bg-white/20 backdrop-blur-sm transition-colors pointer-events-auto">
               <Heart className="w-8 h-8 text-white fill-white/20" />
             </button>
-            <span className="text-white text-xs font-bold">{media.likes}</span>
+            <span className="text-white text-xs font-bold">{media.likeCount}</span>
           </div>
 
           <div className="flex flex-col items-center gap-1">

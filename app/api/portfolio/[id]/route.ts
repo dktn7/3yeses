@@ -3,20 +3,13 @@ import { prisma } from '@/lib/prisma';
 import { AuthService } from '@/lib/auth/auth-service';
 
 // GET single portfolio item
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: NextRequest, context: any) {
+  const params = (context && context.params) || { id: undefined };
   try {
     const item = await prisma.portfolioItem.findUnique({
       where: { id: params.id },
       include: {
-        talentProfile: {
-          select: {
-            id: true,
-            userId: true,
-          },
-        },
+        talentProfile: true,
       },
     });
 
@@ -41,10 +34,8 @@ export async function GET(
 }
 
 // PATCH update portfolio item
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PATCH(request: NextRequest, context: any) {
+  const params = (context && context.params) || { id: undefined };
   try {
     const accessToken = request.cookies.get('accessToken')?.value;
     if (!accessToken) {
@@ -54,7 +45,7 @@ export async function PATCH(
       );
     }
 
-    const decoded = AuthService.verifyJWT(accessToken);
+    const decoded = await AuthService.verifyJWT(accessToken);
     if (!decoded) {
       return NextResponse.json(
         { error: 'Invalid token' },
@@ -77,7 +68,8 @@ export async function PATCH(
       );
     }
 
-    if (item.talentProfile.userId !== decoded.userId) {
+    const profileIdOrUserId = (item.talentProfile as any)?.userId ?? (item.talentProfile as any)?.id;
+    if (profileIdOrUserId !== decoded.userId) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 403 }
@@ -85,14 +77,14 @@ export async function PATCH(
     }
 
     const body = await request.json();
-    const { title, url, type } = body;
+    const { title, url: mediaUrl, type } = body;
 
     // Update item
     const updatedItem = await prisma.portfolioItem.update({
       where: { id: params.id },
       data: {
         ...(title && { title }),
-        ...(url && { url }),
+        ...(mediaUrl && { mediaUrl }),
         ...(type && { type }),
       },
     });
@@ -112,10 +104,8 @@ export async function PATCH(
 }
 
 // DELETE portfolio item
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: NextRequest, context: any) {
+  const params = (context && context.params) || { id: undefined };
   try {
     const accessToken = request.cookies.get('accessToken')?.value;
     if (!accessToken) {
@@ -125,7 +115,7 @@ export async function DELETE(
       );
     }
 
-    const decoded = AuthService.verifyJWT(accessToken);
+    const decoded = await AuthService.verifyJWT(accessToken);
     if (!decoded) {
       return NextResponse.json(
         { error: 'Invalid token' },

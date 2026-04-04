@@ -64,7 +64,7 @@ export interface RecruiterProfile {
 export interface PortfolioItem {
   id: string;
   type: 'image' | 'video' | 'document';
-  url: string;
+  mediaUrl: string;
   title?: string;
   description?: string;
   uploadedAt: Date;

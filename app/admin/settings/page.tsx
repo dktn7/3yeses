@@ -1,23 +1,77 @@
-'use client';
+﻿'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   Settings as SettingsIcon,
   Bell,
   Shield,
   Mail,
-  Globe,
-  Database,
   CreditCard,
   Users,
   Save,
-  AlertCircle
+  Loader2,
+  CheckCircle,
+  Accessibility,
+  Type,
+  Eye,
+  RotateCcw,
 } from 'lucide-react';
+import { toast } from 'sonner';
+
+interface SettingsData {
+  general: {
+    platformName: string;
+    supportEmail: string;
+    defaultLanguage: string;
+    timezone: string;
+  };
+  security: {
+    requireEmailVerification: boolean;
+    twoFactorAuth: boolean;
+    sessionTimeout: number;
+  };
+  email: {
+    smtpHost: string;
+    smtpPort: number;
+    encryption: string;
+    fromEmail: string;
+  };
+  payments: {
+    gateway: string;
+    commission: number;
+    currency: string;
+  };
+  users: {
+    maxPortfolioItems: number;
+    requireApproval: boolean;
+    allowSelfDelete: boolean;
+  };
+  notifications: {
+    emailOnNewUser: boolean;
+    emailOnReport: boolean;
+    emailOnPayment: boolean;
+  };
+  accessibility: {
+    fontSize: number;
+    invertColors: boolean;
+  };
+}
+
+const DEFAULT_SETTINGS: SettingsData = {
+  general: { platformName: '3YESES', supportEmail: 'support@3yeses.online', defaultLanguage: 'en', timezone: 'UTC' },
+  security: { requireEmailVerification: true, twoFactorAuth: false, sessionTimeout: 60 },
+  email: { smtpHost: '', smtpPort: 587, encryption: 'tls', fromEmail: 'noreply@3yeses.online' },
+  payments: { gateway: 'stripe', commission: 15, currency: 'GBP' },
+  users: { maxPortfolioItems: 50, requireApproval: false, allowSelfDelete: true },
+  notifications: { emailOnNewUser: true, emailOnReport: true, emailOnPayment: true },
+  accessibility: { fontSize: 16, invertColors: false },
+};
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('general');
   const [isSaving, setIsSaving] = useState(false);
-  const [saveMessage, setSaveMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [settings, setSettings] = useState<SettingsData>(DEFAULT_SETTINGS);
 
   const tabs = [
     { id: 'general', name: 'General', icon: SettingsIcon },
@@ -26,36 +80,97 @@ export default function SettingsPage() {
     { id: 'payments', name: 'Payments', icon: CreditCard },
     { id: 'users', name: 'User Settings', icon: Users },
     { id: 'notifications', name: 'Notifications', icon: Bell },
+    { id: 'accessibility', name: 'Accessibility', icon: Accessibility },
   ];
+
+  const fetchSettings = useCallback(async () => {
+    try {
+      const res = await fetch('/api/admin/settings');
+      if (res.ok) {
+        const data = await res.json();
+        if (data.settings) setSettings({ ...DEFAULT_SETTINGS, ...data.settings });
+      }
+    } catch {
+      // use defaults
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => { fetchSettings(); }, [fetchSettings]);
+
+  const updateField = (section: keyof SettingsData, key: string, value: any) => {
+    setSettings(prev => ({
+      ...prev,
+      [section]: { ...prev[section], [key]: value },
+    }));
+  };
 
   const handleSave = async () => {
     setIsSaving(true);
-    setSaveMessage('');
-    
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const res = await fetch('/api/admin/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(settings),
+      });
+      if (res.ok) {
+        toast.success('Settings saved successfully!');
+      } else {
+        toast.error('Failed to save settings');
+      }
+    } catch {
+      toast.error('Failed to save settings');
+    } finally {
       setIsSaving(false);
-      setSaveMessage('Settings saved successfully!');
-      setTimeout(() => setSaveMessage(''), 3000);
-    }, 1000);
+    }
   };
+
+  const inputClass = "w-full px-4 py-2 bg-[var(--admin-bg)] border border-[var(--admin-border)] rounded-lg text-sm text-[var(--admin-text)] focus:outline-none focus:ring-2 focus:ring-[var(--admin-primary)]/30 focus:border-[var(--admin-primary)]";
+  const selectClass = `${inputClass} appearance-none cursor-pointer font-bold`;
+
+  const ToggleSwitch = ({ checked, onChange, label, description }: { checked: boolean; onChange: (v: boolean) => void; label: string; description: string }) => (
+    <div className="flex items-center justify-between p-4 bg-[var(--admin-bg)] rounded-lg">
+      <div>
+        <p className="font-medium text-[var(--admin-text)]">{label}</p>
+        <p className="text-sm text-[var(--admin-muted)]">{description}</p>
+      </div>
+      <button
+        onClick={() => onChange(!checked)}
+        className={`relative w-11 h-6 rounded-full transition-colors ${checked ? 'bg-[var(--admin-primary)]' : 'bg-[var(--admin-border)]'}`}
+      >
+        <span className={`absolute top-[2px] left-[2px] w-5 h-5 bg-white rounded-full transition-transform ${checked ? 'translate-x-5' : ''}`} />
+      </button>
+    </div>
+  );
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-64 text-[var(--admin-muted)]">
+        <Loader2 className="animate-spin mr-2" /> Loading settings...
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-          System Settings
-        </h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-1">
-          Configure platform settings and preferences
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-black text-[var(--admin-text)] tracking-tight flex items-center gap-3">
+            <SettingsIcon className="h-7 w-7 text-[var(--admin-primary)]" />
+            System Settings
+          </h1>
+          <p className="text-[var(--admin-muted)] mt-1 font-medium">
+            Configure platform settings and preferences
+          </p>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Sidebar Tabs */}
         <div className="lg:col-span-1">
-          <div className="bg-white dark:bg-white/10 backdrop-blur-md rounded-xl border border-gray-200 dark:border-white/20 p-2">
+          <div className="bg-[var(--admin-surface)] backdrop-blur-md rounded-xl border border-[var(--admin-border)] p-2">
             <nav className="space-y-1">
               {tabs.map((tab) => {
                 const Icon = tab.icon;
@@ -65,8 +180,8 @@ export default function SettingsPage() {
                     onClick={() => setActiveTab(tab.id)}
                     className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all ${
                       activeTab === tab.id
-                        ? 'bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-300'
-                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5'
+                        ? 'bg-[var(--admin-primary)]/10 text-[var(--admin-primary)]'
+                        : 'text-[var(--admin-muted)] hover:bg-[var(--admin-bg)]'
                     }`}
                   >
                     <Icon className="h-5 w-5" />
@@ -80,64 +195,45 @@ export default function SettingsPage() {
 
         {/* Settings Content */}
         <div className="lg:col-span-3">
-          <div className="bg-white dark:bg-white/10 backdrop-blur-md rounded-xl border border-gray-200 dark:border-white/20 p-6">
-            {/* Save Message */}
-            {saveMessage && (
-              <div className="mb-6 p-4 bg-green-50 dark:bg-green-500/10 border border-green-200 dark:border-green-500/20 rounded-lg flex items-center gap-3">
-                <AlertCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
-                <span className="text-green-700 dark:text-green-300">{saveMessage}</span>
-              </div>
-            )}
+          <div className="bg-[var(--admin-surface)] backdrop-blur-md rounded-xl border border-[var(--admin-border)] p-6">
 
             {/* General Settings */}
             {activeTab === 'general' && (
               <div className="space-y-6">
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-                  General Settings
-                </h2>
-                
+                <h2 className="text-xl font-bold text-[var(--admin-text)] mb-4">General Settings</h2>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Platform Name
-                    </label>
-                    <input
-                      type="text"
-                      defaultValue="3Yeses"
-                      className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
+                    <label className="block text-sm font-medium text-[var(--admin-muted)] mb-2">Platform Name</label>
+                    <input type="text" value={settings.general.platformName} onChange={e => updateField('general', 'platformName', e.target.value)} className={inputClass} />
                   </div>
-
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Support Email
-                    </label>
-                    <input
-                      type="email"
-                      defaultValue="support@3yeses.com"
-                      className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
+                    <label className="block text-sm font-medium text-[var(--admin-muted)] mb-2">Support Email</label>
+                    <input type="email" value={settings.general.supportEmail} onChange={e => updateField('general', 'supportEmail', e.target.value)} className={inputClass} />
                   </div>
-
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Default Language
-                    </label>
-                    <select className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label className="block text-sm font-medium text-[var(--admin-muted)] mb-2">Default Language</label>
+                    <select value={settings.general.defaultLanguage} onChange={e => updateField('general', 'defaultLanguage', e.target.value)} className={selectClass}>
                       <option value="en">English</option>
                       <option value="es">Spanish</option>
                       <option value="fr">French</option>
+                      <option value="de">German</option>
+                      <option value="it">Italian</option>
+                      <option value="pt">Portuguese</option>
+                      <option value="ru">Russian</option>
+                      <option value="ja">Japanese</option>
+                      <option value="zh">Chinese</option>
+                      <option value="ar">Arabic</option>
                     </select>
                   </div>
-
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Timezone
-                    </label>
-                    <select className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label className="block text-sm font-medium text-[var(--admin-muted)] mb-2">Timezone</label>
+                    <select value={settings.general.timezone} onChange={e => updateField('general', 'timezone', e.target.value)} className={selectClass}>
                       <option value="UTC">UTC</option>
-                      <option value="EST">Eastern Time</option>
-                      <option value="PST">Pacific Time</option>
+                      <option value="Europe/London">London (GMT/BST)</option>
+                      <option value="America/New_York">Eastern Time (ET)</option>
+                      <option value="America/Los_Angeles">Pacific Time (PT)</option>
+                      <option value="Europe/Paris">Central European (CET)</option>
+                      <option value="Asia/Tokyo">Japan (JST)</option>
                     </select>
                   </div>
                 </div>
@@ -147,55 +243,30 @@ export default function SettingsPage() {
             {/* Security Settings */}
             {activeTab === 'security' && (
               <div className="space-y-6">
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-                  Security Settings
-                </h2>
-                
+                <h2 className="text-xl font-bold text-[var(--admin-text)] mb-4">Security Settings</h2>
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-white/5 rounded-lg">
+                  <ToggleSwitch
+                    checked={settings.security.requireEmailVerification}
+                    onChange={v => updateField('security', 'requireEmailVerification', v)}
+                    label="Require Email Verification"
+                    description="Users must verify their email before accessing the platform"
+                  />
+                  <ToggleSwitch
+                    checked={settings.security.twoFactorAuth}
+                    onChange={v => updateField('security', 'twoFactorAuth', v)}
+                    label="Two-Factor Authentication"
+                    description="Enable 2FA for admin accounts"
+                  />
+                  <div className="flex items-center justify-between p-4 bg-[var(--admin-bg)] rounded-lg">
                     <div>
-                      <p className="font-medium text-gray-900 dark:text-white">
-                        Require Email Verification
-                      </p>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
-                        Users must verify their email before accessing the platform
-                      </p>
+                      <p className="font-medium text-[var(--admin-text)]">Session Timeout</p>
+                      <p className="text-sm text-[var(--admin-muted)]">Auto-logout users after inactivity</p>
                     </div>
-                    <label className="relative inline-flex items-center cursor-pointer">
-                      <input type="checkbox" defaultChecked className="sr-only peer" />
-                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                    </label>
-                  </div>
-
-                  <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-white/5 rounded-lg">
-                    <div>
-                      <p className="font-medium text-gray-900 dark:text-white">
-                        Two-Factor Authentication
-                      </p>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
-                        Enable 2FA for admin accounts
-                      </p>
-                    </div>
-                    <label className="relative inline-flex items-center cursor-pointer">
-                      <input type="checkbox" className="sr-only peer" />
-                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                    </label>
-                  </div>
-
-                  <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-white/5 rounded-lg">
-                    <div>
-                      <p className="font-medium text-gray-900 dark:text-white">
-                        Session Timeout
-                      </p>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
-                        Auto-logout users after inactivity
-                      </p>
-                    </div>
-                    <select className="px-3 py-1.5 bg-white dark:bg-white/10 border border-gray-200 dark:border-white/20 rounded-lg text-sm text-gray-900 dark:text-white">
-                      <option value="15">15 minutes</option>
-                      <option value="30">30 minutes</option>
-                      <option value="60">1 hour</option>
-                      <option value="0">Never</option>
+                    <select value={settings.security.sessionTimeout} onChange={e => updateField('security', 'sessionTimeout', Number(e.target.value))} className="px-3 py-1.5 bg-[var(--admin-bg)] border border-[var(--admin-border)] rounded-lg text-sm text-[var(--admin-text)]">
+                      <option value={15}>15 minutes</option>
+                      <option value={30}>30 minutes</option>
+                      <option value={60}>1 hour</option>
+                      <option value={0}>Never</option>
                     </select>
                   </div>
                 </div>
@@ -205,54 +276,29 @@ export default function SettingsPage() {
             {/* Email Settings */}
             {activeTab === 'email' && (
               <div className="space-y-6">
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-                  Email Configuration
-                </h2>
-                
+                <h2 className="text-xl font-bold text-[var(--admin-text)] mb-4">Email Configuration</h2>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      SMTP Host
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="smtp.example.com"
-                      className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
+                    <label className="block text-sm font-medium text-[var(--admin-muted)] mb-2">SMTP Host</label>
+                    <input type="text" value={settings.email.smtpHost} onChange={e => updateField('email', 'smtpHost', e.target.value)} placeholder="smtp.example.com" className={inputClass} />
                   </div>
-
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        SMTP Port
-                      </label>
-                      <input
-                        type="number"
-                        defaultValue="587"
-                        className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      />
+                      <label className="block text-sm font-medium text-[var(--admin-muted)] mb-2">SMTP Port</label>
+                      <input type="number" value={settings.email.smtpPort} onChange={e => updateField('email', 'smtpPort', Number(e.target.value))} className={inputClass} />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Encryption
-                      </label>
-                      <select className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                      <label className="block text-sm font-medium text-[var(--admin-muted)] mb-2">Encryption</label>
+                      <select value={settings.email.encryption} onChange={e => updateField('email', 'encryption', e.target.value)} className={selectClass}>
                         <option value="tls">TLS</option>
                         <option value="ssl">SSL</option>
                         <option value="none">None</option>
                       </select>
                     </div>
                   </div>
-
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      From Email
-                    </label>
-                    <input
-                      type="email"
-                      defaultValue="noreply@3yeses.com"
-                      className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
+                    <label className="block text-sm font-medium text-[var(--admin-muted)] mb-2">From Email</label>
+                    <input type="email" value={settings.email.fromEmail} onChange={e => updateField('email', 'fromEmail', e.target.value)} className={inputClass} />
                   </div>
                 </div>
               </div>
@@ -261,59 +307,190 @@ export default function SettingsPage() {
             {/* Payment Settings */}
             {activeTab === 'payments' && (
               <div className="space-y-6">
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-                  Payment Configuration
-                </h2>
-                
+                <h2 className="text-xl font-bold text-[var(--admin-text)] mb-4">Payment Configuration</h2>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Payment Gateway
-                    </label>
-                    <select className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label className="block text-sm font-medium text-[var(--admin-muted)] mb-2">Payment Gateway</label>
+                    <select value={settings.payments.gateway} onChange={e => updateField('payments', 'gateway', e.target.value)} className={selectClass}>
                       <option value="stripe">Stripe</option>
-                      <option value="paypal">PayPal</option>
-                      <option value="square">Square</option>
                     </select>
                   </div>
-
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Platform Commission (%)
-                    </label>
-                    <input
-                      type="number"
-                      defaultValue="15"
-                      min="0"
-                      max="100"
-                      className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
+                    <label className="block text-sm font-medium text-[var(--admin-muted)] mb-2">Platform Commission (%)</label>
+                    <input type="number" value={settings.payments.commission} onChange={e => updateField('payments', 'commission', Number(e.target.value))} min={0} max={100} className={inputClass} />
                   </div>
-
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Currency
-                    </label>
-                    <select className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label className="block text-sm font-medium text-[var(--admin-muted)] mb-2">Currency</label>
+                    <select value={settings.payments.currency} onChange={e => updateField('payments', 'currency', e.target.value)} className={selectClass}>
+                      <option value="GBP">GBP - British Pound</option>
                       <option value="USD">USD - US Dollar</option>
                       <option value="EUR">EUR - Euro</option>
-                      <option value="GBP">GBP - British Pound</option>
                     </select>
                   </div>
                 </div>
               </div>
             )}
 
+            {/* User Settings */}
+            {activeTab === 'users' && (
+              <div className="space-y-6">
+                <h2 className="text-xl font-bold text-[var(--admin-text)] mb-4">User Settings</h2>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-[var(--admin-muted)] mb-2">Max Portfolio Items per User</label>
+                    <input type="number" value={settings.users.maxPortfolioItems} onChange={e => updateField('users', 'maxPortfolioItems', Number(e.target.value))} min={1} max={500} className={inputClass} />
+                  </div>
+                  <ToggleSwitch
+                    checked={settings.users.requireApproval}
+                    onChange={v => updateField('users', 'requireApproval', v)}
+                    label="Require Admin Approval"
+                    description="New user profiles must be approved before they appear in search"
+                  />
+                  <ToggleSwitch
+                    checked={settings.users.allowSelfDelete}
+                    onChange={v => updateField('users', 'allowSelfDelete', v)}
+                    label="Allow Account Self-Deletion"
+                    description="Users can delete their own accounts from settings"
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Notification Settings */}
+            {activeTab === 'notifications' && (
+              <div className="space-y-6">
+                <h2 className="text-xl font-bold text-[var(--admin-text)] mb-4">Notification Preferences</h2>
+                <div className="space-y-4">
+                  <ToggleSwitch
+                    checked={settings.notifications.emailOnNewUser}
+                    onChange={v => updateField('notifications', 'emailOnNewUser', v)}
+                    label="New User Registration"
+                    description="Receive email notification when a new user signs up"
+                  />
+                  <ToggleSwitch
+                    checked={settings.notifications.emailOnReport}
+                    onChange={v => updateField('notifications', 'emailOnReport', v)}
+                    label="New Report Submitted"
+                    description="Receive email notification when a user submits a report"
+                  />
+                  <ToggleSwitch
+                    checked={settings.notifications.emailOnPayment}
+                    onChange={v => updateField('notifications', 'emailOnPayment', v)}
+                    label="Payment Events"
+                    description="Receive email notification for subscription payments"
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Accessibility Settings */}
+            {activeTab === 'accessibility' && (
+              <div className="space-y-6">
+                <h2 className="text-xl font-bold text-[var(--admin-text)] mb-4 flex items-center gap-2">
+                  <Accessibility className="h-5 w-5 text-[var(--admin-primary)]" />
+                  Accessibility Settings
+                </h2>
+                <p className="text-sm text-[var(--admin-muted)]">
+                  Adjust text size and display settings for better readability and visual comfort.
+                </p>
+                <div className="space-y-6">
+                  {/* Font Size Slider */}
+                  <div className="p-5 bg-[var(--admin-bg)] rounded-lg border border-[var(--admin-border)]">
+                    <div className="flex items-center gap-3 mb-4">
+                      <Type className="h-5 w-5 text-[var(--admin-primary)]" />
+                      <div>
+                        <p className="font-bold text-[var(--admin-text)]">Font Size</p>
+                        <p className="text-sm text-[var(--admin-muted)]">Adjust the base font size for the admin panel</p>
+                      </div>
+                    </div>
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-4">
+                        <span className="text-xs font-bold text-[var(--admin-muted)] w-6">A</span>
+                        <input
+                          type="range"
+                          min={12}
+                          max={24}
+                          step={1}
+                          value={settings.accessibility.fontSize}
+                          onChange={e => updateField('accessibility', 'fontSize', Number(e.target.value))}
+                          className="flex-1 h-2 bg-[var(--admin-border)] rounded-full appearance-none cursor-pointer accent-[var(--admin-primary)] [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-[var(--admin-primary)] [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:shadow-lg [&::-webkit-slider-thumb]:cursor-pointer"
+                        />
+                        <span className="text-xl font-bold text-[var(--admin-muted)] w-6">A</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-[var(--admin-muted)]">12px</span>
+                        <span className="text-sm font-bold text-[var(--admin-primary)] bg-[var(--admin-primary)]/10 px-3 py-1 rounded-full">
+                          {settings.accessibility.fontSize}px
+                        </span>
+                        <span className="text-xs text-[var(--admin-muted)]">24px</span>
+                      </div>
+                      {/* Preview */}
+                      <div className="mt-3 p-4 bg-[var(--admin-surface)] rounded-lg border border-[var(--admin-border)]">
+                        <p className="text-[var(--admin-muted)] text-xs font-bold uppercase tracking-wider mb-2">Preview</p>
+                        <p style={{ fontSize: `${settings.accessibility.fontSize}px` }} className="text-[var(--admin-text)] leading-relaxed">
+                          This is a preview of how text will appear at {settings.accessibility.fontSize}px. Adjust the slider above to find a comfortable reading size.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Invert Colors Toggle */}
+                  <div className="p-5 bg-[var(--admin-bg)] rounded-lg border border-[var(--admin-border)]">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <Eye className="h-5 w-5 text-[var(--admin-primary)]" />
+                        <div>
+                          <p className="font-bold text-[var(--admin-text)]">Invert Colours</p>
+                          <p className="text-sm text-[var(--admin-muted)]">Invert the display colours for improved contrast and visual comfort. Helpful for users with light sensitivity or certain visual impairments.</p>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => updateField('accessibility', 'invertColors', !settings.accessibility.invertColors)}
+                        className={`relative w-14 h-7 rounded-full transition-colors shrink-0 ml-4 ${
+                          settings.accessibility.invertColors ? 'bg-[var(--admin-primary)]' : 'bg-[var(--admin-border)]'
+                        }`}
+                      >
+                        <span className={`absolute top-[3px] left-[3px] w-[22px] h-[22px] bg-white rounded-full transition-transform shadow-sm ${
+                          settings.accessibility.invertColors ? 'translate-x-7' : ''
+                        }`} />
+                      </button>
+                    </div>
+                    {settings.accessibility.invertColors && (
+                      <div className="mt-4 p-3 rounded-lg border border-yellow-500/30 bg-yellow-500/5">
+                        <p className="text-xs text-yellow-600 dark:text-yellow-400 font-medium">
+                          Colour inversion is active. The admin panel colours will be inverted to improve readability. Save settings and refresh to apply globally.
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Reset Button */}
+                  <div className="flex justify-end">
+                    <button
+                      onClick={() => {
+                        updateField('accessibility', 'fontSize', 16);
+                        updateField('accessibility', 'invertColors', false);
+                      }}
+                      className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-[var(--admin-muted)] hover:text-[var(--admin-text)] bg-[var(--admin-bg)] border border-[var(--admin-border)] rounded-lg hover:border-[var(--admin-primary)]/30 transition-all"
+                    >
+                      <RotateCcw className="h-4 w-4" />
+                      Reset to Defaults
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Save Button */}
-            <div className="mt-8 pt-6 border-t border-gray-200 dark:border-white/10">
+            <div className="mt-8 pt-6 border-t border-[var(--admin-border)]">
               <button
                 onClick={handleSave}
                 disabled={isSaving}
-                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                className="px-6 py-3 bg-[var(--admin-primary)] hover:opacity-90 text-white rounded-lg font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
               >
                 {isSaving ? (
                   <>
-                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                    <Loader2 className="h-5 w-5 animate-spin" />
                     Saving...
                   </>
                 ) : (

@@ -29,7 +29,7 @@ export async function GET(request: Request): Promise<Response> {
 
     if (categoryId) {
       // Get specific category with its subcategories and talent
-      const category = await prisma.category.findUnique({
+      const category = await prisma.talentCategory.findUnique({
         where: { id: categoryId },
         include: {
           subcategories: {
@@ -89,7 +89,7 @@ export async function GET(request: Request): Promise<Response> {
       });
     }
 
-    const categories = await prisma.category.findMany({
+    const categories = await prisma.talentCategory.findMany({
       include: {
         subcategories: {
           orderBy: {

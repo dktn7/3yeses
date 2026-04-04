@@ -1,20 +1,93 @@
-'use client';
+﻿"use client";
 
-import { useEffect, useState } from 'react';
-import { 
-  Search, 
-  Filter, 
-  UserPlus, 
-  MoreVertical, 
-  Mail, 
+import React, { useState, useRef, useEffect } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  UserPlus,
   Shield,
   CheckCircle,
   XCircle,
   Eye,
   Edit,
-  Trash2
-} from 'lucide-react';
-import Link from 'next/link';
+  Trash2,
+  AlertTriangle,
+  Download,
+  MoreVertical,
+  ChevronDown,
+  Ban,
+  Mail,
+  RefreshCw,
+} from "lucide-react";
+import { toast } from "sonner";
+import AdminModal from "@/components/admin/AdminModal";
+import SmartSearch from "@/components/admin/SmartSearch";
+import { formatAdminDate } from "@/lib/admin/formatters";
+import { useDebounce } from "@/hooks/useDebounce";
+
+/* â”€â”€â”€â”€â”€ Action Dropdown Component â”€â”€â”€â”€â”€ */
+function ActionDropdown({ user, onView, onEdit, onWarn, onBan, onDelete }: {
+  user: { id: string; name: string };
+  onView: () => void;
+  onEdit: () => void;
+  onWarn: () => void;
+  onBan: () => void;
+  onDelete: () => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
+  const items = [
+    { label: "View Profile", icon: Eye, onClick: onView, color: "text-[var(--admin-primary)]" },
+    { label: "Edit User", icon: Edit, onClick: onEdit, color: "text-[var(--admin-text)]" },
+    { label: "Send Warning", icon: AlertTriangle, onClick: onWarn, color: "text-amber-500" },
+    { label: "Ban User", icon: Ban, onClick: onBan, color: "text-orange-500" },
+    { label: "Delete User", icon: Trash2, onClick: onDelete, color: "text-rose-500" },
+  ];
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        onClick={() => setOpen(!open)}
+        className="p-2 rounded-lg border border-[var(--admin-border)] bg-[var(--admin-bg)] text-[var(--admin-muted)] hover:text-[var(--admin-text)] hover:border-[var(--admin-primary)]/50 transition-all"
+        title={`Actions for ${user.name}`}
+      >
+        <MoreVertical size={16} />
+      </button>
+      {open && (
+        <div className="absolute right-0 top-full mt-1 w-48 bg-[var(--admin-surface)] border border-[var(--admin-border)] rounded-xl shadow-xl z-50 py-1 animate-in fade-in slide-in-from-top-1">
+          {items.map((item) => {
+            const Icon = item.icon;
+            return (
+              <button
+                key={item.label}
+                onClick={() => { setOpen(false); item.onClick(); }}
+                className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium hover:bg-[var(--admin-bg)] transition-colors ${item.color}`}
+              >
+                <Icon size={15} />
+                {item.label}
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+interface Category {
+  id: string;
+  name: string;
+}
 
 interface User {
   id: string;
@@ -27,126 +100,332 @@ interface User {
   lastLoginAt: string | null;
   talentProfile?: {
     isAvailable: boolean;
-    rating: number;
-    reviewCount: number;
+    category?: Category;
   };
 }
 
+interface UsersResponse {
+  success: boolean;
+  users: User[];
+  pagination: {
+    page: number;
+    limit: number;
+    totalCount: number;
+    totalPages: number;
+  };
+}
+
+// Separate CSV export function
+const exportToCSV = (users: User[]) => {
+  const headers = ["ID", "Name", "Email", "Role", "Status", "Joined", "Last Login"];
+  const rows = users.map(user => [
+    user.id,
+    user.name,
+    user.email,
+    user.role,
+    user.emailVerified ? "Verified" : "Unverified",
+    formatAdminDate(user.createdAt, { year: 'numeric', month: 'short', day: 'numeric' }),
+    user.lastLoginAt ? formatAdminDate(user.lastLoginAt, { year: 'numeric', month: 'short', day: 'numeric' }) : "Never"
+  ]);
+
+  const csvContent = [
+    headers.join(","),
+    ...rows.map(row => row.map(cell => `"${cell}"`).join(","))
+  ].join("\n");
+
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.setAttribute("href", url);
+  link.setAttribute("download", `users_export_${new Date().toISOString().split('T')[0]}.csv`);
+  link.style.visibility = "hidden";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
 export default function UsersManagement() {
-  const [users, setUsers] = useState<User[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [search, setSearch] = useState('');
-  const [roleFilter, setRoleFilter] = useState('all');
-  const [statusFilter, setStatusFilter] = useState('all');
+  const queryClient = useQueryClient();
   const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 500); // 500ms debounce
+  const [roleFilter, setRoleFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  
+  // Selection state
+  const [selectedUserIds, setSelectedUserIds] = useState<Set<string>>(new Set());
 
-  useEffect(() => {
-    fetchUsers();
-  }, [page, roleFilter, statusFilter]);
+  // Modal states
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
+  const [isActionModalOpen, setIsActionModalOpen] = useState(false);
+  const [actionType, setActionType] = useState<'warn' | 'ban'>('warn');
+  const [actionReason, setActionReason] = useState('');
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  
+  // Form state
+  const [editForm, setEditForm] = useState({
+    name: "",
+    email: "",
+    role: "",
+  });
 
-  const fetchUsers = async () => {
-    setIsLoading(true);
-    try {
+  const [addUserForm, setAddUserForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+    role: "TALENT",
+  });
+
+  // Fetch Categories
+  const { data: categoriesData } = useQuery({
+    queryKey: ["admin", "categories"],
+    queryFn: async () => {
+      const res = await fetch("/api/admin/categories");
+      return res.json() as Promise<{ categories: Category[] }>;
+    }
+  });
+
+  // Fetch Users
+  const { data: usersData, isLoading, isFetching } = useQuery({
+    queryKey: ["admin", "users", page, roleFilter, statusFilter, categoryFilter, debouncedSearch],
+    queryFn: async () => {
       const params = new URLSearchParams({
         page: page.toString(),
-        limit: '20',
+        limit: "20",
         role: roleFilter,
         status: statusFilter,
-        search: search,
+        categoryId: categoryFilter,
+        search: debouncedSearch,
       });
+      const res = await fetch(`/api/admin/users?${params}`);
+      return res.json() as Promise<UsersResponse>;
+    },
+    placeholderData: (previousData) => previousData, // Keep previous data while fetching new
+  });
 
-      const response = await fetch(`/api/admin/users?${params}`);
-      const data = await response.json();
+  const users = usersData?.users || [];
+  const totalPages = usersData?.pagination.totalPages || 1;
+  const totalCount = usersData?.pagination.totalCount || 0;
 
-      if (data.success) {
-        setUsers(data.users);
-        setTotalPages(data.pagination.totalPages);
+  // Mutations
+  const updateUserMutation = useMutation({
+    mutationFn: async (data: { id: string; name: string; email: string; role: string }) => {
+      const res = await fetch(`/api/admin/users/${data.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) throw new Error("Failed to update user");
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
+      setIsEditModalOpen(false);
+      toast.success("User updated successfully");
+    },
+    onError: () => toast.error("Failed to update user"),
+  });
+
+  const deleteUserMutation = useMutation({
+    mutationFn: async (userId: string) => {
+      const res = await fetch(`/api/admin/users/${userId}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("Failed to delete user");
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
+      setIsDeleteModalOpen(false);
+      toast.success("User deleted successfully");
+    },
+    onError: () => toast.error("Failed to delete user"),
+  });
+
+  const bulkDeleteMutation = useMutation({
+    mutationFn: async (userIds: string[]) => {
+      // In a real app, you'd have a bulk delete endpoint. 
+      // For now, we'll simulate by deleting one by one or create a bulk endpoint later.
+      // Assuming a bulk endpoint or looping:
+       const promises = userIds.map(id => fetch(`/api/admin/users/${id}`, { method: "DELETE" }));
+       await Promise.all(promises);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
+      setSelectedUserIds(new Set());
+      toast.success("Selected users deleted successfully");
+    },
+    onError: () => toast.error("Failed to delete users"),
+  });
+
+  const addUserMutation = useMutation({
+    mutationFn: async (data: { name: string; email: string; password: string; role: string }) => {
+      const res = await fetch('/api/admin/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || 'Failed to create user');
       }
-    } catch (error) {
-      console.error('Failed to fetch users:', error);
-    } finally {
-      setIsLoading(false);
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
+      setIsAddUserModalOpen(false);
+      setAddUserForm({ name: "", email: "", password: "", role: "TALENT" });
+      toast.success("User created successfully");
+    },
+    onError: (err: Error) => toast.error(err.message || "Failed to create user"),
+  });
+
+  const userActionMutation = useMutation({
+    mutationFn: async ({ userId, action, reason }: { userId: string; action: string; reason: string }) => {
+      const res = await fetch(`/api/admin/users/${userId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action, reason }),
+      });
+      if (!res.ok) throw new Error('Action failed');
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
+      setIsActionModalOpen(false);
+      setActionReason('');
+      setSelectedUser(null);
+      toast.success('Action completed successfully');
+    },
+    onError: () => toast.error("Action failed"),
+  });
+
+
+  // Handlers
+  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      setSelectedUserIds(new Set(users.map(u => u.id)));
+    } else {
+      setSelectedUserIds(new Set());
     }
   };
 
-  const handleSearch = () => {
-    setPage(1);
-    fetchUsers();
+  const handleSelectUser = (userId: string) => {
+    const newSelected = new Set(selectedUserIds);
+    if (newSelected.has(userId)) {
+      newSelected.delete(userId);
+    } else {
+      newSelected.add(userId);
+    }
+    setSelectedUserIds(newSelected);
   };
+
+  const openEditModal = (user: User) => {
+    setSelectedUser(user);
+    setEditForm({ name: user.name, email: user.email, role: user.role });
+    setIsEditModalOpen(true);
+  };
+
+  const openDeleteModal = (user: User) => {
+    setSelectedUser(user);
+    setIsDeleteModalOpen(true);
+  };
+
+  const [showBulkConfirm, setShowBulkConfirm] = useState(false);
+
+  const handleBulkDelete = () => {
+    setShowBulkConfirm(true);
+  };
+
+  const confirmBulkDelete = () => {
+    bulkDeleteMutation.mutate(Array.from(selectedUserIds));
+    setShowBulkConfirm(false);
+  };
+
+  const handleExport = () => {
+    // Export currently filtered users. 
+    // Ideally, fetching all matching users from API for export is better, 
+    // but here we export current view or all available in cache if needed.
+    // For simplicity, let's export the current page's users.
+    if (users.length > 0) {
+      exportToCSV(users);
+      toast.success("Export started");
+    } else {
+      toast.error("No users to export");
+    }
+  };
+
 
   const getRoleBadgeColor = (role: string) => {
     switch (role) {
-      case 'ADMIN':
-        return 'bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-300';
-      case 'TALENT':
-        return 'bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-300';
-      default:
-        return 'bg-gray-100 text-gray-700 dark:bg-gray-500/20 dark:text-gray-300';
+      case "ADMIN": return "bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-300";
+      case "TALENT": return "bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-300";
+      default: return "bg-[var(--admin-bg)] text-[var(--admin-muted)] ";
     }
   };
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            User Management
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-1">
-            Manage and monitor platform users
-          </p>
+          <h1 className="text-3xl font-black text-[var(--admin-text)] tracking-tight">User Management</h1>
+          <p className="text-[var(--admin-muted)] mt-1 font-medium">Manage and monitor platform users ({totalCount} total)</p>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
-          <UserPlus className="h-5 w-5" />
-          <span>Add User</span>
-        </button>
+        <div className="flex gap-3">
+           <button 
+             onClick={handleExport}
+             className="flex items-center gap-2 px-4 py-2 bg-[var(--admin-surface)] border border-[var(--admin-border)] rounded-lg text-sm font-bold text-[var(--admin-text)] hover:border-[var(--admin-primary)]/50 transition-all"
+           >
+             <Download className="h-4 w-4" />
+             <span>Export CSV</span>
+           </button>
+          <button
+            onClick={() => setIsAddUserModalOpen(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-[var(--admin-primary)] text-white rounded-lg text-sm font-bold shadow-lg shadow-[var(--admin-primary)]/20 hover:opacity-90 transition-all"
+          >
+            <UserPlus className="h-4 w-4" />
+            <span>Add User</span>
+          </button>
+        </div>
       </div>
 
       {/* Filters */}
-      <div className="bg-white dark:bg-white/10 backdrop-blur-md rounded-xl p-6 border border-gray-200 dark:border-white/20">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          {/* Search */}
-          <div className="md:col-span-2">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search by name or email..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                className="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
+      <div className="admin-glass rounded-xl p-6 border border-[var(--admin-border)] shadow-sm">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+          <div className="col-span-1 md:col-span-4">
+             <SmartSearch onSearch={(term) => { setSearch(term); setPage(1); }} initialValue={search} />
           </div>
-
-          {/* Role Filter */}
+          <div>
+            <select
+              value={categoryFilter}
+              onChange={(e) => { setCategoryFilter(e.target.value); setPage(1); }}
+              className="w-full px-4 py-2.5 bg-[var(--admin-bg)] border border-[var(--admin-border)] rounded-lg text-sm font-bold text-[var(--admin-text)] focus:outline-none focus:ring-2 focus:ring-[var(--admin-primary)]/30 focus:border-[var(--admin-primary)] appearance-none cursor-pointer"
+            >
+              <option value="all">All Categories</option>
+              {categoriesData?.categories.map((cat) => (
+                <option key={cat.id} value={cat.id}>{cat.name}</option>
+              ))}
+            </select>
+          </div>
           <div>
             <select
               value={roleFilter}
-              onChange={(e) => {
-                setRoleFilter(e.target.value);
-                setPage(1);
-              }}
-              className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={(e) => { setRoleFilter(e.target.value); setPage(1); }}
+              className="w-full px-4 py-2.5 bg-[var(--admin-bg)] border border-[var(--admin-border)] rounded-lg text-sm font-bold text-[var(--admin-text)] focus:outline-none focus:ring-2 focus:ring-[var(--admin-primary)]/30 focus:border-[var(--admin-primary)] appearance-none cursor-pointer"
             >
               <option value="all">All Roles</option>
-              <option value="talent">Talent</option>
-              <option value="admin">Admin</option>
+              <option value="TALENT">Talent</option>
+              <option value="ADMIN">Admin</option>
+              <option value="USER">User</option>
             </select>
           </div>
-
-          {/* Status Filter */}
           <div>
             <select
               value={statusFilter}
-              onChange={(e) => {
-                setStatusFilter(e.target.value);
-                setPage(1);
-              }}
-              className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
+              className="w-full px-4 py-2.5 bg-[var(--admin-bg)] border border-[var(--admin-border)] rounded-lg text-sm font-bold text-[var(--admin-text)] focus:outline-none focus:ring-2 focus:ring-[var(--admin-primary)]/30 focus:border-[var(--admin-primary)] appearance-none cursor-pointer"
             >
               <option value="all">All Status</option>
               <option value="active">Active</option>
@@ -155,84 +434,108 @@ export default function UsersManagement() {
           </div>
         </div>
 
-        <button
-          onClick={handleSearch}
-          className="mt-4 px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
-        >
-          Apply Filters
-        </button>
+        {/* Bulk Actions Bar */}
+        {selectedUserIds.size > 0 && (
+          <div className="flex items-center gap-4 p-3 bg-[var(--admin-primary)]/5 border border-[var(--admin-primary)]/20 rounded-xl animate-in fade-in slide-in-from-top-2">
+            <div className="flex items-center gap-2">
+              <CheckCircle size={16} className="text-[var(--admin-primary)]" />
+              <span className="text-sm font-bold text-[var(--admin-primary)]">{selectedUserIds.size} user{selectedUserIds.size !== 1 ? 's' : ''} selected</span>
+            </div>
+            <div className="h-5 w-px bg-[var(--admin-border)]" />
+            <button 
+              onClick={handleBulkDelete}
+              className="px-3 py-1.5 text-xs font-bold text-rose-500 hover:bg-rose-500/10 rounded-lg flex items-center gap-1.5 transition-colors"
+            >
+              <Trash2 className="h-3.5 w-3.5" />
+              Delete Selected
+            </button>
+            <button 
+              onClick={() => setSelectedUserIds(new Set())}
+              className="px-3 py-1.5 text-xs font-bold text-[var(--admin-muted)] hover:text-[var(--admin-text)] hover:bg-[var(--admin-bg)] rounded-lg transition-colors"
+            >
+              Clear Selection
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Users Table */}
-      <div className="bg-white dark:bg-white/10 backdrop-blur-md rounded-xl border border-gray-200 dark:border-white/20 overflow-hidden">
+      <div className="admin-glass rounded-xl border border-[var(--admin-border)] overflow-hidden relative">
+        {isFetching && (
+           <div className="absolute inset-0 bg-[var(--admin-surface)]/50 z-10 flex items-center justify-center">
+             <div className="w-8 h-8 border-4 border-[var(--admin-primary)] border-t-transparent rounded-full animate-spin"></div>
+           </div>
+        )}
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gray-50 dark:bg-white/5 border-b border-gray-200 dark:border-white/10">
+            <thead className="bg-[var(--admin-surface)]/50 border-b border-[var(--admin-border)]">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  User
+                <th className="px-6 py-4 w-4">
+                  <input 
+                    type="checkbox" 
+                    className="rounded border-[var(--admin-border)] text-indigo-600 focus:ring-indigo-500"
+                    checked={users.length > 0 && selectedUserIds.size === users.length}
+                    onChange={handleSelectAll}
+                  />
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  Role
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  Joined
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  Last Login
-                </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  Actions
-                </th>
+                <th className="px-6 py-3 text-left text-xs font-bold text-[var(--admin-muted)] uppercase tracking-wider">User</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-[var(--admin-muted)] uppercase tracking-wider">Category</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-[var(--admin-muted)] uppercase tracking-wider">Role</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-[var(--admin-muted)] uppercase tracking-wider">Status</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-[var(--admin-muted)] uppercase tracking-wider">Joined</th>
+                <th className="px-6 py-3 text-right text-xs font-medium text-[var(--admin-muted)] uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200 dark:divide-white/10">
+            <tbody className="divide-y divide-[var(--admin-border)]/50">
               {isLoading ? (
-                <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center">
-                    <div className="flex justify-center">
-                      <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-                    </div>
-                  </td>
-                </tr>
+                // Skeleton loading rows
+                [...Array(5)].map((_, i) => (
+                  <tr key={i}>
+                    <td className="px-6 py-4"><div className="h-4 w-4 bg-[var(--admin-border)] rounded"></div></td>
+                    <td className="px-6 py-4"><div className="h-10 w-48 bg-[var(--admin-border)] rounded"></div></td>
+                    <td className="px-6 py-4"><div className="h-4 w-24 bg-[var(--admin-border)] rounded"></div></td>
+                    <td className="px-6 py-4"><div className="h-6 w-16 bg-[var(--admin-border)] rounded-full"></div></td>
+                    <td className="px-6 py-4"><div className="h-4 w-20 bg-[var(--admin-border)] rounded"></div></td>
+                    <td className="px-6 py-4"><div className="h-4 w-24 bg-[var(--admin-border)] rounded"></div></td>
+                    <td className="px-6 py-4"><div className="h-4 w-8 bg-[var(--admin-border)] rounded ml-auto"></div></td>
+                  </tr>
+                ))
               ) : users.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center text-gray-500 dark:text-gray-400">
-                    No users found
-                  </td>
+                  <td colSpan={7} className="px-6 py-12 text-center text-[var(--admin-muted)]">No users found</td>
                 </tr>
               ) : (
                 users.map((user) => (
-                  <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                  <tr key={user.id} className={`hover:bg-[var(--admin-primary)]/5 transition-colors group ${selectedUserIds.has(user.id) ? 'bg-indigo-50/50' : ''}`}>
+                    <td className="px-6 py-4">
+                       <input 
+                        type="checkbox" 
+                        className="rounded border-[var(--admin-border)] text-indigo-600 focus:ring-indigo-500"
+                        checked={selectedUserIds.has(user.id)}
+                        onChange={() => handleSelectUser(user.id)}
+                      />
+                    </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <div className="h-10 w-10 flex-shrink-0">
                           {user.profilePicture ? (
-                            <img
-                              className="h-10 w-10 rounded-full object-cover"
-                              src={user.profilePicture}
-                              alt={user.name}
-                            />
+                            <Image className="rounded-full object-cover" src={user.profilePicture} alt={user.name} width={40} height={40} />
                           ) : (
-                            <div className="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-500/20 flex items-center justify-center">
-                              <span className="text-blue-600 dark:text-blue-400 font-medium">
-                                {user.name.charAt(0).toUpperCase()}
-                              </span>
+                            <div className="h-10 w-10 rounded-full bg-[var(--admin-bg)] flex items-center justify-center border border-[var(--admin-border)]">
+                              <span className="text-[var(--admin-primary)] font-medium">{user.name.charAt(0).toUpperCase()}</span>
                             </div>
                           )}
                         </div>
                         <div className="ml-4">
-                          <div className="text-sm font-medium text-gray-900 dark:text-white">
-                            {user.name}
-                          </div>
-                          <div className="text-sm text-gray-500 dark:text-gray-400">
-                            {user.email}
-                          </div>
+                          <div className="text-sm font-medium text-[var(--admin-text)]">{user.name}</div>
+                          <div className="text-xs text-[var(--admin-muted)]">{user.email}</div>
                         </div>
                       </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {user.talentProfile?.category ? (
+                        <span className="text-sm text-[var(--admin-text)]">{user.talentProfile.category.name}</span>
+                      ) : <span className="text-sm text-[var(--admin-muted)]">-</span>}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getRoleBadgeColor(user.role)}`}>
@@ -253,27 +556,18 @@ export default function UsersManagement() {
                         </span>
                       )}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                      {new Date(user.createdAt).toLocaleDateString()}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                      {user.lastLoginAt ? new Date(user.lastLoginAt).toLocaleDateString() : 'Never'}
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-[var(--admin-muted)]">
+                      {formatAdminDate(user.createdAt, { year: 'numeric', month: 'short', day: 'numeric' })}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <div className="flex items-center justify-end gap-2">
-                        <Link
-                          href={`/admin/users/${user.id}`}
-                          className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
-                        >
-                          <Eye className="h-4 w-4" />
-                        </Link>
-                        <button className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300">
-                          <Edit className="h-4 w-4" />
-                        </button>
-                        <button className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">
-                          <Trash2 className="h-4 w-4" />
-                        </button>
-                      </div>
+                      <ActionDropdown
+                        user={user}
+                        onView={() => window.location.href = `/admin/users/${user.id}`}
+                        onEdit={() => openEditModal(user)}
+                        onWarn={() => { setSelectedUser(user); setActionType('warn'); setIsActionModalOpen(true); }}
+                        onBan={() => { setSelectedUser(user); setActionType('ban'); setIsActionModalOpen(true); }}
+                        onDelete={() => openDeleteModal(user)}
+                      />
                     </td>
                   </tr>
                 ))
@@ -284,29 +578,261 @@ export default function UsersManagement() {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="bg-gray-50 dark:bg-white/5 px-6 py-4 border-t border-gray-200 dark:border-white/10">
-            <div className="flex items-center justify-between">
-              <button
-                onClick={() => setPage(Math.max(1, page - 1))}
-                disabled={page === 1}
-                className="px-4 py-2 border border-gray-300 dark:border-white/20 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Previous
-              </button>
-              <span className="text-sm text-gray-700 dark:text-gray-300">
-                Page {page} of {totalPages}
-              </span>
-              <button
-                onClick={() => setPage(Math.min(totalPages, page + 1))}
-                disabled={page === totalPages}
-                className="px-4 py-2 border border-gray-300 dark:border-white/20 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Next
-              </button>
-            </div>
+          <div className="bg-[var(--admin-bg)] px-6 py-4 border-t border-[var(--admin-border)] flex items-center justify-between">
+            <button
+              onClick={() => setPage(Math.max(1, page - 1))}
+              disabled={page === 1}
+              className="px-4 py-2 border border-[var(--admin-border)] rounded-lg text-sm font-medium text-[var(--admin-text)] hover:bg-[var(--admin-surface)] disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Previous
+            </button>
+            <span className="text-sm text-[var(--admin-text)]">Page {page} of {totalPages}</span>
+            <button
+              onClick={() => setPage(Math.min(totalPages, page + 1))}
+              disabled={page === totalPages}
+              className="px-4 py-2 border border-[var(--admin-border)] rounded-lg text-sm font-medium text-[var(--admin-text)] hover:bg-[var(--admin-surface)] disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Next
+            </button>
           </div>
         )}
       </div>
+
+      {/* Edit User Modal */}
+      <AdminModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        title="Edit User"
+        description={`Modifying profile for ${selectedUser?.name}`}
+        type="info"
+        footer={
+          <>
+            <button onClick={() => setIsEditModalOpen(false)} className="px-4 py-2 text-sm font-medium text-[var(--admin-muted)] hover:text-[var(--admin-text)]">Cancel</button>
+            <button
+              onClick={() => selectedUser && updateUserMutation.mutate({ id: selectedUser.id, ...editForm })}
+              disabled={updateUserMutation.isPending}
+              className="px-4 py-2 bg-[var(--admin-primary)] hover:opacity-90 disabled:opacity-50 text-white text-sm font-medium rounded-lg flex items-center gap-2"
+            >
+              {updateUserMutation.isPending && <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />}
+              Save Changes
+            </button>
+          </>
+        }
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-xs font-medium uppercase tracking-wider text-[var(--admin-muted)] mb-1.5">Full Name</label>
+            <input
+              type="text"
+              value={editForm.name}
+              onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+              className="w-full px-4 py-2 bg-[var(--admin-bg)] border border-[var(--admin-border)] rounded-lg text-[var(--admin-text)] focus:outline-none focus:ring-1 focus:ring-[var(--admin-primary)]"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-medium uppercase tracking-wider text-[var(--admin-muted)] mb-1.5">Email Address</label>
+            <input
+              type="email"
+              value={editForm.email}
+              onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
+              className="w-full px-4 py-2 bg-[var(--admin-bg)] border border-[var(--admin-border)] rounded-lg text-[var(--admin-text)] focus:outline-none focus:ring-1 focus:ring-[var(--admin-primary)]"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-medium uppercase tracking-wider text-[var(--admin-muted)] mb-1.5">System Role</label>
+            <select
+              value={editForm.role}
+              onChange={(e) => setEditForm({ ...editForm, role: e.target.value })}
+              className="w-full px-4 py-2.5 bg-[var(--admin-bg)] border border-[var(--admin-border)] rounded-lg text-sm font-bold text-[var(--admin-text)] focus:outline-none focus:ring-2 focus:ring-[var(--admin-primary)]/30 focus:border-[var(--admin-primary)] appearance-none cursor-pointer"
+            >
+              <option value="USER">User</option>
+              <option value="TALENT">Talent</option>
+              <option value="ADMIN">Admin</option>
+            </select>
+          </div>
+        </div>
+      </AdminModal>
+
+      {/* Delete User Modal */}
+      <AdminModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        title="Confirm Deletion"
+        description="This action cannot be undone."
+        type="danger"
+        footer={
+          <>
+            <button onClick={() => setIsDeleteModalOpen(false)} className="px-4 py-2 text-sm font-medium text-[var(--admin-muted)] hover:text-[var(--admin-text)]">Cancel</button>
+            <button
+              onClick={() => selectedUser && deleteUserMutation.mutate(selectedUser.id)}
+              disabled={deleteUserMutation.isPending}
+              className="px-4 py-2 bg-red-600 hover:bg-red-700 disabled:bg-red-600/50 text-white text-sm font-medium rounded-lg flex items-center gap-2"
+            >
+              {deleteUserMutation.isPending && <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />}
+              Delete Permanently
+            </button>
+          </>
+        }
+      >
+        <div className="flex items-start gap-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
+          <AlertTriangle className="text-red-500 shrink-0" size={24} />
+          <div>
+            <p className="text-sm text-[var(--admin-muted)]">
+              You are about to delete <span className="font-bold text-[var(--admin-text)]">{selectedUser?.name}</span>. 
+              All associated data will be permanently removed.
+            </p>
+          </div>
+        </div>
+      </AdminModal>
+
+      {/* Bulk Delete Confirmation Modal */}
+      <AdminModal
+        isOpen={showBulkConfirm}
+        onClose={() => setShowBulkConfirm(false)}
+        title="Delete Multiple Users"
+        description={`You are about to delete ${selectedUserIds.size} users.`}
+        type="danger"
+        footer={
+          <>
+            <button onClick={() => setShowBulkConfirm(false)} className="px-4 py-2 text-sm font-medium text-[var(--admin-muted)] hover:text-[var(--admin-text)]">Cancel</button>
+            <button
+              onClick={confirmBulkDelete}
+              disabled={bulkDeleteMutation.isPending}
+              className="px-4 py-2 bg-red-600 hover:bg-red-700 disabled:bg-red-600/50 text-white text-sm font-medium rounded-lg flex items-center gap-2"
+            >
+              {bulkDeleteMutation.isPending && <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />}
+              Delete {selectedUserIds.size} Users
+            </button>
+          </>
+        }
+      >
+        <div className="flex items-start gap-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
+          <AlertTriangle className="text-red-500 shrink-0" size={24} />
+          <div>
+            <p className="text-sm text-[var(--admin-muted)]">
+              This will permanently remove <span className="font-bold text-[var(--admin-text)]">{selectedUserIds.size} user{selectedUserIds.size !== 1 ? 's' : ''}</span> and all their associated data. This cannot be undone.
+            </p>
+          </div>
+        </div>
+      </AdminModal>
+
+      {/* Add User Modal */}
+      <AdminModal
+        isOpen={isAddUserModalOpen}
+        onClose={() => setIsAddUserModalOpen(false)}
+        title="Add New User"
+        description="Create a new platform user account"
+        type="info"
+        footer={
+          <>
+            <button onClick={() => setIsAddUserModalOpen(false)} className="px-4 py-2 text-sm font-medium text-[var(--admin-muted)] hover:text-[var(--admin-text)]">Cancel</button>
+            <button
+              onClick={() => addUserMutation.mutate(addUserForm)}
+              disabled={addUserMutation.isPending || !addUserForm.name || !addUserForm.email || !addUserForm.password}
+              className="px-4 py-2 bg-[var(--admin-primary)] hover:opacity-90 disabled:opacity-50 text-white text-sm font-medium rounded-lg flex items-center gap-2"
+            >
+              {addUserMutation.isPending && <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />}
+              Create User
+            </button>
+          </>
+        }
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-xs font-medium uppercase tracking-wider text-[var(--admin-muted)] mb-1.5">Full Name</label>
+            <input
+              type="text"
+              value={addUserForm.name}
+              onChange={(e) => setAddUserForm({ ...addUserForm, name: e.target.value })}
+              placeholder="Enter full name"
+              className="w-full px-4 py-2 bg-[var(--admin-bg)] border border-[var(--admin-border)] rounded-lg text-[var(--admin-text)] placeholder-[var(--admin-muted)] focus:outline-none focus:ring-1 focus:ring-[var(--admin-primary)]"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-medium uppercase tracking-wider text-[var(--admin-muted)] mb-1.5">Email Address</label>
+            <input
+              type="email"
+              value={addUserForm.email}
+              onChange={(e) => setAddUserForm({ ...addUserForm, email: e.target.value })}
+              placeholder="Enter email address"
+              className="w-full px-4 py-2 bg-[var(--admin-bg)] border border-[var(--admin-border)] rounded-lg text-[var(--admin-text)] placeholder-[var(--admin-muted)] focus:outline-none focus:ring-1 focus:ring-[var(--admin-primary)]"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-medium uppercase tracking-wider text-[var(--admin-muted)] mb-1.5">Password</label>
+            <input
+              type="password"
+              value={addUserForm.password}
+              onChange={(e) => setAddUserForm({ ...addUserForm, password: e.target.value })}
+              placeholder="Set initial password"
+              className="w-full px-4 py-2 bg-[var(--admin-bg)] border border-[var(--admin-border)] rounded-lg text-[var(--admin-text)] placeholder-[var(--admin-muted)] focus:outline-none focus:ring-1 focus:ring-[var(--admin-primary)]"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-medium uppercase tracking-wider text-[var(--admin-muted)] mb-1.5">Role</label>
+            <select
+              value={addUserForm.role}
+              onChange={(e) => setAddUserForm({ ...addUserForm, role: e.target.value })}
+              className="w-full px-4 py-2.5 bg-[var(--admin-bg)] border border-[var(--admin-border)] rounded-lg text-sm font-bold text-[var(--admin-text)] focus:outline-none focus:ring-2 focus:ring-[var(--admin-primary)]/30 focus:border-[var(--admin-primary)] appearance-none cursor-pointer"
+            >
+              <option value="USER">User</option>
+              <option value="TALENT">Talent</option>
+              <option value="ADMIN">Admin</option>
+            </select>
+          </div>
+        </div>
+      </AdminModal>
+
+      {/* Warn / Ban Action Modal */}
+      <AdminModal
+        isOpen={isActionModalOpen}
+        onClose={() => { setIsActionModalOpen(false); setActionReason(''); }}
+        title={actionType === 'warn' ? 'Send Warning' : 'Ban User'}
+        description={`${actionType === 'warn' ? 'Issue a warning to' : 'Ban'} ${selectedUser?.name}`}
+        type={actionType === 'warn' ? 'warning' : 'danger'}
+        footer={
+          <>
+            <button onClick={() => { setIsActionModalOpen(false); setActionReason(''); }} className="px-4 py-2 text-sm font-medium text-[var(--admin-muted)] hover:text-[var(--admin-text)]">Cancel</button>
+            <button
+              onClick={() => selectedUser && userActionMutation.mutate({ userId: selectedUser.id, action: actionType, reason: actionReason })}
+              disabled={userActionMutation.isPending || !actionReason.trim()}
+              className={`px-4 py-2 text-white text-sm font-medium rounded-lg flex items-center gap-2 disabled:opacity-50 ${
+                actionType === 'warn' ? 'bg-amber-600 hover:bg-amber-700' : 'bg-red-600 hover:bg-red-700'
+              }`}
+            >
+              {userActionMutation.isPending && <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />}
+              {actionType === 'warn' ? 'Send Warning' : 'Ban User'}
+            </button>
+          </>
+        }
+      >
+        <div className="space-y-4">
+          <div className={`flex items-start gap-3 p-4 rounded-lg border ${
+            actionType === 'warn' ? 'bg-amber-500/10 border-amber-500/20' : 'bg-red-500/10 border-red-500/20'
+          }`}>
+            {actionType === 'warn' ? (
+              <AlertTriangle className="text-amber-500 shrink-0 mt-0.5" size={20} />
+            ) : (
+              <Ban className="text-red-500 shrink-0 mt-0.5" size={20} />
+            )}
+            <p className="text-sm text-[var(--admin-muted)]">
+              {actionType === 'warn'
+                ? 'This will send a warning notification to the user. The warning will be logged in their account history.'
+                : 'This will immediately restrict the user from accessing the platform. They will see a banned message on login.'}
+            </p>
+          </div>
+          <div>
+            <label className="block text-xs font-medium uppercase tracking-wider text-[var(--admin-muted)] mb-1.5">Reason (required)</label>
+            <textarea
+              value={actionReason}
+              onChange={(e) => setActionReason(e.target.value)}
+              placeholder={actionType === 'warn' ? 'Describe the reason for this warning...' : 'Describe the reason for this ban...'}
+              rows={3}
+              className="w-full px-4 py-2 bg-[var(--admin-bg)] border border-[var(--admin-border)] rounded-lg text-[var(--admin-text)] placeholder-[var(--admin-muted)] focus:outline-none focus:ring-1 focus:ring-[var(--admin-primary)] resize-none"
+            />
+          </div>
+        </div>
+      </AdminModal>
     </div>
   );
 }

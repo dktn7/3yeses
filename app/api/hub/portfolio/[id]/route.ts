@@ -3,11 +3,11 @@ import { getPrisma } from '@/lib/prisma';
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const prisma = getPrisma();
-    const id = params.id;
+    const { id } = await params;
 
     const item = await prisma.portfolioItem.findUnique({
       where: { id },
@@ -45,21 +45,19 @@ export async function GET(
     });
 
     // Get likes
-    const likeCount = await prisma.like.count({
+    const likeCount = await prisma.profileLike.count({
       where: { talentProfileId: item.talentProfileId },
     });
 
     const formattedItem = {
       id: item.id,
       title: item.title,
-      url: item.url,
+      mediaUrl: item.mediaUrl,
       type: item.type,
-      thumbnail: undefined,
+      thumbnail: item.thumbnail || undefined,
       talentProfile: {
-        id: item.talentProfile.id,
-        user: {
-          name: item.talentProfile.user.name,
-        },
+        id: (item.talentProfile as any).userId ?? (item.talentProfile as any).id,
+        user: { name: (item.talentProfile as any).user?.name || 'Unknown' },
         avatarUrl: item.talentProfile.avatarUrl,
         category: item.talentProfile.category,
       },

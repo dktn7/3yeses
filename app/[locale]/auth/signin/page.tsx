@@ -4,8 +4,6 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-import { FcGoogle } from 'react-icons/fc';
-import { FaFacebook, FaApple } from 'react-icons/fa';
 import { Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -80,12 +78,6 @@ export default function SignInPage() {
     }
   };
 
-  const handleOAuthLogin = (provider: 'google' | 'facebook' | 'apple') => {
-    // OAuth implementation will be added when NextAuth is fully configured
-    console.log(`${provider} login clicked`);
-    setErrors({ general: `${provider} login coming soon` });
-  };
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-red-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 px-4 py-12">
       <div className="max-w-md w-full">
@@ -133,46 +125,6 @@ export default function SignInPage() {
               </p>
             </div>
           )}
-
-          {/* OAuth Buttons */}
-          <div className="space-y-3 mb-6">
-            <button
-              type="button"
-              onClick={() => handleOAuthLogin('google')}
-              className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors font-medium text-gray-700 dark:text-gray-200"
-            >
-              <FcGoogle className="text-xl" />
-              {t('continueWithGoogle')}
-            </button>
-            <button
-              type="button"
-              onClick={() => handleOAuthLogin('facebook')}
-              className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-[#1877F2] hover:bg-[#166FE5] border border-[#1877F2] rounded-lg transition-colors font-medium text-white"
-            >
-              <FaFacebook className="text-xl" />
-              {t('continueWithFacebook')}
-            </button>
-            <button
-              type="button"
-              onClick={() => handleOAuthLogin('apple')}
-              className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-black hover:bg-gray-900 border border-black dark:border-gray-700 rounded-lg transition-colors font-medium text-white"
-            >
-              <FaApple className="text-xl" />
-              {t('continueWithApple')}
-            </button>
-          </div>
-
-          {/* Divider */}
-          <div className="relative mb-6">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400">
-                {t('orContinueWith')}
-              </span>
-            </div>
-          </div>
 
           {/* Sign In Form */}
           <form onSubmit={handleSubmit} className="space-y-5">

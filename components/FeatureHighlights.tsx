@@ -60,79 +60,80 @@ export default function FeatureHighlights() {
     }
   ];
   return (
-    <div className="py-24 bg-gradient-to-br from-primary-blue/3 via-transparent to-primary-red/3 dark:from-primary-blue/5 dark:via-transparent dark:to-primary-red/5">
+    <div className="py-24 relative z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
-            {t('whyChooseTitle')} <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-blue to-accent-blue dark:from-accent-red dark:to-primary-red">{t('whyChooseSubtitle')}</span>?
-          </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            {t('whyChooseDescription')}
-          </p>
-        </div>
+        <div className="rounded-[2rem] bg-white/95 dark:bg-gray-900/80 border border-gray-200/60 dark:border-white/10 shadow-lg backdrop-blur-sm p-8 md:p-12">
+          <div className="text-center mb-14">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
+              {t('whyChooseTitle')} <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-blue to-accent-blue dark:from-accent-red dark:to-primary-red">{t('whyChooseSubtitle')}</span>?
+            </h2>
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+              {t('whyChooseDescription')}
+            </p>
+          </div>
 
-        {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-          {features.map((feature, index) => (
-            <div
-              key={index}
-              className="group bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg hover:shadow-xl border border-gray-100 dark:border-gray-700 transition-all duration-300 hover:-translate-y-2"
-            >
-              {/* Icon */}
-              <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-primary-blue/20 to-primary-red/20 dark:from-primary-blue/30 dark:to-primary-red/30 rounded-2xl mb-6 text-primary-blue dark:text-accent-red group-hover:from-primary-blue/30 group-hover:to-primary-red/30 dark:group-hover:from-primary-blue/40 dark:group-hover:to-primary-red/40 transition-all duration-300">
-                {feature.icon}
+          <div className="space-y-5 mb-14">
+            {features.map((feature, index) => (
+              <div
+                key={index}
+                className="group rounded-[1.5rem] border border-gray-200/70 dark:border-white/10 bg-white/90 dark:bg-gray-800/60 p-6 md:p-7 shadow-sm hover:shadow-lg transition-all duration-300"
+              >
+                <div className="flex flex-col md:flex-row md:items-start gap-5 md:gap-6">
+                  <div className="flex items-center justify-center w-14 h-14 bg-gradient-to-br from-primary-blue/12 to-primary-red/12 dark:from-primary-blue/20 dark:to-primary-red/20 rounded-2xl text-primary-blue dark:text-accent-red shrink-0">
+                    {feature.icon}
+                  </div>
+
+                  <div className="flex-1">
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                      {t(feature.titleKey)}
+                    </h3>
+
+                    <p className="text-gray-600 dark:text-gray-300 mb-5 leading-relaxed max-w-2xl">
+                      {t(feature.descriptionKey)}
+                    </p>
+
+                    <div className="flex flex-wrap gap-2">
+                      {(t.raw(feature.benefitsKey) as string[]).map((benefit, benefitIndex) => (
+                        <span key={benefitIndex} className="inline-flex items-center rounded-full border border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-900/60 px-3 py-1.5 text-sm text-gray-600 dark:text-gray-300">
+                          <CheckCircle className="w-4 h-4 text-green-500 mr-2 flex-shrink-0" />
+                          {benefit}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               </div>
+            ))}
+          </div>
 
-              {/* Content */}
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 group-hover:text-primary-blue dark:group-hover:text-accent-red transition-colors">
-                {t(feature.titleKey)}
+          <div className="bg-gradient-to-r from-primary-blue/8 to-primary-red/8 dark:from-primary-blue/14 dark:to-primary-red/14 rounded-[1.75rem] p-8 md:p-12 text-center border border-primary-blue/15 dark:border-white/10">
+            <div className="max-w-4xl mx-auto">
+              <h3 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
+                {t('readyToConnectTitle')}
               </h3>
-
-              <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
-                {t(feature.descriptionKey)}
+              <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
+                {t('readyToConnectDescription')}
               </p>
 
-              {/* Benefits List */}
-              <ul className="space-y-2">
-                {(t.raw(feature.benefitsKey) as string[]).map((benefit, benefitIndex) => (
-                  <li key={benefitIndex} className="flex items-center text-sm text-gray-500 dark:text-gray-400">
-                    <CheckCircle className="w-4 h-4 text-green-500 mr-2 flex-shrink-0" />
-                    {benefit}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-
-        {/* Bottom CTA Section */}
-        <div className="bg-gradient-to-r from-primary-blue/10 to-primary-red/10 dark:from-primary-blue/20 dark:to-primary-red/20 rounded-3xl p-8 md:p-12 text-center">
-          <div className="max-w-4xl mx-auto">
-            <h3 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
-              {t('readyToConnectTitle')}
-            </h3>
-            <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
-              {t('readyToConnectDescription')}
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <button className="bg-gradient-to-r from-primary-blue to-accent-blue dark:from-accent-red dark:to-primary-red hover:from-primary-blueHover hover:to-primary-blue dark:hover:from-primary-red dark:hover:to-accent-red text-white font-semibold py-3 px-8 rounded-xl transition-all duration-300 transform hover:scale-105">
-                {t('joinNow')}
-              </button>
-              <button className="border-2 border-primary-blue/50 dark:border-accent-red/50 hover:border-primary-blue dark:hover:border-accent-red text-gray-800 dark:text-white font-semibold py-3 px-8 rounded-xl transition-all duration-300 hover:bg-primary-blue/10 dark:hover:bg-accent-red/10">
-                {t('learnMore')}
-              </button>
-            </div>
-
-            {/* Trust Indicators */}
-            <div className="flex flex-wrap items-center justify-center gap-8 mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
-              <div className="flex items-center text-gray-600 dark:text-gray-300">
-                <Smartphone className="w-5 h-5 text-primary-blue dark:text-accent-red mr-2" />
-                <span className="font-medium">{t('mobileOptimized')}</span>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <button className="bg-gradient-to-r from-primary-blue to-accent-blue dark:from-accent-red dark:to-primary-red text-white font-semibold py-3 px-8 rounded-xl transition-all duration-300 shadow-lg shadow-primary-blue/20 dark:shadow-accent-red/20 hover:opacity-90">
+                  {t('joinNow')}
+                </button>
+                <button className="border border-primary-blue/30 dark:border-accent-red/30 text-gray-800 dark:text-white font-semibold py-3 px-8 rounded-xl transition-all duration-300 hover:bg-primary-blue/10 dark:hover:bg-accent-red/10 bg-white/60 dark:bg-white/[0.04]">
+                  {t('learnMore')}
+                </button>
               </div>
-              <div className="flex items-center text-gray-600 dark:text-gray-300">
-                <Clock className="w-5 h-5 text-green-500 mr-2" />
-                <span className="font-medium">{t('support247')}</span>
+
+              {/* Trust Indicators */}
+              <div className="flex flex-wrap items-center justify-center gap-8 mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
+                <div className="flex items-center text-gray-600 dark:text-gray-300">
+                  <Smartphone className="w-5 h-5 text-primary-blue dark:text-accent-red mr-2" />
+                  <span className="font-medium">{t('mobileOptimized')}</span>
+                </div>
+                <div className="flex items-center text-gray-600 dark:text-gray-300">
+                  <Clock className="w-5 h-5 text-green-500 mr-2" />
+                  <span className="font-medium">{t('support247')}</span>
+                </div>
               </div>
             </div>
           </div>

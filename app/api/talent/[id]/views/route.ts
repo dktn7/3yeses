@@ -3,31 +3,28 @@ import { getPrisma } from '@/lib/prisma';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+import { NextRequest } from 'next/server';
+
+export async function GET(request: NextRequest, context: any) {
+  const params = (context && context.params) || { id: undefined };
+  const resolvedParams = typeof (params as any)?.then === 'function' ? await (params as any) : params;
+  const id = resolvedParams?.id;
   const prisma = getPrisma();
-  const id = params.id;
+
+  if (!id) {
+    return NextResponse.json({ error: 'Missing talent id' }, { status: 400 });
+  }
 
   try {
     // Get today's date at midnight
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    // Try to find the talent profile
-    let talent = await prisma.talentProfile.findUnique({
-      where: { id },
-      select: { id: true }
+    // Find the talent profile by userId (TalentProfile uses userId as unique key)
+    const talent = await prisma.talentProfile.findUnique({
+      where: { userId: id },
+      select: { userId: true }
     });
-
-    // If not found by profileId, try by userId
-    if (!talent) {
-      talent = await prisma.talentProfile.findUnique({
-        where: { userId: id },
-        select: { id: true }
-      });
-    }
 
     if (!talent) {
       return NextResponse.json(
@@ -40,7 +37,7 @@ export async function GET(
     const stats = await prisma.profileStats.findUnique({
       where: {
         talentProfileId_date: {
-          talentProfileId: talent.id,
+          talentProfileId: talent.userId,
           date: today,
         },
       },

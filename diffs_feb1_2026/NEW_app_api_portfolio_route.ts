@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
 
     // Get portfolio items
     const items = await prisma.portfolioItem.findMany({
-      where: { talentProfileId: talentProfile.id },
+      where: { talentProfileId: talentProfile.userId ?? talentProfile.id },
       orderBy: { id: 'desc' },
     });
 
@@ -105,7 +105,7 @@ export async function POST(request: NextRequest) {
         title,
         url,
         type,
-        talentProfileId: talentProfile.id,
+        talentProfileId: talentProfile.userId ?? talentProfile.id,
       },
     });
 

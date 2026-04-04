@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import Link from 'next/link';
@@ -14,7 +14,8 @@ import {
   Search,
   MessageCircle,
   Share2,
-  Heart
+  Wrench,
+  Flag
 } from 'lucide-react';
 import VideoPlayer from './VideoPlayer';
 import CommentsSection from './CommentsSection';
@@ -28,7 +29,7 @@ import { useAuth } from '@/contexts/AuthContext';
 interface MediaItem {
   id: string;
   title: string;
-  url: string;
+  mediaUrl: string;
   type: 'IMAGE' | 'VIDEO' | 'AUDIO';
   thumbnail?: string;
   description?: string;
@@ -44,7 +45,7 @@ interface MediaItem {
     location?: string;
   };
   views: number;
-  likes: number;
+  likeCount: number;
   isSponsored?: boolean;
   createdAt: string;
 }
@@ -67,21 +68,67 @@ export default function MediaOverlay({ media, allMedia, talents = [], onClose, o
   const [searchQuery, setSearchQuery] = useState('');
   const [showCopiedToast, setShowCopiedToast] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
+  const [likesCount, setLikesCount] = useState(media.likeCount);
   const [showLoginToast, setShowLoginToast] = useState(false);
   const [isTheaterMode, setIsTheaterMode] = useState(false);
+  const viewedItemsRef = useRef<Set<string>>(new Set());
 
-  // Reset like state when media changes
+  // Fetch like status and track view when media changes
   useEffect(() => {
     setIsLiked(false);
+    setLikesCount(media.likeCount);
+
+    const talentId = (media.talentProfile as any).userId ?? media.talentProfile.id;
+
+    // Fetch like status
+    fetch(`/api/talent/${talentId}/like`)
+      .then(res => res.ok ? res.json() : null)
+      .then(data => {
+        if (data) {
+          setIsLiked(data.isLiked);
+          setLikesCount(data.likeCount);
+        }
+      })
+      .catch(() => {});
+
+    // Track view (deduplicated per session)
+    if (!viewedItemsRef.current.has(media.id)) {
+      viewedItemsRef.current.add(media.id);
+      fetch('/api/analytics/portfolio-view', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ portfolioItemId: media.id }),
+      }).catch(() => {});
+    }
   }, [media.id]);
 
-  const handleLike = () => {
+  const handleLike = async () => {
     if (!user) {
       setShowLoginToast(true);
       setTimeout(() => setShowLoginToast(false), 3000);
       return;
     }
-    setIsLiked(!isLiked);
+
+    const newLiked = !isLiked;
+    // Optimistic update
+    setIsLiked(newLiked);
+    setLikesCount(prev => newLiked ? prev + 1 : prev - 1);
+
+    try {
+      const talentId = (media.talentProfile as any).userId ?? media.talentProfile.id;
+      const res = await fetch(`/api/talent/${talentId}/like`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ like: newLiked }),
+      });
+      if (!res.ok) throw new Error('Like failed');
+      const data = await res.json();
+      setLikesCount(data.likeCount);
+    } catch {
+      // Revert on failure
+      setIsLiked(!newLiked);
+      setLikesCount(prev => newLiked ? prev - 1 : prev + 1);
+    }
   };
 
   const handleShare = async () => {
@@ -102,7 +149,7 @@ export default function MediaOverlay({ media, allMedia, talents = [], onClose, o
   };
 
   const talent = media.talentProfile;
-  const likesCount = isLiked ? media.likes + 1 : media.likes;
+  const talentUserId = ((talent as any).userId ?? talent.id) as string;
 
   // Filter media based on current selection (Media)
   const filteredMedia = React.useMemo(() => {
@@ -110,7 +157,7 @@ export default function MediaOverlay({ media, allMedia, talents = [], onClose, o
     if (!allMedia || allMedia.length === 0) return [media];
 
     return allMedia.filter(m => {
-      if (m.talentProfile.id !== talent.id) return false;
+      if (((m.talentProfile as any).userId ?? m.talentProfile.id) !== ((talent as any).userId ?? talent.id)) return false;
       
       if (playerFilter !== 'all' && m.type.toLowerCase() !== playerFilter) return false;
       
@@ -128,13 +175,13 @@ export default function MediaOverlay({ media, allMedia, talents = [], onClose, o
   // Recommended Videos (From other talents)
   const recommendedMedia = React.useMemo(() => {
     if (!allMedia) return [];
-    return allMedia.filter(m => m.talentProfile.id !== talent.id).slice(0, 10);
+    return allMedia.filter(m => ((m.talentProfile as any).userId ?? m.talentProfile.id) !== ((talent as any).userId ?? talent.id)).slice(0, 10);
   }, [allMedia, talent.id]);
 
   // Similar Talents - sorted by media count (most active first)
   const similarTalents = React.useMemo(() => {
     return talents
-      .filter(t => t.id !== talent.id)
+      .filter(t => ((t as any).userId ?? t.id) !== ((talent as any).userId ?? talent.id))
       .sort((a, b) => {
         // Sort by media count descending, then by name alphabetically
         const aMediaCount = a._count?.portfolioItems || a.portfolioItems?.length || 0;
@@ -145,6 +192,23 @@ export default function MediaOverlay({ media, allMedia, talents = [], onClose, o
   }, [talents, talent.id]);
 
   // Handle keyboard navigation
+  const navigate = useCallback((direction: 'prev' | 'next') => {
+    if (filteredMedia.length <= 1) return;
+
+    const currentIndex = filteredMedia.findIndex(m => m.id === media.id);
+    if (currentIndex === -1) return;
+
+    let nextIndex;
+    if (direction === 'prev') {
+      nextIndex = (currentIndex - 1 + filteredMedia.length) % filteredMedia.length;
+    } else {
+      nextIndex = (currentIndex + 1) % filteredMedia.length;
+    }
+
+    // Use replace instead of push to avoid building up history stack
+    onMediaSelect(filteredMedia[nextIndex]);
+  }, [filteredMedia, media.id, onMediaSelect]);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -158,24 +222,7 @@ export default function MediaOverlay({ media, allMedia, talents = [], onClose, o
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [filteredMedia, media.id]); 
-
-  const navigate = (direction: 'prev' | 'next') => {
-    if (filteredMedia.length <= 1) return;
-    
-    const currentIndex = filteredMedia.findIndex(m => m.id === media.id);
-    if (currentIndex === -1) return; 
-
-    let nextIndex;
-    if (direction === 'prev') {
-      nextIndex = (currentIndex - 1 + filteredMedia.length) % filteredMedia.length;
-    } else {
-      nextIndex = (currentIndex + 1) % filteredMedia.length;
-    }
-    
-    // Use replace instead of push to avoid building up history stack
-    onMediaSelect(filteredMedia[nextIndex]);
-  };
+  }, [navigate, onClose]);
 
   // Prevent body scroll when overlay is open
   useEffect(() => {
@@ -186,23 +233,23 @@ export default function MediaOverlay({ media, allMedia, talents = [], onClose, o
   }, []);
 
   return (
-    <div className="fixed inset-0 z-[100] bg-gray-100 dark:bg-black flex animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-[100] bg-gray-100 dark:bg-black overflow-y-auto md:overflow-hidden md:flex">
       {/* Left Sidebar - Profile, Filters & Media List */}
-      <div className={`bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-r border-gray-300 dark:border-gray-800 flex-col overflow-hidden flex-shrink-0 transition-all duration-300 ${isTheaterMode ? 'w-0 opacity-0 border-none' : 'w-80 opacity-100 flex'}`}>
+      <div className={`bg-white dark:bg-gray-900 border-r border-gray-300 dark:border-gray-800 flex-col overflow-hidden flex-shrink-0 hidden md:flex ${isTheaterMode ? '!hidden' : 'w-64 xl:w-72'}`}>
         {/* Header with Logo, Theme Toggle, Language & Close */}
-        <div className="p-4 border-b border-gray-300 dark:border-gray-800 flex items-center justify-between">
-          <span className="flex items-center gap-2 font-bold text-2xl text-blue-600 dark:text-red-500">
+        <div className="px-4 py-3 border-b border-gray-300 dark:border-gray-800 flex items-center justify-between gap-3">
+          <span className="flex items-center gap-1.5 font-bold text-xl text-blue-600 dark:text-red-500 flex-shrink-0">
             3YESES
-            <SwoopingTick size={32} />
+            <SwoopingTick size={26} />
           </span>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5 ml-auto">
             <ModeToggle />
             <LanguageSwitcherModal />
             <button
               onClick={onClose}
-              className="w-10 h-10 bg-gray-200 hover:bg-gray-300 dark:bg-white/10 dark:hover:bg-white/20 backdrop-blur-sm text-gray-900 dark:text-white rounded-full flex items-center justify-center transition-colors"
+              className="w-8 h-8 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-full flex items-center justify-center transition-colors flex-shrink-0"
             >
-              <X className="w-6 h-6" />
+              <X className="w-4 h-4" />
             </button>
           </div>
         </div>
@@ -263,7 +310,7 @@ export default function MediaOverlay({ media, allMedia, talents = [], onClose, o
             </div>
           </div>
           <button
-            onClick={() => router.push(`/${locale}/talent/${talent.id}`)}
+            onClick={() => router.push(`/talent/${(talent as any).userId ?? talent.id}`)}
             className="w-full px-3 py-2 bg-primary-blue dark:bg-accent-red text-white text-sm font-medium rounded-lg hover:shadow-lg transition-all"
           >
             View Full Profile
@@ -324,9 +371,9 @@ export default function MediaOverlay({ media, allMedia, talents = [], onClose, o
                             <Play className="w-5 h-5 text-white" fill="currentColor" />
                           </div>
                         </>
-                      ) : (m.thumbnail || (m.type === 'IMAGE' && m.url)) ? (
+                      ) : (m.thumbnail || (m.type === 'IMAGE' && m.mediaUrl)) ? (
                         <Image
-                          src={m.thumbnail || m.url}
+                          src={m.thumbnail || m.mediaUrl}
                           alt={m.title}
                           fill
                           className="object-cover"
@@ -351,7 +398,35 @@ export default function MediaOverlay({ media, allMedia, talents = [], onClose, o
       </div>
 
       {/* Center - Media Viewer */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-y-auto scrollbar-hide relative">
+      <div className="flex-1 flex flex-col min-w-0 overflow-y-auto scrollbar-hide relative min-h-screen md:min-h-0">
+        {/* Mobile Header - Visible on <md where left sidebar is hidden */}
+        <div className="md:hidden bg-white dark:bg-gray-900 border-b border-gray-300 dark:border-gray-800 px-3 py-2 flex items-center justify-between flex-shrink-0 sticky top-0 z-40">
+          <div className="flex items-center gap-2 min-w-0">
+            <div className="w-8 h-8 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-800 flex-shrink-0">
+              {talent.avatarUrl ? (
+                <Image src={talent.avatarUrl} alt={talent.user.name} width={32} height={32} className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center"><User className="w-4 h-4 text-gray-400" /></div>
+              )}
+            </div>
+            <div className="min-w-0">
+              <p className="text-gray-900 dark:text-white text-sm font-semibold truncate">{talent.user.name}</p>
+              {talent.category && <p className="text-gray-500 dark:text-gray-400 text-xs truncate capitalize">{talent.category.name}</p>}
+            </div>
+          </div>
+          <div className="flex items-center gap-1.5 flex-shrink-0">
+            <ModeToggle />
+            <LanguageSwitcherModal />
+            <button
+              onClick={onClose}
+              className="w-7 h-7 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-full flex items-center justify-center transition-colors"
+              aria-label="Close overlay"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+
         {/* Close Button for Theater Mode */}
         {isTheaterMode && (
           <button
@@ -363,9 +438,9 @@ export default function MediaOverlay({ media, allMedia, talents = [], onClose, o
         )}
 
         {/* Media Display */}
-        <div className={`w-full bg-gray-200 dark:bg-black relative flex items-center justify-center transition-all duration-300 ${isTheaterMode ? 'p-0 min-h-screen' : media.type === 'AUDIO' ? 'p-2 flex-1' : 'p-6 flex-1'}`}>
+        <div className={`w-full bg-gray-200 dark:bg-black relative flex items-center justify-center ${isTheaterMode ? 'p-0 min-h-screen' : media.type === 'AUDIO' ? 'p-2 flex-1' : 'p-6 flex-1'}`}>
           <div className="relative w-full h-full flex items-center justify-center max-w-7xl mx-auto">
-               <div className={`bg-black overflow-hidden shadow-2xl transition-all duration-300 flex items-center justify-center ${
+               <div className={`bg-black overflow-hidden shadow-2xl flex items-center justify-center ${
                  isTheaterMode 
                    ? 'h-full w-full rounded-none' 
                    : media.type === 'AUDIO'
@@ -373,10 +448,10 @@ export default function MediaOverlay({ media, allMedia, talents = [], onClose, o
                      : 'aspect-square w-full max-w-[min(90vw,90vh)] rounded-lg'
                }`}>
                  <VideoPlayer 
-                   url={media.url} 
+                   url={media.mediaUrl} 
                    className="w-full h-full"
                    talentProfile={{
-                     id: media.talentProfile.id,
+                     id: (media.talentProfile as any).userId ?? media.talentProfile.id,
                      name: media.talentProfile.user.name,
                      avatarUrl: media.talentProfile.avatarUrl
                    }}
@@ -419,60 +494,84 @@ export default function MediaOverlay({ media, allMedia, talents = [], onClose, o
         </div>
 
         {/* Bottom Info Bar */}
-        <div className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-t border-gray-300 dark:border-gray-800 p-4 flex-shrink-0 flex items-center justify-between">
-          <div>
-            <h2 className="text-gray-900 dark:text-white font-bold text-xl mb-2">{media.title}</h2>
-            <div className="flex items-center gap-4">
-              <span className="text-gray-600 dark:text-gray-400 text-sm">{talent.user.name} • {talent.category?.name}</span>
-              <span className="flex items-center gap-1 text-gray-600 dark:text-gray-400 text-sm">
-                <Eye className="w-4 h-4" />
-                {formatNumber(media.views)} views
-              </span>
+        <div className="bg-white dark:bg-gray-900 border-t border-gray-300 dark:border-gray-800 p-4 flex-shrink-0">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-gray-900 dark:text-white font-bold text-xl mb-2">{media.title}</h2>
+              <div className="flex items-center gap-4">
+                <span className="text-gray-600 dark:text-gray-400 text-sm">{talent.user.name} • {talent.category?.name}</span>
+                <span className="flex items-center gap-1 text-gray-600 dark:text-gray-400 text-sm">
+                  <Eye className="w-4 h-4" />
+                  {formatNumber(media.views)} views
+                </span>
+              </div>
+            </div>
+          
+            <div className="flex items-center gap-2 relative">
+              <button 
+                onClick={handleLike}
+                className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all font-medium text-sm ${
+                  isLiked 
+                    ? 'bg-pink-100 text-pink-600 dark:bg-pink-900/30 dark:text-pink-400' 
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+                }`}
+              >
+                <SwoopingTick size={16} hovered={isLiked} />
+                <span>{likesCount}</span>
+              </button>
+
+              <button 
+                onClick={handleShare}
+                className="flex items-center gap-2 px-4 py-2 bg-primary-blue dark:bg-accent-red text-white rounded-full hover:opacity-90 transition-opacity font-medium text-sm"
+              >
+                <Share2 className="w-4 h-4" />
+                Share
+              </button>
+            
+              {/* Copied Toast */}
+              <div className={`absolute bottom-full right-0 mb-2 px-3 py-1 bg-black/80 text-white text-xs rounded shadow-lg transition-opacity duration-200 pointer-events-none whitespace-nowrap ${showCopiedToast ? 'opacity-100' : 'opacity-0'}`}>
+                Link copied to clipboard!
+              </div>
             </div>
           </div>
-          
-          <div className="flex items-center gap-2 relative">
-            <button 
-              onClick={handleLike}
-              className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all font-medium text-sm ${
-                isLiked 
-                  ? 'bg-pink-100 text-pink-600 dark:bg-pink-900/30 dark:text-pink-400' 
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
-              }`}
-            >
-              <Heart className={`w-4 h-4 ${isLiked ? 'fill-current' : ''}`} />
-              <span>{likesCount}</span>
-            </button>
 
-            <button 
-              onClick={handleShare}
-              className="flex items-center gap-2 px-4 py-2 bg-primary-blue dark:bg-accent-red text-white rounded-full hover:opacity-90 transition-opacity font-medium text-sm"
-            >
-              <Share2 className="w-4 h-4" />
-              Share
-            </button>
-
+          {/* Secondary actions row */}
+          <div className="flex items-center gap-2 mt-3 pt-3 border-t border-gray-200 dark:border-gray-800">
             <FlagButton 
               mediaId={media.id}
               contentType={media.type}
               talentName={talent.user.name}
             />
-            
-            {/* Copied Toast */}
-            <div className={`absolute bottom-full right-0 mb-2 px-3 py-1 bg-black/80 text-white text-xs rounded shadow-lg transition-opacity duration-200 pointer-events-none whitespace-nowrap ${showCopiedToast ? 'opacity-100' : 'opacity-0'}`}>
-              Link copied to clipboard!
-            </div>
+
+            {user?.role === 'admin' && (
+              <>
+                <button
+                  onClick={() => router.push(`/admin/users/${talentUserId}`)}
+                  className="flex items-center gap-1 px-3 py-2 rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-[11px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  <Wrench className="w-3 h-3" />
+                  Admin
+                </button>
+                <button
+                  onClick={() => router.push(`/admin/reports?userId=${encodeURIComponent(talentUserId)}`)}
+                  className="flex items-center gap-1 px-3 py-2 rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-[11px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  <Flag className="w-3 h-3" />
+                  Reports
+                </button>
+              </>
+            )}
           </div>
         </div>
 
         {/* Comments Section */}
         <div className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
-          <CommentsSection mediaId={media.id} />
+          <CommentsSection mediaId={media.id} mediaOwnerId={talentUserId} />
         </div>
       </div>
 
       {/* Right Sidebar - Recommended & Similar */}
-      <div className={`bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-l border-gray-300 dark:border-gray-800 flex-col overflow-hidden flex-shrink-0 hidden xl:flex transition-all duration-300 ${isTheaterMode ? 'w-0 opacity-0 border-none' : 'w-80 opacity-100'}`}>
+      <div className={`bg-white dark:bg-gray-900 md:border-l border-gray-300 dark:border-gray-800 flex flex-col md:overflow-hidden flex-shrink-0 ${isTheaterMode ? 'hidden' : 'w-full md:w-64 xl:w-72 md:max-h-full'}`}>
         {/* Tabs */}
         <div className="flex border-b border-gray-300 dark:border-gray-800">
           <button
@@ -498,7 +597,7 @@ export default function MediaOverlay({ media, allMedia, talents = [], onClose, o
         </div>
 
         {/* Content List */}
-        <div className="flex-1 overflow-y-auto scrollbar-hide p-2">
+        <div className="md:flex-1 md:overflow-y-auto scrollbar-hide p-2">
           {activeRightTab === 'recommended' ? (
             <div className="space-y-2">
               {recommendedMedia.slice(0, 20).map((m) => (
@@ -508,9 +607,9 @@ export default function MediaOverlay({ media, allMedia, talents = [], onClose, o
                   className="w-full group flex gap-3 hover:bg-gray-200 dark:hover:bg-white/10 rounded-lg p-2 transition-all"
                 >
                   <div className="relative w-32 aspect-video rounded overflow-hidden bg-gray-200 dark:bg-gray-800 flex-shrink-0">
-                    {m.thumbnail || (m.type === 'IMAGE' ? m.url : undefined) ? (
+                    {m.thumbnail || (m.type === 'IMAGE' ? m.mediaUrl : undefined) ? (
                       <Image
-                        src={m.thumbnail || (m.type === 'IMAGE' ? m.url : '')}
+                        src={m.thumbnail || (m.type === 'IMAGE' ? m.mediaUrl : '')}
                         alt={m.title}
                         fill
                         className="object-cover"
@@ -548,7 +647,7 @@ export default function MediaOverlay({ media, allMedia, talents = [], onClose, o
                 <button
                   key={t.id}
                   onClick={() => {
-                    const firstMedia = allMedia.find(m => m.talentProfile.id === t.id);
+                    const firstMedia = allMedia.find(m => ((m.talentProfile as any).userId ?? m.talentProfile.id) === ((t as any).userId ?? t.id));
                     if (firstMedia) onMediaSelect(firstMedia);
                   }}
                   className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-all"

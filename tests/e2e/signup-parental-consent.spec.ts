@@ -247,7 +247,7 @@ async function fillStep3Media(page: Page, checkMediaConsent = false) {
 
 test.describe('Parental Consent System - Complete Flow', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto(`${BASE_URL}/auth/signup/step-1`);
+    await page.goto(`${BASE_URL}/auth/signup/steps/step-1`);
   });
 
   test('Test 1: Adult (16+) - Standard Signup', async ({ page }) => {
@@ -446,7 +446,7 @@ test.describe('Parental Consent System - Complete Flow', () => {
 
 test.describe('Validation Tests', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto(`${BASE_URL}/auth/signup/step-1`);
+    await page.goto(`${BASE_URL}/auth/signup/steps/step-1`);
   });
 
   test('Should validate minimum age requirement', async ({ page }) => {

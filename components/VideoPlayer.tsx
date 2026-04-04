@@ -20,7 +20,7 @@ type VideoPlayerProps = {
         id: string;
         title: string;
         thumbnail?: string;
-        url: string;
+        mediaUrl: string;
         type: 'IMAGE' | 'VIDEO' | 'AUDIO';
     }>;
     onMediaSelect?: (media: any) => void;
@@ -56,7 +56,7 @@ export default function VideoPlayer({ url, className, talentProfile, showLogo = 
     const containerRef = useRef<HTMLDivElement>(null);
     const settingsRef = useRef<HTMLDivElement>(null);
 
-    const isYoutube = url.includes('youtube.com') || url.includes('youtu.be');
+    const isYoutube = !!url && (url.includes('youtube.com') || url.includes('youtu.be'));
     const isImage = type === 'IMAGE';
     const isAudio = type === 'AUDIO';
     
@@ -252,7 +252,7 @@ export default function VideoPlayer({ url, className, talentProfile, showLogo = 
                         <div className="w-full h-full bg-red-50 dark:bg-red-900/20 flex items-center justify-center rounded-lg">
                             <p className="text-red-600 dark:text-red-400">Failed to load image</p>
                         </div>
-                    ) : (
+                    ) : url ? (
                         <div className="relative w-full h-full">
                             <Image
                                 src={url}
@@ -261,6 +261,10 @@ export default function VideoPlayer({ url, className, talentProfile, showLogo = 
                                 className="object-contain"
                                 onError={() => setHasError(true)}
                             />
+                        </div>
+                    ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-lg">
+                            <p className="text-gray-400 text-sm">No media available</p>
                         </div>
                     )}
                 </div>
@@ -507,9 +511,9 @@ export default function VideoPlayer({ url, className, talentProfile, showLogo = 
                                             }}
                                             className="group/card relative aspect-video rounded-lg overflow-hidden bg-gray-800 ring-1 ring-white/10 hover:ring-primary-blue transition-all hover:scale-105"
                                         >
-                                            {media.thumbnail || (media.type === 'IMAGE' && media.url) ? (
+                                            {media.thumbnail || (media.type === 'IMAGE' && media.mediaUrl) ? (
                                                 <Image 
-                                                    src={media.thumbnail || media.url} 
+                                                    src={media.thumbnail || media.mediaUrl} 
                                                     alt={media.title} 
                                                     fill 
                                                     className="object-cover opacity-80 group-hover/card:opacity-100 transition-opacity" 
@@ -564,7 +568,7 @@ export default function VideoPlayer({ url, className, talentProfile, showLogo = 
                         {/* Top Right - Profile */}
                         {talentProfile && (
                             <Link 
-                                href={`/talent/${talentProfile.id}`}
+                                href={`/talent/${(talentProfile as any).userId ?? talentProfile.id}`}
                                 className="absolute top-4 right-4 z-20 pointer-events-auto hover:scale-105 transition-all duration-300"
                                 target="_blank"
                             >

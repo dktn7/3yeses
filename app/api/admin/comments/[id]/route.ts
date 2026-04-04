@@ -4,9 +4,10 @@ import { prisma } from '@/lib/prisma';
 
 async function patchHandler(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }>; admin: any }
 ) {
   try {
+    const { id } = await context.params;
     const body = await request.json();
     const { status } = body;
 
@@ -18,7 +19,7 @@ async function patchHandler(
     }
 
     const comment = await prisma.comment.update({
-      where: { id: params.id },
+      where: { id },
       data: { status },
     });
 

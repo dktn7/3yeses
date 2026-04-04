@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { MapPin, Search } from 'lucide-react';
+import DropdownPanel from './DropdownPanel'
 
 interface Props {
   value: string;
@@ -42,7 +43,7 @@ const POPULAR_CITIES = [
 export default function LocationAutocomplete({ value, onChange, placeholder }: Props) {
   const [suggestions, setSuggestions] = React.useState<Array<{ name: string; country: string }>>([]);
   const [showSuggestions, setShowSuggestions] = React.useState(false);
-  const inputRef = React.useRef<HTMLInputElement>(null);
+  const inputRef = React.useRef<HTMLInputElement | null>(null);
 
   React.useEffect(() => {
     if (!value || value.length < 1) {
@@ -78,26 +79,30 @@ export default function LocationAutocomplete({ value, onChange, placeholder }: P
           onFocus={() => setShowSuggestions(true)}
           onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
           placeholder={placeholder || 'Search city or region...'}
-          className="w-full pl-9 pr-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-red-500 focus:border-transparent transition-all"
+          className="w-full pl-9 pr-3 py-2 rounded-full ring-1 ring-slate-900/8 dark:ring-white/[0.08] bg-slate-50 dark:bg-slate-900/90 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-[var(--brand-primary)]/30 focus:outline-none transition-all"
         />
       </div>
 
       {showSuggestions && suggestions.length > 0 && (
-        <div className="absolute top-full left-0 right-0 mt-1 z-50 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg max-h-64 overflow-y-auto">
-          {suggestions.map((city) => (
-            <button
-              key={`${city.name}-${city.country}`}
-              type="button"
-              onClick={() => handleSelect(city)}
-              className="w-full text-left px-3 py-2 hover:bg-blue-50 dark:hover:bg-blue-900/20 text-gray-900 dark:text-white text-sm transition-colors border-b border-gray-100 dark:border-gray-800 last:border-b-0 flex items-center gap-2"
-            >
-              <MapPin className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
-              <div>
-                <div className="font-medium">{city.name}</div>
-                <div className="text-xs text-gray-500 dark:text-gray-400">{city.country}</div>
-              </div>
-            </button>
-          ))}
+        <div className="absolute top-full left-0 right-0 mt-1 z-60">
+          <DropdownPanel portal anchorRef={inputRef} matchWidth>
+            <div className="p-0">
+              {suggestions.map((city) => (
+                <button
+                  key={`${city.name}-${city.country}`}
+                  type="button"
+                  onClick={() => handleSelect(city)}
+                  className="w-full text-left px-4 py-3 rounded-xl text-sm transition-colors duration-200 text-gray-700 dark:text-gray-100 hover:bg-slate-100 dark:hover:bg-white/[0.06] flex items-center gap-2"
+                >
+                  <MapPin className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
+                  <div>
+                    <div className="font-medium">{city.name}</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">{city.country}</div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </DropdownPanel>
         </div>
       )}
     </div>

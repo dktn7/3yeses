@@ -1,45 +1,34 @@
 export const dynamic = 'force-dynamic';
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
-import * as jwt from 'jsonwebtoken';
-
-const JWT_SECRET = process.env.JWT_SECRET || 'your-super-secret-jwt-key';
+import { authenticateUser } from '@/lib/auth/middleware';
 
 // GET - List media for the authenticated talent profile
 export async function GET(req: Request) {
   try {
-    const cookieHeader = req.headers.get('cookie') || '';
-    const match = cookieHeader.match(/accessToken=([^;]+)/);
-    const token = match ? decodeURIComponent(match[1]) : null;
-
-    if (!token) {
+    const auth = await authenticateUser(req);
+    if (!auth.authenticated || !auth.user) {
       return NextResponse.json({ media: [] }, { status: 401 });
     }
-
-    const decoded = jwt.verify(token, JWT_SECRET) as any;
-    const userId = decoded?.userId as string | undefined;
-
-    if (!userId) {
-      return NextResponse.json({ media: [] }, { status: 401 });
-    }
+    const { userId } = auth.user;
 
     const profile = await prisma.talentProfile.findUnique({
       where: { userId },
-      select: { id: true },
     });
 
     if (!profile) {
       return NextResponse.json({ media: [] }, { status: 200 });
     }
+    const profileId = (profile as any).id ?? profile.userId;
 
     const items = await prisma.portfolioItem.findMany({
-      where: { talentProfileId: profile.id },
+      where: { talentProfileId: profileId },
       orderBy: { createdAt: 'desc' },
       select: {
         id: true,
         title: true,
         description: true,
-        url: true,
+        mediaUrl: true,
         type: true,
         thumbnail: true,
         createdAt: true,
@@ -50,7 +39,7 @@ export async function GET(req: Request) {
       id: item.id,
       title: item.title,
       description: item.description ?? '',
-      url: item.url,
+      mediaUrl: item.mediaUrl,
       type: item.type.toLowerCase(),
       thumbnail: item.thumbnail ?? '',
       createdAt: item.createdAt,

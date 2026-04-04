@@ -358,7 +358,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
                     { label: 'Cognitive', value: 'Cognitive' },
                     { label: 'Other', value: 'Other' },
                   ]}
-                  value={filters.disabilities || []}
+                  value={(filters as any).disabilities || []}
                   onChange={(vals) => setFilters((prev) => ({ ...prev, disabilities: vals }))}
                   placeholder="Select accessibility needs"
                 />

@@ -1,15 +1,15 @@
 # GitHub Copilot Instructions for 3yeses
 
-You are assisting on **3yeses**, a subscription-based talent marketplace built with Next.js 14, TypeScript, Prisma, Stripe, and Tailwind CSS.  
+You are assisting on **3yeses**, a subscription-based talent marketplace built with Next.js 16, TypeScript, Prisma, Stripe, and Tailwind CSS.  
 Your goal is to generate secure, idiomatic, production-ready code that matches the conventions in this file.
 
 ---
 
 ## 0. High‑level project overview
 
-- Product: **3yeses** – a platform where talents (actors, musicians, models, voice artists, dancers, etc.) showcase portfolios and get discovered by clients.[file:1]
+- Product: **3yeses** – a subscription-only platform where talents (actors, musicians, models, voice artists, dancers, etc.) showcase portfolios and get discovered.[file:1]
 - Architecture:
-  - Next.js 14 **App Router**, React 18, TypeScript (strict).[file:1]
+  - Next.js 16 **App Router**, React 18, TypeScript (strict).[file:1]
   - PostgreSQL + Prisma ORM (≈20 models covering User, TalentProfile, PortfolioItem, Subscription, Payment, analytics, etc.).[file:1]
   - JWT authentication with bcrypt password hashing.[file:1]
   - Stripe for **subscription billing** (not per-booking).[file:1]
@@ -25,28 +25,27 @@ When generating code, assume this context is always true unless the user explici
 
 - Monetization is **subscription-only** (no per-booking payments).[file:1]
 - There is **one paid tier**: `STANDARD`.
-- Users can sign up and create an account, but **full feature access** requires an **active STANDARD subscription**.
+- **Subscription is mandatory** — users subscribe during the sign-up flow. Without an active subscription the platform cannot be used.
+- There is no free tier or limited-access state. An account without a subscription has no access.
 
 ### 1.2 Pricing
 
 - **STANDARD**:
-  - Price: **£10 per 6 months**, billed via Stripe recurring subscription.[file:2]
-  - Yearly equivalent: £20 (two 6‑month periods); we may add a dedicated yearly price later.
+  - **6 months**: £10, billed via Stripe recurring subscription.[file:2]
+  - **12 months (annual)**: £20, billed via Stripe recurring subscription.
+- Two Stripe price IDs: `STRIPE_PRICE_STANDARD_6M` and `STRIPE_PRICE_STANDARD_12M`.
 - Do **not** create additional pricing tiers (FREE/BASIC/PRO/ENTERPRISE) unless the user explicitly asks to change the model.
 
 ### 1.3 Feature gating
 
 Treat these as the default rules unless specified otherwise:
 
-- **Without active subscription**:
-  - User may create an account and minimal profile.
-  - Limit portfolio items (e.g., up to 3) and hide premium analytics.
-  - No priority search placement, no advanced messaging.
+- **Without active subscription**: no platform access. Users are redirected to the pricing / sign-up flow.
 - **With active STANDARD subscription**:
   - Unlimited portfolio uploads (images, videos, audio).[file:1]
   - Full profile customization.
   - Priority search ranking.
-  - Direct messaging and all dashboard analytics available.
+  - Full dashboard analytics available.
 
 ---
 
@@ -102,7 +101,7 @@ When generating migration snippets, keep them consistent with this shape.
 
 ---
 
-## 3. Next.js 14 / React patterns
+## 3. Next.js 16 / React patterns
 
 ### 3.1 App Router usage
 
@@ -265,7 +264,7 @@ When generating code:
 
 ### 6.3 File uploads
 
-- Use Cloudinary (or similar service) for uploads.[file:1]
+- Use ImageKit for uploads.[file:1]
 - Validate:
   - File type (e.g. images/videos/audio, but not executable binaries).
   - File size limits.
@@ -306,16 +305,16 @@ For component props, prefer explicit Props interfaces.
 
 ### 8.2 Pricing UI
 
-For the talents pricing section, use a single clear plan:
+For the talents pricing section, show two duration options for the same Standard Access tier:
 
 - Heading: "For Talents".
 - Plan name: "Standard Access".
-- Price line: "£10 / 6 months".
+- Durations: "6 months — £10" and "12 months — £20 (Best Value)".
 - Bullet points:
   - Full profile customization.
   - Unlimited portfolio uploads.
-  - Direct messaging.
   - Priority search ranking.
+  - Full dashboard analytics.
 - Primary button: "Subscribe with Stripe".
 
 Make the button stand out and be keyboard accessible.
@@ -373,3 +372,4 @@ When the user asks for code:
 - Include types, validation, and security checks by default, not as an afterthought.
 
 This document defines the default behaviour for Copilot in the 3yeses repository.
+setx PATH "%PATH%;C:\nvm4w\nodejs"

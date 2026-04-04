@@ -653,7 +653,7 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
                     talent={talent.talentProfile}
                     mediaItems={talent.mediaItems}
                     onMediaClick={handleMediaSelect}
-                    onProfileClick={(profile) => router.push(`/${locale}/talent/${profile.id}`)}
+                    onProfileClick={(profile) => router.push(`/talent/${(profile as any).userId ?? profile.id}`)}
                     onSkillClick={handleSkillClick}
                   />
                 ))}
@@ -666,7 +666,7 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
                       {/* Left: Avatar and Info */}
                       <div className="p-4 flex items-center gap-4 sm:w-64 sm:border-r border-b sm:border-b-0 border-gray-100 dark:border-gray-700">
                         <button
-                          onClick={() => router.push(`/${locale}/talent/${talent.talentProfile.id}`)}
+                          onClick={() => router.push(`/talent/${(talent.talentProfile as any).userId ?? talent.talentProfile.id}`)}
                           className="w-16 h-16 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700 flex-shrink-0 ring-2 ring-primary-blue/20 dark:ring-accent-red/20 hover:ring-4 transition-all"
                         >
                           {talent.talentProfile.avatarUrl ? (
@@ -718,7 +718,7 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
                           // Get valid image URL - skip audio files
                           const imageUrl = item.type === 'AUDIO' ? null : 
                             (item.thumbnail && !isAudioUrl(item.thumbnail)) ? item.thumbnail :
-                            (item.url && !isAudioUrl(item.url)) ? item.url : null;
+                            (item.mediaUrl && !isAudioUrl(item.mediaUrl)) ? item.mediaUrl : null;
                           
                           return (
                           <button
@@ -753,7 +753,7 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
                       {/* View Profile Button */}
                       <div className="p-4 flex items-center">
                         <button
-                          onClick={() => router.push(`/${locale}/talent/${talent.talentProfile.id}`)}
+                          onClick={() => router.push(`/talent/${(talent.talentProfile as any).userId ?? talent.talentProfile.id}`)}
                           className="px-4 py-2 bg-primary-blue dark:bg-accent-red text-white rounded-lg text-sm font-medium hover:opacity-90 transition-opacity whitespace-nowrap"
                         >
                           View Profile

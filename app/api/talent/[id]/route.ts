@@ -5,15 +5,15 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const prisma = getPrisma();
-  const id = params.id;
+  const { id } = await params;
 
   try {
-    // Try to find by talentProfile.id first, then fallback to userId
+    // Find by userId (TalentProfile uses `userId` as unique identifier)
     let talent = await prisma.talentProfile.findUnique({
-      where: { id },
+      where: { userId: id },
       include: {
         user: {
           select: {
@@ -38,34 +38,7 @@ export async function GET(
       }
     });
 
-    // If not found by profileId, try by userId
-    if (!talent) {
-      talent = await prisma.talentProfile.findUnique({
-        where: { userId: id },
-        include: {
-          user: {
-            select: {
-              id: true,
-              name: true,
-              email: true,
-            }
-          },
-          category: {
-            select: { id: true, name: true }
-          },
-          subcategory: {
-            select: { id: true, name: true }
-          },
-          portfolio: true,
-          workHistory: {
-            orderBy: {
-              startDate: 'desc'
-            }
-          },
-          languages: true,
-        }
-      });
-    }
+    // (No fallback needed; `userId` is the canonical key for TalentProfile)
 
     if (!talent) {
       return NextResponse.json(
@@ -74,38 +47,24 @@ export async function GET(
       );
     }
 
-    // Combine portfolio items from relation and legacy arrays
-    const portfolioItems = [
-      ...(talent.portfolio || []).map((item: any) => ({
-        id: item.id,
-        title: item.title,
-        url: item.url,
-        type: item.type.toLowerCase(),
-        thumbnail: item.thumbnail,
-        likes: item.likes || 0
-      })),
-      ...(talent.portfolioImages || []).map((url: string) => ({
-        id: url,
-        title: 'Portfolio Image',
-        url: url,
-        type: 'image',
-        likes: 0
-      })),
-      ...(talent.videoUrls || []).map((url: string) => ({
-        id: url,
-        title: 'Portfolio Video',
-        url: url,
-        type: 'video',
-        likes: 0
-      }))
-    ];
+    // Portfolio items from PortfolioItem relation (canonical source)
+    const portfolioItems = (talent.portfolio || []).map((item: any) => ({
+      id: item.id,
+      title: item.title,
+      mediaUrl: item.mediaUrl,
+      type: item.type.toLowerCase(),
+      thumbnail: item.thumbnail,
+      likeCount: item.likeCount || 0
+    }));
 
     // Transform to Talent type
     const transformedTalent = {
       userId: talent.userId,
-      id: talent.id,
+      id: talent.userId,
       name: talent.user.name || 'Unknown Talent',
-      role: talent.roleDescription || '',
+      categoryId: talent.categoryId || null,
+      subcategoryId: talent.subcategoryId || null,
+      role: talent.performerTitle || talent.subcategory?.name || talent.category?.name || '',
       category: talent.category?.name || '',
       subcategory: talent.subcategory?.name || '',
       skills: talent.skills || [],
@@ -113,8 +72,7 @@ export async function GET(
       avatarUrl: talent.avatarUrl || undefined,
       bannerUrl: talent.bannerUrl || undefined,
       location: talent.location || '',
-      experience: parseInt(talent.experience || '0') || 0,
-      rating: talent.rating || 0,
+      experienceLevel: parseInt(talent.experienceLevel || '0') || 0,
       languages: (talent.languages || []).map((l: any) => l.name),
       bio: talent.bio || '',
       gender: (talent.gender as any) || 'other',
@@ -132,33 +90,49 @@ export async function GET(
       viewCount: talent.viewCount || 0,
       likeCount: talent.likeCount || 0,
       isLiked: false, // Needs auth context or separate call
+      contentBackground: (talent as any).contentBackground || null,
     };
 
-    // Fetch suggestions (same category, excluding current)
+    // Build similarity filters: match by category, overlapping skills, or key characteristics.
+    const profileId = talent.userId; // exclude current talent by userId
+
+    const orConditions: any[] = [];
+    if (talent.categoryId) orConditions.push({ categoryId: talent.categoryId });
+    if (talent.skills && Array.isArray(talent.skills) && talent.skills.length) orConditions.push({ skills: { hasSome: talent.skills } });
+    if (talent.bodyType) orConditions.push({ bodyType: talent.bodyType });
+    if ((talent.gender as any)) orConditions.push({ gender: talent.gender });
+
+    // Fallback to category match when no other signals are available
+    if (orConditions.length === 0 && talent.categoryId) orConditions.push({ categoryId: talent.categoryId });
+
     const suggestions = await prisma.talentProfile.findMany({
       where: {
-        categoryId: talent.categoryId,
-        id: { not: id }
+        AND: [
+          { userId: { not: profileId } },
+          { OR: orConditions }
+        ]
       },
-      take: 4,
+      take: 6,
       include: {
         user: { select: { name: true } },
         category: { select: { name: true } },
-        subcategory: { select: { name: true } }
+        subcategory: { select: { name: true } },
+        portfolio: true
       }
     });
 
     const transformedSuggestions = suggestions.map(s => ({
-      id: s.id,
+      id: s.userId,
       name: s.user.name || 'Unknown',
-      role: s.roleDescription || '',
+      role: s.performerTitle || '',
+      categoryId: s.categoryId || null,
+      subcategoryId: s.subcategoryId || null,
       category: s.category?.name || '',
       subcategory: s.subcategory?.name || '',
       skills: s.skills || [],
       avatarUrl: s.avatarUrl || undefined,
       location: s.location || '',
-      experience: parseInt(s.experience || '0') || 0,
-      rating: s.rating || 0,
+      experienceLevel: parseInt(s.experienceLevel || '0') || 0,
       languages: [],
       bio: s.bio || '',
       gender: (s.gender as any) || 'other',
@@ -169,7 +143,7 @@ export async function GET(
       eyeColor: s.eyeColor || '',
       hairColor: s.hairColor || '',
       socialMedia: [],
-      portfolio: [],
+      portfolio: (s.portfolio || []).map((p: any) => ({ id: p.id, title: p.title, mediaUrl: p.mediaUrl, type: p.type.toLowerCase(), thumbnail: p.thumbnail })),
       reviews: [],
       isBeginner: s.isBeginner || false,
       viewCount: s.viewCount || 0,

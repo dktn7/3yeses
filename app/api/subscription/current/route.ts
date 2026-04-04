@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const decoded = AuthService.verifyJWT(accessToken);
+    const decoded = await AuthService.verifyJWT(accessToken);
     if (!decoded) {
       return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
     }
@@ -35,11 +35,11 @@ export async function GET(req: NextRequest) {
     });
 
     if (!subscription) {
-      // Return FREE plan as default
+      // Return no active subscription
       return NextResponse.json({
-        plan: 'FREE',
-        status: 'ACTIVE',
-        features: ['Basic profile', 'Limited portfolio (5 items)', 'Standard search visibility'],
+        plan: null,
+        status: 'NONE',
+        features: ['Basic profile', 'Limited portfolio (3 items)', 'Standard search visibility'],
       });
     }
 

@@ -29,17 +29,17 @@ export async function POST(request: NextRequest) {
       include: {
         talentProfile: {
           select: {
-            id: true,
-            roleDescription: true,
+            userId: true,
+            performerTitle: true,
           },
         },
       },
     });
 
     if (!user) {
-      // Don't reveal whether email exists
+      // Don't reveal whether email exists - but provide specific error
       return NextResponse.json(
-        { error: 'Invalid email or password' },
+        { error: 'Invalid email address' },
         { status: 401 }
       );
     }
@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
 
     if (!isPasswordValid) {
       return NextResponse.json(
-        { error: 'Invalid email or password' },
+        { error: 'Invalid password' },
         { status: 401 }
       );
     }
@@ -79,14 +79,14 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate tokens
-    const accessToken = AuthService.generateJWT({
+    const accessToken = await AuthService.generateJWT({
       userId: user.id,
       email: user.email,
       role: user.role,
       name: user.name,
     });
 
-    const refreshToken = AuthService.generateRefreshToken({
+    const refreshToken = await AuthService.generateRefreshToken({
       userId: user.id,
     });
 
@@ -120,8 +120,8 @@ export async function POST(request: NextRequest) {
         emailVerified: !!user.emailVerified,
         talentProfile: user.talentProfile
           ? {
-              id: user.talentProfile.id,
-              roleDescription: user.talentProfile.roleDescription,
+              userId: user.talentProfile.userId,
+              performerTitle: user.talentProfile.performerTitle,
             }
           : null,
       },

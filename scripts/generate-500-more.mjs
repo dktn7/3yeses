@@ -130,7 +130,7 @@ async function main() {
   console.log('🚀 Starting generation of 500 additional profiles...');
 
   // 1. Fetch all categories and subcategories
-  const categories = await prisma.category.findMany({
+  const categories = await prisma.talentCategory.findMany({
     include: { 
       subcategories: {
         include: {
@@ -212,7 +212,7 @@ async function main() {
     for (let j = 1; j <= numImages; j++) {
       portfolioItems.push({
         title: `Portfolio Image ${j}`,
-        url: `https://picsum.photos/seed/${i}${j}/800/600`,
+        mediaUrl: `https://picsum.photos/seed/${i}${j}/800/600`,
         type: 'IMAGE',
         thumbnail: `https://picsum.photos/seed/${i}${j}/800/600`,
         description: 'A highlight from my recent work.'
@@ -223,7 +223,7 @@ async function main() {
     if (categoryMedia.videos.length > 0) {
       portfolioItems.push({
         title: 'Featured Video',
-        url: videoUrl,
+        mediaUrl: videoUrl,
         type: 'VIDEO',
         thumbnail: `https://img.youtube.com/vi/${videoUrl.split('v=')[1]}/0.jpg`,
         description: 'My featured performance/reel.'
@@ -235,7 +235,7 @@ async function main() {
       const audioUrl = getRandomItem(categoryMedia.audio);
       portfolioItems.push({
         title: 'Audio Demo',
-        url: audioUrl,
+        mediaUrl: audioUrl,
         type: 'AUDIO',
         description: 'Listen to my demo reel.'
       });
@@ -258,11 +258,11 @@ async function main() {
         userId: user.id,
         categoryId: targetSub.categoryId,
         subcategoryId: targetSub.id,
-        roleDescription: targetSub.name,
+        performerTitle: targetSub.name,
         bio: `I am a passionate ${targetSub.name} professional based in ${location}. I specialize in ${targetSub.categoryName} and have been working in the industry for several years.`,
         location: location,
-        experience: `${getRandomInt(1, 20)} years`,
-        rating: parseFloat((Math.random() * 2 + 3).toFixed(1)),
+        experienceLevel: `${getRandomInt(1, 20)} years`,
+        // rating removed per platform decision
         viewCount: getRandomInt(10, 5000),
         likeCount: getRandomInt(0, 500),
         isBeginner: Math.random() > 0.8,
@@ -284,7 +284,7 @@ async function main() {
         // Media
         avatarUrl: `https://i.pravatar.cc/400?u=${user.id}`,
         videoUrl: videoUrl,
-        portfolioImages: portfolioItems.filter(p => p.type === 'IMAGE').map(p => p.url),
+        portfolioImages: portfolioItems.filter(p => p.type === 'IMAGE').map(p => p.mediaUrl),
         videoUrls: [videoUrl],
         
         // Create related records

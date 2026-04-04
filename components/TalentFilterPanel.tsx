@@ -88,7 +88,7 @@ export default function TalentFilterPanel({
   }, [filters]);
 
   return (
-    <div className={`bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg animate-in fade-in slide-in-from-top-2 duration-200 ${compact ? 'p-3' : 'p-4'}`}>
+    <div className={`bg-white dark:bg-slate-900 rounded-xl ring-1 ring-slate-900/8 dark:ring-white/[0.08] shadow-lg animate-in fade-in slide-in-from-top-2 duration-200 ${compact ? 'p-3' : 'p-4'}`}>
       {/* Header with Close */}
       {showHeader && (
         <div className="flex items-center justify-between mb-4">
@@ -96,14 +96,14 @@ export default function TalentFilterPanel({
             <SlidersHorizontal className="w-4 h-4" />
             Filter Talents
             {activeFilterCount > 0 && (
-              <span className="px-1.5 py-0.5 bg-blue-600 dark:bg-red-500 text-white text-xs rounded-full">{activeFilterCount}</span>
+              <span className="px-1.5 py-0.5 bg-[var(--brand-primary)] text-white text-xs rounded-full">{activeFilterCount}</span>
             )}
           </h3>
           {onClose && (
             <button
               type="button"
               onClick={onClose}
-              className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+              className="p-1.5 hover:bg-gray-100 dark:hover:bg-white/[0.06] rounded-lg transition-colors"
             >
               <X className="w-4 h-4 text-gray-500" />
             </button>
@@ -112,14 +112,14 @@ export default function TalentFilterPanel({
       )}
       
       {/* Tab Navigation */}
-      <div className="flex gap-2 mb-4 border-b border-gray-200 dark:border-gray-700">
+      <div className="flex gap-2 mb-4 border-b border-slate-200 dark:border-white/[0.08]">
         <button
           type="button"
           onClick={() => setFilterTab('main')}
           className={`px-4 py-2 text-sm font-medium transition-colors border-b-2 ${
             filterTab === 'main'
-              ? 'border-blue-600 dark:border-red-500 text-blue-600 dark:text-red-500'
-              : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300'
+              ? 'border-[var(--brand-primary)] text-[var(--brand-primary)]'
+              : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
           }`}
         >
           Main Filters
@@ -129,8 +129,8 @@ export default function TalentFilterPanel({
           onClick={() => setFilterTab('more')}
           className={`px-4 py-2 text-sm font-medium transition-colors border-b-2 ${
             filterTab === 'more'
-              ? 'border-blue-600 dark:border-red-500 text-blue-600 dark:text-red-500'
-              : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300'
+              ? 'border-[var(--brand-primary)] text-[var(--brand-primary)]'
+              : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
           }`}
         >
           More Filters
@@ -157,8 +157,8 @@ export default function TalentFilterPanel({
                     }}
                     className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all capitalize ${
                       filters.gender?.includes(g)
-                        ? 'bg-blue-600 text-white shadow-sm'
-                        : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                        ? 'bg-[var(--brand-primary)] text-white shadow-sm'
+                        : 'bg-gray-100 dark:bg-white/[0.06] text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-white/[0.10]'
                     }`}
                   >
                     {g}
@@ -182,8 +182,8 @@ export default function TalentFilterPanel({
                     }}
                     className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all capitalize ${
                       filters.bodyType?.includes(b)
-                        ? 'bg-blue-600 text-white shadow-sm'
-                        : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                        ? 'bg-[var(--brand-primary)] text-white shadow-sm'
+                        : 'bg-gray-100 dark:bg-white/[0.06] text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-white/[0.10]'
                     }`}
                   >
                     {b}
@@ -216,7 +216,7 @@ export default function TalentFilterPanel({
                 />
                 <button
                   type="button"
-                  className="px-2 py-1.5 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-sm flex-shrink-0"
+                  className="px-2 py-1.5 rounded-lg bg-gray-100 dark:bg-white/[0.06] hover:bg-gray-200 dark:hover:bg-white/[0.10] text-sm flex-shrink-0"
                   title="Use my location"
                   onClick={async () => {
                     if (navigator.geolocation) {
@@ -315,7 +315,7 @@ export default function TalentFilterPanel({
             <div className="flex items-center justify-between mb-3">
               <label className="text-xs font-semibold text-gray-600 dark:text-gray-400">Age</label>
               {(filters.ageRange?.min !== 5 || filters.ageRange?.max !== 80) && (
-                <button type="button" onClick={() => { setFilters(prev => ({ ...prev, ageRange: { min: 5, max: 80 } })); setAgePreset(null); }} className="text-xs text-blue-600 dark:text-red-400">Reset</button>
+                <button type="button" onClick={() => { setFilters(prev => ({ ...prev, ageRange: { min: 5, max: 80 } })); setAgePreset(null); }} className="text-xs text-[var(--brand-primary)]">Reset</button>
               )}
             </div>
             <div className="mb-3">
@@ -325,8 +325,7 @@ export default function TalentFilterPanel({
                 max="80"
                 value={filters.ageRange?.min || 25}
                 onChange={(e) => setFilters(prev => ({ ...prev, ageRange: { min: parseInt(e.target.value) || 25, max: parseInt(e.target.value) || 25 } }))}
-                className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white text-center text-base mb-2"
-                placeholder="Enter specific age..."
+                className="w-full px-3 py-2 rounded-lg ring-1 ring-slate-900/8 dark:ring-white/[0.08] bg-white dark:bg-slate-900/80 text-gray-900 dark:text-white text-center text-base mb-2"
               />
               <div className="text-xs text-gray-400">Looking for talent aged {filters.ageRange?.min || 25}</div>
             </div>
@@ -344,7 +343,7 @@ export default function TalentFilterPanel({
                   type="button"
                   onClick={() => { setFilters(prev => ({ ...prev, ageRange: { min: preset.min, max: preset.max } })); setAgePreset(preset.key); }}
                   className={`px-2 py-1 rounded text-xs font-medium transition-all ${
-                    agePreset === preset.key ? 'bg-blue-600 dark:bg-red-500 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200'
+                    agePreset === preset.key ? 'bg-[var(--brand-primary)] text-white' : 'bg-gray-100 dark:bg-white/[0.06] text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-white/[0.10]'
                   }`}
                 >
                   {preset.label}
@@ -354,12 +353,12 @@ export default function TalentFilterPanel({
             <div className="flex items-center gap-2">
               <input type="number" min="5" max="80" value={filters.ageRange?.min || 5}
                 onChange={(e) => { setFilters(prev => ({ ...prev, ageRange: { min: parseInt(e.target.value) || 5, max: prev.ageRange?.max || 80 } })); setAgePreset(null); }}
-                className="w-16 px-2 py-1 rounded border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-center"
+                className="w-16 px-2 py-1 rounded ring-1 ring-slate-900/8 dark:ring-white/[0.08] bg-white dark:bg-slate-900/80 text-gray-900 dark:text-white text-sm text-center"
               />
               <span className="text-xs text-gray-400">to</span>
               <input type="number" min="5" max="80" value={filters.ageRange?.max || 80}
                 onChange={(e) => { setFilters(prev => ({ ...prev, ageRange: { min: prev.ageRange?.min || 5, max: parseInt(e.target.value) || 80 } })); setAgePreset(null); }}
-                className="w-16 px-2 py-1 rounded border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-center"
+                className="w-16 px-2 py-1 rounded ring-1 ring-slate-900/8 dark:ring-white/[0.08] bg-white dark:bg-slate-900/80 text-gray-900 dark:text-white text-sm text-center"
               />
               <span className="text-xs text-gray-400">years</span>
             </div>
@@ -370,7 +369,7 @@ export default function TalentFilterPanel({
             <div className="flex items-center justify-between mb-3">
               <label className="text-xs font-semibold text-gray-600 dark:text-gray-400">Height</label>
               {(filters.heightRange?.min !== 150 || filters.heightRange?.max !== 200) && (
-                <button type="button" onClick={() => { setFilters(prev => ({ ...prev, heightRange: { min: 150, max: 200 } })); setHeightPreset(null); }} className="text-xs text-blue-600 dark:text-red-400">Reset</button>
+                <button type="button" onClick={() => { setFilters(prev => ({ ...prev, heightRange: { min: 150, max: 200 } })); setHeightPreset(null); }} className="text-xs text-[var(--brand-primary)]">Reset</button>
               )}
             </div>
             <div className="mb-3">
@@ -380,8 +379,7 @@ export default function TalentFilterPanel({
                 max="250"
                 value={filters.heightRange?.min || 170}
                 onChange={(e) => setFilters(prev => ({ ...prev, heightRange: { min: parseInt(e.target.value) || 170, max: parseInt(e.target.value) || 170 } }))}
-                className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white text-center text-base mb-2"
-                placeholder="Enter specific height..."
+                className="w-full px-3 py-2 rounded-lg ring-1 ring-slate-900/8 dark:ring-white/[0.08] bg-white dark:bg-slate-900/80 text-gray-900 dark:text-white text-center text-base mb-2"
               />
               <div className="text-xs text-gray-400">Looking for talent {filters.heightRange?.min || 170} cm tall</div>
             </div>
@@ -398,7 +396,7 @@ export default function TalentFilterPanel({
                   type="button"
                   onClick={() => { setFilters(prev => ({ ...prev, heightRange: { min: preset.min, max: preset.max } })); setHeightPreset(preset.key); }}
                   className={`px-2 py-1 rounded text-xs font-medium transition-all ${
-                    heightPreset === preset.key ? 'bg-blue-600 dark:bg-red-500 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200'
+                    heightPreset === preset.key ? 'bg-[var(--brand-primary)] text-white' : 'bg-gray-100 dark:bg-white/[0.06] text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-white/[0.10]'
                   }`}
                 >
                   {preset.label}
@@ -408,12 +406,12 @@ export default function TalentFilterPanel({
             <div className="flex items-center gap-2">
               <input type="number" min="100" max="250" value={filters.heightRange?.min || 150}
                 onChange={(e) => { setFilters(prev => ({ ...prev, heightRange: { min: parseInt(e.target.value) || 150, max: prev.heightRange?.max || 200 } })); setHeightPreset(null); }}
-                className="w-16 px-2 py-1 rounded border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-center"
+                className="w-16 px-2 py-1 rounded ring-1 ring-slate-900/8 dark:ring-white/[0.08] bg-white dark:bg-slate-900/80 text-gray-900 dark:text-white text-sm text-center"
               />
               <span className="text-xs text-gray-400">to</span>
               <input type="number" min="100" max="250" value={filters.heightRange?.max || 200}
                 onChange={(e) => { setFilters(prev => ({ ...prev, heightRange: { min: prev.heightRange?.min || 150, max: parseInt(e.target.value) || 200 } })); setHeightPreset(null); }}
-                className="w-16 px-2 py-1 rounded border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-center"
+                className="w-16 px-2 py-1 rounded ring-1 ring-slate-900/8 dark:ring-white/[0.08] bg-white dark:bg-slate-900/80 text-gray-900 dark:text-white text-sm text-center"
               />
               <span className="text-xs text-gray-400">cm</span>
             </div>
@@ -435,7 +433,7 @@ export default function TalentFilterPanel({
                   type="button"
                   onClick={() => { setFilters(prev => ({ ...prev, experience: { min: preset.min, max: preset.max } })); setExperiencePreset(preset.key); }}
                   className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-                    experiencePreset === preset.key ? 'bg-blue-600 dark:bg-red-500 text-white shadow-md' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600'
+                    experiencePreset === preset.key ? 'bg-[var(--brand-primary)] text-white shadow-md' : 'bg-gray-100 dark:bg-white/[0.06] text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-white/[0.10]'
                   }`}
                 >
                   {preset.label}
@@ -467,8 +465,8 @@ export default function TalentFilterPanel({
                   }}
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                     filters.disabilities?.includes(option.value)
-                      ? 'bg-purple-600 text-white shadow-sm'
-                      : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                      ? 'bg-[var(--brand-primary)] text-white shadow-sm'
+                      : 'bg-gray-100 dark:bg-white/[0.06] text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-white/[0.10]'
                   }`}
                 >
                   {option.label}
@@ -480,7 +478,7 @@ export default function TalentFilterPanel({
       )}
 
       {/* Actions */}
-      <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-100 dark:border-gray-700">
+      <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-100 dark:border-white/[0.08]">
         <button
           type="button"
           onClick={clearFilters}
@@ -492,7 +490,7 @@ export default function TalentFilterPanel({
           <button
             type="button"
             onClick={onApply}
-            className="px-5 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-red-500 dark:hover:bg-red-600 text-white rounded-lg text-sm font-medium shadow-md"
+            className="px-5 py-2 bg-[var(--brand-primary)] hover:opacity-90 text-white rounded-lg text-sm font-medium shadow-md transition-opacity"
           >
             Apply Filters
           </button>

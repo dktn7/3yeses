@@ -1,34 +1,13 @@
-// File upload utility for handling media uploads
-// Supports profile photos, portfolio images, and videos
-
-import { writeFile, mkdir } from 'fs/promises';
-import { join } from 'path';
-import { existsSync } from 'fs';
+// File upload utility for handling media uploads via ImageKit
+// Client-side: files upload directly to ImageKit via @imagekit/next
+// Server-side: API routes receive ImageKit response data (url, fileId) and save to DB
 
 export interface UploadResult {
   success: boolean;
   url?: string;
+  fileId?: string;
   error?: string;
   filename?: string;
-}
-
-// Base upload directory (public/uploads)
-const UPLOAD_BASE_DIR = join(process.cwd(), 'public', 'uploads');
-
-// Upload subdirectories
-const UPLOAD_DIRS = {
-  profiles: join(UPLOAD_BASE_DIR, 'profiles'),
-  portfolio: join(UPLOAD_BASE_DIR, 'portfolio'),
-  videos: join(UPLOAD_BASE_DIR, 'videos'),
-};
-
-// Ensure upload directories exist
-export async function ensureUploadDirs() {
-  for (const dir of Object.values(UPLOAD_DIRS)) {
-    if (!existsSync(dir)) {
-      await mkdir(dir, { recursive: true });
-    }
-  }
 }
 
 // Generate unique filename
@@ -64,172 +43,23 @@ export function validateVideoType(mimeType: string): boolean {
   return validTypes.includes(mimeType);
 }
 
-// Upload profile photo
-export async function uploadProfilePhoto(
-  file: File,
-  userId?: string
-): Promise<UploadResult> {
-  try {
-    await ensureUploadDirs();
+// ImageKit folder paths for different upload types
+export const IMAGEKIT_FOLDERS = {
+  profiles: '/profiles',
+  portfolio: '/portfolio',
+  videos: '/videos',
+} as const;
 
-    // Validate file type
-    if (!validateImageType(file.type)) {
-      return {
-        success: false,
-        error: 'Invalid file type. Only JPEG, PNG, GIF, and WebP are allowed.',
-      };
-    }
-
-    // Validate file size (max 5MB)
-    if (!validateFileSize(file.size, 5)) {
-      return {
-        success: false,
-        error: 'File size exceeds 5MB limit.',
-      };
-    }
-
-    // Convert file to buffer
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-
-    // Generate filename and path
-    const filename = generateFilename(file.name, userId);
-    const filepath = join(UPLOAD_DIRS.profiles, filename);
-
-    // Write file
-    await writeFile(filepath, buffer);
-
-    // Return public URL
-    const url = `/uploads/profiles/${filename}`;
-    return {
-      success: true,
-      url,
-      filename,
-    };
-  } catch (error) {
-    console.error('Profile photo upload error:', error);
-    return {
-      success: false,
-      error: 'Failed to upload profile photo',
-    };
+// Determine ImageKit folder from upload type
+export function getImageKitFolder(type: 'profile' | 'portfolio' | 'video'): string {
+  switch (type) {
+    case 'profile':
+      return IMAGEKIT_FOLDERS.profiles;
+    case 'portfolio':
+      return IMAGEKIT_FOLDERS.portfolio;
+    case 'video':
+      return IMAGEKIT_FOLDERS.videos;
+    default:
+      return '/uploads';
   }
-}
-
-// Upload portfolio image
-export async function uploadPortfolioImage(
-  file: File,
-  userId?: string
-): Promise<UploadResult> {
-  try {
-    await ensureUploadDirs();
-
-    // Validate file type
-    if (!validateImageType(file.type)) {
-      return {
-        success: false,
-        error: 'Invalid file type. Only JPEG, PNG, GIF, and WebP are allowed.',
-      };
-    }
-
-    // Validate file size (max 5MB)
-    if (!validateFileSize(file.size, 5)) {
-      return {
-        success: false,
-        error: 'File size exceeds 5MB limit.',
-      };
-    }
-
-    // Convert file to buffer
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-
-    // Generate filename and path
-    const filename = generateFilename(file.name, userId);
-    const filepath = join(UPLOAD_DIRS.portfolio, filename);
-
-    // Write file
-    await writeFile(filepath, buffer);
-
-    // Return public URL
-    const url = `/uploads/portfolio/${filename}`;
-    return {
-      success: true,
-      url,
-      filename,
-    };
-  } catch (error) {
-    console.error('Portfolio image upload error:', error);
-    return {
-      success: false,
-      error: 'Failed to upload portfolio image',
-    };
-  }
-}
-
-// Upload video
-export async function uploadVideo(
-  file: File,
-  userId?: string
-): Promise<UploadResult> {
-  try {
-    await ensureUploadDirs();
-
-    // Validate file type
-    if (!validateVideoType(file.type)) {
-      return {
-        success: false,
-        error: 'Invalid file type. Only MP4, MOV, AVI, WebM, and MKV are allowed.',
-      };
-    }
-
-    // Validate file size (max 100MB)
-    if (!validateFileSize(file.size, 100)) {
-      return {
-        success: false,
-        error: 'File size exceeds 100MB limit.',
-      };
-    }
-
-    // Convert file to buffer
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-
-    // Generate filename and path
-    const filename = generateFilename(file.name, userId);
-    const filepath = join(UPLOAD_DIRS.videos, filename);
-
-    // Write file
-    await writeFile(filepath, buffer);
-
-    // Return public URL
-    const url = `/uploads/videos/${filename}`;
-    return {
-      success: true,
-      url,
-      filename,
-    };
-  } catch (error) {
-    console.error('Video upload error:', error);
-    return {
-      success: false,
-      error: 'Failed to upload video',
-    };
-  }
-}
-
-// Upload multiple files
-export async function uploadMultipleFiles(
-  files: File[],
-  type: 'profile' | 'portfolio' | 'video',
-  userId?: string
-): Promise<UploadResult[]> {
-  const uploadFn =
-    type === 'profile'
-      ? uploadProfilePhoto
-      : type === 'portfolio'
-      ? uploadPortfolioImage
-      : uploadVideo;
-
-  const results = await Promise.all(files.map((file) => uploadFn(file, userId)));
-  return results;
 }

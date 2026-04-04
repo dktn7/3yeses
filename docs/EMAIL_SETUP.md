@@ -75,11 +75,11 @@ Or set `RESEND_API_KEY` to see actual sent emails in Resend dashboard.
 
 ### Step 1: Domain Verification (Optional but Recommended)
 
-To send emails from your own domain (e.g., `noreply@3yeses.com`):
+To send emails from your own domain (e.g., `noreply@3yeses.online`):
 
 1. Go to Resend Dashboard → Domains
 2. Click "Add Domain"
-3. Enter your domain: `3yeses.com`
+3. Enter your domain: `3yeses.online`
 4. Add the DNS records to your domain provider:
    - SPF record
    - DKIM record
@@ -91,8 +91,8 @@ To send emails from your own domain (e.g., `noreply@3yeses.com`):
 ```bash
 # Production .env
 RESEND_API_KEY="re_your_production_key"
-EMAIL_FROM="noreply@3yeses.com"  # Your verified domain
-NEXT_PUBLIC_APP_URL="https://3yeses.com"
+EMAIL_FROM="noreply@3yeses.online"  # Your verified domain
+NEXT_PUBLIC_APP_URL="https://3yeses.online"
 ```
 
 ### Step 3: Test Email Sending

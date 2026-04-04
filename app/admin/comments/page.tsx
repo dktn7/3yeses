@@ -1,6 +1,7 @@
-'use client';
+﻿'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
+import Image from 'next/image';
 import {
   MessageSquare,
   Filter,
@@ -13,6 +14,8 @@ import {
   Reply,
   Eye
 } from 'lucide-react';
+import { toast } from 'sonner';
+import { formatAdminDate } from '@/lib/admin/formatters';
 
 interface Comment {
   id: string;
@@ -45,12 +48,9 @@ export default function CommentsModeration() {
   const [filterStatus, setFilterStatus] = useState('all');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [stats, setStats] = useState({ total: 0, pending: 0, flagged: 0, approvedToday: 0 });
 
-  useEffect(() => {
-    fetchComments();
-  }, [filterStatus, page]);
-
-  const fetchComments = async () => {
+  const fetchComments = useCallback(async () => {
     setIsLoading(true);
     try {
       const response = await fetch(`/api/admin/comments?status=${filterStatus}&page=${page}`);
@@ -59,13 +59,18 @@ export default function CommentsModeration() {
       if (data.success) {
         setComments(data.comments);
         setTotalPages(data.pagination?.totalPages || 1);
+        if (data.stats) setStats(data.stats);
       }
     } catch (error) {
       console.error('Failed to fetch comments:', error);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [filterStatus, page]);
+
+  useEffect(() => {
+    fetchComments();
+  }, [fetchComments]);
 
   const updateCommentStatus = async (commentId: string, status: string) => {
     try {
@@ -84,18 +89,20 @@ export default function CommentsModeration() {
   };
 
   const deleteComment = async (commentId: string) => {
-    if (!confirm('Are you sure you want to delete this comment?')) return;
-
     try {
       const response = await fetch(`/api/admin/comments/${commentId}`, {
         method: 'DELETE',
       });
 
       if (response.ok) {
-        fetchComments(); // Refresh list
+        toast.success('Comment deleted successfully');
+        fetchComments();
+      } else {
+        toast.error('Failed to delete comment');
       }
     } catch (error) {
       console.error('Failed to delete comment:', error);
+      toast.error('Failed to delete comment');
     }
   };
 
@@ -124,7 +131,7 @@ export default function CommentsModeration() {
         );
       case 'REJECTED':
         return (
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700 dark:bg-gray-500/20 dark:text-gray-300">
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[var(--admin-bg)] text-[var(--admin-muted)] ">
             <XCircle className="h-3 w-3 mr-1" />
             Rejected
           </span>
@@ -139,22 +146,22 @@ export default function CommentsModeration() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+          <h1 className="text-3xl font-black text-[var(--admin-text)] tracking-tight">
             Comment Moderation
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-1">
+          <p className="text-[var(--admin-muted)] mt-1 font-medium">
             Moderate user comments on videos and profiles
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <Filter className="h-5 w-5 text-gray-400" />
+          <Filter className="h-5 w-5 text-[var(--admin-muted)]" />
           <select
             value={filterStatus}
             onChange={(e) => {
               setFilterStatus(e.target.value);
               setPage(1);
             }}
-            className="px-4 py-2 bg-white dark:bg-white/10 border border-gray-200 dark:border-white/20 rounded-lg text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-4 py-2.5 bg-[var(--admin-bg)] border border-[var(--admin-border)] rounded-lg text-sm font-bold text-[var(--admin-text)] focus:outline-none focus:ring-2 focus:ring-[var(--admin-primary)]/30 focus:border-[var(--admin-primary)] appearance-none cursor-pointer"
           >
             <option value="all">All Comments</option>
             <option value="pending">Pending</option>
@@ -168,50 +175,52 @@ export default function CommentsModeration() {
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {[
-          { title: 'Total Comments', value: '5,234', icon: MessageSquare, color: 'blue' },
-          { title: 'Pending Review', value: '23', icon: AlertTriangle, color: 'yellow' },
-          { title: 'Flagged', value: '5', icon: Flag, color: 'red' },
-          { title: 'Approved Today', value: '156', icon: CheckCircle, color: 'green' },
+          { title: 'Total Comments', value: stats.total.toLocaleString(), icon: MessageSquare, colorClass: 'text-blue-600 dark:text-blue-400' },
+          { title: 'Pending Review', value: stats.pending.toString(), icon: AlertTriangle, colorClass: 'text-yellow-600 dark:text-yellow-400' },
+          { title: 'Flagged', value: stats.flagged.toString(), icon: Flag, colorClass: 'text-red-600 dark:text-red-400' },
+          { title: 'Approved Today', value: stats.approvedToday.toString(), icon: CheckCircle, colorClass: 'text-green-600 dark:text-green-400' },
         ].map((stat, index) => {
           const Icon = stat.icon;
           return (
             <div
               key={index}
-              className="bg-white dark:bg-white/10 backdrop-blur-md rounded-xl p-6 border border-gray-200 dark:border-white/20"
+              className="bg-[var(--admin-surface)] backdrop-blur-md rounded-xl p-6 border border-[var(--admin-border)]"
             >
               <div className="flex items-center gap-3 mb-3">
-                <Icon className={`h-8 w-8 text-${stat.color}-600 dark:text-${stat.color}-400`} />
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
+                <Icon className={`h-8 w-8 ${stat.colorClass}`} />
+                <h3 className="text-2xl font-bold text-[var(--admin-text)]">
                   {stat.value}
                 </h3>
               </div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">{stat.title}</p>
+              <p className="text-sm text-[var(--admin-muted)]">{stat.title}</p>
             </div>
           );
         })}
       </div>
 
       {/* Comments List */}
-      <div className="bg-white dark:bg-white/10 backdrop-blur-md rounded-xl border border-gray-200 dark:border-white/20 overflow-hidden">
-        <div className="divide-y divide-gray-200 dark:divide-white/10">
+      <div className="bg-[var(--admin-surface)] backdrop-blur-md rounded-xl border border-[var(--admin-border)] overflow-hidden">
+        <div className="divide-y divide-[var(--admin-border)]">
           {isLoading ? (
             <div className="p-12 text-center">
               <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto"></div>
             </div>
           ) : comments.length === 0 ? (
-            <div className="p-12 text-center text-gray-500 dark:text-gray-400">
+            <div className="p-12 text-center text-[var(--admin-muted)]">
               No comments found
             </div>
           ) : (
             comments.map((comment) => (
-              <div key={comment.id} className="p-6 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+              <div key={comment.id} className="p-6 hover:bg-[var(--admin-bg)] dark:hover:bg-white/5 transition-colors">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
                     {comment.user.profilePicture ? (
-                      <img
+                      <Image
                         src={comment.user.profilePicture}
                         alt={comment.user.name}
-                        className="h-12 w-12 rounded-full object-cover"
+                        width={48}
+                        height={48}
+                        className="rounded-full object-cover"
                       />
                     ) : (
                       <div className="h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-500/20 flex items-center justify-center">
@@ -221,10 +230,10 @@ export default function CommentsModeration() {
                       </div>
                     )}
                     <div>
-                      <p className="font-medium text-gray-900 dark:text-white">
+                      <p className="font-medium text-[var(--admin-text)]">
                         {comment.user.name}
                       </p>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                      <p className="text-sm text-[var(--admin-muted)]">
                         {comment.portfolioItem
                           ? `Comment on "${comment.portfolioItem.title}" (${comment.portfolioItem.type})`
                           : comment.talentProfile
@@ -236,14 +245,14 @@ export default function CommentsModeration() {
                   {getStatusBadge(comment.status)}
                 </div>
 
-                <div className="bg-gray-50 dark:bg-white/5 rounded-lg p-4 mb-4">
-                  <p className="text-gray-700 dark:text-gray-300">
+                <div className="bg-[var(--admin-bg)] rounded-lg p-4 mb-4">
+                  <p className="text-[var(--admin-muted)]">
                     {comment.content}
                   </p>
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+                  <div className="flex items-center gap-4 text-sm text-[var(--admin-muted)]">
                     <span className="flex items-center gap-1">
                       <ThumbsUp className="h-4 w-4" />
                       {comment.likesCount} likes
@@ -254,7 +263,7 @@ export default function CommentsModeration() {
                         {comment._count.replies} replies
                       </span>
                     )}
-                    <span>{new Date(comment.createdAt).toLocaleString()}</span>
+                    <span>{formatAdminDate(comment.createdAt)}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     {comment.status !== 'APPROVED' && (
@@ -278,7 +287,7 @@ export default function CommentsModeration() {
                     {comment.status !== 'REJECTED' && (
                       <button
                         onClick={() => updateCommentStatus(comment.id, 'REJECTED')}
-                        className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 dark:bg-white/5 dark:hover:bg-white/10 text-gray-700 dark:text-gray-300 rounded-lg text-sm transition-colors"
+                        className="px-3 py-1.5 bg-[var(--admin-bg)] hover:bg-[var(--admin-surface)] text-[var(--admin-muted)] rounded-lg text-sm transition-colors"
                       >
                         <XCircle className="h-4 w-4 inline mr-1" />
                         Reject
@@ -286,7 +295,7 @@ export default function CommentsModeration() {
                     )}
                     <button
                       onClick={() => deleteComment(comment.id)}
-                      className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 dark:bg-white/5 dark:hover:bg-white/10 text-gray-700 dark:text-gray-300 rounded-lg text-sm transition-colors"
+                      className="px-3 py-1.5 bg-[var(--admin-bg)] hover:bg-[var(--admin-surface)] text-[var(--admin-muted)] rounded-lg text-sm transition-colors"
                     >
                       <Trash2 className="h-4 w-4 inline mr-1" />
                       Delete
@@ -300,22 +309,22 @@ export default function CommentsModeration() {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="bg-gray-50 dark:bg-white/5 px-6 py-4 border-t border-gray-200 dark:border-white/10">
+          <div className="bg-[var(--admin-bg)] px-6 py-4 border-t border-[var(--admin-border)]">
             <div className="flex items-center justify-between">
               <button
                 onClick={() => setPage(Math.max(1, page - 1))}
                 disabled={page === 1}
-                className="px-4 py-2 border border-gray-300 dark:border-white/20 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 py-2 border border-[var(--admin-border)] rounded-lg text-sm font-medium text-[var(--admin-muted)] hover:bg-[var(--admin-surface)] disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Previous
               </button>
-              <span className="text-sm text-gray-700 dark:text-gray-300">
+              <span className="text-sm text-[var(--admin-muted)]">
                 Page {page} of {totalPages}
               </span>
               <button
                 onClick={() => setPage(Math.min(totalPages, page + 1))}
                 disabled={page === totalPages}
-                className="px-4 py-2 border border-gray-300 dark:border-white/20 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 py-2 border border-[var(--admin-border)] rounded-lg text-sm font-medium text-[var(--admin-muted)] hover:bg-[var(--admin-surface)] disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Next
               </button>

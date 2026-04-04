@@ -1,0 +1,4 @@
+.container { display: flex; height: 100vh; }
+.main-view { flex: 3; padding: 20px; border-right: 1px solid #ddd; }
+.sidebar { flex: 1; padding: 20px; background-color: #f7f7f7; overflow-y: auto; }
+.agent-component { background: #fff; padding: 10px; border: 1px solid #ccc; }

@@ -4,7 +4,7 @@
 		{
 			"type": "shell",
 			"label": "Run Next.js dev server",
-			"command": "npx next dev",
+			"command": "npx next dev -p 3002",
 			"group": "build",
 			"isBackground": true,
 			"problemMatcher": []
@@ -12,9 +12,58 @@
 		{
 			"label": "Run Next.js dev server clean",
 			"type": "shell",
-			"command": "npx next dev",
+			"command": "npx next dev -p 3002",
 			"isBackground": true,
 			"group": "build"
+		},
+		{
+			"label": "Launch Agent (agentdev)",
+			"type": "shell",
+			"command": "npm run agentdev",
+			"group": "build",
+			"isBackground": true,
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated",
+				"group": "agent"
+			}
+		},
+		{
+			"label": "Start Agent Server (direct)",
+			"type": "shell",
+			"command": "node agent-runtime/agent-server/index.js",
+			"group": "build",
+			"isBackground": true,
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated",
+				"group": "agent"
+			}
+		},
+		{
+			"label": "Start Agent Server (watch)",
+			"type": "shell",
+			"command": "npx nodemon agent-runtime/agent-server/index.js",
+			"group": "build",
+			"isBackground": true,
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated",
+				"group": "agent"
+			}
+		},
+		{
+			"label": "Start Next.js + Agent Server",
+			"dependsOn": [
+				"Run Next.js dev server",
+				"Start Agent Server (direct)"
+			],
+			"dependsOrder": "parallel",
+			"group": "build",
+			"problemMatcher": []
 		}
 	]
 }

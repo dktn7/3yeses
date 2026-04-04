@@ -6,8 +6,8 @@ import IntlProvider from '../../components/IntlProvider';
 import MainLayout from '../../components/MainLayout';
 
 
-export default async function LocaleLayout({children, params}: {children: React.ReactNode, params: {locale: string}}) {
-  const { locale } = params;
+export default async function LocaleLayout({children, params}: {children: React.ReactNode, params: Promise<{locale: string}>}) {
+  const { locale } = await params;
 
   let messages;
   try {

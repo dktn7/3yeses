@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
         role: true,
         talentProfile: {
           select: {
-            id: true,
+            userId: true,
           }
         }
       }
@@ -30,7 +30,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ activities: [] });
     }
 
-    const talentProfileId = user.talentProfile.id;
+    const talentProfileId = (user.talentProfile as any).userId ?? user.talentProfile.userId;
     const activities: Array<{
       type: 'view' | 'comment' | 'like';
       text: string;
@@ -95,7 +95,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Get recent likes (last 10)
-    const recentLikes = await prisma.like.findMany({
+    const recentLikes = await prisma.profileLike.findMany({
       where: { talentProfileId },
       include: {
         user: {

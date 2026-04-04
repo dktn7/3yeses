@@ -123,8 +123,8 @@ const ActiveFilters: React.FC<ActiveFiltersProps> = ({
     }
 
     // Disabilities
-    if (filters.disabilities?.length) {
-      filters.disabilities.forEach((disability) => {
+    if ((filters as any).disabilities?.length) {
+      (filters as any).disabilities.forEach((disability: any) => {
         activeFilters.push({
           type: 'disabilities',
           value: disability,

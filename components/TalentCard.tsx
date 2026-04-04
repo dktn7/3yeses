@@ -11,7 +11,7 @@ export default function TalentCard({ talent }: { talent: Talent }) {
     
     return (
         <Link
-            href={`/talent/${talent.id}`}
+            href={`/talent/${(talent as any).userId ?? talent.id}`}
             className="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 block"
         >
             <div className="p-6">
@@ -52,15 +52,11 @@ export default function TalentCard({ talent }: { talent: Talent }) {
                 {/* Stats */}
                 <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
                     <div className="text-center">
-                        <div className="font-bold text-gray-900 dark:text-white">{talent.rating?.toFixed(1) || '4.9'}</div>
-                        <div>Rating</div>
-                    </div>
-                    <div className="text-center">
                         <div className="font-bold">{talent.likeCount || 0}</div>
                         <div>Likes</div>
                     </div>
                     <div className="text-center">
-                        <div className="font-bold">{talent.experience || 5}yrs</div>
+                        <div className="font-bold">{talent.experienceLevel || 5}yrs</div>
                         <div>Experience</div>
                     </div>
                 </div>

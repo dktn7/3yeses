@@ -52,7 +52,7 @@ export async function GET(req: NextRequest) {
             languages: {
               select: { id: true }
             },
-            experience: true,
+            experienceLevel: true,
             portfolioImages: true,
             videoUrls: true,
             portfolio: {

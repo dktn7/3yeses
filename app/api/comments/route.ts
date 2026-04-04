@@ -38,12 +38,16 @@ export async function GET(request: NextRequest) {
         where,
         skip,
         take: limit,
-        orderBy: { createdAt: 'desc' },
+        orderBy: [{ isPinned: 'desc' }, { createdAt: 'desc' }],
         select: {
           id: true,
           content: true,
           likesCount: true,
+          isPinned: true,
+          pinnedAt: true,
           createdAt: true,
+          updatedAt: true,
+          userId: true,
           user: {
             select: {
               id: true,
@@ -65,9 +69,36 @@ export async function GET(request: NextRequest) {
       prisma.comment.count({ where }),
     ]);
 
+    // Check if current user has liked any of these comments
+    let likedCommentIds = new Set<string>();
+    const accessToken = request.cookies.get('accessToken')?.value;
+    if (accessToken) {
+      try {
+        const decoded = await AuthService.verifyJWT(accessToken);
+        if (decoded) {
+          const commentIds = comments.map((c: any) => c.id);
+          const likes = await prisma.commentLike.findMany({
+            where: {
+              userId: decoded.userId,
+              commentId: { in: commentIds },
+            },
+            select: { commentId: true },
+          });
+          likedCommentIds = new Set(likes.map((l: any) => l.commentId));
+        }
+      } catch {
+        // Ignore auth errors — treat as anonymous
+      }
+    }
+
+    const commentsWithLiked = comments.map((c: any) => ({
+      ...c,
+      isLiked: likedCommentIds.has(c.id),
+    }));
+
     return NextResponse.json({
       success: true,
-      comments,
+      comments: commentsWithLiked,
       pagination: {
         page,
         limit,
@@ -96,7 +127,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const decoded = AuthService.verifyJWT(accessToken);
+    const decoded = await AuthService.verifyJWT(accessToken);
     if (!decoded) {
       return NextResponse.json(
         { error: 'Invalid token' },
@@ -145,6 +176,49 @@ export async function POST(request: NextRequest) {
         },
       },
     });
+
+    // Send PROFILE_COMMENT notification to the media/profile owner
+    try {
+      let ownerId: string | null = null;
+
+      if (portfolioItemId) {
+        const item = await prisma.portfolioItem.findUnique({
+          where: { id: portfolioItemId },
+          select: { talentProfileId: true },
+        });
+        ownerId = item?.talentProfileId ?? null;
+      } else if (talentProfileId) {
+        ownerId = talentProfileId;
+      }
+
+      // Don't notify if commenter is the content owner
+      if (ownerId && ownerId !== decoded.userId) {
+        const actor = await prisma.user.findUnique({
+          where: { id: decoded.userId },
+          select: { name: true },
+        });
+        const actorName = actor?.name || 'Someone';
+        const truncated = content.trim().length > 60
+          ? content.trim().slice(0, 60) + '…'
+          : content.trim();
+
+        await prisma.talentNotification.create({
+          data: {
+            talentProfileId: ownerId,
+            type: 'PROFILE_COMMENT',
+            title: `${actorName} commented`,
+            message: truncated,
+            metadata: {
+              actorId: decoded.userId,
+              commentId: comment.id,
+              portfolioItemId: portfolioItemId || null,
+            },
+          } as any,
+        });
+      }
+    } catch (nerr) {
+      console.error('Failed to create comment notification:', nerr);
+    }
 
     return NextResponse.json({
       success: true,
