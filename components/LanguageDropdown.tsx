@@ -94,7 +94,7 @@ export default function LanguageDropdown() {
       </button>
 
       {isOpen && (
-        <div className="absolute top-full right-0 mt-2 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg p-2">
+        <div className="absolute top-full right-0 mt-2 w-48 bg-light-surface dark:bg-dark-surface border border-gray-200 dark:border-gray-700 rounded-md shadow-lg p-2">
           <div className="grid grid-cols-1 gap-2">
             {locales.map((locale) => (
               <button

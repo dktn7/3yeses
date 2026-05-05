@@ -1,0 +1,39 @@
+{
+  "general": {
+    "platformName": "3YESES",
+    "supportEmail": "support@3yeses.online",
+    "defaultLanguage": "en",
+    "timezone": "Europe/London"
+  },
+  "security": {
+    "requireEmailVerification": true,
+    "twoFactorAuth": false,
+    "sessionTimeout": 60
+  },
+  "email": {
+    "smtpHost": "",
+    "smtpPort": 587,
+    "encryption": "tls",
+    "fromEmail": "noreply@3yeses.online"
+  },
+  "payments": {
+    "gateway": "stripe",
+    "commission": 15,
+    "currency": "GBP"
+  },
+  "users": {
+    "maxPortfolioItems": 50,
+    "requireApproval": false,
+    "allowSelfDelete": true
+  },
+  "notifications": {
+    "emailOnNewUser": true,
+    "emailOnReport": true,
+    "emailOnPayment": true
+  },
+  "accessibility": {
+    "fontSize": 18,
+    "highContrast": false,
+    "invertColors": false
+  }
+}

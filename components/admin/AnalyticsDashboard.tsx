@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { format } from "date-fns/format";
 import {
   LineChart,
@@ -21,11 +21,7 @@ export function AnalyticsDashboard() {
   const [loading, setLoading] = useState(true);
   const [period, setPeriod] = useState("30d");
 
-  useEffect(() => {
-    fetchAnalytics();
-  }, [period]);
-
-  async function fetchAnalytics() {
+  const fetchAnalytics = useCallback(async () => {
     try {
       setLoading(true);
       const res = await fetch(`/api/admin/growth/analytics?period=${period}`);
@@ -36,7 +32,11 @@ export function AnalyticsDashboard() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [period]);
+
+  useEffect(() => {
+    fetchAnalytics();
+  }, [fetchAnalytics]);
 
   if (loading) return <div className="p-8 text-center">Loading analytics...</div>;
   if (!data) return <div className="p-8 text-center text-red-500">Failed to load data</div>;
@@ -48,7 +48,7 @@ export function AnalyticsDashboard() {
         <select
           value={period}
           onChange={(e) => setPeriod(e.target.value)}
-          className="border rounded p-2 bg-white dark:bg-gray-800"
+          className="border rounded p-2 bg-light-surface dark:bg-dark-surface"
         >
           <option value="7d">Last 7 Days</option>
           <option value="30d">Last 30 Days</option>
@@ -66,7 +66,7 @@ export function AnalyticsDashboard() {
 
       {/* Charts Row 1 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow border dark:border-gray-700">
+        <div className="bg-light-surface dark:bg-dark-surface p-6 rounded-lg shadow border dark:border-gray-700">
           <h3 className="text-lg font-bold mb-4">User Growth</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
@@ -87,7 +87,7 @@ export function AnalyticsDashboard() {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow border dark:border-gray-700">
+        <div className="bg-light-surface dark:bg-dark-surface p-6 rounded-lg shadow border dark:border-gray-700">
           <h3 className="text-lg font-bold mb-4">Subscriptions by Plan</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
@@ -106,7 +106,7 @@ export function AnalyticsDashboard() {
 
       {/* Tables Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow border dark:border-gray-700">
+        <div className="bg-light-surface dark:bg-dark-surface p-6 rounded-lg shadow border dark:border-gray-700">
           <h3 className="text-lg font-bold mb-4">Top Talents (by Views)</h3>
           <table className="w-full text-sm">
             <thead>
@@ -126,7 +126,7 @@ export function AnalyticsDashboard() {
           </table>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow border dark:border-gray-700">
+        <div className="bg-light-surface dark:bg-dark-surface p-6 rounded-lg shadow border dark:border-gray-700">
           <h3 className="text-lg font-bold mb-4">Recent Activity</h3>
           <div className="space-y-3">
             {data.recentActivity.map((log: any) => (
@@ -150,7 +150,7 @@ export function AnalyticsDashboard() {
 
 function StatCard({ title, value, subtitle }: { title: string, value: string | number, subtitle?: string }) {
   return (
-    <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow border dark:border-gray-700">
+    <div className="bg-light-surface dark:bg-dark-surface p-6 rounded-lg shadow border dark:border-gray-700">
       <h4 className="text-gray-500 text-sm font-medium uppercase">{title}</h4>
       <div className="mt-2 text-3xl font-bold">{value}</div>
       {subtitle && <div className="mt-1 text-xs text-gray-400">{subtitle}</div>}

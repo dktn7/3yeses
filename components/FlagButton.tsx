@@ -3,6 +3,8 @@
 import React, { useState } from 'react';
 import { Flag, AlertCircle, X } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useAuthRequired } from '@/hooks/useAuthRequired';
+import AuthRequiredModal from '@/components/AuthRequiredModal';
 
 interface FlagButtonProps {
   mediaId: string;
@@ -26,6 +28,7 @@ const REPORT_CATEGORIES: { value: ReportCategory; label: string; description: st
 
 export default function FlagButton({ mediaId, contentType = 'VIDEO', talentName, onReportSubmitted }: FlagButtonProps) {
   const { user } = useAuth();
+  const { showAuthModal, openAuthModal, closeAuthModal } = useAuthRequired();
   const [showModal, setShowModal] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<ReportCategory | null>(null);
   const [description, setDescription] = useState('');
@@ -35,9 +38,7 @@ export default function FlagButton({ mediaId, contentType = 'VIDEO', talentName,
 
   const handleFlagClick = () => {
     if (!user) {
-      setErrorMessage('Please log in to report content');
-      setSubmitStatus('error');
-      setTimeout(() => setSubmitStatus('idle'), 3000);
+      openAuthModal();
       return;
     }
     setShowModal(true);
@@ -119,7 +120,7 @@ export default function FlagButton({ mediaId, contentType = 'VIDEO', talentName,
       {/* Report Modal */}
       {showModal && (
         <div className="fixed inset-0 z-[150] bg-black/50 flex items-center justify-center p-4 pt-20">
-          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-2xl max-w-md w-full animate-in fade-in zoom-in-95 duration-200">
+          <div className="bg-light-surface dark:bg-dark-surface rounded-xl shadow-2xl max-w-md w-full animate-in fade-in zoom-in-95 duration-200">
             {/* Header */}
             <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-800">
               <div className="flex items-center gap-2">
@@ -202,6 +203,14 @@ export default function FlagButton({ mediaId, contentType = 'VIDEO', talentName,
           </div>
         </div>
       )}
+
+      <AuthRequiredModal
+        isOpen={showAuthModal}
+        onClose={closeAuthModal}
+        title="Sign in to report"
+        message="You need an account to report content. Continue to sign in or create an account."
+        action="report content"
+      />
     </>
   );
 }

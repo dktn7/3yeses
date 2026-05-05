@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 import { toast } from 'sonner';
 import Link from 'next/link';
 import { formatAdminDate } from '@/lib/admin/formatters';
@@ -158,7 +159,7 @@ export default function CMSPage() {
     switch (type) {
       case 'IMAGE': return <ImageIcon className="w-8 h-8 text-blue-500" />;
       case 'VIDEO': return <Video className="w-8 h-8 text-red-500" />;
-      case 'DOCUMENT': return <FileText className="w-8 h-8 text-orange-500" />;
+      case 'DOCUMENT': return <FileText className="w-8 h-8 text-red-500" />;
       default: return <File className="w-8 h-8 text-[var(--admin-muted)]" />;
     }
   };
@@ -339,7 +340,9 @@ export default function CMSPage() {
                 <div key={asset.id} className="group relative bg-[var(--admin-bg)] border border-[var(--admin-border)] rounded-lg p-3 hover:shadow-md hover:border-[var(--admin-primary)]/30 transition-all">
                   <div className="aspect-square bg-[var(--admin-surface)] rounded-lg mb-3 flex items-center justify-center overflow-hidden">
                     {asset.type === 'IMAGE' ? (
-                      <img src={asset.url} alt={asset.filename} className="w-full h-full object-cover" />
+                      <div className="w-full h-full relative">
+                        <Image src={asset.url} alt={asset.filename} fill className="object-cover" />
+                      </div>
                     ) : (
                       getIconForType(asset.type)
                     )}

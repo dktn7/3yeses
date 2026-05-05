@@ -16,6 +16,8 @@ import HeroSlideshow from './HeroSlideshow.tsx'
 import TalentFilterPanel, { TalentFilters, defaultFilters } from './TalentFilterPanel'
 import CategoryReel from './CategoryReel'
 import DropdownPanel from './DropdownPanel'
+import { useTranslations } from 'next-intl'
+import { getCategoryTranslationKey } from '@/lib/categoryTranslations'
 
 const CITY_SUGGESTIONS = [
   'London, UK', 'Paris, France', 'Berlin, Germany', 'New York, USA',
@@ -29,27 +31,35 @@ const CITY_SUGGESTIONS = [
 
 function HomeBgDecoration() {
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0" aria-hidden="true">
+    <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none" aria-hidden="true">
       <svg className="w-full h-full" preserveAspectRatio="none" viewBox="0 0 1440 900" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <linearGradient id="v2bg" x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0%" stopColor="var(--brand-from, #FFFFFF)" stopOpacity="0.16" />
+          <linearGradient id="homeAbBg" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stopColor="var(--brand-from)" stopOpacity="0.22" />
+            <stop offset="55%" stopColor="var(--brand-to)" stopOpacity="0.10" />
             <stop offset="100%" stopColor="transparent" />
           </linearGradient>
-          <linearGradient id="homeWaveOne" x1="0" x2="1" y1="0" y2="1">
-            <stop offset="0%" stopColor="var(--brand-from)" stopOpacity="0.28" />
-            <stop offset="100%" stopColor="var(--brand-to)" stopOpacity="0.10" />
+          <linearGradient id="homeAbW1" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0%" stopColor="var(--brand-from)" stopOpacity="0.30" />
+            <stop offset="100%" stopColor="var(--brand-to)" stopOpacity="0.14" />
           </linearGradient>
-          <linearGradient id="homeWaveTwo" x1="1" x2="0" y1="0" y2="1">
-            <stop offset="0%" stopColor="var(--brand-to)" stopOpacity="0.18" />
+          <linearGradient id="homeAbW2" x1="1" x2="0" y1="0" y2="1">
+            <stop offset="0%" stopColor="var(--brand-to)" stopOpacity="0.24" />
             <stop offset="100%" stopColor="var(--brand-from)" stopOpacity="0.08" />
           </linearGradient>
+          <radialGradient id="homeAbGlow" cx="50%" cy="0%" r="70%">
+            <stop offset="0%" stopColor="var(--brand-glow)" stopOpacity="0.28" />
+            <stop offset="100%" stopColor="transparent" />
+          </radialGradient>
         </defs>
-        <rect width="100%" height="100%" fill="url(#v2bg)" />
-        <path d="M0 520 C240 420 480 580 720 500 C960 420 1200 540 1440 480 L1440 900 L0 900 Z" fill="url(#homeWaveOne)" />
-        <path d="M0 600 C320 530 560 650 800 580 C1040 510 1280 620 1440 560 L1440 900 L0 900 Z" fill="url(#homeWaveTwo)" />
-        <path d="M0 700 C200 660 440 740 720 690 C1000 640 1200 720 1440 680 L1440 900 L0 900 Z" fill="var(--brand-from)" opacity="0.08" />
-        <path d="M0 80 C360 140 720 40 1080 100 C1260 130 1380 90 1440 110 L1440 0 L0 0 Z" fill="var(--brand-from)" opacity="0.10" />
+        <rect width="1440" height="900" fill="url(#homeAbBg)" />
+        <rect width="1440" height="900" fill="url(#homeAbGlow)" />
+        <path d="M0 520 C240 420 480 580 720 500 C960 420 1200 540 1440 480 L1440 900 L0 900 Z" fill="url(#homeAbW1)" opacity="0.36" />
+        <path d="M0 640 C320 570 560 690 800 620 C1040 550 1280 660 1440 600 L1440 900 L0 900 Z" fill="url(#homeAbW2)" opacity="0.28" />
+        <path d="M0 80 C360 140 720 40 1080 100 C1260 130 1380 90 1440 110 L1440 0 L0 0 Z" fill="var(--brand-from)" opacity="0.22" />
+        <circle cx="200" cy="150" r="200" fill="var(--brand-to)" opacity="0.14" />
+        <circle cx="1250" cy="700" r="260" fill="var(--brand-from)" opacity="0.12" />
+        <circle cx="720" cy="400" r="280" fill="var(--brand-glow)" opacity="0.06" />
       </svg>
     </div>
   )
@@ -57,6 +67,7 @@ function HomeBgDecoration() {
 
 export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: { t?: any; locale?: string }) {
   // State declarations
+  const tCategories = useTranslations('Categories')
 
   // Map subcategory to gender (memoized)
   const subcategoryGenderMap = useMemo(() => ({
@@ -139,6 +150,7 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
   const [hairColor, setHairColor] = useState<string>('')
   const [skills, setSkills] = useState<string>('')
   const [languages, setLanguages] = useState<string>('')
+  const [disabilities, setDisabilities] = useState<string[]>([])
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [isSubcategoryOpen, setIsSubcategoryOpen] = useState(false)
   const [showLocSuggestions, setShowLocSuggestions] = useState(false)
@@ -168,6 +180,7 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
     setHairColor(advancedFilters.hairColor?.join(', ') || '')
     setSkills(advancedFilters.skills?.join(', ') || '')
     setLanguages(advancedFilters.languages?.join(', ') || '')
+    setDisabilities(advancedFilters.disabilities || [])
     setLocation(advancedFilters.location || '')
   }, [advancedFilters])
 
@@ -183,6 +196,15 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
   const clearLanguages = useCallback(() => setLanguages(''), [setLanguages])
   const clearEyeColor = useCallback(() => setEyeColor(''), [setEyeColor])
   const clearHairColor = useCallback(() => setHairColor(''), [setHairColor])
+  const removeDisability = useCallback((value: string) => setDisabilities((prev) => prev.filter((item) => item !== value)), [setDisabilities])
+
+  const getTranslatedCategoryName = useCallback((category?: { id?: string; slug?: string; name?: string } | null) => {
+    if (!category?.name) return ''
+    const translationKey = getCategoryTranslationKey(category.id, category.slug, category.name)
+    if (!translationKey) return category.name
+    const messageKey = `names.${translationKey}`
+    return typeof tCategories.has === 'function' && tCategories.has(messageKey) ? tCategories(messageKey) : category.name
+  }, [tCategories])
 
   const clearAllFilters = useCallback(() => {
     setGender([])
@@ -198,7 +220,8 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
     setHairColor('')
     setSkills('')
     setLanguages('')
-  }, [setGender, setBodyType, setEthnicity, setMinAge, setMaxAge, setMinExp, setMaxExp, setMinHeight, setMaxHeight, setEyeColor, setHairColor, setSkills, setLanguages])
+    setDisabilities([])
+  }, [setGender, setBodyType, setEthnicity, setMinAge, setMaxAge, setMinExp, setMaxExp, setMinHeight, setMaxHeight, setEyeColor, setHairColor, setSkills, setLanguages, setDisabilities])
 
   // Auto-select gender if gender-specific subcategory is chosen
   useEffect(() => {
@@ -289,9 +312,10 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
     if (hairColor.trim()) setParamText('hairColor', hairColor.split(',').map((s) => s.trim()).filter(Boolean).join(','))
     if (skills.trim()) setParamText('skills', skills.split(',').map((s) => s.trim()).filter(Boolean).join(','))
     if (languages.trim()) setParamText('languages', languages.split(',').map((s) => s.trim()).filter(Boolean).join(','))
+    setParamCsv('disabilities', disabilities)
 
     return params
-  }, [searchTerm, selectedCategory, selectedSubcategory, location, gender, bodyType, ethnicity, minAge, maxAge, minExp, maxExp, minHeight, maxHeight, eyeColor, hairColor, skills, languages])
+  }, [searchTerm, selectedCategory, selectedSubcategory, location, gender, bodyType, ethnicity, minAge, maxAge, minExp, maxExp, minHeight, maxHeight, eyeColor, hairColor, skills, languages, disabilities])
 
   const handleSearch = useCallback((e: React.FormEvent) => {
     e.preventDefault()
@@ -300,13 +324,13 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
   }, [buildSearchParams, router, locale])
 
   const hasAnyFilter = useMemo(() => Boolean(
-    gender.length || bodyType.length || ethnicity || minAge !== '' || maxAge !== '' || minExp !== '' || maxExp !== '' || minHeight !== '' || maxHeight !== '' || eyeColor || hairColor || skills || languages
-  ), [gender.length, bodyType.length, ethnicity, minAge, maxAge, minExp, maxExp, minHeight, maxHeight, eyeColor, hairColor, skills, languages])
+    gender.length || bodyType.length || ethnicity || minAge !== '' || maxAge !== '' || minExp !== '' || maxExp !== '' || minHeight !== '' || maxHeight !== '' || eyeColor || hairColor || skills || languages || disabilities.length
+  ), [gender.length, bodyType.length, ethnicity, minAge, maxAge, minExp, maxExp, minHeight, maxHeight, eyeColor, hairColor, skills, languages, disabilities.length])
 
   const chips = useMemo(() => {
     const list: { label: string; onRemove: () => void; k: string }[] = []
     if (selectedCategory) {
-      const catName = realCategories.find(c => c.id === selectedCategory)?.name || selectedCategory
+      const catName = getTranslatedCategoryName(realCategories.find(c => c.id === selectedCategory)) || selectedCategory
       list.push({ label: catName, onRemove: () => { setSelectedCategory(''); setSelectedSubcategory('') }, k: 'cat' })
     }
     if (selectedSubcategory && selectedCatObj) {
@@ -317,15 +341,16 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
     gender.forEach(g => list.push({ label: g, onRemove: () => removeGender(g), k: `g-${g}` }))
     bodyType.forEach(b => list.push({ label: b, onRemove: () => removeBodyType(b), k: `bt-${b}` }))
     if (ethnicity) list.push({ label: ethnicity, onRemove: clearEthnicity, k: 'eth' })
-    if (minAge !== '' || maxAge !== '') list.push({ label: `Age: ${minAge || 0}-${maxAge || 100}`, onRemove: () => { setMinAge(''); setMaxAge('') }, k: 'age' })
-    if (minHeight !== '' || maxHeight !== '') list.push({ label: `Height: ${minHeight || 100}-${maxHeight || 220}`, onRemove: () => { setMinHeight(''); setMaxHeight('') }, k: 'height' })
-    if (minExp !== '' || maxExp !== '') list.push({ label: `Exp: ${minExp || 0}-${maxExp || 50}+`, onRemove: () => { setMinExp(''); setMaxExp('') }, k: 'exp' })
-    if (eyeColor) list.push({ label: `Eyes: ${eyeColor}`, onRemove: clearEyeColor, k: 'eyes' })
-    if (hairColor) list.push({ label: `Hair: ${hairColor}`, onRemove: clearHairColor, k: 'hair' })
-    if (skills) list.push({ label: `Skills: ${skills}`, onRemove: clearSkills, k: 'skills' })
-    if (languages) list.push({ label: `Lang: ${languages}`, onRemove: clearLanguages, k: 'lang' })
+    if (minAge !== '' || maxAge !== '') list.push({ label: t('chipAge', { min: minAge || 0, max: maxAge || 100 }), onRemove: () => { setMinAge(''); setMaxAge('') }, k: 'age' })
+    if (minHeight !== '' || maxHeight !== '') list.push({ label: t('chipHeight', { min: minHeight || 100, max: maxHeight || 220 }), onRemove: () => { setMinHeight(''); setMaxHeight('') }, k: 'height' })
+    if (minExp !== '' || maxExp !== '') list.push({ label: t('chipExp', { min: minExp || 0, max: maxExp || 50 }), onRemove: () => { setMinExp(''); setMaxExp('') }, k: 'exp' })
+    if (eyeColor) list.push({ label: t('chipEyes', { value: eyeColor }), onRemove: clearEyeColor, k: 'eyes' })
+    if (hairColor) list.push({ label: t('chipHair', { value: hairColor }), onRemove: clearHairColor, k: 'hair' })
+    if (skills) list.push({ label: t('chipSkills', { value: skills }), onRemove: clearSkills, k: 'skills' })
+    if (languages) list.push({ label: t('chipLang', { value: languages }), onRemove: clearLanguages, k: 'lang' })
+    disabilities.forEach((value) => list.push({ label: t('chipAccessibility', { value }), onRemove: () => removeDisability(value), k: `dis-${value}` }))
     return list
-  }, [selectedCategory, selectedSubcategory, location, gender, bodyType, ethnicity, minAge, maxAge, minHeight, maxHeight, minExp, maxExp, eyeColor, hairColor, skills, languages, realCategories, selectedCatObj, removeGender, removeBodyType, clearEthnicity, clearEyeColor, clearHairColor, clearSkills, clearLanguages])
+  }, [selectedCategory, selectedSubcategory, location, gender, bodyType, ethnicity, minAge, maxAge, minHeight, maxHeight, minExp, maxExp, eyeColor, hairColor, skills, languages, disabilities, realCategories, selectedCatObj, removeGender, removeBodyType, clearEthnicity, clearEyeColor, clearHairColor, clearSkills, clearLanguages, removeDisability, getTranslatedCategoryName, t])
 
   const tickFeatures = [
     {
@@ -346,7 +371,7 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
   ]
 
   return (
-    <div className="min-h-screen bg-[var(--landing-bg)] transition-colors duration-300 relative overflow-hidden">
+    <div className="min-h-screen landing-bg brand-true-red relative isolate overflow-hidden transition-colors duration-300">
       <main>
       {/* Background Elements */}
       <HomeBgDecoration />
@@ -358,19 +383,19 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
         <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 md:py-40">
           <div className="text-center mb-16">
             {/* Eyebrow tag */}
-            <span className="inline-flex items-center gap-2 rounded-full px-5 py-2 text-[10px] uppercase tracking-[0.22em] font-semibold text-[var(--brand-primary)] ring-1 ring-black/10 dark:ring-white/10 bg-white/72 dark:bg-white/[0.08] mb-10 shadow-sm backdrop-blur-md transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]">
-              <SwoopingTick className="w-4 h-4" />
+            <span className="marketing-pill inline-flex items-center gap-2.5 rounded-full px-5 py-2.5 text-[10px] uppercase tracking-[0.22em] font-semibold text-[var(--marketing-heading-blue)] dark:text-[var(--marketing-heading-blue-strong)] mb-10 shadow-sm backdrop-blur-md transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]">
+              <SwoopingTick className="w-[1.125rem] h-[1.125rem] shrink-0" />
               {t('forTalent.title')}
             </span>
 
-              <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold text-gray-900 dark:text-white mb-8 leading-[1.02] tracking-tighter">
-                3<span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-blue via-accent-blue to-indigo-500 dark:from-accent-red dark:via-primary-red dark:to-orange-500">YES</span>ES
+              <h1 className="mb-8 text-6xl font-bold leading-[1.02] tracking-tighter text-gray-900 dark:text-white dark:[text-shadow:0_6px_22px_rgba(0,0,0,0.36)] md:text-8xl lg:text-9xl">
+                3<span className="bg-gradient-to-r from-[#1e3a8a] via-[#1d4ed8] to-[#2563eb] bg-clip-text text-transparent dark:from-red-500 dark:via-red-500 dark:to-red-300">YES</span>ES
             </h1>
 
             {/* Dynamic Headline */}
             <DynamicHeadline />
 
-            <p className="text-lg md:text-xl text-gray-600 dark:text-gray-200 mb-14 max-w-2xl mx-auto leading-relaxed">
+            <p className="mx-auto mb-14 max-w-2xl text-lg leading-relaxed text-gray-600 dark:text-red-200 dark:[text-shadow:0_2px_14px_rgba(0,0,0,0.18)] md:text-xl">
               {t('tagline')}
             </p>
 
@@ -391,12 +416,12 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
                     className={`transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${hoveredTick === index ? 'scale-125 rotate-12' : ''}`}
                   />
                   {hoveredTick === index && (
-                    <div className="absolute bottom-20 left-1/2 -translate-x-1/2 rounded-2xl p-5 z-[70] w-64 animate-fadeIn ring-1 ring-black/5 dark:ring-white/10 bg-white dark:bg-slate-900 shadow-[0_16px_48px_rgba(0,0,0,0.12)] dark:shadow-[0_16px_48px_rgba(0,0,0,0.60)]">
+                    <div className="marketing-surface absolute bottom-20 left-1/2 -translate-x-1/2 rounded-2xl p-5 z-[70] w-64 animate-fadeIn ring-1 ring-black/5 shadow-[0_16px_48px_rgba(0,0,0,0.12)] dark:shadow-[0_16px_48px_rgba(0,0,0,0.60)]">
                       <div className="flex items-center gap-3 mb-2">
-                        <div className="text-[var(--brand-primary)]">{feature.icon}</div>
-                        <h4 className="font-semibold text-gray-900 dark:text-white text-sm tracking-tight">{feature.title}</h4>
+                        <div className="text-[var(--brand-primary)] dark:text-accent-red">{feature.icon}</div>
+                        <h4 className="font-semibold text-gray-900 dark:text-slate-50 text-sm tracking-tight">{feature.title}</h4>
                       </div>
-                      <p className="text-xs text-gray-500 dark:text-gray-300 leading-relaxed">{feature.description}</p>
+                      <p className="text-xs text-gray-500 dark:text-red-200 leading-relaxed">{feature.description}</p>
                     </div>
                   )}
                 </button>
@@ -407,13 +432,13 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
           {/* ─── Double-Bezel search container (outer shell → inner core) ─── */}
           <form onSubmit={handleSearch} className="max-w-4xl mx-auto">
             {/* Outer shell */}
-            <div className="rounded-[2.5rem] bg-white/58 dark:bg-white/[0.04] ring-1 ring-black/[0.06] dark:ring-white/[0.08] backdrop-blur-xl p-2 md:p-2.5 transition-shadow duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[0_24px_64px_rgba(0,0,0,0.06)] dark:hover:shadow-[0_24px_64px_rgba(0,0,0,0.3)]">
+            <div className="marketing-surface rounded-[2.5rem] p-2 ring-1 ring-[var(--marketing-surface-strong)] shadow-[0_20px_50px_rgba(0,0,0,0.12)] transition-shadow duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[0_24px_64px_rgba(0,0,0,0.18)] dark:hover:shadow-[0_24px_64px_rgba(0,0,0,0.45)] md:p-2.5">
               {/* Inner core */}
-              <div className="rounded-[calc(2.5rem-0.5rem)] bg-white dark:bg-slate-950 shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)] p-6 sm:p-8">
+              <div className="rounded-[calc(2.5rem-0.5rem)] bg-light-surface dark:bg-dark-surface p-6 shadow-[inset_0_1px_1px_rgba(148,163,184,0.16)] dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.06)] sm:p-8">
                 {/* Main search bar */}
-                <div className="flex items-center gap-2 bg-slate-50 dark:bg-slate-900/90 rounded-full ring-1 ring-slate-900/8 dark:ring-white/[0.08] p-1.5 mb-5 transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] focus-within:ring-2 focus-within:ring-[var(--brand-primary)]/30 focus-within:shadow-[0_0_0_4px_rgba(var(--brand-primary-rgb,37,99,235),0.06)]">
+                <div className="flex items-center gap-2 bg-light-surface dark:bg-dark-surface rounded-full ring-1 ring-slate-300/60 dark:ring-red-400/30 p-1.5 mb-5 transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] focus-within:ring-2 focus-within:ring-[var(--brand-primary)]/40 focus-within:shadow-[0_0_0_4px_rgba(37,99,235,0.12)] dark:focus-within:shadow-[0_0_0_4px_rgba(249,115,22,0.16)]">
                   <div className="flex-1 flex items-center gap-3 pl-4">
-                    <Search className="text-gray-400 h-5 w-5 shrink-0" />
+                    <Search className="text-gray-500 dark:text-gray-400 h-5 w-5 shrink-0" />
                     <input
                       type="text"
                       placeholder={t('searchPlaceholder')}
@@ -425,7 +450,7 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
                   {/* Button-in-button CTA */}
                   <button
                     type="submit"
-                    className="group relative flex items-center gap-2 bg-gradient-to-r from-primary-blue to-accent-blue dark:from-accent-blue dark:to-primary-blue text-white rounded-full pl-5 pr-1.5 py-2 font-semibold text-sm shadow-lg transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-xl active:scale-[0.97]"
+                    className="group relative flex items-center gap-2 rounded-full bg-gradient-to-r from-[var(--brand-primary)] to-[var(--brand-accent)] py-2 pl-5 pr-1.5 text-sm font-semibold text-white shadow-lg transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-xl active:scale-[0.97]"
                   >
                     <span>{t('searchButton')}</span>
                     <span className="flex items-center justify-center w-8 h-8 rounded-full bg-white/15 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-0.5 group-hover:-translate-y-px group-hover:scale-105">
@@ -442,13 +467,13 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
                       ref={categoryAnchorRef}
                       type="button"
                       onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                      className="w-full flex items-center justify-between px-4 py-2.5 rounded-full ring-1 ring-slate-900/8 dark:ring-white/[0.08] bg-slate-50 dark:bg-slate-900/90 text-gray-900 dark:text-white text-sm shadow-sm focus:ring-2 focus:ring-[var(--brand-primary)] focus:outline-none transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]"
+                      className="w-full flex items-center justify-between px-4 py-2.5 rounded-full ring-1 ring-slate-900/8 dark:ring-red-300/20 bg-slate-50 dark:bg-dark-surface/72 text-gray-900 dark:text-white text-sm shadow-sm focus:ring-2 focus:ring-[var(--brand-primary)] focus:outline-none transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]"
                       aria-expanded={isDropdownOpen}
                       aria-haspopup="listbox"
                     >
                       <span className={selectedCategory ? 'text-gray-900 dark:text-white font-medium' : 'text-gray-500 dark:text-gray-300'}>
                         {selectedCategory
-                          ? realCategories.find(cat => cat.id === selectedCategory)?.name || selectedCategory
+                          ? getTranslatedCategoryName(realCategories.find(cat => cat.id === selectedCategory)) || selectedCategory
                           : t('allCategories')}
                       </span>
                       <ChevronDown className={`h-4 w-4 text-gray-500 dark:text-gray-300 transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${isDropdownOpen ? 'rotate-180' : ''}`} />
@@ -459,7 +484,7 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
                           <button
                             type="button"
                             onClick={() => { setSelectedCategory(''); setSelectedSubcategory(''); setIsDropdownOpen(false) }}
-                            className={`w-full flex items-center justify-between gap-3 text-left px-4 py-3 rounded-xl text-sm transition-colors duration-200 ${selectedCategory === '' ? 'bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] dark:bg-[var(--brand-primary)]/16 dark:text-white font-semibold' : 'text-gray-700 dark:text-gray-100 hover:bg-slate-100 dark:hover:bg-white/[0.06]'}`}
+                            className={`w-full flex items-center justify-between gap-3 text-left px-4 py-3 rounded-xl text-sm transition-colors duration-200 ${selectedCategory === '' ? 'bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] dark:bg-[var(--brand-primary)]/16 dark:text-white font-semibold' : 'text-gray-700 dark:text-gray-100 hover-smart-bg'}`}
                           >
                             <span>{t('allCategories')}</span>
                             {selectedCategory === '' && <Check className="h-4 w-4" />}
@@ -469,9 +494,9 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
                               key={cat.id}
                               type="button"
                               onClick={() => { setSelectedCategory(cat.id); setSelectedSubcategory(''); setIsDropdownOpen(false) }}
-                              className={`w-full flex items-center justify-between gap-3 text-left px-4 py-3 rounded-xl text-sm transition-colors duration-200 ${selectedCategory === cat.id ? 'bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] dark:bg-[var(--brand-primary)]/16 dark:text-white font-semibold' : 'text-gray-700 dark:text-gray-100 hover:bg-slate-100 dark:hover:bg-white/[0.06]'}`}
+                              className={`w-full flex items-center justify-between gap-3 text-left px-4 py-3 rounded-xl text-sm transition-colors duration-200 ${selectedCategory === cat.id ? 'bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] dark:bg-[var(--brand-primary)]/16 dark:text-white font-semibold' : 'text-gray-700 dark:text-gray-100 hover-smart-bg'}`}
                             >
-                              <span>{cat.name}</span>
+                              <span>{getTranslatedCategoryName(cat) || cat.name}</span>
                               {selectedCategory === cat.id && <Check className="h-4 w-4" />}
                             </button>
                           ))}
@@ -484,14 +509,14 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
                           ref={subcategoryAnchorRef}
                           type="button"
                           onClick={() => setIsSubcategoryOpen((current) => !current)}
-                          className="w-full flex items-center justify-between px-4 py-2.5 rounded-full ring-1 ring-slate-900/8 dark:ring-white/[0.08] bg-slate-50 dark:bg-slate-900/90 text-gray-900 dark:text-white text-sm shadow-sm focus:ring-2 focus:ring-[var(--brand-primary)] focus:outline-none transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] mt-1"
+                          className="w-full flex items-center justify-between px-4 py-2.5 rounded-full ring-1 ring-slate-900/8 dark:ring-red-300/20 bg-slate-50 dark:bg-dark-surface/72 text-gray-900 dark:text-white text-sm shadow-sm focus:ring-2 focus:ring-[var(--brand-primary)] focus:outline-none transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] mt-1"
                           aria-expanded={isSubcategoryOpen}
                           aria-haspopup="listbox"
                         >
                           <span className={selectedSubcategory ? 'text-gray-900 dark:text-white font-medium' : 'text-gray-500 dark:text-gray-300'}>
                             {selectedSubcategory
                               ? selectedCatObj.subcategories.find((sub: any) => sub.id === selectedSubcategory)?.name || selectedSubcategory
-                              : `All ${selectedCatObj.name}`}
+                              : t('allCategory', { name: getTranslatedCategoryName(selectedCatObj) || selectedCatObj.name })}
                           </span>
                           <ChevronDown className={`h-4 w-4 text-gray-500 dark:text-gray-300 transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${isSubcategoryOpen ? 'rotate-180' : ''}`} />
                         </button>
@@ -500,16 +525,16 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
                             <div className="p-0">
                               <button
                                 type="button"
-                                className={`w-full flex items-center justify-between text-left px-4 py-3 rounded-xl text-sm transition-colors ${selectedSubcategory === '' ? 'bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] dark:bg-[var(--brand-primary)]/16 dark:text-white font-semibold' : 'text-gray-700 dark:text-gray-100 hover:bg-slate-100 dark:hover:bg-white/[0.06]'}`}
+                                className={`w-full flex items-center justify-between text-left px-4 py-3 rounded-xl text-sm transition-colors ${selectedSubcategory === '' ? 'bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] dark:bg-[var(--brand-primary)]/16 dark:text-white font-semibold' : 'text-gray-700 dark:text-gray-100 hover-smart-bg'}`}
                                 onClick={() => { setSelectedSubcategory(''); setIsSubcategoryOpen(false) }}
                               >
-                                <span>All {selectedCatObj.name}</span>
+                                <span>{t('allCategory', { name: getTranslatedCategoryName(selectedCatObj) || selectedCatObj.name })}</span>
                               </button>
                               {selectedCatObj.subcategories.map((sub: any) => (
                                 <button
                                   key={sub.id}
                                   type="button"
-                                  className={`w-full flex items-center justify-between text-left px-4 py-3 rounded-xl text-sm transition-colors ${selectedSubcategory === sub.id ? 'bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] dark:bg-[var(--brand-primary)]/16 dark:text-white font-semibold' : 'text-gray-700 dark:text-gray-100 hover:bg-slate-100 dark:hover:bg-white/[0.06]'}`}
+                                  className={`w-full flex items-center justify-between text-left px-4 py-3 rounded-xl text-sm transition-colors ${selectedSubcategory === sub.id ? 'bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] dark:bg-[var(--brand-primary)]/16 dark:text-white font-semibold' : 'text-gray-700 dark:text-gray-100 hover-smart-bg'}`}
                                   onClick={() => { setSelectedSubcategory(sub.id); setIsSubcategoryOpen(false) }}
                                 >
                                   <span>{sub.name}</span>
@@ -525,7 +550,7 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
 
                   {/* Location */}
                   <div className="relative location-container">
-                    <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 h-4 w-4 pointer-events-none z-10" />
+                    <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 h-4 w-4 pointer-events-none z-10" />
                     <input
                       ref={locationAnchorRef}
                       type="text"
@@ -533,7 +558,7 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
                       value={location}
                       onChange={(e) => { setLocation(e.target.value); setShowLocSuggestions(true); }}
                       onFocus={() => setShowLocSuggestions(true)}
-                      className="w-full pl-10 pr-10 py-2.5 rounded-full ring-1 ring-slate-900/8 dark:ring-white/[0.08] bg-slate-50 dark:bg-slate-900/90 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-300 text-sm shadow-sm focus:ring-2 focus:ring-[var(--brand-primary)]/30 focus:outline-none transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]"
+                      className="w-full pl-10 pr-10 py-2.5 rounded-full ring-1 ring-slate-900/8 dark:ring-red-300/20 bg-slate-50 dark:bg-dark-surface/72 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-300 text-sm shadow-sm focus:ring-2 focus:ring-[var(--brand-primary)]/30 focus:outline-none transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]"
                       autoComplete="off"
                     />
                     {showLocSuggestions && (() => {
@@ -548,9 +573,9 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
                                 key={city}
                                 type="button"
                                 onMouseDown={() => { setLocation(city); setShowLocSuggestions(false); }}
-                                className="w-full flex items-center gap-3 text-left px-4 py-3 rounded-xl text-sm transition-colors duration-200 text-gray-700 dark:text-gray-100 hover:bg-slate-100 dark:hover:bg-white/[0.06]"
+                                className="w-full flex items-center gap-3 text-left px-4 py-3 rounded-xl text-sm transition-colors duration-200 text-gray-700 dark:text-gray-100 hover-smart-bg"
                               >
-                                <MapPin className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                                <MapPin className="h-4 w-4 text-gray-400 dark:text-gray-500 flex-shrink-0" />
                                 {city}
                               </button>
                             ))}
@@ -588,7 +613,7 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
                     <button
                       type="button"
                       onClick={() => setIsFiltersOpen((v) => !v)}
-                      className="group w-full md:w-auto flex items-center justify-center gap-2 px-5 py-2.5 rounded-full ring-1 ring-[var(--brand-primary)]/20 text-[var(--brand-primary)] dark:text-white text-sm font-semibold bg-[var(--brand-primary)]/[0.04] dark:bg-white/[0.04] hover:bg-[var(--brand-primary)]/[0.08] dark:hover:bg-white/[0.08] transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-[0.97]"
+                      className="group flex w-full items-center justify-center gap-2 rounded-full bg-[var(--brand-primary)]/[0.05] px-5 py-2.5 text-sm font-semibold text-[var(--brand-primary)] ring-1 ring-[var(--brand-primary)]/20 transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-[var(--brand-primary)]/[0.10] active:scale-[0.97] md:w-auto dark:bg-[var(--marketing-pill-bg)] dark:text-[var(--marketing-heading-blue)] dark:border dark:border-[var(--marketing-pill-border)] dark:hover:bg-red-500/10"
                       aria-expanded={isFiltersOpen}
                     >
                       <span>{t('filters')}</span>
@@ -601,7 +626,7 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
 
                 {/* Expanded filter panel */}
                 {isFiltersOpen && (
-                  <div className="w-full mt-4 rounded-[1.25rem] overflow-hidden ring-1 ring-black/[0.06] dark:ring-white/[0.08]">
+                  <div className="w-full mt-4 rounded-[1.25rem] overflow-hidden ring-1 ring-black/[0.06] dark:ring-red-300/20">
                     <TalentFilterPanel
                       filters={advancedFilters}
                       onFiltersChange={setAdvancedFilters}
@@ -618,10 +643,10 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
                     {chips.map((chip) => (
                       <span
                         key={chip.k}
-                        className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-50 dark:bg-slate-900/90 ring-1 ring-slate-900/8 dark:ring-white/[0.08] text-xs text-gray-700 dark:text-gray-100"
+                        className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-50 dark:bg-dark-surface/72 ring-1 ring-slate-900/8 dark:ring-red-300/20 text-xs text-gray-700 dark:text-gray-100"
                       >
                         {chip.label}
-                        <button type="button" onClick={chip.onRemove} className="text-gray-400 hover:text-gray-700 dark:hover:text-gray-100 transition-colors">×</button>
+                        <button type="button" onClick={chip.onRemove} className="text-gray-400 hover:text-gray-700 dark:text-gray-500 dark:hover:text-gray-100 transition-colors">×</button>
                       </span>
                     ))}
                     {hasAnyFilter && (
@@ -649,23 +674,23 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section heading */}
           <div className="text-center mb-14">
-            <span className="inline-flex items-center gap-2 rounded-full px-5 py-2 text-[10px] uppercase tracking-[0.22em] font-semibold text-[var(--brand-accent)] ring-1 ring-black/10 dark:ring-white/10 bg-white/72 dark:bg-white/[0.08] mb-6 shadow-sm backdrop-blur-md">
-              <SwoopingTick className="w-4 h-4" />
-              Watch what 3YESES is about
+            <span className="marketing-pill inline-flex items-center gap-2.5 rounded-full px-5 py-2.5 text-[10px] uppercase tracking-[0.22em] font-semibold text-[var(--marketing-heading-blue)] dark:text-[var(--marketing-heading-blue-strong)] mb-6 shadow-sm backdrop-blur-md">
+              <SwoopingTick className="w-[1.125rem] h-[1.125rem] shrink-0" />
+              {t('watchEyebrow')}
             </span>
             <h2 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-5 leading-[1.05] tracking-tighter">
-              See the{' '}
+              {t('videoSectionSeeThe')}{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--brand-primary)] to-[var(--brand-accent)]">
-                3YESES experience
+                {t('videoSectionExperience')}
               </span>
             </h2>
             <p className="text-lg text-gray-600 dark:text-gray-200 max-w-2xl mx-auto leading-relaxed">
-              Discover how talents get cast and how casting directors find the perfect fit — every time.
+              {t('videoSectionDescription')}
             </p>
           </div>
 
           {/* Double-Bezel video player shell */}
-          <div className="rounded-[2.5rem] bg-white/58 dark:bg-white/[0.04] ring-1 ring-black/[0.06] dark:ring-white/[0.08] backdrop-blur-xl p-2 md:p-2.5 shadow-[0_20px_60px_rgba(0,0,0,0.06)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.3)]">
+          <div className="rounded-[2.5rem] bg-light-surface dark:bg-dark-surface ring-1 ring-slate-300/60 dark:ring-[var(--marketing-surface-strong)] backdrop-blur-xl p-2 md:p-2.5 shadow-[0_20px_60px_rgba(0,0,0,0.06)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.3)]">
             <div className="aspect-video rounded-[calc(2.5rem-0.375rem)] overflow-hidden bg-gray-950 shadow-[inset_0_1px_1px_rgba(255,255,255,0.08)]">
               <VideoPlayer
                 url="/videos/Welcome.mp4"
@@ -695,7 +720,7 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
 
               <a
                 href={`/${locale}/search-results`}
-                className="group flex items-center gap-2 px-6 py-3 rounded-full ring-1 font-semibold text-base bg-white/72 dark:bg-white/[0.06] transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-[0.97]"
+                className="group flex items-center gap-2 px-6 py-3 rounded-full ring-1 ring-slate-300/60 dark:ring-[var(--marketing-pill-border)] font-semibold text-base bg-light-surface dark:bg-dark-surface transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-[0.97]"
                 style={{ color: 'var(--brand-primary)', boxShadow: 'none' }}
               >
                 <Users className="w-4 h-4" />
@@ -709,16 +734,16 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
       {/* Welcome / Pitch Section */}
       <div className="relative z-10 pb-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="rounded-[2.5rem] bg-slate-50 dark:bg-slate-900 border border-gray-200/80 dark:border-white/[0.08] shadow-[0_16px_48px_rgba(0,0,0,0.08)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.5)] px-6 md:px-10 lg:px-14 py-12 md:py-16">
+          <div className="rounded-[2.5rem] bg-light-surface dark:bg-dark-surface border border-slate-300/60 dark:border-[var(--marketing-surface-strong)] shadow-[0_16px_48px_rgba(0,0,0,0.14)] px-6 md:px-10 lg:px-14 py-12 md:py-16">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
               <div className="flex flex-col justify-start h-full min-h-[320px]">
                 <h2 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-7 leading-[1.05] tracking-tighter">
                   {t('findYourNextJob')}{' '}
-                  <span className="block text-transparent bg-clip-text bg-gradient-to-r from-primary-blue via-accent-blue to-indigo-500 dark:from-accent-red dark:via-primary-red dark:to-orange-500">
+                  <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#1e3a8a] via-[#1d4ed8] to-[#2563eb] dark:from-red-500 dark:via-red-500 dark:to-red-300">
                     {t('elevateYourCareer')}
                   </span>
                 </h2>
-                <p className="text-lg text-gray-600 dark:text-gray-300 mb-10 leading-relaxed max-w-md">
+                <p className="text-lg text-gray-600 dark:text-red-200 mb-10 leading-relaxed max-w-md">
                   {t('joinThousands')}{' '}
                   {t('supportCreativeJourney')}
                 </p>
@@ -737,7 +762,7 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
                   {/* Secondary CTA — visible ghost */}
                   <a
                     href={`/${locale}/search-results`}
-                    className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full ring-2 ring-[var(--brand-primary)] font-semibold text-base text-[var(--brand-primary)] dark:text-white dark:ring-white/25 bg-transparent hover:bg-[var(--brand-primary)]/[0.06] transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-[0.98]"
+                    className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full ring-2 ring-[var(--brand-primary)] font-semibold text-base text-[var(--brand-primary)] dark:text-[var(--marketing-heading-blue)] dark:ring-[var(--marketing-pill-border)] bg-transparent hover:bg-[var(--brand-primary)]/[0.06] dark:hover:bg-red-500/10 transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-[0.98]"
                   >
                     <Users className="w-4 h-4" />
                     <span>{t('learnMore')}</span>
@@ -745,7 +770,7 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
                 </div>
               </div>
             
-              <div className="rounded-[2rem] overflow-hidden border border-gray-200/60 dark:border-white/10 shadow-[0_12px_40px_rgba(0,0,0,0.08)] dark:shadow-[0_12px_40px_rgba(0,0,0,0.3)] bg-gray-100 dark:bg-slate-800/60 p-3">
+              <div className="rounded-[2rem] overflow-hidden border border-slate-300/60 dark:border-[var(--marketing-surface-strong)] shadow-[0_12px_40px_rgba(0,0,0,0.16)] bg-light-surface dark:bg-dark-surface p-3">
                 <HeroSlideshow />
               </div>
             </div>

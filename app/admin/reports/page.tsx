@@ -196,7 +196,7 @@ export default function ReportsPage() {
           <div className="admin-glass rounded-xl p-4 min-w-[120px]">
             <p className="text-xs font-medium text-[var(--admin-muted)] uppercase tracking-wider">Critical</p>
             <div className="flex items-center gap-2">
-              <p className="text-2xl font-bold text-orange-500">{stats.critical}</p>
+              <p className="text-2xl font-bold text-red-500">{stats.critical}</p>
               {stats.critical > 0 && <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />}
             </div>
           </div>
@@ -515,15 +515,15 @@ export default function ReportsPage() {
                       {selectedReport.comment && (
                         <div className="bg-[var(--admin-surface)] border border-[var(--admin-border)] rounded-xl p-6 shadow-sm">
                           <div className="flex items-center gap-3 mb-4">
-                            <div className="w-10 h-10 rounded-full bg-orange-500/10 flex items-center justify-center">
-                              <MessageSquare className="w-5 h-5 text-orange-500" />
+                            <div className="w-10 h-10 rounded-full bg-red-500/10 flex items-center justify-center">
+                              <MessageSquare className="w-5 h-5 text-red-500" />
                             </div>
                             <div>
                                 <h4 className="font-bold text-[var(--admin-text)]">Reported Comment</h4>
                                 <p className="text-xs text-[var(--admin-muted)]">Posted by {selectedReport.reportedUser.name}</p>
                             </div>
                           </div>
-                          <div className="p-4 bg-[var(--admin-bg)] rounded-lg border-l-4 border-orange-500 italic text-[var(--admin-text)]">
+                          <div className="p-4 bg-[var(--admin-bg)] rounded-lg border-l-4 border-red-500 italic text-[var(--admin-text)]">
                             "{selectedReport.comment.content}"
                           </div>
                         </div>

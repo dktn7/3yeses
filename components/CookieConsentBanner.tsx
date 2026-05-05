@@ -79,7 +79,7 @@ const CookieConsentBanner = () => {
     <>
       {!showModal && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 sm:left-auto sm:right-6 sm:translate-x-0 z-50 w-[90%] sm:w-auto max-w-md">
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-6 border border-gray-200 dark:border-gray-700">
+          <div className="bg-light-surface dark:bg-dark-surface rounded-xl shadow-2xl p-6 border border-gray-200 dark:border-gray-700">
             {/* Logo and Title */}
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 bg-primary-blue dark:bg-accent-red rounded-lg flex items-center justify-center flex-shrink-0 p-1.5">
@@ -94,7 +94,7 @@ const CookieConsentBanner = () => {
             </div>
             
             <p className="text-gray-600 dark:text-gray-300 text-sm mb-5 leading-relaxed">
-              3yeses uses cookies to enhance your experience, show you relevant talent profiles, and analyze how you use our platform. By clicking "Accept all cookies", you consent to our use of cookies.
+              3YESES uses cookies to enhance your experience, show you relevant talent profiles, and analyze how you use our platform. By clicking "Accept all cookies", you consent to our use of cookies.
             </p>
             
             <div className="flex flex-col gap-2">
@@ -122,7 +122,7 @@ const CookieConsentBanner = () => {
       )}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-2xl p-8">
+          <div className="bg-light-surface dark:bg-dark-surface rounded-xl shadow-2xl w-full max-w-2xl p-8">
             {/* Modal Header with Logo */}
             <div className="flex items-center gap-3 mb-6">
               <div className="w-12 h-12 bg-primary-blue dark:bg-accent-red rounded-lg flex items-center justify-center flex-shrink-0 p-2">
@@ -133,7 +133,7 @@ const CookieConsentBanner = () => {
               </div>
               <div>
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Cookie Preferences</h2>
-                <p className="text-sm text-gray-600 dark:text-gray-400">3yeses Talent Platform</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">3YESES Talent Platform</p>
               </div>
             </div>
 
@@ -233,7 +233,7 @@ const CookieConsentBanner = () => {
             <div className="flex justify-end gap-3 mt-8">
               <button
                 onClick={handleDeny}
-                className="px-6 py-2.5 rounded-lg text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-700 hover:opacity-90 font-semibold transition-opacity"
+                className="px-6 py-2.5 rounded-lg text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-dark-surface hover:opacity-90 font-semibold transition-opacity"
               >
                 Deny
               </button>

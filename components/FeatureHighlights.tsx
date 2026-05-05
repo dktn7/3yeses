@@ -62,7 +62,7 @@ export default function FeatureHighlights() {
   return (
     <div className="py-24 relative z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-[2rem] bg-white/95 dark:bg-gray-900/80 border border-gray-200/60 dark:border-white/10 shadow-lg backdrop-blur-sm p-8 md:p-12">
+        <div className="rounded-[2rem] bg-light-surface dark:bg-dark-surface border border-gray-200/60 dark:border-white/10 shadow-lg backdrop-blur-sm p-8 md:p-12">
           <div className="text-center mb-14">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
               {t('whyChooseTitle')} <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-blue to-accent-blue dark:from-accent-red dark:to-primary-red">{t('whyChooseSubtitle')}</span>?
@@ -74,12 +74,12 @@ export default function FeatureHighlights() {
 
           <div className="space-y-5 mb-14">
             {features.map((feature, index) => (
-              <div
+                <div
                 key={index}
-                className="group rounded-[1.5rem] border border-gray-200/70 dark:border-white/10 bg-white/90 dark:bg-gray-800/60 p-6 md:p-7 shadow-sm hover:shadow-lg transition-all duration-300"
+                className="group rounded-[1.5rem] border border-gray-200/70 dark:border-white/10 bg-light-surface dark:bg-dark-surface p-6 md:p-7 shadow-sm hover:shadow-lg transition-all duration-300"
               >
                 <div className="flex flex-col md:flex-row md:items-start gap-5 md:gap-6">
-                  <div className="flex items-center justify-center w-14 h-14 bg-gradient-to-br from-primary-blue/12 to-primary-red/12 dark:from-primary-blue/20 dark:to-primary-red/20 rounded-2xl text-primary-blue dark:text-accent-red shrink-0">
+                  <div className="flex items-center justify-center w-14 h-14 bg-gradient-to-br from-primary-blue/12 to-primary-red/12 dark:from-accent-red/18 dark:to-primary-red/24 rounded-2xl text-primary-blue dark:text-accent-red shrink-0">
                     {feature.icon}
                   </div>
 
@@ -94,7 +94,7 @@ export default function FeatureHighlights() {
 
                     <div className="flex flex-wrap gap-2">
                       {(t.raw(feature.benefitsKey) as string[]).map((benefit, benefitIndex) => (
-                        <span key={benefitIndex} className="inline-flex items-center rounded-full border border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-900/60 px-3 py-1.5 text-sm text-gray-600 dark:text-gray-300">
+                        <span key={benefitIndex} className="inline-flex items-center rounded-full border border-gray-200 dark:border-gray-700 bg-light-surface dark:bg-dark-surface px-3 py-1.5 text-sm text-gray-600 dark:text-gray-300">
                           <CheckCircle className="w-4 h-4 text-green-500 mr-2 flex-shrink-0" />
                           {benefit}
                         </span>
@@ -106,7 +106,7 @@ export default function FeatureHighlights() {
             ))}
           </div>
 
-          <div className="bg-gradient-to-r from-primary-blue/8 to-primary-red/8 dark:from-primary-blue/14 dark:to-primary-red/14 rounded-[1.75rem] p-8 md:p-12 text-center border border-primary-blue/15 dark:border-white/10">
+          <div className="bg-gradient-to-r from-primary-blue/8 to-primary-red/8 dark:from-accent-red/12 dark:to-primary-red/16 rounded-[1.75rem] p-8 md:p-12 text-center border border-primary-blue/15 dark:border-red-400/20">
             <div className="max-w-4xl mx-auto">
               <h3 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
                 {t('readyToConnectTitle')}

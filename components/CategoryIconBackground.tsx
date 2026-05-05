@@ -2,51 +2,9 @@
 
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
-import {
-  Music,
-  Video,
-  Mic2,
-  Palette,
-  Camera,
-  Film,
-  Radio,
-  Keyboard,
-  Headphones,
-  Sparkles,
-  Star,
-  Heart,
-  Zap,
-  Wind,
-  Cloud,
-  Target,
-  Shapes,
-  Boxes,
-  Award,
-  Trophy,
-} from 'lucide-react';
+import { getAvailableCategoryIconNames, getCategoryIconByName } from '@/lib/categoryIcons';
 
-const icons = [
-  Music,
-  Video,
-  Mic2,
-  Palette,
-  Camera,
-  Film,
-  Radio,
-  Keyboard,
-  Headphones,
-  Sparkles,
-  Star,
-  Heart,
-  Zap,
-  Wind,
-  Cloud,
-  Target,
-  Shapes,
-  Boxes,
-  Award,
-  Trophy,
-];
+const AVAILABLE_ICONS = getAvailableCategoryIconNames();
 
 // Pre-generate scattered icons with consistent positions - evenly spaced grid with randomization
 const generateScatteredIcons = () => {
@@ -64,7 +22,7 @@ const generateScatteredIcons = () => {
       
       icons.push({
         id: row * cols + col,
-        IconIndex: (row * cols + col) % 20,
+        IconIndex: (row * cols + col) % AVAILABLE_ICONS.length,
         left,
         top,
         size: Math.random() * 50 + 32, // 32-82px
@@ -97,7 +55,9 @@ export default function CategoryIconBackground() {
   return (
     <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
       {SCATTERED_ICONS.map(({ id, IconIndex, left, top, size, rotation, opacity, delay }) => {
-        const Icon = icons[IconIndex];
+        const iconKey = AVAILABLE_ICONS[IconIndex];
+        const Icon = getCategoryIconByName(undefined, iconKey);
+        if (!Icon) return null;
         return (
           <div
             key={id}
@@ -111,8 +71,9 @@ export default function CategoryIconBackground() {
             }}
           >
             <Icon
-              size={size}
               style={{
+                width: size,
+                height: size,
                 opacity: opacity,
                 animation: `float-${id % 3} 6s ease-in-out ${delay}s infinite`,
                 color: isDark ? 'rgb(148, 163, 184)' : 'rgb(156, 163, 175)',

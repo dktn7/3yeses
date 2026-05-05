@@ -329,7 +329,7 @@ export default function AdminFinancialsPage() {
                     <td className="px-6 py-4">
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold ${
                         tx.status === "COMPLETED" ? "bg-emerald-500/10 text-emerald-500" :
-                        tx.status === "REFUNDED" ? "bg-orange-500/10 text-orange-500" :
+                        tx.status === "REFUNDED" ? "bg-red-500/10 text-red-500" :
                         tx.status === "FAILED" ? "bg-rose-500/10 text-rose-500" :
                         "bg-[var(--admin-border)] text-[var(--admin-muted)]"
                       }`}>

@@ -9,7 +9,7 @@ import SwoopingTick from '@/components/SwoopingTick';
 /* ── Background decoration ─────────────────────────────────────────── */
 function TermsBgDecoration() {
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0" aria-hidden="true">
+    <div className="absolute inset-0 overflow-hidden pointer-events-none select-none z-0 dark:opacity-90" aria-hidden="true">
       <svg className="w-full h-full" preserveAspectRatio="none" viewBox="0 0 1440 900" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <linearGradient id="tBg" x1="0" x2="0" y1="0" y2="1">
@@ -65,10 +65,12 @@ export default function TermsPage() {
 
         {/* Header */}
         <div className="text-center mb-14">
-          <div className="flex items-center justify-center gap-3 mb-5">
-            <SwoopingTick className="w-7 h-7 text-primary-blue dark:text-accent-red" />
-            <span className="text-xs font-bold uppercase tracking-[0.25em] text-primary-blue dark:text-accent-red">
-              {t('badge')}
+          <div className="flex justify-center mb-5">
+            <span className="marketing-pill inline-flex items-center gap-3 rounded-full px-5 py-2.5 backdrop-blur-md bg-light-surface dark:bg-dark-surface border border-gray-200/60 dark:border-[var(--marketing-pill-border)] shadow-sm">
+              <SwoopingTick className="w-9 h-9 shrink-0 text-primary-blue dark:text-accent-red" />
+              <span className="text-xs font-bold uppercase tracking-[0.25em] text-primary-blue dark:text-accent-red">
+                {t('badge')}
+              </span>
             </span>
           </div>
 
@@ -87,7 +89,7 @@ export default function TermsPage() {
         </div>
 
         {/* Table of Contents */}
-        <nav className="rounded-[1.5rem] backdrop-blur-xl bg-white/60 dark:bg-white/[0.05] border border-gray-200/50 dark:border-white/10 shadow-sm p-6 mb-10">
+        <nav className="rounded-[1.5rem] backdrop-blur-xl bg-white/60 dark:bg-dark-surface/72 border border-gray-200/50 dark:border-red-400/20 shadow-sm p-6 mb-10">
           <h2 className="text-sm font-bold text-gray-900 dark:text-white mb-3 uppercase tracking-wider">{t('contents')}</h2>
           <ol className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-sm">
             {[
@@ -107,7 +109,7 @@ export default function TermsPage() {
               <li key={id}>
                 <a
                   href={`#${id}`}
-                  className="text-gray-600 dark:text-gray-300 hover:text-primary-blue dark:hover:text-accent-red transition-colors"
+                  className="rounded-sm text-gray-600 dark:text-slate-200 hover:text-primary-blue dark:hover:text-accent-red focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/30 dark:focus-visible:ring-accent-red/35 transition-colors"
                 >
                   <span className="text-primary-blue dark:text-accent-red font-mono mr-1.5">{i + 1}.</span>
                   {label}
@@ -118,7 +120,7 @@ export default function TermsPage() {
         </nav>
 
         {/* Terms Content */}
-        <div className="rounded-[2rem] backdrop-blur-xl bg-white/60 dark:bg-white/[0.05] border border-gray-200/50 dark:border-white/10 shadow-lg p-8 md:p-12 space-y-10">
+        <div className="rounded-[2rem] backdrop-blur-xl bg-white/60 dark:bg-dark-surface/72 border border-gray-200/50 dark:border-red-400/20 shadow-lg p-8 md:p-12 space-y-10">
 
           <Section id="overview" number="1" title={t('sections.overview.title') || 'Overview'}>
             <p>{t('sections.overview.p1')}</p>
@@ -265,7 +267,7 @@ export default function TermsPage() {
           <Section id="privacy" number="8" title="Privacy & Cookies">
             <p>
               Your privacy matters to us. Our collection, use, and protection of personal data is governed by our{' '}
-              <Link href="/privacy" className="text-primary-blue dark:text-accent-red hover:underline font-medium">
+              <Link href="/privacy" className="rounded-sm text-primary-blue dark:text-accent-red hover:underline font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/30 dark:focus-visible:ring-accent-red/35">
                 Privacy Policy
               </Link>, which forms part of these Terms.
             </p>
@@ -326,7 +328,7 @@ export default function TermsPage() {
           <Section id="contact" number="12" title="Contact">
             <p>
               If you have questions about these Terms, please contact us through our{' '}
-              <Link href="/support/submit-ticket" className="text-primary-blue dark:text-accent-red hover:underline font-medium">
+              <Link href="/support/submit-ticket" className="rounded-sm text-primary-blue dark:text-accent-red hover:underline font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/30 dark:focus-visible:ring-accent-red/35">
                 Support Centre
               </Link>.
             </p>

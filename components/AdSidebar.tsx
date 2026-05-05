@@ -5,7 +5,7 @@ import AdUnit from './AdUnit';
 
 const AdSidebar: React.FC = () => {
   return (
-    <aside className="w-56 h-screen sticky top-16 p-4 bg-gray-50 dark:bg-gray-900 border-l border-gray-200 dark:border-gray-700 overflow-y-auto">
+    <aside className="w-56 h-screen sticky top-16 p-4 bg-[var(--chrome-panel)] border-l border-[var(--chrome-border)] overflow-y-auto">
       {/* AdSense-style header */}
       <div className="flex items-center justify-between mb-3">
         <span className="text-[10px] font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500">Sponsored</span>

@@ -111,7 +111,7 @@ export default function CommentItem({
 
         {/* Comment Content */}
         <div className="flex-1 min-w-0">
-          <div className="bg-gray-100 dark:bg-gray-800 rounded-2xl px-4 py-3">
+          <div className="bg-light-surface dark:bg-dark-surface rounded-2xl px-4 py-3">
             <div className="flex items-start justify-between gap-2">
               <div className="flex-1">
                 <h4 className="font-semibold text-sm text-gray-900 dark:text-white">
@@ -132,7 +132,7 @@ export default function CommentItem({
                 </button>
 
                 {showMenu && (
-                  <div className="absolute right-0 mt-2 w-32 bg-white dark:bg-gray-700 rounded-lg shadow-lg border border-gray-200 dark:border-gray-600 py-1 z-10">
+                  <div className="absolute right-0 mt-2 w-32 bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg border border-gray-200 dark:border-gray-600 py-1 z-10">
                     <button
                       onClick={() => {
                         handleDelete();
@@ -174,7 +174,7 @@ export default function CommentItem({
             {!isReply && (
               <button
                 onClick={() => setShowReplyInput(!showReplyInput)}
-                className="flex items-center gap-1 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                className="flex items-center gap-1 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-red-400 transition-colors"
               >
                 <MessageCircle className="w-4 h-4" />
                 Reply
@@ -185,7 +185,7 @@ export default function CommentItem({
               <button
                 onClick={fetchReplies}
                 disabled={loadingReplies}
-                className="text-xs font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 disabled:opacity-50 flex items-center gap-2"
+                className="text-xs font-medium text-blue-600 dark:text-red-400 hover:text-blue-700 dark:hover:text-red-300 disabled:opacity-50 flex items-center gap-2"
               >
                 {loadingReplies
                   ? <LoadingSpinner size="small" className="p-0" />

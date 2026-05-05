@@ -433,7 +433,7 @@ function ChartCard({ title, children, className = "" }: { title: string; childre
   return (
     <div className={`bg-[var(--admin-surface)] border border-[var(--admin-border)] rounded-xl p-5 animate-in fade-in slide-in-from-bottom-3 duration-700 ${className}`}>
       <h3 className="text-sm font-black uppercase tracking-wider text-[var(--admin-muted)] mb-4">{title}</h3>
-      <div className="w-full">{children}</div>
+      <div className="w-full admin-invert-optout">{children}</div>
     </div>
   );
 }

@@ -46,10 +46,35 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    const unreadCount = notifications.filter(n => !n.read).length;
+    // Include pending media reports for this talent profile as warning/media-flag notifications
+    const mediaReports = await prisma.contentReport.findMany({
+      where: {
+        reportedUserId: talentProfileId,
+        status: 'PENDING',
+      },
+      orderBy: { createdAt: 'desc' },
+      take: 20,
+      select: {
+        id: true,
+        portfolioItemId: true,
+        type: true,
+        reason: true,
+        createdAt: true,
+      },
+    });
 
-    // Map enum to user-friendly strings
-    const mapped = notifications.map(n => ({
+    const reportNotifications = mediaReports.map((report) => ({
+      id: `report-${report.id}`,
+      type: 'media_flag',
+      title: 'Content flagged for review',
+      message: `Your portfolio item has been reported for ${report.type.toLowerCase().replace('_', ' ')}`,
+      metadata: { reportId: report.id, portfolioItemId: report.portfolioItemId },
+      timestamp: report.createdAt,
+      read: false,
+      dismissed: false,
+    }));
+
+    const combined = [...notifications.map((n) => ({
       id: n.id,
       type: n.type.toLowerCase(),
       title: n.title,
@@ -58,9 +83,16 @@ export async function GET(request: NextRequest) {
       timestamp: n.createdAt,
       read: n.read,
       dismissed: n.dismissed,
-    }));
+    })),
+      ...reportNotifications,
+    ];
 
-    return NextResponse.json({ notifications: mapped, unreadCount }, { status: 200 });
+    // Sort by timestamp descending
+    combined.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+
+    const unreadCount = combined.filter(n => !n.read).length;
+
+    return NextResponse.json({ notifications: combined, unreadCount }, { status: 200 });
   } catch (error) {
     console.error('Error fetching notifications:', error);
     return NextResponse.json(

@@ -16,7 +16,7 @@ const PLAN_ICONS = {
 
 function BgDecorations({ variant }: { variant: number }) {
   const wrap = (children: React.ReactNode) => (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0" aria-hidden="true">
+    <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none dark:opacity-90" aria-hidden="true">
       <svg className="w-full h-full" preserveAspectRatio="none" viewBox="0 0 1440 900" xmlns="http://www.w3.org/2000/svg">
         {children}
       </svg>
@@ -273,7 +273,7 @@ const PLANS = [
     id: '6_months' as const,
     label: '6 months',
     price: '£10',
-    period: '/ 6 months',
+    period: '6 months',
     subtext: 'Less than a coffee a month',
     description: 'Dip your toe in. No long-term commitment.',
     badge: null,
@@ -282,7 +282,7 @@ const PLANS = [
     id: '12_months' as const,
     label: '12 months',
     price: '£20',
-    period: '/ year',
+    period: 'year',
     subtext: 'Same price. Twice the runway.',
     description: 'Go all in. A full year to get your break.',
     badge: 'Best Value',
@@ -363,7 +363,7 @@ export default function PricingPage() {
   };
 
   return (
-    <div className="min-h-screen landing-bg relative overflow-hidden brand-true-red">
+    <div className="min-h-screen landing-bg brand-true-red relative isolate overflow-hidden">
 
       {/* ── Background preview (use keys 1–5) ── */}
       <BgDecorations variant={bgVariant} />
@@ -374,14 +374,14 @@ export default function PricingPage() {
 
         {/* ── Hero heading ── */}
         <div className="text-center mb-20">
-          <div className="inline-flex items-center gap-2 backdrop-blur-md bg-white/60 dark:bg-white/10 text-white text-sm font-semibold px-5 py-2 rounded-full mb-8 border border-white/40 dark:border-white/15 shadow-sm">
+          <div className="marketing-pill inline-flex items-center gap-2 backdrop-blur-md bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-white text-sm font-semibold px-5 py-2.5 rounded-full mb-8 border border-gray-300/70 dark:border-[var(--marketing-pill-border)] shadow-sm">
             <span className="w-2 h-2 rounded-full bg-primary-blue dark:bg-accent-red animate-pulse" />
             Your spotlight starts here
           </div>
 
           <h1 className="text-5xl sm:text-6xl md:text-7xl font-extrabold text-gray-900 dark:text-white mb-6 leading-[1.08] tracking-tight">
             Ready for your{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-blue via-accent-blue to-indigo-500 dark:from-accent-red dark:via-primary-red dark:to-orange-500">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-blue via-accent-blue to-indigo-500 dark:from-accent-red dark:via-primary-red dark:to-red-900">
               three yeses?
             </span>
           </h1>
@@ -427,14 +427,21 @@ export default function PricingPage() {
             return (
               <div
                 key={plan.id}
-                className={`group relative flex-1 flex flex-col rounded-[2rem] overflow-hidden transition-all duration-500 ease-out hover:-translate-y-3 hover:shadow-2xl ${
+                className={`group relative ${isFeatured ? 'md:flex-[1.12] z-20' : 'flex-1'} flex flex-col rounded-[2rem] overflow-hidden transition-all duration-500 ease-out hover:-translate-y-3 hover:shadow-2xl ${
                     isFeatured
-                      ? 'shadow-xl shadow-primary-blue/12 dark:shadow-accent-red/12 ring-1 ring-primary-blue/30 dark:ring-accent-red/30'
+                      ? 'shadow-2xl shadow-primary-blue/16 dark:shadow-accent-red/16 ring-2 ring-primary-blue/20 dark:ring-accent-red/20 featured-elevated'
                       : 'shadow-lg shadow-gray-900/10 dark:shadow-black/30 ring-1 ring-gray-200/60 dark:ring-white/12'
                 } backdrop-blur-xl card-surface`}
               >
                 {/* Gradient top edge */}
                 <div className="h-1 w-full brand-mix-gradient" />
+
+                {/* Decorative sale ribbon (visual only) */}
+                {plan.originalPrice && (
+                  <div className="absolute -top-3 left-6 z-30 pointer-events-none" aria-hidden="true">
+                    <span className="ribbon">{percent ? `${percent}% OFF` : `Save ${plan.savings}`}</span>
+                  </div>
+                )}
 
                 {/* Inner glow on hover */}
                 <div className="absolute inset-0 rounded-[2rem] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none bg-gradient-to-b from-primary-blue/[0.03] to-transparent dark:from-accent-red/[0.05]" />
@@ -470,14 +477,32 @@ export default function PricingPage() {
                   </h2>
                   <p className="text-sm text-gray-600 dark:text-gray-200 mb-8 leading-relaxed">{plan.description}</p>
 
-                  {/* Price */}
+                  {/* Price (visual discount only) */}
                   <div className="mb-2">
-                    <span className="text-6xl sm:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-primary-blue via-accent-blue to-indigo-500 dark:from-accent-red dark:via-primary-red dark:to-orange-500 tracking-tight">
-                      {plan.price}
-                    </span>
-                    <span className="text-gray-500 dark:text-gray-300 ml-2 text-sm font-medium">
-                      {plan.period}
-                    </span>
+                    <span className="sr-only">Price: {plan.price} {plan.period}</span>
+
+                    {/* Visual original price (fake discount) */}
+                    {plan.originalPrice && (
+                      <div className="flex items-center justify-center gap-3 mb-2" aria-hidden="true">
+                        <span className="text-sm text-gray-400 dark:text-gray-500 line-through">{plan.originalPrice}</span>
+                        {percent ? (
+                          <span className="percent-badge">{percent}% Off</span>
+                        ) : (
+                          <span className="inline-block text-xs font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 px-2 py-0.5 rounded-full">
+                            Save {plan.savings}
+                          </span>
+                        )}
+                      </div>
+                    )}
+
+                    <div className="flex items-baseline justify-center gap-3">
+                      <span className="text-6xl sm:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-primary-blue via-accent-blue to-indigo-500 dark:from-accent-red dark:via-primary-red dark:to-red-900 tracking-tight">
+                        {plan.price}
+                      </span>
+                      <span className="text-gray-500 dark:text-gray-300 ml-2 text-sm font-medium">
+                        / {plan.period}
+                      </span>
+                    </div>
                   </div>
                   <p className="text-xs text-gray-500 dark:text-gray-300 mb-10 font-medium">{plan.subtext}</p>
 
@@ -499,7 +524,7 @@ export default function PricingPage() {
                     className={`w-full flex items-center justify-center gap-2 py-4 px-6 rounded-2xl font-bold text-white text-base transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed ${
                       hasActiveSub
                         ? 'bg-gray-400 cursor-default'
-                        : 'brand-mix-gradient shadow-lg shadow-primary-blue/25 dark:shadow-accent-red/25 hover:shadow-xl hover:shadow-primary-blue/30 dark:hover:shadow-accent-red/30 hover:scale-[1.02] active:scale-[0.98]'
+                        : 'brand-mix-gradient shadow-lg shadow-primary-blue/25 dark:shadow-accent-red/25 hover:shadow-xl hover:shadow-primary-blue/30 dark:hover:shadow-accent-red/30 hover:scale-[1.02] active:scale-[0.98] cta-animate'
                     }`}
                   >
                     {isLoading ? (
@@ -512,7 +537,10 @@ export default function PricingPage() {
                     ) : !authChecked ? (
                       <Loader2 className="w-4 h-4 animate-spin" />
                     ) : (
-                      'Subscribe with Stripe'
+                      <>
+                        Subscribe with Stripe
+                        <span className="ml-2 transform transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true">→</span>
+                      </>
                     )}
                   </button>
                 </div>
@@ -524,7 +552,7 @@ export default function PricingPage() {
         {/* ── Trust indicators ── */}
         <div className="flex flex-wrap justify-center gap-4 mb-20">
           {TRUST.map(({ icon, label }) => (
-            <div key={label} className="flex items-center gap-2.5 text-sm text-gray-800 dark:text-gray-100 backdrop-blur-md bg-white/70 dark:bg-white/[0.08] px-5 py-2.5 rounded-full border border-gray-300/50 dark:border-white/10 shadow-sm">
+            <div key={label} className="flex items-center gap-2.5 text-sm text-gray-800 dark:text-slate-50 backdrop-blur-md bg-white/70 dark:bg-dark-surface/72 px-5 py-2.5 rounded-full border border-gray-300/50 dark:border-red-400/25 shadow-sm">
               <span className="text-primary-blue dark:text-accent-red">{icon}</span>
               <span className="font-medium">{label}</span>
             </div>

@@ -354,7 +354,7 @@ export default function CMSEditorPage() {
                                 <ExternalLink size={12} /> Open in Tab
                             </button>
                         </div>
-                        <div className="flex-1 overflow-y-auto bg-white dark:bg-gray-900">
+                        <div className="flex-1 overflow-y-auto bg-light-surface dark:bg-dark-surface">
                             <div className="p-6">
                                 <article
                                     className="prose prose-lg dark:prose-invert max-w-none

@@ -275,7 +275,7 @@ export default function GalleryViewer({ items, initialIndex, isOpen, onClose }: 
           {renderMainContent()}
         </div>
 
-        <div className="w-full lg:w-96 bg-white dark:bg-gray-900 border-t lg:border-t-0 lg:border-l border-gray-200 dark:border-gray-800 flex flex-col">
+        <div className="w-full lg:w-96 bg-light-surface dark:bg-dark-surface border-t lg:border-t-0 lg:border-l border-gray-200 dark:border-gray-800 flex flex-col">
           <div className="p-3 flex items-center justify-between border-b border-gray-200 dark:border-gray-800">
             <button
               onClick={handleLike}

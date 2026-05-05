@@ -147,21 +147,21 @@ export default function DashboardHero({ displayName, formattedDay, profileComple
   const isProfileComplete = profileCompletion >= 100;
 
   return (
-    <section className="relative rounded-2xl shadow-lg p-6 md:p-8 mb-8 overflow-hidden bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800">
+    <section className="relative rounded-2xl shadow-lg p-6 md:p-8 mb-8 overflow-hidden bg-light-surface dark:bg-dark-surface border border-gray-200 dark:border-gray-800">
       {/* Row 1: Welcome + Avatar + CTA */}
       <div className="flex items-start justify-between gap-6">
         <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white flex-1">Welcome back, <span className="underline decoration-gray-300 dark:decoration-gray-700">{displayName}</span>!</h1>
         
         {/* Avatar in the gap */}
         <div className="flex flex-col items-center gap-2 flex-shrink-0">
-          <div className="w-28 h-28 rounded-full overflow-hidden relative border-2 border-gray-300 dark:border-gray-700 shadow-md bg-gray-100 dark:bg-gray-800">
+          <div className="w-28 h-28 rounded-full overflow-hidden relative border-2 border-gray-300 dark:border-gray-700 shadow-md bg-light-surface dark:bg-dark-surface">
             <SafeAvatarImage src={talentProfile?.avatarUrl} alt={displayName} size={112} className="rounded-full object-cover" />
           </div>
           <p className="text-center text-xs font-semibold text-gray-600 dark:text-gray-400">
             {talentProfile?.displayName || displayName}
           </p>
           {/* Date pill below avatar */}
-          <div className="px-2 py-0.5 rounded-full text-xs text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 whitespace-nowrap">
+          <div className="px-2 py-0.5 rounded-full text-xs text-gray-600 dark:text-gray-400 bg-light-surface/90 dark:bg-dark-surface border border-gray-200 dark:border-gray-700 whitespace-nowrap">
             {formattedDay}
           </div>
         </div>
@@ -169,7 +169,7 @@ export default function DashboardHero({ displayName, formattedDay, profileComple
         <div className="flex items-center gap-3 flex-shrink-0">
           <Link
             href={`/talent/${userId}`}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold shadow-sm hover:shadow-md hover:scale-[1.02] transition-all bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white whitespace-nowrap"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold shadow-sm hover:shadow-md hover:scale-[1.02] transition-all bg-light-surface/90 dark:bg-dark-surface text-light-surface dark:text-dark-surface whitespace-nowrap"
             aria-label="View public profile"
           >
             View Profile
@@ -177,7 +177,7 @@ export default function DashboardHero({ displayName, formattedDay, profileComple
           {!isProfileComplete && firstIncomplete && (
             <Link
               href={getActionLink(firstIncomplete.action)}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold shadow-sm hover:shadow-md hover:scale-[1.02] transition-all bg-blue-600 dark:bg-blue-700 text-white whitespace-nowrap"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold shadow-sm hover:shadow-md hover:scale-[1.02] transition-all bg-gradient-to-r from-primary-blue to-accent-blue dark:from-accent-red dark:to-primary-red text-white whitespace-nowrap"
               aria-label={`Complete ${firstIncomplete.label}`}
             >
               {getCompletionButtonText(firstIncomplete.action)}
@@ -240,13 +240,13 @@ export default function DashboardHero({ displayName, formattedDay, profileComple
           {/* Modal for breakdown CTA */}
           {modal && createPortal(
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 animate-fadeIn" onClick={() => setModal(null)}>
-              <div className="bg-white dark:bg-gray-900 rounded-xl shadow-2xl p-8 min-w-[320px] max-w-xs relative" onClick={e => e.stopPropagation()}>
+              <div className="bg-light-surface dark:bg-dark-surface rounded-xl shadow-2xl p-8 min-w-[320px] max-w-xs relative" onClick={e => e.stopPropagation()}>
                 <button className="absolute top-2 right-2 text-gray-400 hover:text-gray-700 dark:hover:text-white text-xl" onClick={() => setModal(null)} aria-label="Close">×</button>
                 <div className="text-lg font-bold mb-2 text-gray-900 dark:text-white">Complete your {modal.label}</div>
                 <div className="mb-4 text-gray-700 dark:text-gray-200 text-sm">To finish your {modal.label.toLowerCase()}, go to your profile and add the missing info.</div>
                 <Link
                   href={getActionLink(modal.action)}
-                  className="inline-block px-4 py-2 rounded-lg font-semibold bg-blue-600 dark:bg-blue-700 text-white shadow hover:shadow-md hover:scale-[1.02] transition-all text-sm"
+                  className="inline-block px-4 py-2 rounded-lg font-semibold bg-gradient-to-r from-primary-blue to-accent-blue dark:from-accent-red dark:to-primary-red text-white shadow hover:shadow-md hover:scale-[1.02] transition-all text-sm"
                   onClick={() => setModal(null)}
                 >
                   {getActionLabel(modal.action)}
@@ -304,7 +304,7 @@ export default function DashboardHero({ displayName, formattedDay, profileComple
                       </p>
                       <button
                         onClick={() => setModal({ label: item.label, action: item.action })}
-                        className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 hover:underline font-medium"
+                        className="text-xs text-primary-blue dark:text-accent-red hover:text-accent-blue dark:hover:text-red-300 hover:underline font-medium"
                       >
                         {remaining > 0 ? `Add ${remaining} more ${item.label.toLowerCase()}${remaining === 1 ? '' : 's'} →` : 'Complete now →'}
                       </button>
@@ -320,16 +320,16 @@ export default function DashboardHero({ displayName, formattedDay, profileComple
       {/* Row 3: Stats section with fun icons */}
       <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Portfolio Items */}
-        <div className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950/30 dark:to-blue-900/20 rounded-xl p-4 border border-blue-200 dark:border-blue-800/50 hover:shadow-lg transition-all duration-300 hover:scale-[1.02]">
+        <div className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-red-950/30 dark:to-red-900/20 rounded-xl p-4 border border-blue-200 dark:border-red-800/50 hover:shadow-lg transition-all duration-300 hover:scale-[1.02]">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-blue-500 dark:bg-blue-600 rounded-lg shadow-md">
+            <div className="p-2.5 bg-blue-500 dark:bg-red-600 rounded-lg shadow-md">
               <ImageIcon className="w-5 h-5 text-white" />
             </div>
             <div className="flex-1">
-              <div className="text-2xl font-bold text-blue-900 dark:text-blue-100">{talentProfile?.portfolio?.length?.toLocaleString() ?? 0}</div>
-              <div className="text-xs font-medium text-blue-600 dark:text-blue-400">Portfolio Items</div>
+              <div className="text-2xl font-bold text-blue-900 dark:text-red-100">{talentProfile?.portfolio?.length?.toLocaleString() ?? 0}</div>
+              <div className="text-xs font-medium text-blue-600 dark:text-red-300">Portfolio Items</div>
             </div>
-            <Sparkles className="w-4 h-4 text-blue-500 dark:text-blue-400 opacity-50" />
+            <Sparkles className="w-4 h-4 text-blue-500 dark:text-red-300 opacity-50" />
           </div>
         </div>
 

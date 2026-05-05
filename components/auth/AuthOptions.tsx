@@ -14,7 +14,7 @@ function SocialLoginButton({ provider, onClick }: SocialLoginButtonProps) {
     google: {
       icon: Chrome,
       text: 'Continue with Google',
-      bgColor: 'bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600',
+      bgColor: 'bg-light-surface dark:bg-dark-surface hover:bg-gray-50 dark:hover:bg-gray-600',
       textColor: 'text-gray-900 dark:text-white',
       borderColor: 'border-gray-300 dark:border-gray-600',
     },
@@ -28,7 +28,7 @@ function SocialLoginButton({ provider, onClick }: SocialLoginButtonProps) {
     apple: {
       icon: Apple,
       text: 'Continue with Apple',
-      bgColor: 'bg-black hover:bg-gray-900 dark:bg-white dark:hover:bg-gray-100',
+      bgColor: 'bg-black hover:bg-gray-900 dark:bg-light-surface dark:hover:bg-gray-100',
       textColor: 'text-white dark:text-black',
       borderColor: 'border-black dark:border-white',
     },
@@ -82,7 +82,7 @@ export default function AuthOptionsComponent() {
               <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400">
+              <span className="px-4 bg-light-surface dark:bg-dark-surface text-gray-500 dark:text-gray-400">
                 Or continue with email
               </span>
             </div>

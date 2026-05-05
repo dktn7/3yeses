@@ -44,7 +44,7 @@ export default function QuickActionsBar() {
       label: 'Analytics',
       icon: <BarChart3 className="h-5 w-5" />,
       href: `/${locale}/dashboard/insights`,
-      color: 'bg-orange-500 hover:bg-orange-600 dark:bg-orange-600 dark:hover:bg-orange-700',
+      color: 'bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700',
     },
   ];
 

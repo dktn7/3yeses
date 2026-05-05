@@ -29,10 +29,10 @@ export default function SubscriptionSuccessPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-900 to-gray-800">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="w-12 h-12 animate-spin text-blue-400 mx-auto mb-4" />
-          <p className="text-gray-300">Processing your subscription...</p>
+          <Loader2 className="w-12 h-12 animate-spin text-primary-blue dark:text-accent-red mx-auto mb-4" />
+          <p className="text-gray-600 dark:text-gray-300">Processing your subscription...</p>
         </div>
       </div>
     );
@@ -40,18 +40,18 @@ export default function SubscriptionSuccessPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-900 to-gray-800">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center max-w-md">
           <div className="text-red-400 text-6xl mb-4">⚠️</div>
-          <h1 className="text-2xl font-bold text-white mb-4">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
             Something went wrong
           </h1>
-          <p className="text-gray-300 mb-6">
+          <p className="text-gray-600 dark:text-gray-300 mb-6">
             We couldn't verify your subscription. Please contact support if you were charged.
           </p>
           <Link
             href="/dashboard/subscription"
-            className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
+            className="inline-block bg-primary-blue dark:bg-accent-red hover:bg-primary-blueHover dark:hover:bg-accent-red/80 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
           >
             Back to Subscription
           </Link>
@@ -61,17 +61,17 @@ export default function SubscriptionSuccessPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-900 to-gray-800 px-4">
+    <div className="min-h-screen flex items-center justify-center px-4">
       <div className="text-center max-w-md">
         <CheckCircle className="w-20 h-20 text-green-400 mx-auto mb-6" />
-        <h1 className="text-3xl font-bold text-white mb-4">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
           Welcome to Standard Access!
         </h1>
-        <p className="text-gray-300 mb-8">
+        <p className="text-gray-600 dark:text-gray-300 mb-8">
           Your subscription has been activated successfully. You now have access to all premium features:
         </p>
-        <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-6 mb-8 text-left">
-          <ul className="space-y-3 text-gray-300">
+        <div className="bg-white/80 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-lg p-6 mb-8 text-left">
+          <ul className="space-y-3 text-gray-700 dark:text-gray-300">
             <li className="flex items-center gap-2">
               <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
               Full Profile Customization
@@ -87,10 +87,10 @@ export default function SubscriptionSuccessPage() {
           </ul>
         </div>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link
-            href="/dashboard"
-            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
-          >
+            <Link
+              href="/dashboard"
+              className="bg-primary-blue hover:bg-primary-blue/90 dark:bg-accent-red dark:hover:bg-accent-red/90 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
+            >
             Go to Dashboard
           </Link>
           <Link

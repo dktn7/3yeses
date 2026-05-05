@@ -26,7 +26,7 @@ import {
   eyeColorOptions,
   hairColorOptions,
 } from '@/lib/characteristics';
-import { 
+import {
   Briefcase, MapPin, Languages, Film, ImageIcon, Music, Flag, 
   Eye, Share2, Users, TrendingUp, Building2, 
   Calendar, Ruler, Palette, User, CheckCircle2, PlayCircle,
@@ -35,43 +35,13 @@ import {
   Flame, Tent, Smile, Aperture, Sliders, Smartphone, Scissors, Wrench,
   Star, Settings, BookOpen, Monitor, CheckCircle, ChevronDown, Drama
 } from 'lucide-react';
+import { getCategoryIconByName } from '@/lib/categoryIcons';
 
-// Helper to render Lucide icon by name (matching DB icon field)
+// Resolve category icon using canonical resolver (Phosphor)
 const getCategoryIcon = (iconName: string | null, size = 16) => {
   const cls = `w-${size === 16 ? 4 : size === 20 ? 5 : 4} h-${size === 16 ? 4 : size === 20 ? 5 : 4} shrink-0`;
-  const name = iconName || 'CheckCircle';
-  switch (name) {
-    case 'Mic':           return <Mic className={cls} />;
-    case 'Globe':         return <Globe className={cls} />;
-    case 'PenTool':       return <PenTool className={cls} />;
-    case 'Music':         return <Music className={cls} />;
-    case 'Clapperboard':  return <Clapperboard className={cls} />;
-    case 'Drama':         return <Drama className={cls} />;
-    case 'Camera':        return <Camera className={cls} />;
-    case 'Users':         return <Users className={cls} />;
-    case 'Heart':         return <Heart className={cls} />;
-    case 'Trophy':        return <Trophy className={cls} />;
-    case 'Flame':         return <Flame className={cls} />;
-    case 'Sparkles':      return <Sparkles className={cls} />;
-    case 'Tent':          return <Tent className={cls} />;
-    case 'Smile':         return <Smile className={cls} />;
-    case 'Aperture':      return <Aperture className={cls} />;
-    case 'Palette':       return <Palette className={cls} />;
-    case 'Sliders':       return <Sliders className={cls} />;
-    case 'Smartphone':    return <Smartphone className={cls} />;
-    case 'Scissors':      return <Scissors className={cls} />;
-    case 'Wrench':        return <Wrench className={cls} />;
-    case 'Film':          return <Film className={cls} />;
-    case 'Zap':           return <Zap className={cls} />;
-    case 'UserCheck':     return <UserCheck className={cls} />;
-    case 'MapPin':        return <MapPin className={cls} />;
-    case 'Star':          return <Star className={cls} />;
-    case 'Calendar':      return <Calendar className={cls} />;
-    case 'Settings':      return <Settings className={cls} />;
-    case 'BookOpen':      return <BookOpen className={cls} />;
-    case 'Monitor':       return <Monitor className={cls} />;
-    default:              return <CheckCircle className={cls} />;
-  }
+  const Icon = getCategoryIconByName(undefined, iconName || undefined);
+  return <Icon className={cls} />;
 };
 import { AnalyticsTracker } from '@/lib/analytics/tracker';
 import SafeAvatarImage from '@/components/SafeAvatarImage';
@@ -293,7 +263,7 @@ export default function TalentProfilePage() {
     { id: 'preset-1', label: 'Ocean', gradient: 'linear-gradient(135deg, #0ea5e9 0%, #1e3a8a 100%)' },
     { id: 'preset-2', label: 'Sunset', gradient: 'linear-gradient(135deg, #f97316 0%, #be123c 100%)' },
     { id: 'preset-3', label: 'Aurora', gradient: 'linear-gradient(135deg, #22c55e 0%, #0f766e 100%)' },
-    { id: 'preset-4', label: 'Midnight', gradient: 'linear-gradient(135deg, #0f172a 0%, #334155 100%)' },
+    { id: 'preset-4', label: 'Midnight', gradient: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)' },
     { id: 'preset-5', label: 'Candy', gradient: 'linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%)' },
     { id: 'preset-6', label: 'Skyline', gradient: 'linear-gradient(135deg, #38bdf8 0%, #6366f1 100%)' },
     { id: 'preset-7', label: 'Forest', gradient: 'linear-gradient(135deg, #16a34a 0%, #166534 100%)' },
@@ -311,7 +281,7 @@ export default function TalentProfilePage() {
     { id: 'cbg-lavender', label: 'Lavender', gradient: 'linear-gradient(180deg, #f3e8ff 0%, #e9d5ff 100%)' },
     { id: 'cbg-peach', label: 'Peach', gradient: 'linear-gradient(180deg, #fff7ed 0%, #ffedd5 100%)' },
     { id: 'cbg-slate', label: 'Slate', gradient: 'linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%)' },
-    { id: 'cbg-dark', label: 'Dark', gradient: 'linear-gradient(180deg, #0f172a 0%, #020617 100%)' },
+    { id: 'cbg-dark', label: 'Dark', gradient: 'linear-gradient(180deg, #1e293b 0%, #020617 100%)' },
     // Patterned low-contrast options
     { id: 'pattern-dots', label: 'Dots', pattern: 'radial-gradient(rgba(0,0,0,0.03) 1px, transparent 1px)', gradient: 'linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.4))' },
     { id: 'pattern-hatch', label: 'Hatch', pattern: 'repeating-linear-gradient(45deg, rgba(0,0,0,0.03) 0 1px, transparent 1px 8px)', gradient: 'linear-gradient(180deg, rgba(250,250,250,0.7), rgba(240,240,255,0.6))' },
@@ -705,10 +675,10 @@ export default function TalentProfilePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 font-sans selection:bg-primary-blue selection:text-white">
+    <div className="min-h-screen text-gray-900 dark:text-gray-100 font-sans selection:bg-primary-blue dark:selection:bg-accent-red selection:text-white">
       
       {/* Hero Section */}
-      <div className="relative w-full bg-white dark:bg-gray-900 overflow-hidden">
+      <div className="relative w-full bg-white/80 dark:bg-dark-surface/85 backdrop-blur-sm overflow-hidden">
         {/* Banner Background */}
         <div className="absolute inset-0 z-0">
           {bannerStyle ? (
@@ -718,9 +688,9 @@ export default function TalentProfilePage() {
             />
           ) : (
             <>
-              <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-50 via-purple-50 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 opacity-80"></div>
-              <div className="absolute -top-24 -right-24 w-96 h-96 bg-blue-400/20 rounded-full blur-3xl"></div>
-              <div className="absolute top-1/2 -left-24 w-72 h-72 bg-purple-400/20 rounded-full blur-3xl"></div>
+              <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-50 via-purple-50 to-white dark:from-slate-950 dark:via-zinc-900 dark:to-slate-950 opacity-80"></div>
+              <div className="absolute -top-24 -right-24 w-96 h-96 bg-blue-400/20 dark:bg-red-500/15 rounded-full blur-3xl"></div>
+              <div className="absolute top-1/2 -left-24 w-72 h-72 bg-purple-400/20 dark:bg-red-600/12 rounded-full blur-3xl"></div>
             </>
           )}
           <div className="absolute inset-0 bg-black/5 dark:bg-black/40"></div>
@@ -841,7 +811,7 @@ export default function TalentProfilePage() {
                         <div className="relative">
                           <button
                             onClick={() => setCategoryOpen(v => !v)}
-                            className="px-3 py-1.5 rounded-full text-xs font-bold bg-blue-100 text-blue-700 dark:bg-red-900/30 dark:text-red-300 uppercase tracking-wider flex items-center gap-2 hover:bg-blue-200 dark:hover:bg-red-900/50 transition-colors"
+                            className="px-3 py-1.5 rounded-full text-xs font-bold bg-[var(--marketing-pill-bg)] text-[var(--marketing-pill-icon)] dark:bg-[var(--marketing-pill-bg)] dark:text-[var(--marketing-pill-icon)] border border-[var(--marketing-pill-border)] uppercase tracking-wider flex items-center gap-2 hover-smart-bg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-ring)] dark:focus-visible:ring-[var(--brand-ring)] transition-colors"
                           >
                             {(() => {
                               const sel = categories.find(c => c.id === editData.categoryId);
@@ -858,7 +828,7 @@ export default function TalentProfilePage() {
                             <ChevronDown size={12} className={`transition-transform ${categoryOpen ? 'rotate-180' : ''}`} />
                           </button>
                           {categoryOpen && (
-                            <div className="absolute z-50 mt-2 w-72 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-xl overflow-hidden">
+                            <div className="absolute z-50 mt-2 w-72 bg-light-surface dark:bg-dark-surface border border-gray-200 dark:border-gray-700 rounded-xl shadow-xl overflow-hidden">
                               <div className="p-2 border-b border-gray-100 dark:border-gray-800">
                                 <input
                                   value={categorySearch}
@@ -883,7 +853,7 @@ export default function TalentProfilePage() {
                                         }}
                                         className={`w-full text-left text-sm font-semibold px-3 py-2 rounded-lg flex items-center gap-2.5 transition-colors ${
                                           editData.categoryId === cat.id && !editData.subcategoryId
-                                            ? 'bg-blue-50 dark:bg-red-900/30 text-blue-700 dark:text-red-300'
+                                            ? 'bg-[var(--marketing-surface)] dark:bg-[var(--marketing-surface)] text-[var(--marketing-pill-icon)] dark:text-[var(--marketing-pill-icon)] border border-[var(--marketing-pill-border)]'
                                             : 'hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-900 dark:text-white'
                                         }`}
                                       >
@@ -904,7 +874,7 @@ export default function TalentProfilePage() {
                                               }}
                                               className={`w-full text-left text-xs px-3 py-1.5 rounded-md transition-colors ${
                                                 editData.subcategoryId === sub.id
-                                                  ? 'bg-blue-50 dark:bg-red-900/20 text-blue-700 dark:text-red-300 font-semibold'
+                                                  ? 'bg-[var(--marketing-surface)] dark:bg-[var(--marketing-surface)] text-[var(--marketing-pill-icon)] dark:text-[var(--marketing-pill-icon)] font-semibold border border-[var(--marketing-pill-border)]'
                                                   : 'hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400'
                                               }`}
                                             >
@@ -920,12 +890,12 @@ export default function TalentProfilePage() {
                           )}
                         </div>
                       ) : (
-                        <button onClick={handleCategoryClick} className="px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-700 dark:bg-red-900/30 dark:text-red-300 uppercase tracking-wider">
+                        <button onClick={handleCategoryClick} className="px-3 py-1 rounded-full text-xs font-bold bg-[var(--marketing-pill-bg)] text-[var(--marketing-pill-icon)] dark:bg-[var(--marketing-pill-bg)] dark:text-[var(--marketing-pill-icon)] border border-[var(--marketing-pill-border)] uppercase tracking-wider">
                           {talent.category}
                         </button>
                       )}
                     {socialProof.isPopular && (
-                      <span className="flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-700 dark:bg-red-900/30 dark:text-red-300 uppercase tracking-wider">
+                      <span className="flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-[var(--marketing-pill-bg)] text-[var(--marketing-pill-icon)] dark:bg-[var(--marketing-pill-bg)] dark:text-[var(--marketing-pill-icon)] border border-[var(--marketing-pill-border)] uppercase tracking-wider">
                         <Sparkles size={12} /> {socialProof.badge}
                       </span>
                     )}
@@ -989,7 +959,7 @@ export default function TalentProfilePage() {
                     className={`flex-1 md:flex-none px-6 py-3 rounded-xl font-bold transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2 border ${
                       isLiked 
                         ? 'bg-blue-50 text-blue-600 border-blue-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800' 
-                        : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-red-500 hover:text-blue-500 dark:hover:text-red-400'
+                        : 'bg-light-surface dark:bg-dark-surface text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-red-500 hover:text-blue-500 dark:hover:text-red-400'
                     }`}
                   >
                     <CheckCircle2 size={20} />
@@ -997,7 +967,7 @@ export default function TalentProfilePage() {
                   </button>
                   <button 
                     onClick={handleShare}
-                    className="relative p-3 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-500 hover:text-blue-600 dark:hover:text-red-400 transition-colors shadow-sm"
+                    className="relative p-3 rounded-xl bg-light-surface dark:bg-dark-surface border border-gray-200 dark:border-gray-700 text-gray-500 hover:text-blue-600 dark:hover:text-red-400 transition-colors shadow-sm"
                   >
                     <Share2 size={20} />
                     {isShared && (
@@ -1011,14 +981,14 @@ export default function TalentProfilePage() {
                     <>
                       <button
                         onClick={() => router.push(`/admin/users/${talentUserId}`)}
-                        className="flex-1 md:flex-none px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-xs font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2"
+                        className="flex-1 md:flex-none px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-light-surface dark:bg-dark-surface text-xs font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2"
                       >
                         <Wrench size={14} />
                         Admin: User
                       </button>
                       <button
                         onClick={() => router.push(`/admin/reports?userId=${encodeURIComponent(talentUserId)}`)}
-                        className="flex-1 md:flex-none px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-xs font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2"
+                        className="flex-1 md:flex-none px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-light-surface dark:bg-dark-surface text-xs font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2"
                       >
                         <Flag size={14} />
                         Admin: Reports
@@ -1161,13 +1131,13 @@ export default function TalentProfilePage() {
                   onClick={() => setActiveTab(tab as any)}
                   className={`pb-3 text-lg font-semibold capitalize whitespace-nowrap transition-all relative ${
                     activeTab === tab 
-                      ? 'text-blue-600 dark:text-blue-400' 
+                      ? 'text-blue-600 dark:text-red-300' 
                       : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
                   }`}
                 >
                   {tab}
                   {activeTab === tab && (
-                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 dark:bg-blue-400 rounded-full"></span>
+                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 dark:bg-red-300 rounded-full"></span>
                   )}
                 </button>
               ))}
@@ -1191,7 +1161,7 @@ export default function TalentProfilePage() {
                         <button
                           key={item.id ?? `${item.mediaUrl}-${index}`}
                           onClick={() => openGallery(index)}
-                          className="group relative aspect-video rounded-2xl overflow-hidden bg-white dark:bg-gray-800 shadow-md hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-700"
+                          className="group relative aspect-video rounded-2xl overflow-hidden bg-light-surface dark:bg-dark-surface shadow-md hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-700"
                         >
                           {/* Media Content */}
                           {item.type === 'image' && (
@@ -1217,7 +1187,7 @@ export default function TalentProfilePage() {
                             )
                           )}
                           {item.type === 'audio' && (
-                            <div className="absolute inset-0 bg-gradient-to-br from-pink-500/20 to-orange-500/20 dark:from-pink-600/30 dark:to-orange-600/30" />
+                            <div className="absolute inset-0 bg-gradient-to-br from-pink-500/20 to-red-500/20 dark:from-pink-600/30 dark:to-red-600/30" />
                           )}
                           
                           {/* Overlay with Icon and Title */}
@@ -1252,7 +1222,7 @@ export default function TalentProfilePage() {
 
               {activeTab === 'about' && (
                 <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                  <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-sm border border-gray-100 dark:border-gray-700">
+                  <div className="bg-light-surface dark:bg-dark-surface rounded-2xl p-8 shadow-sm border border-gray-100 dark:border-gray-700">
                     <h3 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Biography</h3>
                     {editMode && isOwnProfile ? (
                       <textarea
@@ -1268,7 +1238,7 @@ export default function TalentProfilePage() {
                     )}
                   </div>
 
-                  <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-sm border border-gray-100 dark:border-gray-700">
+                  <div className="bg-light-surface dark:bg-dark-surface rounded-2xl p-8 shadow-sm border border-gray-100 dark:border-gray-700">
                     <h3 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Work History</h3>
                     <div className="space-y-8">
                       {talent.workHistory && talent.workHistory.length > 0 ? (
@@ -1312,7 +1282,7 @@ export default function TalentProfilePage() {
           <div className="lg:col-span-4 space-y-6 lg:sticky lg:top-24 h-fit">
             
             {/* Skills Card */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+            <div className="bg-light-surface dark:bg-dark-surface rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
                   <Zap size={20} className="text-blue-500 dark:text-red-500" />
@@ -1359,7 +1329,7 @@ export default function TalentProfilePage() {
             </div>
 
             {/* Details Card */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+            <div className="bg-light-surface dark:bg-dark-surface rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
                   <User size={20} className="text-blue-500 dark:text-red-500" />
@@ -1398,7 +1368,7 @@ export default function TalentProfilePage() {
                       type="number"
                       value={editData.age || ''}
                       onChange={(e) => setEditData(prev => ({ ...prev, age: e.target.value ? parseInt(e.target.value) : null }))}
-                      className="w-20 px-3 py-1 text-sm border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-red-500"
+                      className="w-20 px-3 py-1 text-sm border border-gray-200 dark:border-gray-600 rounded bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-red-500"
                       min="18"
                       max="100"
                     />
@@ -1439,7 +1409,7 @@ export default function TalentProfilePage() {
                           type="number"
                           value={editData.height || ''}
                           onChange={(e) => setEditData(prev => ({ ...prev, height: e.target.value ? parseInt(e.target.value) : null }))}
-                          className="w-20 px-3 py-1 text-sm border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-red-500"
+                          className="w-20 px-3 py-1 text-sm border border-gray-200 dark:border-gray-600 rounded bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-red-500"
                           min="140"
                           max="220"
                         />
@@ -1521,7 +1491,7 @@ export default function TalentProfilePage() {
 
             {/* Accessibility / Disabilities Card */}
             {talent.disabilities && talent.disabilities.length > 0 && (
-              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+              <div className="bg-light-surface dark:bg-dark-surface rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
                 <h3 className="text-lg font-bold mb-4 text-gray-900 dark:text-white flex items-center gap-2">
                   <User size={20} className="text-green-500" />
                   Accessibility
@@ -1546,7 +1516,7 @@ export default function TalentProfilePage() {
 
             {/* Social Media Card */}
             {talent.socialMedia && Array.isArray(talent.socialMedia) && talent.socialMedia.length > 0 && isVisible('showSocialMedia') && (
-              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+              <div className="bg-light-surface dark:bg-dark-surface rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
                 <h3 className="text-lg font-bold mb-4 text-gray-900 dark:text-white flex items-center gap-2">
                   <Share2 size={20} className="text-blue-500 dark:text-red-500" />
                   Social Media
@@ -1560,7 +1530,7 @@ export default function TalentProfilePage() {
                       rel="noopener noreferrer"
                       className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 dark:bg-gray-700/50 hover:bg-blue-50 dark:hover:bg-red-900/20 transition-colors group"
                     >
-                      <div className="w-8 h-8 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center shadow-sm text-gray-600 dark:text-gray-400 group-hover:text-blue-500 dark:group-hover:text-red-400 transition-colors">
+                      <div className="w-8 h-8 rounded-full bg-light-surface dark:bg-dark-surface flex items-center justify-center shadow-sm text-gray-600 dark:text-gray-400 group-hover:text-blue-500 dark:group-hover:text-red-400 transition-colors">
                         <Share2 size={16} />
                       </div>
                       <span className="font-medium text-gray-700 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-red-400">
@@ -1574,7 +1544,7 @@ export default function TalentProfilePage() {
 
             {/* Languages Card */}
             {isVisible('showLanguages') && (
-              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+              <div className="bg-light-surface dark:bg-dark-surface rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
                     <Languages size={20} className="text-blue-500 dark:text-red-500" />

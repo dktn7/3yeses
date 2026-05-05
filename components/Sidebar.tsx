@@ -30,10 +30,10 @@ export default function Sidebar({ isCollapsed = false, setIsCollapsed }: { isCol
     const navItems = [
         { href: `/${locale}`, icon: Home, label: t('home') },
         { href: `/${locale}/about`, icon: BookOpen, label: t('about') },
-        { href: `/${locale}/why-how`, icon: Compass, label: 'Why & How' },
+        { href: `/${locale}/why-how`, icon: Compass, label: t('whyAndHow') },
         { href: `/${locale}/categories`, icon: List, label: t('categories') },
         { href: `/${locale}/pricing`, icon: CreditCard, label: t('pricing') },
-        { href: `/${locale}/hub`, icon: Grid, label: 'Talent Hub' },
+        { href: `/${locale}/hub`, icon: Grid, label: t('talentHub') },
         { href: `/${locale}/support`, icon: Mail, label: t('support') }
     ];
 
@@ -100,7 +100,7 @@ export default function Sidebar({ isCollapsed = false, setIsCollapsed }: { isCol
 
 
     return (
-        <aside className={`bg-white/80 dark:bg-gray-900/90 backdrop-blur-sm border-r border-gray-200/60 dark:border-white/[0.08] text-gray-800 dark:text-white flex flex-col py-6 px-3 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] fixed top-16 left-0 h-[calc(100vh-4rem)] z-50 overflow-y-auto ${isCollapsed ? 'w-20' : 'w-60'}`}>
+        <aside className={`fixed top-16 left-0 z-50 flex h-[calc(100vh-4rem)] flex-col overflow-y-auto border-r border-[var(--chrome-border)] bg-[var(--chrome-bg)] px-3 py-6 text-blue-600 backdrop-blur-md transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] dark:text-red-500 ${isCollapsed ? 'w-20' : 'w-60'}`}>
             <div className="flex items-center justify-end mb-4">
            </div>
             <nav className="space-y-5 flex-1">
@@ -113,7 +113,7 @@ export default function Sidebar({ isCollapsed = false, setIsCollapsed }: { isCol
                             href={item.href}
                             className={`group flex items-center gap-3 py-2.5 px-4 rounded-xl transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${isActive
                                 ? 'bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] font-semibold shadow-sm ring-1 ring-[var(--brand-primary)]/15'
-                                : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/[0.06] hover:text-gray-900 dark:hover:text-white'
+                                : 'text-blue-600 dark:text-red-500 hover:bg-[var(--chrome-hover)] hover:text-blue-700 dark:hover:text-red-400'
                             }`}
                             style={{ animationDelay: `${index * 40}ms` }}
                         >
@@ -132,7 +132,7 @@ export default function Sidebar({ isCollapsed = false, setIsCollapsed }: { isCol
                     })}
                 </div>
 
-                <div className="h-px bg-gray-200/60 dark:bg-white/[0.06] mx-2" />
+                <div className="h-px bg-gray-200/60 dark:bg-red-200/10 mx-2" />
 
                 <div className="space-y-1">
                     {getDropdownItems().map((dropdown) => (
@@ -147,7 +147,7 @@ export default function Sidebar({ isCollapsed = false, setIsCollapsed }: { isCol
                                 onClick={() => handleDropdownClick(dropdown.label)}
                                 className={`group flex items-center justify-between w-full py-2.5 px-4 rounded-xl transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${openDropdown === dropdown.label
                                     ? 'bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] font-semibold ring-1 ring-[var(--brand-primary)]/15'
-                                    : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/[0.06] hover:text-gray-900 dark:hover:text-white'
+                                    : 'text-blue-600 dark:text-red-500 hover:bg-[var(--chrome-hover)] hover:text-blue-700 dark:hover:text-red-400'
                                 }`}
                             >
                                 <div className="flex items-center gap-3">
@@ -159,19 +159,19 @@ export default function Sidebar({ isCollapsed = false, setIsCollapsed }: { isCol
                             {isCollapsed && popoverOpen === dropdown.label &&
     ReactDOM.createPortal(
         <div
-            className="absolute w-52 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.4)] p-2 z-50 ring-1 ring-black/[0.06] dark:ring-white/[0.08]"
+            className="absolute z-50 w-52 rounded-xl bg-[var(--chrome-panel)] p-2 shadow-[0_8px_32px_rgba(0,0,0,0.12)] ring-1 ring-[var(--chrome-border)] backdrop-blur-md dark:shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
             style={{ top: `${popoverPosition.top}px`, left: `${popoverPosition.left}px` }}
             onMouseEnter={() => handleMouseEnter(dropdown.label)}
             onMouseLeave={handleMouseLeave}
         >
-            <div className="font-semibold text-xs uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-2 px-3 pt-1">{dropdown.label}</div>
+            <div className="mb-2 px-3 pt-1 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-red-200/70">{dropdown.label}</div>
             {dropdown.items.map((item) => (
                 <Link
                     key={item.label}
                     href={item.href}
-                    className={`flex items-center gap-2 py-2 px-3 rounded-lg text-sm transition-all duration-200 ${pathname === item.href
+                        className={`flex items-center gap-2 py-2 px-3 rounded-lg text-sm transition-all duration-200 ${pathname === item.href
                         ? 'bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] font-semibold'
-                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/[0.06]'
+                        : 'text-blue-600 dark:text-red-500 hover:bg-[var(--chrome-hover)]'
                     }`}
                 >
                     <span>{item.label}</span>
@@ -181,14 +181,14 @@ export default function Sidebar({ isCollapsed = false, setIsCollapsed }: { isCol
         document.getElementById('tooltip-root')!
     )}
                             {!isCollapsed && openDropdown === dropdown.label && (
-                                <div className="ml-3 mt-1 space-y-0.5 py-1.5 px-1 rounded-lg bg-gray-50/80 dark:bg-white/[0.03] ring-1 ring-black/[0.04] dark:ring-white/[0.06]">
+                                <div className="ml-3 mt-1 space-y-0.5 rounded-lg bg-black/[0.02] px-1 py-1.5 ring-1 ring-black/[0.04] dark:bg-white/[0.03] dark:ring-white/[0.06]">
                                     {dropdown.items.map((item) => (
                                         <Link
                                             key={item.label}
                                             href={item.href}
                                             className={`block py-2 px-3 rounded-lg text-sm transition-all duration-200 ${pathname === item.href
                                                 ? 'bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] font-semibold'
-                                                : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/[0.06]'
+                                                : 'text-blue-600 dark:text-red-500 hover:bg-[var(--chrome-hover)]'
                                             }`}
                                         >
                                             {item.label}
@@ -202,18 +202,18 @@ export default function Sidebar({ isCollapsed = false, setIsCollapsed }: { isCol
             </nav>
 
             <div className="mt-auto pt-3">
-                <div className="h-px bg-gray-200/60 dark:bg-white/[0.06] mx-2 mb-4" />
+                <div className="h-px bg-gray-200/60 dark:bg-red-200/10 mx-2 mb-4" />
                 <div className={`flex items-center justify-center ${isCollapsed ? 'flex-col space-y-3' : 'space-x-3'}`}>
-                    <a href="#" className="text-gray-400 hover:text-[var(--brand-primary)] transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:scale-110" aria-label="Twitter">
+                    <a href="#" className="text-gray-400 dark:text-red-200/70 hover:text-[var(--brand-primary)] transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:scale-110" aria-label="Twitter">
                         <Twitter className="h-4.5 w-4.5" />
                     </a>
-                    <a href="#" className="text-gray-400 hover:text-[var(--brand-primary)] transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:scale-110" aria-label="Facebook">
+                    <a href="#" className="text-gray-400 dark:text-red-200/70 hover:text-[var(--brand-primary)] transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:scale-110" aria-label="Facebook">
                         <Facebook className="h-4.5 w-4.5" />
                     </a>
-                    <a href="#" className="text-gray-400 hover:text-[var(--brand-primary)] transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:scale-110" aria-label="Instagram">
+                    <a href="#" className="text-gray-400 dark:text-red-200/70 hover:text-[var(--brand-primary)] transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:scale-110" aria-label="Instagram">
                         <Instagram className="h-4.5 w-4.5" />
                     </a>
-                    <a href="#" className="text-gray-400 hover:text-[var(--brand-primary)] transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:scale-110" aria-label="TikTok">
+                    <a href="#" className="text-gray-400 dark:text-red-200/70 hover:text-[var(--brand-primary)] transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:scale-110" aria-label="TikTok">
                         <TikTokIcon className="h-4.5 w-4.5" />
                     </a>
                 </div>
@@ -221,7 +221,7 @@ export default function Sidebar({ isCollapsed = false, setIsCollapsed }: { isCol
             <div className="pt-4">
                     <button
                     onClick={() => { if (typeof setIsCollapsed === 'function') setIsCollapsed(!isCollapsed); }}
-                    className="group flex items-center justify-center w-full py-2.5 px-4 rounded-xl text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-white/[0.06] transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]"
+                    className="group flex w-full items-center justify-center rounded-xl px-4 py-2.5 text-gray-400 dark:text-red-200/70 transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-[var(--chrome-hover)] hover:text-gray-600 dark:hover:text-red-100"
                     aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
                 >
                     {isCollapsed ? <ChevronsRight size={18} className="transition-transform duration-300 group-hover:translate-x-0.5" /> : <ChevronsLeft size={18} className="transition-transform duration-300 group-hover:-translate-x-0.5" />}

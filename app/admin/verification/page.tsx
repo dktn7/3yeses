@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   BadgeCheck,
   Search,
@@ -43,11 +43,7 @@ export default function AdminVerificationPage() {
   const [selectedRequest, setSelectedRequest] = useState<VerificationRequest | null>(null);
   const [rejectReason, setRejectReason] = useState("");
 
-  useEffect(() => {
-    fetchRequests();
-  }, [filter]);
-
-  const fetchRequests = async () => {
+    const fetchRequests = useCallback(async () => {
     setIsLoading(true);
     try {
       const res = await fetch(`/api/admin/verification/requests?status=${filter}`);
@@ -59,7 +55,11 @@ export default function AdminVerificationPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+    }, [filter]);
+
+    useEffect(() => {
+        fetchRequests();
+    }, [fetchRequests]);
 
   const handleAction = async (action: 'APPROVE' | 'REJECT') => {
     if(!selectedRequest) return;

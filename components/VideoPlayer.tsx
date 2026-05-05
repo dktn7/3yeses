@@ -1,11 +1,14 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from 'react';
-import ReactPlayer from 'react-player';
+import sendTelemetryEvent from '@/lib/telemetry';
+import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
 import SwoopingTick from './SwoopingTick';
 import { User, Play, Pause, Volume2, VolumeX, Maximize, ExternalLink, Loader2, Settings, RectangleHorizontal, Captions, Check, ChevronRight, ChevronLeft, Music, Image as ImageIcon } from 'lucide-react';
+
+const ReactPlayer = dynamic(() => import('react-player'), { ssr: false });
 
 type VideoPlayerProps = {
     url: string;
@@ -28,9 +31,11 @@ type VideoPlayerProps = {
     isTheaterMode?: boolean;
     type?: 'IMAGE' | 'VIDEO' | 'AUDIO';
     thumbnail?: string;
+    mediaId?: string;
 };
 
-export default function VideoPlayer({ url, className, talentProfile, showLogo = true, relatedMedia = [], onMediaSelect, onToggleTheater, isTheaterMode = false, type = 'VIDEO', thumbnail }: VideoPlayerProps) {
+export default function VideoPlayer({ url, className, talentProfile, showLogo = true, relatedMedia = [], onMediaSelect, onToggleTheater, isTheaterMode = false, type = 'VIDEO', thumbnail, mediaId }: VideoPlayerProps) {
+    const [isClient, setIsClient] = useState(false);
     const [hasError, setHasError] = useState(false);
     const [isReady, setIsReady] = useState(false);
     const [playing, setPlaying] = useState(false);
@@ -55,10 +60,15 @@ export default function VideoPlayer({ url, className, talentProfile, showLogo = 
     const playerRef = useRef<any>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const settingsRef = useRef<HTMLDivElement>(null);
+    const lastQuartileRef = useRef<number>(0);
 
     const isYoutube = !!url && (url.includes('youtube.com') || url.includes('youtu.be'));
     const isImage = type === 'IMAGE';
     const isAudio = type === 'AUDIO';
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
     
     // Audio visualization animation
     useEffect(() => {
@@ -165,6 +175,7 @@ export default function VideoPlayer({ url, className, talentProfile, showLogo = 
         setPlaying(false);
         setEnded(true);
         setShowControls(true);
+        try { void sendTelemetryEvent({ event: 'play_complete', mediaUrl: url, mediaId, ts: Date.now(), duration }); } catch {}
     };
 
     const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -204,7 +215,23 @@ export default function VideoPlayer({ url, className, talentProfile, showLogo = 
 
     const handleProgress = (state: { played: number }) => {
         if (!seeking) {
-            setPlayed(state.played);
+                        setPlayed(state.played);
+                        // Telemetry: report quartiles once per playback
+                        try {
+                            const p = state.played || 0;
+                            if (p >= 0.25 && lastQuartileRef.current < 1) {
+                                lastQuartileRef.current = 1;
+                                void sendTelemetryEvent({ event: 'play_quartile', quartile: 25, mediaUrl: url, mediaId });
+                            }
+                            if (p >= 0.5 && lastQuartileRef.current < 2) {
+                                lastQuartileRef.current = 2;
+                                void sendTelemetryEvent({ event: 'play_quartile', quartile: 50, mediaUrl: url, mediaId });
+                            }
+                            if (p >= 0.75 && lastQuartileRef.current < 3) {
+                                lastQuartileRef.current = 3;
+                                void sendTelemetryEvent({ event: 'play_quartile', quartile: 75, mediaUrl: url, mediaId });
+                            }
+                        } catch {}
         }
     };
 
@@ -423,7 +450,7 @@ export default function VideoPlayer({ url, className, talentProfile, showLogo = 
                                         </div>
                                     ) : (
                                         <div className="w-full h-full relative">
-                                            {React.createElement(ReactPlayer as any, {
+                                            {isClient ? React.createElement(ReactPlayer as any, {
                                         ref: playerRef,
                                         url,
                                         width: '100%',
@@ -439,11 +466,12 @@ export default function VideoPlayer({ url, className, talentProfile, showLogo = 
                                         onDuration: handleDuration,
                                         onError: () => setHasError(true),
                                         onSeek: (seconds: number) => {
-                                            console.log('Seeked to:', seconds);
+                                            try { void sendTelemetryEvent({ event: 'seek', seconds, mediaUrl: url, mediaId, ts: Date.now() }); } catch {}
                                         },
                                         onPlay: () => {
                                             setPlaying(true);
                                             setEnded(false);
+                                            try { void sendTelemetryEvent({ event: 'play_start', mediaUrl: url, mediaId, ts: Date.now() }); } catch {}
                                         },
                                         onPause: () => setPlaying(false),
                                         onEnded: handleEnded,
@@ -478,7 +506,9 @@ export default function VideoPlayer({ url, className, talentProfile, showLogo = 
                                                 }
                                             }
                                         },
-                                            })}
+                                            }) : (
+                                                <div className="w-full h-full bg-black" aria-hidden="true" />
+                                            )}
                                         </div>
                                     )}
                                 </div>
@@ -657,9 +687,9 @@ export default function VideoPlayer({ url, className, talentProfile, showLogo = 
                                             step="any"
                                             value={muted ? 0 : volume}
                                             onChange={handleVolumeChange}
-                                            className="w-0 overflow-hidden group-hover/volume:w-20 transition-all duration-300 h-1.5 bg-white/30 rounded-lg appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:rounded-full"
+                                            className="w-0 overflow-hidden group-hover/volume:w-20 transition-all duration-300 h-1.5 bg-light-surface/30 rounded-lg appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:bg-light-surface [&::-webkit-slider-thumb]:rounded-full"
                                             style={{
-                                                backgroundImage: `linear-gradient(to right, white ${(muted ? 0 : volume) * 100}%, rgba(255,255,255,0.3) ${(muted ? 0 : volume) * 100}%)`
+                                                backgroundImage: `linear-gradient(to right, var(--background) ${(muted ? 0 : volume) * 100}%, rgba(255,255,255,0.3) ${(muted ? 0 : volume) * 100}%)`
                                             }}
                                         />
                                     </div>

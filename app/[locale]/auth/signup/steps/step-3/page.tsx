@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import Image from 'next/image';
+import SwoopingTick from '@/components/SwoopingTick';
 import { MdCloudUpload, MdDelete, MdImage, MdVideoLibrary } from 'react-icons/md';
 
 interface VideoLink {
@@ -339,13 +340,13 @@ export default function SignupStep3() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-red-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-blue-50 to-blue-200 dark:from-[#1a0508] dark:via-[#2d080d] dark:to-[#0f0204] px-4 py-12">
       <div className="max-w-2xl w-full">
         {/* Breadcrumb */}
         <nav className="mb-6 text-sm">
           <ol className="flex items-center space-x-2 text-gray-600 dark:text-gray-400">
-            <li><Link href="/" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Home</Link></li>
-            <li className="flex items-center"><span className="mx-2">/</span><Link href="/auth/signup" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Sign Up</Link></li>
+            <li><Link href="/" className="hover:text-primary-blue dark:hover:text-accent-red transition-colors">Home</Link></li>
+            <li className="flex items-center"><span className="mx-2">/</span><Link href="/auth/signup" className="hover:text-primary-blue dark:hover:text-accent-red transition-colors">Sign Up</Link></li>
             <li className="flex items-center"><span className="mx-2">/</span><span className="text-gray-900 dark:text-gray-100 font-medium">Step 3</span></li>
           </ol>
         </nav>
@@ -362,12 +363,15 @@ export default function SignupStep3() {
         </div>
 
         {/* Form Card */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700">
+        <div className="bg-light-surface dark:bg-dark-surface rounded-2xl shadow-2xl p-8 border border-blue-200 dark:border-gray-700">
           {/* Header with context based on account type */}
           <div className="text-center mb-8">
+            <div className="flex items-center justify-center mb-4">
+              <SwoopingTick size={52} className="text-primary-blue dark:text-accent-red" />
+            </div>
             {accountType === 'PARENT_MANAGED' && childName && (
-              <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg">
-                <p className="text-blue-800 dark:text-blue-300 text-sm">
+              <div className="mb-4 p-4 bg-blue-50 dark:bg-red-900/20 border border-blue-200 dark:border-red-800 rounded-lg">
+                <p className="text-blue-800 dark:text-red-200 text-sm">
                   Uploading photos and media for <span className="font-semibold">{childName}</span>
                 </p>
               </div>
@@ -456,7 +460,7 @@ export default function SignupStep3() {
                   Upload audio samples to showcase your work (MP3, WAV, M4A, AAC, OGG, FLAC)
                 </p>
                 <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors mb-3">
-                  <MdCloudUpload className="text-4xl text-blue-600 mb-2" />
+                  <MdCloudUpload className="text-4xl text-primary-blue dark:text-accent-red mb-2" />
                   <span className="text-sm text-gray-500 dark:text-gray-400">Upload Audio Files</span>
                   <span className="text-xs text-gray-400 dark:text-gray-500 mt-1">Max 50MB per file</span>
                   <input 
@@ -515,7 +519,7 @@ export default function SignupStep3() {
                   onClick={() => setUploadType('file')}
                   className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
                     uploadType === 'file'
-                      ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm'
+                      ? 'bg-light-surface dark:bg-dark-surface text-primary-blue dark:text-accent-red shadow-sm'
                       : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
                   }`}
                 >
@@ -526,7 +530,7 @@ export default function SignupStep3() {
                   onClick={() => setUploadType('url')}
                   className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
                     uploadType === 'url'
-                      ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm'
+                      ? 'bg-light-surface dark:bg-dark-surface text-primary-blue dark:text-accent-red shadow-sm'
                       : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
                   }`}
                 >
@@ -559,7 +563,7 @@ export default function SignupStep3() {
                     onChange={(e) => setVideoInput(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addVideoLink())}
                     placeholder={t('videoUrlPlaceholder')}
-                    className="flex-1 px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 transition-all"
+                    className="flex-1 px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red transition-all"
                   />
                   <button
                     type="button"
@@ -593,12 +597,12 @@ export default function SignupStep3() {
                         <div className="flex items-center gap-2">
                           {video.type === 'file' ? (
                             <>
-                              <span className="text-xs bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-0.5 rounded">FILE</span>
+                              <span className="text-xs bg-[var(--marketing-pill-bg)] dark:bg-[var(--marketing-pill-bg)] text-[var(--marketing-pill-icon)] dark:text-[var(--marketing-pill-icon)] px-2 py-0.5 rounded border border-[var(--marketing-pill-border)]">FILE</span>
                               <span className="text-sm text-gray-700 dark:text-gray-300 truncate">{video.file?.name}</span>
                             </>
                           ) : (
                             <>
-                              <span className="text-xs bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 px-2 py-0.5 rounded">URL</span>
+                              <span className="text-xs bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 px-2 py-0.5 rounded">URL</span>
                               <span className="text-sm text-gray-700 dark:text-gray-300 truncate">{video.url}</span>
                             </>
                           )}
@@ -623,8 +627,8 @@ export default function SignupStep3() {
             </div>
 
             {/* Note */}
-            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-              <p className="text-sm text-blue-800 dark:text-blue-200">
+            <div className="bg-[var(--marketing-surface)] dark:bg-[var(--marketing-surface)] border border-[var(--marketing-pill-border)] rounded-lg p-4">
+              <p className="text-sm text-[var(--marketing-pill-icon)] dark:text-[var(--marketing-pill-icon)]">
                 <strong>Note:</strong> Media uploads are optional but highly recommended. You can always add them later from your profile.
               </p>
             </div>
@@ -637,7 +641,7 @@ export default function SignupStep3() {
                     type="checkbox"
                     checked={mediaConsentGiven}
                     onChange={(e) => setMediaConsentGiven(e.target.checked)}
-                    className="mt-1 w-5 h-5 text-purple-600 border-gray-300 rounded focus:ring-purple-500 dark:border-gray-600 dark:bg-gray-700"
+                    className="mt-1 w-5 h-5 text-primary-blue dark:text-accent-red border-gray-300 rounded focus:ring-primary-blue dark:focus:ring-accent-red dark:border-gray-600 dark:bg-gray-700"
                   />
                   <span className="text-sm text-yellow-900 dark:text-yellow-200">
                     <strong>Parental Consent Required:</strong> I confirm that I am the parent/legal guardian of {childName}, 
@@ -659,7 +663,7 @@ export default function SignupStep3() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="flex-1 py-3 px-4 bg-gradient-to-r from-blue-600 to-red-600 hover:from-blue-700 hover:to-red-700 text-white font-bold rounded-lg transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 py-3 px-4 bg-gradient-to-r from-primary-blue to-accent-blue dark:from-accent-red dark:to-primary-red hover:opacity-95 text-white font-bold rounded-lg transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLoading ? (
                   <span className="flex items-center justify-center gap-2">

@@ -120,7 +120,7 @@ export default function SavedTalentsPage() {
               <select
                 value={filter}
                 onChange={(e) => setFilter(e.target.value)}
-                className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="bg-light-surface dark:bg-dark-surface border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red"
               >
                 <option value="all">{t('dashboard.allCategories')}</option>
                 {categories.map((c) => (
@@ -133,7 +133,7 @@ export default function SavedTalentsPage() {
 
         {/* Talents Grid */}
         {filteredTalents.length === 0 ? (
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-12 text-center">
+          <div className="bg-light-surface dark:bg-dark-surface rounded-xl shadow-sm p-12 text-center">
             <Heart className="h-16 w-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
               {t('dashboard.noSavedTalents')}
@@ -143,7 +143,7 @@ export default function SavedTalentsPage() {
             </p>
             <Link
               href={`/${locale}/talents`}
-              className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+              className="inline-block bg-primary-blue hover:bg-primary-blue/90 dark:bg-accent-red dark:hover:bg-accent-red/90 text-white px-6 py-2 rounded-lg font-medium transition-colors"
             >
               {t('dashboard.browseTalents')}
             </Link>

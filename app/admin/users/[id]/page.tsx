@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -93,11 +93,7 @@ export default function UserDetailPage() {
   const [deleteMediaModal, setDeleteMediaModal] = useState<{ id: string; title: string; type: 'portfolio' | 'media' } | null>(null);
   const [mediaTab, setMediaTab] = useState<'portfolio' | 'images' | 'videos' | 'assets'>('portfolio');
 
-  useEffect(() => {
-    if (userId) fetchUser();
-  }, [userId]);
-
-  const fetchUser = async () => {
+  const fetchUser = useCallback(async () => {
     try {
       setLoading(true);
       const res = await fetch(`/api/admin/users/${userId}`);
@@ -113,7 +109,11 @@ export default function UserDetailPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [userId]);
+
+  useEffect(() => {
+    if (userId) fetchUser();
+  }, [userId, fetchUser]);
 
   const handleAction = async (action: string) => {
     setActionLoading(true);

@@ -9,6 +9,19 @@ const FROM_EMAIL = process.env.EMAIL_FROM || 'onboarding@resend.dev';
 const APP_NAME = '3YESES';
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3002';
 
+function withEmailUtm(url: string, campaign: string, content?: string): string {
+  try {
+    const parsed = new URL(url);
+    parsed.searchParams.set('utm_source', '3yeses-email');
+    parsed.searchParams.set('utm_medium', 'transactional');
+    parsed.searchParams.set('utm_campaign', campaign);
+    if (content) parsed.searchParams.set('utm_content', content);
+    return parsed.toString();
+  } catch {
+    return url;
+  }
+}
+
 // Rate limiting: Track last email send time
 let lastEmailTime = 0;
 const MIN_EMAIL_INTERVAL = 500; // 500ms = 2 emails per second max
@@ -109,7 +122,8 @@ async function renderDbTemplate(
 }
 
 export async function sendVerificationEmail(email: string, token: string, locale: string = 'en') {
-  const verificationUrl = `${APP_URL}/${locale}/auth/verify-email?token=${token}`;
+  const verificationUrl = withEmailUtm(`${APP_URL}/${locale}/auth/verify-email?token=${token}`, 'email-verification', 'primary-cta');
+  const contactUrl = withEmailUtm(`${APP_URL}/contact`, 'email-verification', 'support-link');
 
   // Try DB template first (allows admin customization)
   const dbResult = await renderDbTemplate('email-verification', {
@@ -174,7 +188,7 @@ export async function sendVerificationEmail(email: string, token: string, locale
     <!-- Help -->
     <div style="margin-top:32px;padding-top:24px;border-top:1px solid #e2e8f0;" class="dark-border">
       <p style="margin:0;font-size:13px;color:#64748b;text-align:center;" class="dark-subtle">
-        Need help? <a href="${APP_URL}/contact" style="color:#1d4ed8;text-decoration:none;font-weight:500;">Contact Support</a>
+        Need help? <a href="${contactUrl}" style="color:#1d4ed8;text-decoration:none;font-weight:500;">Contact Support</a>
       </p>
     </div>
   `;
@@ -189,7 +203,8 @@ export async function sendVerificationEmail(email: string, token: string, locale
 }
 
 export async function sendPasswordResetEmail(email: string, token: string, locale: string = 'en') {
-  const resetUrl = `${APP_URL}/${locale}/auth/reset-password?token=${token}`;
+  const resetUrl = withEmailUtm(`${APP_URL}/${locale}/auth/reset-password?token=${token}`, 'password-reset', 'primary-cta');
+  const contactUrl = withEmailUtm(`${APP_URL}/contact`, 'password-reset', 'support-link');
 
   // Try DB template first
   const dbResult = await renderDbTemplate('password-reset', {
@@ -254,7 +269,7 @@ export async function sendPasswordResetEmail(email: string, token: string, local
     <!-- Help -->
     <div style="margin-top:32px;padding-top:24px;border-top:1px solid #e2e8f0;" class="dark-border">
       <p style="margin:0;font-size:13px;color:#64748b;text-align:center;" class="dark-subtle">
-        Having trouble? <a href="${APP_URL}/contact" style="color:#1d4ed8;text-decoration:none;font-weight:500;">Contact Support</a>
+        Having trouble? <a href="${contactUrl}" style="color:#1d4ed8;text-decoration:none;font-weight:500;">Contact Support</a>
       </p>
     </div>
   `;
@@ -274,11 +289,14 @@ export async function sendParentalConsentEmail(
   consentUrl: string,
   locale: string = 'en'
 ) {
+  const trackedConsentUrl = withEmailUtm(consentUrl, 'parental-consent', 'primary-cta');
+  const contactUrl = withEmailUtm(`${APP_URL}/contact`, 'parental-consent', 'support-link');
+
   // Try DB template first
   const dbResult = await renderDbTemplate('parental-consent', {
     childName,
     parentEmail,
-    consentUrl,
+    consentUrl: trackedConsentUrl,
   }, parentEmail);
 
   if (dbResult) {
@@ -307,13 +325,13 @@ export async function sendParentalConsentEmail(
       <tr>
         <td align="center">
           <!--[if mso]>
-          <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${consentUrl}" style="height:50px;v-text-anchor:middle;width:280px;" arcsize="16%" stroke="f" fillcolor="#1d4ed8">
+          <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${trackedConsentUrl}" style="height:50px;v-text-anchor:middle;width:280px;" arcsize="16%" stroke="f" fillcolor="#1d4ed8">
             <w:anchorlock/>
             <center style="color:#ffffff;font-family:sans-serif;font-size:16px;font-weight:600;">Review &amp; Provide Consent</center>
           </v:roundrect>
           <![endif]-->
           <!--[if !mso]><!-->
-          <a href="${consentUrl}" style="display:inline-block;background:#1d4ed8;color:#ffffff;text-decoration:none;padding:14px 44px;border-radius:8px;font-size:16px;font-weight:600;box-shadow:0 4px 14px rgba(29,78,216,0.35);min-width:200px;text-align:center;">
+          <a href="${trackedConsentUrl}" style="display:inline-block;background:#1d4ed8;color:#ffffff;text-decoration:none;padding:14px 44px;border-radius:8px;font-size:16px;font-weight:600;box-shadow:0 4px 14px rgba(29,78,216,0.35);min-width:200px;text-align:center;">
             Review &amp; Provide Consent
           </a>
           <!--<![endif]-->
@@ -324,7 +342,7 @@ export async function sendParentalConsentEmail(
     <!-- Fallback URL -->
     <p style="margin:0 0 28px 0;font-size:13px;color:#64748b;text-align:center;" class="dark-subtle">
       If the button doesn&rsquo;t work, copy and paste this URL:<br>
-      <span style="color:#1d4ed8;font-family:'Courier New',monospace;word-break:break-all;">${consentUrl}</span>
+      <span style="color:#1d4ed8;font-family:'Courier New',monospace;word-break:break-all;">${trackedConsentUrl}</span>
     </p>
 
     <!-- Info note -->
@@ -338,7 +356,7 @@ export async function sendParentalConsentEmail(
     <!-- Help -->
     <div style="margin-top:32px;padding-top:24px;border-top:1px solid #e2e8f0;" class="dark-border">
       <p style="margin:0;font-size:13px;color:#64748b;text-align:center;" class="dark-subtle">
-        Questions about parental consent? <a href="${APP_URL}/contact" style="color:#1d4ed8;text-decoration:none;font-weight:500;">Contact Support</a>
+        Questions about parental consent? <a href="${contactUrl}" style="color:#1d4ed8;text-decoration:none;font-weight:500;">Contact Support</a>
       </p>
     </div>
   `;
@@ -353,7 +371,8 @@ export async function sendParentalConsentEmail(
 }
 
 export async function sendWelcomeEmail(email: string, name: string, locale: string = 'en') {
-  const dashboardUrl = `${APP_URL}/${locale}/dashboard`;
+  const dashboardUrl = withEmailUtm(`${APP_URL}/${locale}/dashboard`, 'welcome-email', 'primary-cta');
+  const contactUrl = withEmailUtm(`${APP_URL}/contact`, 'welcome-email', 'support-link');
 
   // Try DB template first
   const dbResult = await renderDbTemplate('welcome-email', {
@@ -380,7 +399,7 @@ export async function sendWelcomeEmail(email: string, name: string, locale: stri
     </h1>
 
     <p style="margin:0 0 28px 0;font-size:16px;color:#475569;line-height:1.7;" class="dark-text mobile-text">
-      Your email has been verified and your ${APP_NAME} account is now active. We&rsquo;re thrilled to have you in the community &mdash; start building your portfolio and connecting with opportunities.
+      Your email has been verified and your ${APP_NAME} account is now active. Start building your portfolio, optimize your profile, and track performance in your dashboard.
     </p>
 
     <!-- CTA Button -->
@@ -437,7 +456,7 @@ export async function sendWelcomeEmail(email: string, name: string, locale: stri
           <td>
             <table role="presentation" cellpadding="0" cellspacing="0"><tr>
               <td style="width:28px;height:28px;background:#1d4ed8;border-radius:50%;color:#ffffff;text-align:center;line-height:28px;font-weight:700;font-size:13px;vertical-align:middle;">4</td>
-              <td style="padding-left:12px;font-size:15px;color:#475569;vertical-align:middle;" class="dark-text">Connect with the community</td>
+              <td style="padding-left:12px;font-size:15px;color:#475569;vertical-align:middle;" class="dark-text">Track performance in your dashboard analytics</td>
             </tr></table>
           </td>
         </tr>
@@ -447,7 +466,7 @@ export async function sendWelcomeEmail(email: string, name: string, locale: stri
     <!-- Help -->
     <div style="margin-top:32px;padding-top:24px;border-top:1px solid #e2e8f0;" class="dark-border">
       <p style="margin:0;font-size:13px;color:#64748b;text-align:center;" class="dark-subtle">
-        Need help getting started? <a href="${APP_URL}/contact" style="color:#1d4ed8;text-decoration:none;font-weight:500;">Contact Support</a>
+        Need help getting started? <a href="${contactUrl}" style="color:#1d4ed8;text-decoration:none;font-weight:500;">Contact Support</a>
       </p>
     </div>
   `;
@@ -472,7 +491,7 @@ export async function sendSupportNotification({ ticket, user }: { ticket: any; u
     priority: ticket.priority || 'MEDIUM',
     userName: user?.name || 'Unknown',
     userEmail: user?.email || 'Unknown',
-    appUrl: APP_URL,
+    appUrl: withEmailUtm(APP_URL, 'support-ticket-created', 'app-link'),
   } as Record<string, string>;
 
   const dbResult = await renderDbTemplate('support-ticket-created', vars, supportTo);
@@ -489,9 +508,62 @@ export async function sendSupportNotification({ ticket, user }: { ticket: any; u
     <p><strong>From:</strong> ${vars.userName} &lt;${vars.userEmail}&gt;</p>
     <hr />
     <pre style="white-space:pre-wrap">${ticket.message}</pre>
-    <p><a href="${APP_URL}/admin/support">Open admin support</a></p>
+    <p><a href="${withEmailUtm(`${APP_URL}/admin/support`, 'support-ticket-created', 'admin-link')}">Open admin support</a></p>
   `;
 
   const html = wrapEmailContent(innerHtml, { subject, recipientEmail: supportTo, preheaderText: `New support ticket ${ticket.id}` });
   return sendEmail({ to: supportTo, subject, html });
+}
+
+// Send a reply to a user for an existing support ticket
+export async function sendTicketReply({ ticket, reply, admin }: { ticket: any; reply: string; admin?: { name?: string; email?: string } }) {
+  const recipient = ticket?.user?.email || ticket?.guestEmail;
+  if (!recipient) {
+    console.warn('sendTicketReply: no recipient for ticket', ticket?.id);
+    return { success: false, message: 'No recipient email' };
+  }
+
+  const vars: Record<string, string> = {
+    ticketId: ticket.id,
+    subject: ticket.subject,
+    reply: reply,
+    adminName: admin?.name || 'Support',
+    adminEmail: admin?.email || '',
+    appUrl: withEmailUtm(APP_URL, 'support-reply', 'app-link'),
+  };
+
+  // Try DB-driven template first
+  const dbResult = await renderDbTemplate('support-ticket-reply', vars, recipient);
+  if (dbResult) {
+    return sendEmail({ to: recipient, subject: dbResult.subject, html: dbResult.html });
+  }
+
+  // Fallback HTML (escape reply)
+  function escapeHtml(text: string) {
+    return text.replace(/[&<>\"'`]/g, (c) => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '\"': '&quot;',
+      "'": '&#39;',
+      '`': '&#96;'
+    } as Record<string, string>)[c]);
+  }
+
+  const subject = `Response to your support ticket: ${ticket.subject}`;
+  const safeReply = escapeHtml(reply).replace(/\n/g, '<br/>');
+
+  const innerHtml = `
+    <h2>Reply regarding your support ticket</h2>
+    <p>Hello ${ticket?.user?.name || ''},</p>
+    <p>${admin?.name || 'Support'} has replied to your ticket (#${ticket.id}).</p>
+    <div style="border-left:4px solid #e2e8f0;padding:12px;margin:12px 0;background:#f8fafc;">
+      ${safeReply}
+    </div>
+    <p>View your ticket: <a href="${withEmailUtm(`${APP_URL}/support`, 'support-reply', 'ticket-link')}">Open Support Center</a></p>
+    <p>If you have further questions, reply to this email.</p>
+  `;
+
+  const html = wrapEmailContent(innerHtml, { subject, recipientEmail: recipient, preheaderText: `Reply from 3yeses support on ticket ${ticket.id}` });
+  return sendEmail({ to: recipient, subject, html });
 }

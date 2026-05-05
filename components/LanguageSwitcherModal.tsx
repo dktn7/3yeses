@@ -76,7 +76,7 @@ export default function LanguageSwitcherModal() {
                 <div className="fixed inset-0 z-[150] flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm">
                     <div
                         ref={modalRef}
-                        className="bg-white dark:bg-gray-900 rounded-t-2xl sm:rounded-2xl shadow-2xl p-5 w-full max-w-xs mx-auto animate-in slide-in-from-bottom-4 sm:slide-in-from-bottom-0 fade-in duration-200"
+                        className="bg-light-surface dark:bg-dark-surface rounded-t-2xl sm:rounded-2xl shadow-2xl p-5 w-full max-w-xs mx-auto animate-in slide-in-from-bottom-4 sm:slide-in-from-bottom-0 fade-in duration-200"
                     >
                         <div className="flex justify-between items-center mb-4">
                             <h2 className="text-base font-semibold text-gray-800 dark:text-white">

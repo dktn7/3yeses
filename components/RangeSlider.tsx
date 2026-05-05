@@ -68,7 +68,7 @@ export default function RangeSlider({ min = 0, max = 100, step = 1, values, onCh
           className="absolute left-0 w-0"
           style={{ left: `calc(${pct(low)}% - 1.25rem / 2)` }}
         >
-          <div className="absolute top-8 left-1/2 -translate-x-1/2 text-xs font-semibold text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-900 px-2 py-0.5 rounded shadow border border-gray-200 dark:border-gray-700 pointer-events-none select-none">
+          <div className="absolute top-8 left-1/2 -translate-x-1/2 text-xs font-semibold text-gray-700 dark:text-gray-200 bg-light-surface dark:bg-dark-surface px-2 py-0.5 rounded shadow border border-gray-200 dark:border-gray-700 pointer-events-none select-none">
             {low}
           </div>
         </div>
@@ -77,7 +77,7 @@ export default function RangeSlider({ min = 0, max = 100, step = 1, values, onCh
           className="absolute left-0 w-0"
           style={{ left: `calc(${pct(high)}% - 1.25rem / 2)` }}
         >
-          <div className="absolute top-8 left-1/2 -translate-x-1/2 text-xs font-semibold text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-900 px-2 py-0.5 rounded shadow border border-gray-200 dark:border-gray-700 pointer-events-none select-none">
+          <div className="absolute top-8 left-1/2 -translate-x-1/2 text-xs font-semibold text-gray-700 dark:text-gray-200 bg-light-surface dark:bg-dark-surface px-2 py-0.5 rounded shadow border border-gray-200 dark:border-gray-700 pointer-events-none select-none">
             {high}
           </div>
         </div>

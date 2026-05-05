@@ -1,23 +1,20 @@
 ﻿'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Plus, Edit, Trash2, Save, X, ChevronRight, ChevronDown, AlertTriangle, Image as ImageIcon, Music, Film, Camera, Mic, Palette, Star, Users, Globe, Sparkles, Heart, Zap, Award, Headphones, Video, Paintbrush, Megaphone, Tv, Smile, Activity } from 'lucide-react';
+import { Plus, Edit, Trash2, Save, X, ChevronRight, ChevronDown, AlertTriangle, Image as ImageIcon } from 'lucide-react';
+import { getCategoryIconByName, getAvailableCategoryIconNames } from '@/lib/categoryIcons';
 import AdminModal from '@/components/admin/AdminModal';
 import { toast } from 'sonner';
 
-// Category icon mapping
-const ICON_MAP: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
-  Music, Film, Camera, Mic, Palette, Star, Users, Globe, Sparkles, Heart, Zap, Award, Headphones, Video, Paintbrush, Megaphone, Tv, Smile, Activity,
-};
-
-const AVAILABLE_ICONS = Object.keys(ICON_MAP);
-
 function CategoryIcon({ iconName, size = 18, className = '' }: { iconName?: string | null; size?: number; className?: string }) {
   if (!iconName) return null;
-  const IconComponent = ICON_MAP[iconName];
-  if (!IconComponent) return null;
-  return <IconComponent size={size} className={className} />;
+  // Resolve by the stored DB icon key
+  const Resolved = getCategoryIconByName(undefined, iconName);
+  if (!Resolved) return null;
+  return <Resolved width={size} height={size} className={className} />;
 }
+
+const AVAILABLE_ICONS = getAvailableCategoryIconNames();
 
 interface Subcategory {
   id: string;

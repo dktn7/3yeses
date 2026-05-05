@@ -141,7 +141,7 @@ export default function AnalyticsPage() {
       {/* Charts Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* User Growth Chart */}
-        <div className="bg-[var(--admin-surface)] border border-[var(--admin-border)] rounded-xl p-6">
+        <div className="bg-[var(--admin-surface)] border border-[var(--admin-border)] rounded-xl p-6 admin-invert-optout">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-lg font-bold text-[var(--admin-text)]">User Growth</h2>
             <TrendingUp className="h-5 w-5 text-[var(--admin-muted)]" />
@@ -179,7 +179,7 @@ export default function AnalyticsPage() {
         </div>
 
         {/* Profile Growth Chart */}
-        <div className="bg-[var(--admin-surface)] border border-[var(--admin-border)] rounded-xl p-6">
+        <div className="bg-[var(--admin-surface)] border border-[var(--admin-border)] rounded-xl p-6 admin-invert-optout">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-lg font-bold text-[var(--admin-text)]">Profile Growth</h2>
             <Activity className="h-5 w-5 text-[var(--admin-muted)]" />

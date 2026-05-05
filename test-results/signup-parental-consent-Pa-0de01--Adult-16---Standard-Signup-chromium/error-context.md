@@ -1,0 +1,236 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - link "3YESES" [ref=e5] [cursor=pointer]:
+          - /url: /en
+          - text: 3YESES
+          - img [ref=e6]
+        - button "Toggle theme" [ref=e11] [cursor=pointer]:
+          - img [ref=e12]
+          - generic [ref=e14]: Toggle theme
+      - generic [ref=e15]:
+        - link "Log In" [ref=e16] [cursor=pointer]:
+          - /url: /en/auth/signin
+        - link "Sign Up" [ref=e17] [cursor=pointer]:
+          - /url: /en/auth/signup/steps/step-1
+        - button "English" [ref=e19] [cursor=pointer]:
+          - img "English" [ref=e20]
+    - generic [ref=e21]:
+      - generic [ref=e22]:
+        - complementary [ref=e23]:
+          - navigation [ref=e24]:
+            - generic [ref=e25]:
+              - link "Home" [ref=e26] [cursor=pointer]:
+                - /url: /en-gb
+                - img [ref=e27]
+                - generic [ref=e30]: Home
+              - link "About" [ref=e31] [cursor=pointer]:
+                - /url: /en-gb/about
+                - img [ref=e32]
+                - generic [ref=e34]: About
+              - link "Why & How" [ref=e35] [cursor=pointer]:
+                - /url: /en-gb/why-how
+                - img [ref=e36]
+                - generic [ref=e39]: Why & How
+              - link "Categories" [ref=e40] [cursor=pointer]:
+                - /url: /en-gb/categories
+                - img [ref=e41]
+                - generic [ref=e42]: Categories
+              - link "Pricing" [ref=e43] [cursor=pointer]:
+                - /url: /en-gb/pricing
+                - img [ref=e44]
+                - generic [ref=e46]: Pricing
+              - link "Talent Hub" [ref=e47] [cursor=pointer]:
+                - /url: /en-gb/hub
+                - img [ref=e48]
+                - generic [ref=e50]: Talent Hub
+              - link "Support" [ref=e51] [cursor=pointer]:
+                - /url: /en-gb/support
+                - img [ref=e52]
+                - generic [ref=e55]: Support
+            - button "Legal" [ref=e59] [cursor=pointer]:
+              - generic [ref=e60]:
+                - img [ref=e61]
+                - generic [ref=e63]: Legal
+              - img [ref=e64]
+          - generic [ref=e68]:
+            - link "Twitter" [ref=e69] [cursor=pointer]:
+              - /url: "#"
+              - img [ref=e70]
+            - link "Facebook" [ref=e72] [cursor=pointer]:
+              - /url: "#"
+              - img [ref=e73]
+            - link "Instagram" [ref=e75] [cursor=pointer]:
+              - /url: "#"
+              - img [ref=e76]
+            - link "TikTok" [ref=e79] [cursor=pointer]:
+              - /url: "#"
+              - img [ref=e80]
+          - button "Collapse sidebar" [ref=e84] [cursor=pointer]:
+            - img [ref=e85]
+        - generic [ref=e89]:
+          - main [ref=e90]:
+            - generic [ref=e92]:
+              - generic [ref=e94]:
+                - generic [ref=e95]: Account Information
+                - generic [ref=e96]: 1 / 3
+              - generic [ref=e99]:
+                - generic [ref=e100]:
+                  - heading "Account Information" [level=1] [ref=e101]
+                  - paragraph [ref=e102]: Basic details
+                - generic [ref=e103]:
+                  - generic [ref=e104]:
+                    - generic [ref=e105]: Date of Birth *
+                    - textbox [ref=e106]
+                    - paragraph [ref=e107]: Date of birth is required
+                  - generic [ref=e108]:
+                    - generic [ref=e109]:
+                      - generic [ref=e110]:
+                        - generic [ref=e111]: First Name *
+                        - textbox "John" [ref=e112]
+                      - generic [ref=e113]:
+                        - generic [ref=e114]: Last Name *
+                        - textbox "Doe" [ref=e115]: Adult
+                    - generic [ref=e116]:
+                      - generic [ref=e117]: Email Address *
+                      - textbox "your.email@example.com" [ref=e118]: adult-1774580673056@test.com
+                    - generic [ref=e119]:
+                      - generic [ref=e120]: Phone Number *
+                      - generic [ref=e121]:
+                        - generic [ref=e122]:
+                          - log [ref=e124]
+                          - generic [ref=e125] [cursor=pointer]:
+                            - generic [ref=e126]:
+                              - generic [ref=e128]:
+                                - img "GB" [ref=e129]
+                                - generic [ref=e130]: "+44"
+                              - combobox [ref=e132]
+                            - img [ref=e135]
+                        - textbox "+44 7XXX XXXXXX" [ref=e137]: +44 7267569028
+                  - generic [ref=e138]:
+                    - generic [ref=e139]:
+                      - img [ref=e140]
+                      - heading "Account Security" [level=3] [ref=e143]
+                    - generic [ref=e144]:
+                      - generic [ref=e145]: Password *
+                      - generic [ref=e146]:
+                        - textbox "Create a strong password" [ref=e147]: SecurePass123!
+                        - button [ref=e148] [cursor=pointer]:
+                          - img [ref=e149]
+                      - generic [ref=e152]:
+                        - generic [ref=e153]:
+                          - generic [ref=e154]: Password Strength
+                          - generic [ref=e155]: Strong
+                        - generic [ref=e156]:
+                          - generic [ref=e157]:
+                            - img [ref=e158]
+                            - generic [ref=e161]: At least 8 characters
+                          - generic [ref=e162]:
+                            - img [ref=e163]
+                            - generic [ref=e166]: Uppercase letter (A-Z)
+                          - generic [ref=e167]:
+                            - img [ref=e168]
+                            - generic [ref=e171]: Lowercase letter (a-z)
+                          - generic [ref=e172]:
+                            - img [ref=e173]
+                            - generic [ref=e176]: Number (0-9)
+                    - generic [ref=e177]:
+                      - generic [ref=e178]: Confirm Password *
+                      - generic [ref=e179]:
+                        - textbox "Re-enter your password" [ref=e180]: SecurePass123!
+                        - button [ref=e181] [cursor=pointer]:
+                          - img [ref=e182]
+                    - generic [ref=e186] [cursor=pointer]:
+                      - checkbox "I agree to the Terms and Conditions and Privacy Policy *" [checked] [ref=e187]
+                      - generic [ref=e188]:
+                        - text: I agree to the
+                        - button "Terms and Conditions" [ref=e189]
+                        - text: and
+                        - button "Privacy Policy" [ref=e190]
+                        - text: "*"
+                  - generic [ref=e191]:
+                    - link "Back" [ref=e192] [cursor=pointer]:
+                      - /url: /auth/signup
+                    - button "Next Step" [active] [ref=e193] [cursor=pointer]
+                - generic [ref=e194]:
+                  - text: Already have an account?
+                  - link "Sign in" [ref=e195] [cursor=pointer]:
+                    - /url: /auth/signin
+          - contentinfo [ref=e196]:
+            - generic [ref=e197]:
+              - generic [ref=e198]:
+                - generic [ref=e199]:
+                  - heading "About Us" [level=4] [ref=e200]
+                  - paragraph [ref=e201]: Showcase your work to a live audience — subscribe to be discoverable and grow through views, likes, comments and shares.
+                - generic [ref=e202]:
+                  - heading "For Talent" [level=4] [ref=e203]
+                  - list [ref=e204]:
+                    - listitem [ref=e205]:
+                      - link "Join as Talent" [ref=e206] [cursor=pointer]:
+                        - /url: /auth/signup
+                    - listitem [ref=e207]:
+                      - link "Browse Categories" [ref=e208] [cursor=pointer]:
+                        - /url: /en-gb/categories
+                    - listitem [ref=e209]:
+                      - link "Pricing Plans" [ref=e210] [cursor=pointer]:
+                        - /url: /en-gb/pricing
+                - generic [ref=e211]:
+                  - heading "Contact Us" [level=4] [ref=e212]
+                  - list [ref=e213]:
+                    - listitem [ref=e214]:
+                      - img [ref=e215]
+                      - generic [ref=e218]: contact@3yeses.co.uk
+                    - listitem [ref=e219]:
+                      - img [ref=e220]
+                      - generic [ref=e222]: +44 121 123 4567
+                    - listitem [ref=e223]:
+                      - img [ref=e224]
+                      - generic [ref=e227]: Birmingham, UK
+              - generic [ref=e228]:
+                - paragraph [ref=e229]: © 2026 3YESES. All rights reserved.
+                - generic [ref=e230]:
+                  - generic [ref=e231]:
+                    - link [ref=e232] [cursor=pointer]:
+                      - /url: "#"
+                      - img [ref=e233]
+                    - link [ref=e235] [cursor=pointer]:
+                      - /url: "#"
+                      - img [ref=e236]
+                    - link [ref=e238] [cursor=pointer]:
+                      - /url: "#"
+                      - img [ref=e239]
+                    - link [ref=e242] [cursor=pointer]:
+                      - /url: "#"
+                      - img [ref=e243]
+                  - generic [ref=e246]:
+                    - link "Privacy Policy" [ref=e247] [cursor=pointer]:
+                      - /url: /en-gb/privacy
+                    - link "Terms of Service" [ref=e248] [cursor=pointer]:
+                      - /url: /en-gb/terms
+                    - button "Cookie Settings" [ref=e249] [cursor=pointer]
+      - generic [ref=e251]:
+        - generic [ref=e252]:
+          - img [ref=e254]
+          - heading "We care about your privacy" [level=3] [ref=e258]
+        - paragraph [ref=e259]: 3yeses uses cookies to enhance your experience, show you relevant talent profiles, and analyze how you use our platform. By clicking "Accept all cookies", you consent to our use of cookies.
+        - generic [ref=e260]:
+          - button "Accept all cookies" [ref=e261] [cursor=pointer]
+          - button "Reject all cookies" [ref=e262] [cursor=pointer]
+          - button "Manage preferences" [ref=e263] [cursor=pointer]
+  - generic [ref=e268] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=e269]:
+      - img [ref=e270]
+    - generic [ref=e273]:
+      - button "Open issues overlay" [ref=e274]:
+        - generic [ref=e275]:
+          - generic [ref=e276]: "0"
+          - generic [ref=e277]: "1"
+        - generic [ref=e278]: Issue
+      - button "Collapse issues badge" [ref=e279]:
+        - img [ref=e280]
+  - alert [ref=e282]
+```

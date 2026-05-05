@@ -91,7 +91,7 @@ export default function ResetPasswordPage() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-red-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 px-4 py-12">
         <div className="max-w-md w-full">
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700 text-center">
+          <div className="bg-light-surface dark:bg-dark-surface rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700 text-center">
             <div className="w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
               <MdLock className="text-4xl text-red-600 dark:text-red-400" />
             </div>
@@ -120,13 +120,13 @@ export default function ResetPasswordPage() {
         <nav className="mb-6 text-sm">
           <ol className="flex items-center space-x-2 text-gray-600 dark:text-gray-400">
             <li>
-              <Link href="/" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+              <Link href="/" className="hover:text-blue-600 dark:hover:text-red-300 transition-colors">
                 Home
               </Link>
             </li>
             <li className="flex items-center">
               <span className="mx-2">/</span>
-              <Link href="/auth/signin" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+              <Link href="/auth/signin" className="hover:text-blue-600 dark:hover:text-red-300 transition-colors">
                 Sign In
               </Link>
             </li>
@@ -138,7 +138,7 @@ export default function ResetPasswordPage() {
         </nav>
 
         {/* Reset Password Card */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700">
+        <div className="bg-light-surface dark:bg-dark-surface rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700">
           {!isSuccess ? (
             <>
               {/* Header */}
@@ -181,7 +181,7 @@ export default function ResetPasswordPage() {
                         errors.password
                           ? 'border-red-500 dark:border-red-500'
                           : 'border-gray-300 dark:border-gray-600'
-                      } bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-all`}
+                      } bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red focus:border-transparent transition-all`}
                     />
                     <button
                       type="button"
@@ -215,7 +215,7 @@ export default function ResetPasswordPage() {
                         errors.confirmPassword
                           ? 'border-red-500 dark:border-red-500'
                           : 'border-gray-300 dark:border-gray-600'
-                      } bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-all`}
+                      } bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red focus:border-transparent transition-all`}
                     />
                     <button
                       type="button"
@@ -233,7 +233,7 @@ export default function ResetPasswordPage() {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-red-600 hover:from-blue-700 hover:to-red-700 text-white font-medium rounded-lg transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full py-3 px-4 bg-gradient-to-r from-primary-blue to-accent-blue dark:from-accent-red dark:to-primary-red hover:opacity-95 text-white font-medium rounded-lg transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isLoading ? (
                     <span className="flex items-center justify-center gap-2">

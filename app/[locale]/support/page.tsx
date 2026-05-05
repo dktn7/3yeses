@@ -16,7 +16,7 @@ import Breadcrumbs from '@/components/Breadcrumbs';
 /* ── Background decoration (reuses pricing page "Layered Waves" style) ─ */
 function SupportBgDecoration() {
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0" aria-hidden="true">
+    <div className="absolute inset-0 overflow-hidden pointer-events-none select-none z-0 dark:opacity-90" aria-hidden="true">
       <svg className="w-full h-full" preserveAspectRatio="none" viewBox="0 0 1440 900" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <linearGradient id="supBg" x1="0" x2="0" y1="0" y2="1">
@@ -101,7 +101,7 @@ export default function SupportPage() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-white dark:bg-gray-950">
+    <div className="relative min-h-screen overflow-hidden landing-bg brand-true-red isolate">
       <SupportBgDecoration />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-24">
@@ -110,10 +110,12 @@ export default function SupportPage() {
 
         {/* ── Hero ── */}
         <div className="text-center mb-16">
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <SwoopingTick className="w-8 h-8 text-primary-blue dark:text-accent-red" />
-            <span className="text-xs font-bold uppercase tracking-[0.25em] text-primary-blue dark:text-accent-red">
-              {t('helpCentre')}
+          <div className="flex justify-center mb-6">
+            <span className="marketing-pill inline-flex items-center gap-3 rounded-full px-5 py-2.5 backdrop-blur-md bg-light-surface dark:bg-dark-surface border border-gray-200/60 dark:border-[var(--marketing-pill-border)] shadow-sm">
+              <SwoopingTick className="w-9 h-9 shrink-0 text-primary-blue dark:text-accent-red" />
+              <span className="text-xs font-bold uppercase tracking-[0.25em] text-primary-blue dark:text-accent-red">
+                {t('helpCentre')}
+              </span>
             </span>
           </div>
 
@@ -143,7 +145,7 @@ export default function SupportPage() {
                 placeholder={t('searchPlaceholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full backdrop-blur-xl bg-white/70 dark:bg-white/[0.08] border border-gray-200/60 dark:border-white/10 rounded-full pl-12 pr-10 py-3.5 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-blue/30 dark:focus:ring-accent-red/30 focus:border-primary-blue dark:focus:border-accent-red transition-all shadow-sm"
+                className="w-full backdrop-blur-xl bg-white/70 dark:bg-dark-surface/90 border border-gray-200/60 dark:border-red-400/20 rounded-full pl-12 pr-10 py-3.5 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-blue/30 dark:focus:ring-accent-red/30 focus:border-primary-blue dark:focus:border-accent-red transition-all shadow-sm"
               />
               {searchQuery && (
                 <button
@@ -174,9 +176,9 @@ export default function SupportPage() {
               {matchingFAQs.slice(0, 5).map((faq, idx) => (
                 <div
                   key={idx}
-                  className="rounded-xl border border-gray-200/60 dark:border-white/10 overflow-hidden backdrop-blur-sm bg-white/40 dark:bg-white/[0.03] p-5"
+                  className="rounded-xl border border-gray-200/60 dark:border-red-400/20 overflow-hidden backdrop-blur-sm bg-white/40 dark:bg-dark-surface p-5"
                 >
-                  <span className="block text-[0.65rem] font-bold uppercase tracking-widest text-primary-blue/60 dark:text-accent-red/60 mb-1">
+                  <span className="block text-[0.65rem] font-bold uppercase tracking-widest text-primary-blue/60 dark:text-accent-red/80 mb-1">
                     {faq.category}
                   </span>
                   <h3 className="font-semibold text-gray-900 dark:text-white text-sm mb-2">
@@ -205,9 +207,9 @@ export default function SupportPage() {
                   <Link
                     key={topic.title}
                     href={`/support/${topic.slug}`}
-                    className="group text-left rounded-[1.5rem] backdrop-blur-xl bg-white/60 dark:bg-white/[0.06] border border-gray-200/50 dark:border-white/10 p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary-blue/30 dark:focus:ring-accent-red/30"
+                    className="group text-left rounded-[1.5rem] backdrop-blur-xl bg-white/60 dark:bg-[rgba(10,14,22,0.82)] border border-gray-200/50 dark:border-red-400/20 p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary-blue/30 dark:focus:ring-accent-red/30"
                   >
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-blue/10 to-accent-blue/10 dark:from-accent-red/10 dark:to-primary-red/10 flex items-center justify-center mb-4">
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-blue/10 to-accent-blue/10 dark:from-red-900/70 dark:to-red-950/60 flex items-center justify-center mb-4">
                       <Icon className="w-6 h-6 text-primary-blue dark:text-accent-red" strokeWidth={1.5} />
                     </div>
                     <h3 className="font-bold text-gray-900 dark:text-white mb-1.5 group-hover:text-primary-blue dark:group-hover:text-accent-red transition-colors">
@@ -250,7 +252,7 @@ export default function SupportPage() {
 
         {/* ── FAQ Section ── */}
         <section id="faq-section">
-          <div className="rounded-[2rem] backdrop-blur-xl bg-white/60 dark:bg-white/[0.05] border border-gray-200/50 dark:border-white/10 shadow-lg p-8 md:p-10">
+          <div className="rounded-[2rem] backdrop-blur-xl bg-white/60 dark:bg-dark-surface border border-gray-200/50 dark:border-red-400/20 shadow-lg p-8 md:p-10">
             <div className="flex items-center gap-3 mb-6">
               <BookOpen className="w-6 h-6 text-primary-blue dark:text-accent-red" />
               <h2 className="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">
@@ -268,7 +270,7 @@ export default function SupportPage() {
             { icon: <MessageSquare className="w-4 h-4" />, label: t('replyTime') },
             { icon: <Mail className="w-4 h-4" />, label: t('trackedDashboard') },
           ].map(({ icon, label }) => (
-            <div key={label} className="flex items-center gap-2.5 text-sm text-gray-700 dark:text-gray-200 backdrop-blur-md bg-white/70 dark:bg-white/[0.06] px-4 py-2.5 rounded-full border border-gray-200/50 dark:border-white/10 shadow-sm">
+            <div key={label} className="marketing-pill flex items-center gap-2.5 text-sm text-gray-700 dark:text-slate-50 backdrop-blur-md bg-light-surface dark:bg-dark-surface px-4 py-2.5 rounded-full border border-gray-200/50 dark:border-[var(--marketing-pill-border)] shadow-sm">
               <span className="text-primary-blue dark:text-accent-red">{icon}</span>
               <span className="font-medium">{label}</span>
             </div>

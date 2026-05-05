@@ -14,7 +14,7 @@ export default function CategoryFilter({ categories }: { categories: string[] })
             <h3 className="text-lg font-semibold">Filter by Category</h3>
             <select
                 onChange={(e) => handleCategoryChange(e.target.value)}
-                className="w-full p-3 border rounded-lg bg-white"
+                className="w-full p-3 border rounded-lg bg-light-surface dark:bg-dark-surface"
             >
                 <option value="all">All Categories</option>
                 {categories.map((category) => (

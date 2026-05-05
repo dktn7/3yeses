@@ -9,7 +9,7 @@ import SwoopingTick from '@/components/SwoopingTick';
 /* ── Background decoration ─ */
 function HelpBgDecoration() {
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0" aria-hidden="true">
+    <div className="absolute inset-0 overflow-hidden pointer-events-none select-none z-0 dark:opacity-90" aria-hidden="true">
       <svg className="w-full h-full" preserveAspectRatio="none" viewBox="0 0 1440 900" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <linearGradient id="helpBg" x1="0" x2="0" y1="0" y2="1">
@@ -48,13 +48,13 @@ function HelpFAQ({ items }: { items: { q: string; a: string }[] }) {
         return (
           <div
             key={idx}
-            className="rounded-xl border border-gray-200/60 dark:border-white/10 overflow-hidden backdrop-blur-sm bg-white/40 dark:bg-white/[0.03] transition-shadow hover:shadow-sm"
+            className="rounded-xl border border-gray-200/60 dark:border-red-400/20 overflow-hidden backdrop-blur-sm bg-light-surface dark:bg-dark-surface transition-shadow hover:shadow-sm"
           >
             <button
               type="button"
               aria-expanded={isOpen}
               onClick={() => setOpenIndex(isOpen ? null : idx)}
-              className="w-full text-left px-5 py-4 flex items-center justify-between gap-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/30 dark:focus-visible:ring-accent-red/30"
+              className="w-full text-left px-5 py-4 flex items-center justify-between gap-4 hover:bg-black/[0.02] dark:hover:bg-white/[0.04] focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/30 dark:focus-visible:ring-accent-red/35"
             >
               <span className="font-semibold text-gray-900 dark:text-white text-sm">{item.q}</span>
               <ChevronDown
@@ -111,7 +111,7 @@ export default function HelpSectionPage({
 }: HelpSectionPageProps) {
   const t = useTranslations('support');
   return (
-    <div className="relative min-h-screen overflow-hidden">
+    <div className="relative min-h-screen overflow-hidden landing-bg brand-true-red isolate">
       <HelpBgDecoration />
 
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-24">
@@ -119,7 +119,7 @@ export default function HelpSectionPage({
         {/* Back link */}
         <Link
           href="/support"
-          className="inline-flex items-center gap-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-primary-blue dark:hover:text-accent-red transition-colors mb-8"
+          className="inline-flex items-center gap-2 text-sm font-medium text-gray-500 dark:text-gray-300 hover:text-primary-blue dark:hover:text-accent-red focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/30 dark:focus-visible:ring-accent-red/35 rounded-sm transition-colors mb-8"
         >
           <ArrowLeft className="w-4 h-4" />
           {t('backToHelp')}
@@ -127,8 +127,8 @@ export default function HelpSectionPage({
 
         {/* Hero */}
         <div className="text-center mb-12">
-          <div className="flex items-center justify-center gap-3 mb-5">
-            <SwoopingTick className="w-7 h-7 text-primary-blue dark:text-accent-red" />
+          <div className="marketing-pill mb-5 inline-flex items-center justify-center gap-3 rounded-full border border-primary-blue/20 bg-light-surface px-5 py-2.5 shadow-sm backdrop-blur-md dark:border-[var(--marketing-pill-border)] dark:bg-dark-surface">
+            <SwoopingTick className="h-8 w-8 shrink-0 text-primary-blue dark:text-accent-red" />
             <span className="text-xs font-bold uppercase tracking-[0.25em] text-primary-blue dark:text-accent-red">
               {label}
             </span>
@@ -150,14 +150,13 @@ export default function HelpSectionPage({
             {description}
           </p>
         </div>
-
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
 
           {/* Main content */}
           <div className="lg:col-span-3 space-y-8">
             {/* Guides */}
             {guides.length > 0 && (
-              <div className="rounded-[2rem] backdrop-blur-xl bg-white/60 dark:bg-white/[0.05] border border-gray-200/50 dark:border-white/10 shadow-lg p-8">
+              <div className="rounded-[2rem] backdrop-blur-xl bg-light-surface dark:bg-dark-surface border border-gray-200/50 dark:border-red-400/20 shadow-lg p-8">
                 <div className="flex items-center gap-3 mb-6">
                   {icon}
                   <h2 className="text-xl font-bold text-gray-900 dark:text-white">{t('quickGuide')}</h2>
@@ -168,7 +167,7 @@ export default function HelpSectionPage({
 
             {/* FAQ */}
             {faqs.length > 0 && (
-              <div className="rounded-[2rem] backdrop-blur-xl bg-white/60 dark:bg-white/[0.05] border border-gray-200/50 dark:border-white/10 shadow-lg p-8">
+              <div className="rounded-[2rem] backdrop-blur-xl bg-light-surface dark:bg-dark-surface border border-gray-200/50 dark:border-red-400/20 shadow-lg p-8">
                 <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">
                   {t('faqTitle')}
                 </h2>
@@ -181,7 +180,7 @@ export default function HelpSectionPage({
           <aside className="lg:col-span-2 space-y-5">
             <Link
               href={`/support/submit-ticket`}
-              className="group flex items-center gap-3 rounded-[1.5rem] backdrop-blur-xl bg-white/60 dark:bg-white/[0.06] border border-gray-200/50 dark:border-white/10 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 p-6"
+              className="group flex items-center gap-3 rounded-[1.5rem] backdrop-blur-xl bg-light-surface dark:bg-dark-surface border border-gray-200/50 dark:border-red-400/20 shadow-sm hover:shadow-lg hover:-translate-y-0.5 hover:border-primary-blue/30 dark:hover:border-red-300/35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/30 dark:focus-visible:ring-accent-red/35 transition-all duration-300 p-6"
             >
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-blue/10 to-accent-blue/10 dark:from-accent-red/10 dark:to-primary-red/10 flex items-center justify-center flex-shrink-0">
                 <LifeBuoy className="w-5 h-5 text-primary-blue dark:text-accent-red" />
@@ -196,7 +195,7 @@ export default function HelpSectionPage({
               </div>
             </Link>
 
-            <div className="rounded-[1.5rem] backdrop-blur-xl bg-white/60 dark:bg-white/[0.06] border border-gray-200/50 dark:border-white/10 shadow-sm p-6">
+            <div className="rounded-[1.5rem] backdrop-blur-xl bg-light-surface dark:bg-dark-surface border border-gray-200/50 dark:border-red-400/20 shadow-sm p-6">
               <h3 className="font-bold text-gray-900 dark:text-white text-sm mb-3">{t('relatedTopics')}</h3>
               <div className="space-y-2">
                 {[
@@ -213,7 +212,7 @@ export default function HelpSectionPage({
                     <Link
                       key={topic.href}
                       href={topic.href}
-                      className="block text-sm text-gray-600 dark:text-gray-300 hover:text-primary-blue dark:hover:text-accent-red transition-colors py-1"
+                      className="block text-sm text-gray-600 dark:text-gray-300 hover:text-primary-blue dark:hover:text-accent-red focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/30 dark:focus-visible:ring-accent-red/35 rounded-sm transition-colors py-1"
                     >
                       {topic.label}
                     </Link>

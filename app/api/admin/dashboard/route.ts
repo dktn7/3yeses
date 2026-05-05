@@ -4,14 +4,45 @@ import { withAdminAuth } from '@/lib/middleware/adminAuth';
 import { prisma } from '@/lib/prisma';
 import os from 'os';
 
-async function handler(request: NextRequest) {
+type CountRow = { count: bigint | number };
+
+async function getUserCounts() {
   try {
-    // Get counts for different user types
     const [totalUsers, totalTalent, adminCount] = await Promise.all([
       prisma.user.count(),
       prisma.user.count({ where: { role: 'TALENT' } }),
       prisma.user.count({ where: { role: 'ADMIN' } }),
     ]);
+
+    return { totalUsers, totalTalent, adminCount };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+
+    // Some local/dev DBs have role as text and not a PostgreSQL enum type.
+    if (!message.includes('type "public.UserRole" does not exist')) {
+      throw error;
+    }
+
+    const [totalRows, talentRows, adminRows] = await Promise.all([
+      prisma.$queryRaw<CountRow[]>`SELECT COUNT(*)::bigint AS count FROM "User"`,
+      prisma.$queryRaw<CountRow[]>`SELECT COUNT(*)::bigint AS count FROM "User" WHERE UPPER("role"::text) = 'TALENT'`,
+      prisma.$queryRaw<CountRow[]>`SELECT COUNT(*)::bigint AS count FROM "User" WHERE UPPER("role"::text) = 'ADMIN'`,
+    ]);
+
+    const toNumber = (value: bigint | number | undefined) => Number(value ?? 0);
+
+    return {
+      totalUsers: toNumber(totalRows[0]?.count),
+      totalTalent: toNumber(talentRows[0]?.count),
+      adminCount: toNumber(adminRows[0]?.count),
+    };
+  }
+}
+
+async function handler(request: NextRequest) {
+  try {
+    // Get counts for different user types
+    const { totalUsers, totalTalent, adminCount } = await getUserCounts();
 
     // Get talent profile statistics
     const [totalProfiles, completeProfiles] = await Promise.all([

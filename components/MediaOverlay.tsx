@@ -1,6 +1,8 @@
-'use client';
+"use client";
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { createPortal } from 'react-dom';
+import useFocusTrap from '@/hooks/useFocusTrap';
 import { useRouter } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import Link from 'next/link';
@@ -22,6 +24,8 @@ import CommentsSection from './CommentsSection';
 import SwoopingTick from './SwoopingTick';
 import MediaThumbnailFallback from './MediaThumbnailFallback';
 import FlagButton from './FlagButton';
+import AuthRequiredModal from './AuthRequiredModal';
+import { useAuthRequired } from '@/hooks/useAuthRequired';
 import { ModeToggle } from './ThemeToggle';
 import LanguageSwitcherModal from './LanguageSwitcherModal';
 import { useAuth } from '@/contexts/AuthContext';
@@ -56,12 +60,15 @@ interface MediaOverlayProps {
   talents?: any[]; // Optional for now to avoid breaking other usages if any
   onClose: () => void;
   onMediaSelect: (item: MediaItem) => void;
+  mode?: 'overlay' | 'embedded';
+  onBackToHub?: () => void;
 }
 
-export default function MediaOverlay({ media, allMedia, talents = [], onClose, onMediaSelect }: MediaOverlayProps) {
+export default function MediaOverlay({ media, allMedia, talents = [], onClose, onMediaSelect, mode = 'overlay', onBackToHub }: MediaOverlayProps) {
   const router = useRouter();
   const locale = useLocale();
   const { user } = useAuth();
+  const { showAuthModal, openAuthModal, closeAuthModal } = useAuthRequired();
   
   const [activeRightTab, setActiveRightTab] = useState<'recommended' | 'similar'>('recommended');
   const [playerFilter, setPlayerFilter] = useState<'all' | 'video' | 'audio' | 'image'>('all');
@@ -72,6 +79,11 @@ export default function MediaOverlay({ media, allMedia, talents = [], onClose, o
   const [showLoginToast, setShowLoginToast] = useState(false);
   const [isTheaterMode, setIsTheaterMode] = useState(false);
   const viewedItemsRef = useRef<Set<string>>(new Set());
+  const overlayRef = useRef<HTMLDivElement | null>(null);
+  const isEmbedded = mode === 'embedded';
+
+  // Trap focus inside the overlay and restore on close
+  useFocusTrap(overlayRef as any);
 
   // Fetch like status and track view when media changes
   useEffect(() => {
@@ -100,12 +112,11 @@ export default function MediaOverlay({ media, allMedia, talents = [], onClose, o
         body: JSON.stringify({ portfolioItemId: media.id }),
       }).catch(() => {});
     }
-  }, [media.id]);
+  }, [media.id, media.likeCount, media.talentProfile]);
 
   const handleLike = async () => {
     if (!user) {
-      setShowLoginToast(true);
-      setTimeout(() => setShowLoginToast(false), 3000);
+      openAuthModal();
       return;
     }
 
@@ -170,13 +181,13 @@ export default function MediaOverlay({ media, allMedia, talents = [], onClose, o
       
       return true;
     });
-  }, [allMedia, talent.id, playerFilter, searchQuery, media]);
+  }, [allMedia, talent, playerFilter, searchQuery, media]);
 
   // Recommended Videos (From other talents)
   const recommendedMedia = React.useMemo(() => {
     if (!allMedia) return [];
     return allMedia.filter(m => ((m.talentProfile as any).userId ?? m.talentProfile.id) !== ((talent as any).userId ?? talent.id)).slice(0, 10);
-  }, [allMedia, talent.id]);
+  }, [allMedia, talent]);
 
   // Similar Talents - sorted by media count (most active first)
   const similarTalents = React.useMemo(() => {
@@ -189,7 +200,7 @@ export default function MediaOverlay({ media, allMedia, talents = [], onClose, o
         if (bMediaCount !== aMediaCount) return bMediaCount - aMediaCount;
         return (a.user?.name || '').localeCompare(b.user?.name || '');
       });
-  }, [talents, talent.id]);
+  }, [talents, talent]);
 
   // Handle keyboard navigation
   const navigate = useCallback((direction: 'prev' | 'next') => {
@@ -224,18 +235,50 @@ export default function MediaOverlay({ media, allMedia, talents = [], onClose, o
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [navigate, onClose]);
 
-  // Prevent body scroll when overlay is open
+  // Prevent body scroll and make background inert while overlay is open
   useEffect(() => {
+    if (isEmbedded) return;
+
+    const overlayEl = overlayRef.current;
+    const bodyChildren = Array.from(document.body.children) as HTMLElement[];
+    const previous = new Map<HTMLElement, { inert: any; ariaHidden: string | null }>();
+
+    bodyChildren.forEach((child) => {
+      // Skip the subtree that contains the overlay so we don't accidentally hide it
+      if (overlayEl && (child === overlayEl || child.contains(overlayEl))) return;
+      previous.set(child, { inert: (child as any).inert, ariaHidden: child.getAttribute('aria-hidden') });
+      try { (child as any).inert = true; } catch {}
+      try { child.setAttribute('aria-hidden', 'true'); } catch {}
+    });
+
+    const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
+
     return () => {
-      document.body.style.overflow = 'unset';
+      // restore
+      try { document.body.style.overflow = prevOverflow || ''; } catch {}
+      previous.forEach((v, child) => {
+        try { (child as any).inert = v.inert; } catch {}
+        try {
+          if (v.ariaHidden === null) child.removeAttribute('aria-hidden');
+          else child.setAttribute('aria-hidden', v.ariaHidden as string);
+        } catch {}
+      });
     };
-  }, []);
+  }, [isEmbedded]);
 
   return (
-    <div className="fixed inset-0 z-[100] bg-gray-100 dark:bg-black overflow-y-auto md:overflow-hidden md:flex">
+    <div
+      ref={overlayRef}
+      role={isEmbedded ? undefined : 'dialog'}
+      aria-modal={isEmbedded ? undefined : 'true'}
+      aria-label={`Media: ${media.title}`}
+      className={isEmbedded
+        ? 'relative z-10 bg-gray-100 dark:bg-black overflow-y-auto md:overflow-hidden md:flex min-h-screen'
+        : 'fixed inset-0 z-[100] bg-gray-100 dark:bg-black overflow-y-auto md:overflow-hidden md:flex'}
+    >
       {/* Left Sidebar - Profile, Filters & Media List */}
-      <div className={`bg-white dark:bg-gray-900 border-r border-gray-300 dark:border-gray-800 flex-col overflow-hidden flex-shrink-0 hidden md:flex ${isTheaterMode ? '!hidden' : 'w-64 xl:w-72'}`}>
+      <div className={`bg-light-surface dark:bg-dark-surface border-r border-gray-300 dark:border-gray-800 flex-col overflow-hidden flex-shrink-0 hidden md:flex ${isTheaterMode ? '!hidden' : 'w-64 xl:w-72'}`}>
         {/* Header with Logo, Theme Toggle, Language & Close */}
         <div className="px-4 py-3 border-b border-gray-300 dark:border-gray-800 flex items-center justify-between gap-3">
           <span className="flex items-center gap-1.5 font-bold text-xl text-blue-600 dark:text-red-500 flex-shrink-0">
@@ -243,6 +286,14 @@ export default function MediaOverlay({ media, allMedia, talents = [], onClose, o
             <SwoopingTick size={26} />
           </span>
           <div className="flex items-center gap-2.5 ml-auto">
+            {isEmbedded && onBackToHub && (
+              <button
+                onClick={onBackToHub}
+                className="px-2.5 py-1.5 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-md text-xs font-medium transition-colors"
+              >
+                Back to Hub
+              </button>
+            )}
             <ModeToggle />
             <LanguageSwitcherModal />
             <button
@@ -400,7 +451,7 @@ export default function MediaOverlay({ media, allMedia, talents = [], onClose, o
       {/* Center - Media Viewer */}
       <div className="flex-1 flex flex-col min-w-0 overflow-y-auto scrollbar-hide relative min-h-screen md:min-h-0">
         {/* Mobile Header - Visible on <md where left sidebar is hidden */}
-        <div className="md:hidden bg-white dark:bg-gray-900 border-b border-gray-300 dark:border-gray-800 px-3 py-2 flex items-center justify-between flex-shrink-0 sticky top-0 z-40">
+        <div className="md:hidden bg-light-surface dark:bg-dark-surface border-b border-gray-300 dark:border-gray-800 px-3 py-2 flex items-center justify-between flex-shrink-0 sticky top-0 z-40">
           <div className="flex items-center gap-2 min-w-0">
             <div className="w-8 h-8 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-800 flex-shrink-0">
               {talent.avatarUrl ? (
@@ -415,6 +466,14 @@ export default function MediaOverlay({ media, allMedia, talents = [], onClose, o
             </div>
           </div>
           <div className="flex items-center gap-1.5 flex-shrink-0">
+            {isEmbedded && onBackToHub && (
+              <button
+                onClick={onBackToHub}
+                className="px-2 py-1 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded text-[11px] font-medium transition-colors"
+              >
+                Back
+              </button>
+            )}
             <ModeToggle />
             <LanguageSwitcherModal />
             <button
@@ -449,6 +508,7 @@ export default function MediaOverlay({ media, allMedia, talents = [], onClose, o
                }`}>
                  <VideoPlayer 
                    url={media.mediaUrl} 
+                   mediaId={media.id}
                    className="w-full h-full"
                    talentProfile={{
                      id: (media.talentProfile as any).userId ?? media.talentProfile.id,
@@ -494,7 +554,7 @@ export default function MediaOverlay({ media, allMedia, talents = [], onClose, o
         </div>
 
         {/* Bottom Info Bar */}
-        <div className="bg-white dark:bg-gray-900 border-t border-gray-300 dark:border-gray-800 p-4 flex-shrink-0">
+        <div className="bg-light-surface dark:bg-dark-surface border-t border-gray-300 dark:border-gray-800 p-4 flex-shrink-0">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-gray-900 dark:text-white font-bold text-xl mb-2">{media.title}</h2>
@@ -547,14 +607,14 @@ export default function MediaOverlay({ media, allMedia, talents = [], onClose, o
               <>
                 <button
                   onClick={() => router.push(`/admin/users/${talentUserId}`)}
-                  className="flex items-center gap-1 px-3 py-2 rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-[11px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  className="flex items-center gap-1 px-3 py-2 rounded-full border border-gray-200 dark:border-gray-700 bg-light-surface dark:bg-dark-surface text-[11px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                 >
                   <Wrench className="w-3 h-3" />
                   Admin
                 </button>
                 <button
                   onClick={() => router.push(`/admin/reports?userId=${encodeURIComponent(talentUserId)}`)}
-                  className="flex items-center gap-1 px-3 py-2 rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-[11px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  className="flex items-center gap-1 px-3 py-2 rounded-full border border-gray-200 dark:border-gray-700 bg-light-surface dark:bg-dark-surface text-[11px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                 >
                   <Flag className="w-3 h-3" />
                   Reports
@@ -565,13 +625,13 @@ export default function MediaOverlay({ media, allMedia, talents = [], onClose, o
         </div>
 
         {/* Comments Section */}
-        <div className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
+        <div className="bg-light-surface dark:bg-dark-surface border-t border-gray-200 dark:border-gray-800">
           <CommentsSection mediaId={media.id} mediaOwnerId={talentUserId} />
         </div>
       </div>
 
       {/* Right Sidebar - Recommended & Similar */}
-      <div className={`bg-white dark:bg-gray-900 md:border-l border-gray-300 dark:border-gray-800 flex flex-col md:overflow-hidden flex-shrink-0 ${isTheaterMode ? 'hidden' : 'w-full md:w-64 xl:w-72 md:max-h-full'}`}>
+      <div className={`bg-light-surface dark:bg-dark-surface md:border-l border-gray-300 dark:border-gray-800 flex flex-col md:overflow-hidden flex-shrink-0 ${isTheaterMode ? 'hidden' : 'w-full md:w-64 xl:w-72 md:max-h-full'}`}>
         {/* Tabs */}
         <div className="flex border-b border-gray-300 dark:border-gray-800">
           <button
@@ -669,6 +729,14 @@ export default function MediaOverlay({ media, allMedia, talents = [], onClose, o
           )}
         </div>
       </div>
+
+      <AuthRequiredModal
+        isOpen={showAuthModal}
+        onClose={closeAuthModal}
+        title="Sign in to like"
+        message="You need an account to like media. Continue to sign in or create an account."
+        action="like media"
+      />
     </div>
   );
 }

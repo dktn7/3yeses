@@ -121,7 +121,7 @@ const HeroSlideshow = () => {
             onClick={() => scrollTo(index)}
             className={`rounded-full transition-all duration-300 ${
               selectedIndex === index
-                ? 'w-6 h-2 bg-white shadow-lg'
+                ? 'w-6 h-2 bg-light-surface shadow-lg'
                 : 'w-2 h-2 bg-white/45 hover:bg-white/70'
             }`}
             aria-label={`Go to slide ${index + 1}: ${slides[index].category}`}

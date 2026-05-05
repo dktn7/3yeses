@@ -78,7 +78,7 @@ async function ensureSubcategory(categoryName, subName) {
     return;
   }
 
-  await prisma.talentSubcategory.create({ data: { name: subName, categoryId: cat.id, description: `${subName} (seeded)` } });
+  await prisma.talentSubcategory.create({ data: { name: subName, categoryId: cat.id, description: `${subName}` } });
   console.log(`Created subcategory: ${categoryName} -> ${subName}`);
 }
 

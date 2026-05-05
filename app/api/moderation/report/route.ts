@@ -98,6 +98,19 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    // Create a notification for the content owner (media flag event)
+    await prisma.talentNotification.create({
+      data: {
+        talentProfileId: portfolioItem.talentProfileId,
+        type: 'SYSTEM',
+        title: 'Your content was flagged',
+        message: `Your media has been flagged for ${reportType.toLowerCase().replace('_', ' ')}. The moderation team will review it shortly.`,
+        metadata: { reportId: report.id, portfolioItemId: portfolioItem.id },
+        read: false,
+        dismissed: false,
+      },
+    });
+
     return NextResponse.json({
       success: true,
       reportId: report.id,

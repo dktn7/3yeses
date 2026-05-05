@@ -50,7 +50,7 @@ function ActionDropdown({ user, onView, onEdit, onWarn, onBan, onDelete }: {
     { label: "View Profile", icon: Eye, onClick: onView, color: "text-[var(--admin-primary)]" },
     { label: "Edit User", icon: Edit, onClick: onEdit, color: "text-[var(--admin-text)]" },
     { label: "Send Warning", icon: AlertTriangle, onClick: onWarn, color: "text-amber-500" },
-    { label: "Ban User", icon: Ban, onClick: onBan, color: "text-orange-500" },
+    { label: "Ban User", icon: Ban, onClick: onBan, color: "text-red-500" },
     { label: "Delete User", icon: Trash2, onClick: onDelete, color: "text-rose-500" },
   ];
 
@@ -360,7 +360,7 @@ export default function UsersManagement() {
   const getRoleBadgeColor = (role: string) => {
     switch (role) {
       case "ADMIN": return "bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-300";
-      case "TALENT": return "bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-300";
+      case "TALENT": return "bg-blue-100 text-blue-700 dark:bg-red-500/20 dark:text-red-300";
       default: return "bg-[var(--admin-bg)] text-[var(--admin-muted)] ";
     }
   };

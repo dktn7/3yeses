@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { 
   Ticket, 
@@ -36,6 +36,14 @@ interface SupportTicket {
     id: string;
     name: string;
   };
+  internalNotes?: string;
+  messages?: Array<{
+    id: string;
+    content: string;
+    isStaff: boolean;
+    createdAt: string;
+    author?: { id?: string; name?: string; email?: string } | null;
+  }>;
   createdAt: string;
 }
 
@@ -65,11 +73,7 @@ export default function SupportPage() {
   const [isEditingArticle, setIsEditingArticle] = useState(false);
   const [currentArticle, setCurrentArticle] = useState<Partial<KBArticle> & { content?: string }>({});
 
-  useEffect(() => {
-    fetchData();
-  }, [activeTab]);
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
     try {
       if (activeTab === 'tickets') {
@@ -86,7 +90,11 @@ export default function SupportPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [activeTab]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   const handleTicketAction = async (id: string, action: string, value?: string) => {
     try {
@@ -192,7 +200,7 @@ export default function SupportPage() {
                 <input
                   type="text"
                   placeholder="Search tickets..."
-                  className="w-full pl-9 pr-4 py-2 bg-[var(--admin-bg)] bg-[var(--admin-surface)] border border-[var(--admin-border)] rounded-lg text-sm"
+                  className="w-full pl-9 pr-4 py-2 bg-[var(--admin-surface)] border border-[var(--admin-border)] rounded-lg text-sm"
                 />
               </div>
             </div>
@@ -212,7 +220,7 @@ export default function SupportPage() {
                       <div className="flex justify-between items-start mb-1">
                         <span className={`px-2 py-0.5 text-xs rounded-full ${
                           ticket.priority === 'URGENT' ? 'bg-red-100 text-red-700' :
-                          ticket.priority === 'HIGH' ? 'bg-orange-100 text-orange-700' :
+                          ticket.priority === 'HIGH' ? 'bg-red-50 text-red-700' :
                           'bg-blue-100 text-blue-700'
                         }`}>
                           {ticket.priority}
@@ -271,12 +279,36 @@ export default function SupportPage() {
                 </div>
                 
                 <div className="flex-1 overflow-y-auto p-6 space-y-6">
-                  <div className="bg-[var(--admin-bg)] bg-[var(--admin-surface)] p-4 rounded-lg">
+                  <div className="bg-[var(--admin-surface)] p-4 rounded-lg">
                     <p className="text-[var(--admin-muted)] whitespace-pre-wrap">
                       {selectedTicket.message}
                     </p>
                   </div>
-                  {/* Mock conversation history would go here */}
+                    {selectedTicket.messages && selectedTicket.messages.length > 0 ? (
+                      <div className="space-y-3">
+                        <h4 className="text-sm font-semibold text-[var(--admin-muted)]">Conversation</h4>
+                        <div className="space-y-3">
+                          {selectedTicket.messages.map((m) => (
+                            <div key={m.id} className={`p-4 rounded-lg ${m.isStaff ? 'bg-blue-50 dark:bg-blue-900/20' : 'bg-[var(--admin-bg)]'}`}>
+                              <div className="text-xs text-[var(--admin-muted)] mb-1">
+                                <strong>{m.author?.name || (m.isStaff ? 'Support' : selectedTicket.user?.name || selectedTicket.guestEmail || 'User')}</strong>
+                                <span className="ml-2">{new Date(m.createdAt).toLocaleString()}</span>
+                              </div>
+                              <div className="text-sm text-[var(--admin-muted)] whitespace-pre-wrap">{m.content}</div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ) : selectedTicket.internalNotes ? (
+                      <div className="space-y-3">
+                        <h4 className="text-sm font-semibold text-[var(--admin-muted)]">Conversation / Internal notes</h4>
+                        <div className="bg-[var(--admin-bg)] p-4 rounded-lg text-sm text-[var(--admin-muted)] whitespace-pre-wrap">
+                          {selectedTicket.internalNotes}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-sm text-[var(--admin-muted)]">No conversation history yet.</div>
+                    )}
                 </div>
 
                 <div className="p-4 border-t border-[var(--admin-border)]">
@@ -285,7 +317,7 @@ export default function SupportPage() {
                       value={replyMessage}
                       onChange={(e) => setReplyMessage(e.target.value)}
                       placeholder="Type your reply..."
-                      className="flex-1 p-3 bg-[var(--admin-bg)] bg-[var(--admin-surface)] border border-[var(--admin-border)] rounded-lg resize-none h-24 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="flex-1 p-3 bg-[var(--admin-surface)] border border-[var(--admin-border)] rounded-lg resize-none h-24 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                     <button
                       onClick={() => handleTicketAction(selectedTicket.id, 'reply', replyMessage)}
@@ -374,7 +406,7 @@ export default function SupportPage() {
               <div className="flex justify-end gap-3">
                 <button
                   onClick={() => setIsEditingArticle(false)}
-                  className="px-4 py-2 text-[var(--admin-muted)] hover:bg-[var(--admin-bg)] rounded-lg text-[var(--admin-muted)] dark:hover:bg-gray-700"
+                  className="px-4 py-2 text-[var(--admin-muted)] hover:bg-[var(--admin-bg)] rounded-lg dark:hover:bg-gray-700"
                 >
                   Cancel
                 </button>
@@ -389,7 +421,7 @@ export default function SupportPage() {
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm">
-                <thead className="bg-[var(--admin-bg)] bg-[var(--admin-surface)] text-[var(--admin-muted)]">
+                <thead className="bg-[var(--admin-surface)] text-[var(--admin-muted)]">
                   <tr>
                     <th className="px-6 py-3 font-medium">Title</th>
                     <th className="px-6 py-3 font-medium">Category</th>
@@ -409,7 +441,7 @@ export default function SupportPage() {
                         <span className={`px-2 py-1 rounded-full text-xs ${
                           article.isPublished 
                             ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
-                            : 'bg-[var(--admin-bg)] text-[var(--admin-muted)] bg-[var(--admin-bg)] text-[var(--admin-muted)]'
+                            : 'bg-[var(--admin-bg)] text-[var(--admin-muted)]'
                         }`}>
                           {article.isPublished ? 'Published' : 'Draft'}
                         </span>

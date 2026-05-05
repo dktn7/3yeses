@@ -166,7 +166,7 @@ export default function SmartSearch({ onSearch, placeholder = "Search users, pag
       case 'ADMIN':
         return 'bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-300';
       case 'TALENT':
-        return 'bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-300';
+        return 'bg-blue-100 text-blue-700 dark:bg-red-500/20 dark:text-red-300';
       default:
         return 'bg-gray-100 text-gray-700 dark:bg-gray-500/20 dark:text-gray-300';
     }

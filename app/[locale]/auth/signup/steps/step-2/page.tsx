@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
+import SwoopingTick from '@/components/SwoopingTick';
 
 interface Category {
   id: string;
@@ -408,13 +409,13 @@ export default function SignupStep2() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-red-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-blue-50 to-blue-200 dark:from-[#1a0508] dark:via-[#2d080d] dark:to-[#0f0204] px-4 py-12">
       <div className="max-w-2xl w-full">
         {/* Breadcrumb */}
         <nav className="mb-6 text-sm">
           <ol className="flex items-center space-x-2 text-gray-600 dark:text-gray-400">
-            <li><Link href="/" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Home</Link></li>
-            <li className="flex items-center"><span className="mx-2">/</span><Link href="/auth/signup" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Sign Up</Link></li>
+            <li><Link href="/" className="hover:text-blue-600 dark:hover:text-red-300 transition-colors">Home</Link></li>
+            <li className="flex items-center"><span className="mx-2">/</span><Link href="/auth/signup" className="hover:text-blue-600 dark:hover:text-red-300 transition-colors">Sign Up</Link></li>
             <li className="flex items-center"><span className="mx-2">/</span><span className="text-gray-900 dark:text-gray-100 font-medium">Step 2</span></li>
           </ol>
         </nav>
@@ -431,12 +432,15 @@ export default function SignupStep2() {
         </div>
 
         {/* Form Card */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700">
+        <div className="bg-light-surface dark:bg-dark-surface rounded-2xl shadow-2xl p-8 border border-blue-200 dark:border-gray-700">
           {/* Header with context based on account type */}
           <div className="text-center mb-8">
+            <div className="flex items-center justify-center mb-4">
+              <SwoopingTick size={52} className="text-primary-blue dark:text-accent-red" />
+            </div>
             {accountType === 'PARENT_MANAGED' && childName && (
-              <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg">
-                <p className="text-blue-800 dark:text-blue-300 text-sm">
+              <div className="mb-4 p-4 bg-blue-50 dark:bg-red-900/20 border border-blue-200 dark:border-red-700 rounded-lg">
+                <p className="text-blue-800 dark:text-red-300 text-sm">
                   Creating talent profile for <span className="font-semibold">{childName}</span>
                 </p>
               </div>
@@ -465,7 +469,7 @@ export default function SignupStep2() {
                 <select
                   value={formData.category}
                   onChange={(e) => handleCategoryChange(e.target.value)}
-                  className={`w-full px-4 py-3 rounded-lg border ${errors.category ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 transition-all`}
+                  className={`w-full px-4 py-3 rounded-lg border ${errors.category ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red transition-all`}
                 >
                   <option value="">{t('categoryPlaceholder')}</option>
                   {categories.map(cat => (
@@ -487,7 +491,7 @@ export default function SignupStep2() {
                 <select
                   value={formData.subcategory}
                   onChange={(e) => handleChange('subcategory', e.target.value)}
-                  className={`w-full px-4 py-3 rounded-lg border ${errors.subcategory ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 transition-all`}
+                  className={`w-full px-4 py-3 rounded-lg border ${errors.subcategory ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red transition-all`}
                 >
                   <option value="">Select a subcategory...</option>
                   {availableSubcategories.map(sub => (
@@ -510,7 +514,7 @@ export default function SignupStep2() {
                 onChange={(e) => handleChange('bio', e.target.value)}
                 placeholder={t('bioPlaceholder')}
                 rows={5}
-                className={`w-full px-4 py-3 rounded-lg border ${errors.bio ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 transition-all`}
+                className={`w-full px-4 py-3 rounded-lg border ${errors.bio ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red transition-all`}
               />
               <div className="flex justify-between mt-1">
                 {errors.bio && <p className="text-sm text-red-600 dark:text-red-400">{errors.bio}</p>}
@@ -533,13 +537,13 @@ export default function SignupStep2() {
                 }}
                 onFocus={() => setShowLocationDropdown(true)}
                 placeholder={t('locationPlaceholder')}
-                className={`w-full px-4 py-3 rounded-lg border ${errors.location ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 transition-all`}
+                className={`w-full px-4 py-3 rounded-lg border ${errors.location ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red transition-all`}
               />
               {errors.location && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.location}</p>}
               
               {/* Location Dropdown */}
               {showLocationDropdown && (
-                <div className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                <div className="absolute z-10 w-full mt-1 bg-light-surface dark:bg-dark-surface border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg max-h-60 overflow-y-auto">
                   {/* Popular Locations */}
                   {locationQuery.length === 0 && (
                     <>
@@ -595,7 +599,7 @@ export default function SignupStep2() {
               <select
                 value={formData.experienceLevel}
                 onChange={(e) => handleChange('experienceLevel', e.target.value)}
-                className={`w-full px-4 py-3 rounded-lg border ${errors.experienceLevel ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 transition-all`}
+                className={`w-full px-4 py-3 rounded-lg border ${errors.experienceLevel ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red transition-all`}
               >
                 <option value="">{t('experiencePlaceholder')}</option>
                 {experienceLevels.map(level => (
@@ -617,12 +621,12 @@ export default function SignupStep2() {
                   onChange={(e) => setSkillInput(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addSkill())}
                   placeholder={t('skillsPlaceholder')}
-                  className="flex-1 px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 transition-all"
+                  className="flex-1 px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red transition-all"
                 />
                 <button
                   type="button"
                   onClick={addSkill}
-                  className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+                  className="px-6 py-3 bg-primary-blue dark:bg-accent-red hover:bg-primary-blue/90 dark:hover:bg-accent-red/90 text-white rounded-lg transition-colors"
                 >
                   Add
                 </button>
@@ -630,7 +634,7 @@ export default function SignupStep2() {
               {formData.skills.length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-3">
                   {formData.skills.map(skill => (
-                    <span key={skill} className="inline-flex items-center gap-2 px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 rounded-full text-sm">
+                    <span key={skill} className="inline-flex items-center gap-2 px-3 py-1 bg-[var(--marketing-pill-bg)] dark:bg-[var(--marketing-pill-bg)] text-[var(--marketing-pill-icon)] dark:text-[var(--marketing-pill-icon)] border border-[var(--marketing-pill-border)] rounded-full text-sm">
                       {skill}
                       <button
                         type="button"
@@ -659,7 +663,7 @@ export default function SignupStep2() {
                 value={formData.dateOfBirth}
                 onChange={(e) => handleChange('dateOfBirth', e.target.value)}
                 max={new Date(new Date().setFullYear(new Date().getFullYear() - 16)).toISOString().split('T')[0]}
-                className={`w-full px-4 py-3 rounded-lg border ${errors.dateOfBirth ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 transition-all`}
+                className={`w-full px-4 py-3 rounded-lg border ${errors.dateOfBirth ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red transition-all`}
               />
               {errors.dateOfBirth && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.dateOfBirth}</p>}
             </div>
@@ -672,7 +676,7 @@ export default function SignupStep2() {
               <select
                 value={formData.gender}
                 onChange={(e) => handleChange('gender', e.target.value)}
-                className={`w-full px-4 py-3 rounded-lg border ${errors.gender ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 transition-all`}
+                className={`w-full px-4 py-3 rounded-lg border ${errors.gender ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red transition-all`}
               >
                 <option value="">{t('genderPlaceholder')}</option>
                 {genderOptions.map(option => (
@@ -685,7 +689,7 @@ export default function SignupStep2() {
                   value={formData.genderOther}
                   onChange={(e) => handleChange('genderOther', e.target.value)}
                   placeholder={t('genderOtherSpecify')}
-                  className="mt-2 w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 transition-all"
+                  className="mt-2 w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red transition-all"
                 />
               )}
               {errors.gender && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.gender}</p>}
@@ -699,7 +703,7 @@ export default function SignupStep2() {
               <select
                 value={formData.ethnicity}
                 onChange={(e) => handleChange('ethnicity', e.target.value)}
-                className={`w-full px-4 py-3 rounded-lg border ${errors.ethnicity ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 transition-all`}
+                className={`w-full px-4 py-3 rounded-lg border ${errors.ethnicity ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red transition-all`}
               >
                 <option value="">{t('ethnicityPlaceholder')}</option>
                 {ethnicityOptions.map(option => (
@@ -712,7 +716,7 @@ export default function SignupStep2() {
                   value={formData.ethnicityOther}
                   onChange={(e) => handleChange('ethnicityOther', e.target.value)}
                   placeholder={t('ethnicityOtherSpecify')}
-                  className="mt-2 w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 transition-all"
+                  className="mt-2 w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red transition-all"
                 />
               )}
               {errors.ethnicity && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.ethnicity}</p>}
@@ -726,7 +730,7 @@ export default function SignupStep2() {
               <select
                 value={formData.bodyType}
                 onChange={(e) => handleChange('bodyType', e.target.value)}
-                className={`w-full px-4 py-3 rounded-lg border ${errors.bodyType ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 transition-all`}
+                className={`w-full px-4 py-3 rounded-lg border ${errors.bodyType ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red transition-all`}
               >
                 <option value="">{t('bodyTypePlaceholder')}</option>
                 {bodyTypeOptions.map(option => (
@@ -748,12 +752,12 @@ export default function SignupStep2() {
                     value={languageInput.name}
                     onChange={(e) => setLanguageInput(prev => ({ ...prev, name: e.target.value }))}
                     placeholder={t('languageNamePlaceholder')}
-                    className="flex-1 px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 transition-all"
+                    className="flex-1 px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red transition-all"
                   />
                   <select
                     value={languageInput.proficiency}
                     onChange={(e) => setLanguageInput(prev => ({ ...prev, proficiency: e.target.value }))}
-                    className="px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 transition-all"
+                    className="px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red transition-all"
                   >
                     {proficiencyOptions.map(option => (
                       <option key={option.value} value={option.value}>{option.label}</option>
@@ -762,7 +766,7 @@ export default function SignupStep2() {
                   <button
                     type="button"
                     onClick={addLanguage}
-                    className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors whitespace-nowrap"
+                    className="px-6 py-3 bg-primary-blue dark:bg-accent-red hover:bg-primary-blue/90 dark:hover:bg-accent-red/90 text-white rounded-lg transition-colors whitespace-nowrap"
                   >
                     {t('addLanguage')}
                   </button>
@@ -808,7 +812,7 @@ export default function SignupStep2() {
                       type="checkbox"
                       checked={formData.disabilities.includes(option.value)}
                       onChange={() => toggleDisability(option.value)}
-                      className="mt-1 w-4 h-4 text-blue-600 border-gray-300 dark:border-gray-600 rounded focus:ring-blue-500"
+                      className="mt-1 w-4 h-4 text-primary-blue dark:text-accent-red border-gray-300 dark:border-gray-600 rounded focus:ring-primary-blue dark:focus:ring-accent-red"
                     />
                     <span className="text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100">
                       {option.label}
@@ -824,7 +828,7 @@ export default function SignupStep2() {
                   value={formData.disabilityOther}
                   onChange={(e) => handleChange('disabilityOther', e.target.value)}
                   placeholder={t('disabilityOtherSpecify')}
-                  className="mt-2 w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 transition-all"
+                  className="mt-2 w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red transition-all"
                 />
               )}
               
@@ -836,13 +840,13 @@ export default function SignupStep2() {
                     return (
                       <span
                         key={disability}
-                        className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-sm rounded-full"
+                        className="inline-flex items-center gap-1 px-3 py-1 bg-[var(--marketing-pill-bg)] dark:bg-[var(--marketing-pill-bg)] text-[var(--marketing-pill-icon)] dark:text-[var(--marketing-pill-icon)] text-sm rounded-full border border-[var(--marketing-pill-border)]"
                       >
                         {option?.label}
                         <button
                           type="button"
                           onClick={() => toggleDisability(disability)}
-                          className="ml-1 text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-100"
+                          className="ml-1 text-blue-600 dark:text-red-300 hover:text-blue-800 dark:hover:text-red-100"
                         >
                           ×
                         </button>

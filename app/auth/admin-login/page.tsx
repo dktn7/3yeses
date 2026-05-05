@@ -108,7 +108,7 @@ export default function AdminLoginPage() {
               <div className="bg-white/80 dark:bg-white/5 backdrop-blur-xl py-8 px-4 shadow-2xl sm:rounded-2xl sm:px-10 border border-gray-200 dark:border-white/10 transition-colors duration-300">
                 <form className="space-y-6" onSubmit={handleSubmit}>
                   <div>
-                    <label htmlFor="email" className="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-2">
+                    <label htmlFor="email" className="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-2">
                       Email Address
                     </label>
                     <div className="mt-1">
@@ -128,7 +128,7 @@ export default function AdminLoginPage() {
                   </div>
       
                   <div>
-                    <label htmlFor="password" className="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-2">
+                    <label htmlFor="password" className="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-2">
                       Password
                     </label>
                     <div className="mt-1 relative">
@@ -163,7 +163,7 @@ export default function AdminLoginPage() {
                                   onChange={handleInputChange}
                                   className="h-4 w-4 text-[var(--admin-primary)] focus:ring-[var(--admin-primary)] border-gray-600 rounded bg-black/20"
                                 />
-                                <label htmlFor="rememberMe" className="ml-2 block text-sm text-gray-300">
+                                <label htmlFor="rememberMe" className="ml-2 block text-sm text-gray-700 dark:text-gray-300">
                                   Remember me
                                 </label>
                               </div>

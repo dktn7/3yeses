@@ -115,7 +115,7 @@ export default function SupportForm({ onSuccess, defaultCategory }: Props) {
           value={subject}
           onChange={(e) => setSubject(e.target.value)}
           placeholder={t('formSubjectPlaceholder')}
-          className="w-full rounded-xl border border-gray-200/60 dark:border-white/10 backdrop-blur-xl bg-white/70 dark:bg-white/[0.08] px-4 py-3 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-blue/30 dark:focus:ring-accent-red/30 focus:border-primary-blue dark:focus:border-accent-red transition-all"
+          className="w-full rounded-xl border border-gray-200/60 dark:border-white/10 backdrop-blur-xl bg-light-surface dark:bg-dark-surface px-4 py-3 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-blue/30 dark:focus:ring-accent-red/30 focus:border-primary-blue dark:focus:border-accent-red transition-all"
           required
           minLength={3}
         />
@@ -132,7 +132,7 @@ export default function SupportForm({ onSuccess, defaultCategory }: Props) {
           onChange={(e) => setMessage(e.target.value)}
           rows={6}
           placeholder={t('formDescPlaceholder')}
-          className="w-full rounded-xl border border-gray-200/60 dark:border-white/10 backdrop-blur-xl bg-white/70 dark:bg-white/[0.08] px-4 py-3 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-blue/30 dark:focus:ring-accent-red/30 focus:border-primary-blue dark:focus:border-accent-red transition-all resize-none"
+          className="w-full rounded-xl border border-gray-200/60 dark:border-white/10 backdrop-blur-xl bg-light-surface dark:bg-dark-surface px-4 py-3 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-blue/30 dark:focus:ring-accent-red/30 focus:border-primary-blue dark:focus:border-accent-red transition-all resize-none"
           required
           minLength={10}
         />
@@ -142,7 +142,7 @@ export default function SupportForm({ onSuccess, defaultCategory }: Props) {
       <button
         type="submit"
         disabled={loading}
-        className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary-blue via-accent-blue to-accent-red dark:from-accent-red dark:via-primary-red dark:to-orange-500 text-white font-semibold px-6 py-3.5 text-sm shadow-lg shadow-primary-blue/20 dark:shadow-accent-red/20 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+        className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary-blue via-accent-blue to-accent-red dark:from-accent-red dark:via-primary-red dark:to-red-900 text-white font-semibold px-6 py-3.5 text-sm shadow-lg shadow-primary-blue/20 dark:shadow-accent-red/20 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
       >
         {loading ? (
           <span className="flex items-center gap-2">

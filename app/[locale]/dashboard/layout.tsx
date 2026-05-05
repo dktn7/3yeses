@@ -38,6 +38,8 @@ export default function DashboardLayout({
   const [loading, setLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
+  const t = useTranslations('dashboard.nav');
+
   useEffect(() => {
     const checkAuth = async () => {
       try {
@@ -80,15 +82,13 @@ export default function DashboardLayout({
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
+      <div className="min-h-screen flex items-center justify-center">
         <LoadingSpinner />
       </div>
     );
   }
 
   if (!user) return null;
-
-  const t = useTranslations('dashboard.nav');
 
   const navigation: Array<{ name: string; href: string; icon: LucideIcon }> = [
     { name: t('overview'), href: '/dashboard', icon: LayoutDashboard },
@@ -104,11 +104,11 @@ export default function DashboardLayout({
   ];
 
   return (
-    <div className="relative min-h-screen bg-white dark:bg-gray-950 transition-colors duration-300">
+    <div className="relative min-h-screen transition-colors duration-300">
       <CategoryIconBackground />
       <div className="relative z-20">
         {/* Top Navigation Bar */}
-        <div className="sticky top-0 z-40 backdrop-blur-md bg-white/90 dark:bg-gray-900/90 border-b border-gray-200 dark:border-gray-800 shadow-sm">
+        <div className="sticky top-0 z-40 backdrop-blur-md bg-white/90 dark:bg-dark-surface/90 border-b border-gray-200 dark:border-red-400/20 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Desktop Tabs */}
@@ -162,7 +162,7 @@ export default function DashboardLayout({
             className="fixed inset-0 bg-black/50 z-40 md:hidden backdrop-blur-sm"
             onClick={() => setSidebarOpen(false)}
           ></div>
-          <aside className="fixed top-0 left-0 z-50 h-full w-72 bg-white dark:bg-gray-900 shadow-2xl transform transition-transform duration-300 md:hidden">
+          <aside className="fixed top-0 left-0 z-50 h-full w-72 bg-light-surface dark:bg-dark-surface shadow-2xl transform transition-transform duration-300 md:hidden">
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-bold text-gray-900 dark:text-white">Dashboard</h2>

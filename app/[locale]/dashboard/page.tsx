@@ -13,7 +13,7 @@ export default function DashboardPage() {
   }, [router]);
 
   return (
-    <div className="flex items-center justify-center min-h-[400px] bg-white dark:bg-gray-900">
+    <div className="flex items-center justify-center min-h-[400px]">
       <LoadingSpinner />
     </div>
   );

@@ -106,7 +106,7 @@ export default function SupportFAQ() {
         return (
           <div
             key={idx}
-            className="rounded-xl border border-gray-200/60 dark:border-white/10 overflow-hidden backdrop-blur-sm bg-white/40 dark:bg-white/[0.03] transition-shadow hover:shadow-sm"
+            className="rounded-xl border border-gray-200/60 dark:border-red-400/15 overflow-hidden backdrop-blur-sm bg-white/40 dark:bg-dark-surface/72 transition-shadow hover:shadow-sm"
           >
             <button
               type="button"

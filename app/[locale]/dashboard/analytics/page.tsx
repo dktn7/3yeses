@@ -101,7 +101,7 @@ export default function AnalyticsPage() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen bg-white dark:bg-gray-900">
+      <div className="flex justify-center items-center min-h-screen bg-light-surface dark:bg-dark-surface">
         <LoadingSpinner />
       </div>
     );
@@ -149,7 +149,7 @@ export default function AnalyticsPage() {
             onClick={() => setTimeRange(7)}
             className={`px-4 py-2 rounded-lg ${
               timeRange === 7
-                ? 'bg-blue-600 text-white'
+                ? 'bg-primary-blue dark:bg-accent-red text-white'
                 : 'bg-gray-100 dark:bg-gray-800'
             }`}
           >
@@ -159,7 +159,7 @@ export default function AnalyticsPage() {
             onClick={() => setTimeRange(30)}
             className={`px-4 py-2 rounded-lg ${
               timeRange === 30
-                ? 'bg-blue-600 text-white'
+                ? 'bg-primary-blue dark:bg-accent-red text-white'
                 : 'bg-gray-100 dark:bg-gray-800'
             }`}
           >
@@ -169,7 +169,7 @@ export default function AnalyticsPage() {
             onClick={() => setTimeRange(90)}
             className={`px-4 py-2 rounded-lg ${
               timeRange === 90
-                ? 'bg-blue-600 text-white'
+                ? 'bg-primary-blue dark:bg-accent-red text-white'
                 : 'bg-gray-100 dark:bg-gray-800'
             }`}
           >
@@ -180,7 +180,7 @@ export default function AnalyticsPage() {
 
       {/* Overview Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md">
+        <div className="bg-light-surface dark:bg-dark-surface rounded-lg p-6 shadow-md">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400">
               {t('totalViews')}
@@ -193,7 +193,7 @@ export default function AnalyticsPage() {
           </p>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md">
+        <div className="bg-light-surface dark:bg-dark-surface rounded-lg p-6 shadow-md">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400">
               {t('portfolioViews')}
@@ -208,7 +208,7 @@ export default function AnalyticsPage() {
           </p>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md">
+        <div className="bg-light-surface dark:bg-dark-surface rounded-lg p-6 shadow-md">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400">
               {t('searchPerformance')}
@@ -229,7 +229,7 @@ export default function AnalyticsPage() {
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         {/* Profile Views Trend */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md">
+        <div className="bg-light-surface dark:bg-dark-surface rounded-lg p-6 shadow-md">
           <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
             <TrendingUp className="w-5 h-5" />
             {t('profileViewsTrend')}
@@ -258,7 +258,7 @@ export default function AnalyticsPage() {
         </div>
 
         {/* Portfolio Engagement */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md">
+        <div className="bg-light-surface dark:bg-dark-surface rounded-lg p-6 shadow-md">
           <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
             <ImageIcon className="w-5 h-5" />
             {t('portfolioEngagement')}
@@ -276,7 +276,7 @@ export default function AnalyticsPage() {
         </div>
 
         {/* Search Performance */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md">
+        <div className="bg-light-surface dark:bg-dark-surface rounded-lg p-6 shadow-md">
           <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
             <Search className="w-5 h-5" />
             {t('searchPerformance')}
@@ -305,7 +305,7 @@ export default function AnalyticsPage() {
         </div>
 
         {/* Top Portfolio Items */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md">
+        <div className="bg-light-surface dark:bg-dark-surface rounded-lg p-6 shadow-md">
           <h3 className="text-lg font-semibold mb-4">{t('topPortfolioItems')}</h3>
           <div className="space-y-3">
             {topPortfolioItems.map((item, index) => (
@@ -340,7 +340,7 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Recent Views */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md">
+      <div className="bg-light-surface dark:bg-dark-surface rounded-lg p-6 shadow-md">
         <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
           <Users className="w-5 h-5" />
           {t('recentProfileViews')}

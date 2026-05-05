@@ -231,7 +231,7 @@ export default function ProfileDropdown({ user, onLogout }: Readonly<ProfileDrop
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-72 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50">
+        <div className="absolute right-0 mt-2 w-72 bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50">
           {/* User Info Header */}
           <div className="p-4 border-b border-gray-200 dark:border-gray-700">
             <div className="flex items-center space-x-3">
@@ -279,14 +279,14 @@ export default function ProfileDropdown({ user, onLogout }: Readonly<ProfileDrop
                 )}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                <p className="text-sm font-medium text-light-surface dark:text-dark-surface truncate">
                   {user.name}
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
                   {user.email}
                 </p>
                 <div className="flex items-center gap-2 mt-1">
-                  <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                  <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-[var(--marketing-pill-bg)] dark:bg-[var(--marketing-pill-bg)] text-[var(--marketing-pill-icon)] dark:text-[var(--marketing-pill-icon)] border border-[var(--marketing-pill-border)]">
                     {user.role === 'ADMIN' ? 'Admin' : 'Talent'}
                   </span>
                   {profileCompletion !== null && profileCompletion < 100 && (
@@ -300,11 +300,11 @@ export default function ProfileDropdown({ user, onLogout }: Readonly<ProfileDrop
             
             {/* Profile Completion Banner */}
             {profileCompletion !== null && profileCompletion < 100 && missingFields.length > 0 && (
-              <div className="mt-3 p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-                <p className="text-xs font-medium text-blue-900 dark:text-blue-200 mb-1">
+              <div className="mt-3 p-2 bg-[var(--marketing-surface)] dark:bg-[var(--marketing-surface)] rounded-lg border border-[var(--marketing-pill-border)]">
+                <p className="text-xs font-medium text-[var(--marketing-heading-blue)] dark:text-[var(--marketing-heading-blue)] mb-1">
                   Complete your profile
                 </p>
-                <p className="text-xs text-blue-700 dark:text-blue-300 leading-relaxed">
+                <p className="text-xs text-[var(--marketing-pill-icon)] dark:text-[var(--marketing-pill-icon)] leading-relaxed">
                   {missingFields.length === 1 ? (
                     missingFields[0]
                   ) : missingFields.length === 2 ? (
@@ -313,7 +313,7 @@ export default function ProfileDropdown({ user, onLogout }: Readonly<ProfileDrop
                     <>
                       {missingFields.slice(0, 2).join(', ')}
                       {missingFields.length > 2 && (
-                        <span className="block mt-0.5 text-blue-600 dark:text-blue-400 font-medium">
+                        <span className="block mt-0.5 text-blue-600 dark:text-red-400 font-medium">
                           +{missingFields.length - 2} more item{missingFields.length - 2 > 1 ? 's' : ''}
                         </span>
                       )}
@@ -322,7 +322,7 @@ export default function ProfileDropdown({ user, onLogout }: Readonly<ProfileDrop
                 </p>
                 <button
                   onClick={() => handleNavigation('/dashboard/profile')}
-                  className="mt-2 text-xs font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
+                  className="mt-2 text-xs font-medium text-blue-600 hover:text-blue-700 dark:text-red-400 dark:hover:text-red-300 transition-colors"
                 >
                   Complete now →
                 </button>

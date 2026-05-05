@@ -6,6 +6,29 @@ generator client {
   previewFeatures = ["driverAdapters"]
 }
 
+model SupportTicketMessage {
+  id String @id @default(cuid())
+
+  // The ticket this message belongs to
+  ticket   SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  ticketId String
+
+  // Optional author (null for guest/system messages)
+  author   User?   @relation(fields: [authorId], references: [id])
+  authorId String?
+
+  // Message body
+  content String @db.Text
+
+  // Indicates whether message was sent by an admin/staff
+  isStaff Boolean @default(false)
+
+  createdAt DateTime @default(now())
+
+  @@index([ticketId])
+  @@index([authorId])
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -57,7 +80,7 @@ model User {
   // Analytics
   profileViews   ProfileView[]
   portfolioViews PortfolioView[]
-  
+
   // Advanced Admin Features
   authoredContent ContentVersion[]
   userSessions    UserSession[]
@@ -65,14 +88,15 @@ model User {
   emailLogs       EmailLog[]
 
   // Financials & Verification
-  transactions    FinancialTransaction[]
+  transactions                FinancialTransaction[]
   handledVerificationRequests VerificationRequest[]
 
   // Support & Operations
-  supportTicketsCreated SupportTicket[] @relation("TicketCreator")
-  supportTicketsAssigned SupportTicket[] @relation("TicketAssignee")
-  kbArticlesAuthored KnowledgeBaseArticle[]
-  mediaAssetsUploaded MediaAsset[]
+  supportTicketsCreated  SupportTicket[]        @relation("TicketCreator")
+  supportTicketsAssigned SupportTicket[]        @relation("TicketAssignee")
+  supportMessages        SupportTicketMessage[]
+  kbArticlesAuthored     KnowledgeBaseArticle[]
+  mediaAssetsUploaded    MediaAsset[]
 
   // Admin Notification State
   adminNotifState AdminNotificationState? @relation("AdminNotifState")
@@ -82,7 +106,7 @@ model TalentProfile {
   user   User   @relation(fields: [userId], references: [id])
   userId String @unique
 
-  performerTitle String? @map("roleDescription") // e.g., "Lead Actress"
+  performerTitle  String? @map("roleDescription") // e.g., "Lead Actress"
   bio             String?
   location        String?
   experienceLevel String? @map("experience") // "Beginner (0-2 years)", etc.
@@ -101,30 +125,30 @@ model TalentProfile {
 
   languages      SpokenLanguage[] // Relation for proficiency levels
   skills         String[]
-  featuredSkills String[]   @default([]) // User-selected skills to display on card (max 4)
+  featuredSkills String[]         @default([]) // User-selected skills to display on card (max 4)
 
   // Disability/accessibility information (optional, for inclusive casting)
   disabilities    String[] @default([]) // Array of disability types
   disabilityOther String? // Custom disability specification
 
-  avatarSource    String? // New field to specify the source of the avatar (e.g., 'url', 'upload', etc.)
-  bannerSource    String? // New field to specify the source of the banner (e.g., 'url', 'upload', etc.)
-  avatarUrl       String? // Updated to support multiple sources
-  bannerUrl       String? // Updated to support multiple sources
+  avatarSource      String? // New field to specify the source of the avatar (e.g., 'url', 'upload', etc.)
+  bannerSource      String? // New field to specify the source of the banner (e.g., 'url', 'upload', etc.)
+  avatarUrl         String? // Updated to support multiple sources
+  bannerUrl         String? // Updated to support multiple sources
   contentBackground String? // Customizable background for content section (preset id or hex color)
-  videoUrl        String?
-  portfolioImages String[] @default([]) // Array of image URLs
-  videoUrls       String[] @default([]) // Array of video URLs (YouTube, Vimeo, etc.)
+  videoUrl          String?
+  portfolioImages   String[] @default([]) // Array of image URLs
+  videoUrls         String[] @default([]) // Array of video URLs (YouTube, Vimeo, etc.)
 
-  socialMedia     Json? // [{ platform: "Instagram", url: "..." }]
-  portfolio       PortfolioItem[]
-  workHistory     WorkHistory[]
-  comments        Comment[]
+  socialMedia Json? // [{ platform: "Instagram", url: "..." }]
+  portfolio   PortfolioItem[]
+  workHistory WorkHistory[]
+  comments    Comment[]
 
-  viewCount  Int     @default(0)
-  likeCount  Int     @default(0)
+  viewCount    Int           @default(0)
+  likeCount    Int           @default(0)
   profileLikes ProfileLike[]
-  isBeginner Boolean @default(false)
+  isBeginner   Boolean       @default(false)
 
   // Profile completion
   profileComplete Boolean @default(false)
@@ -156,7 +180,7 @@ model TalentProfile {
   verificationRequests VerificationRequest[]
   backgroundChecks     BackgroundCheck[]
 
-  featuredItems        FeaturedItem[]
+  featuredItems FeaturedItem[]
 
   @@index([categoryId])
   @@index([subcategoryId])
@@ -263,28 +287,28 @@ model WorkHistory {
   talentProfile   TalentProfile @relation(fields: [talentProfileId], references: [userId], onDelete: Cascade)
   talentProfileId String
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // Growth & Promotion
 model AdBanner {
-  id          String   @id @default(cuid())
-  title       String
-  imageUrl    String
-  linkUrl     String?
-  position    AdPosition @default(SIDEBAR)
-  
-  startDate   DateTime?
-  endDate     DateTime?
-  active      Boolean  @default(true)
-  
+  id       String     @id @default(cuid())
+  title    String
+  imageUrl String
+  linkUrl  String?
+  position AdPosition @default(SIDEBAR)
+
+  startDate DateTime?
+  endDate   DateTime?
+  active    Boolean   @default(true)
+
   // Basic stats
-  impressions Int      @default(0)
-  clicks      Int      @default(0)
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  impressions Int @default(0)
+  clicks      Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([position, active])
   @@index([startDate, endDate])
@@ -299,27 +323,27 @@ enum AdPosition {
 }
 
 model FeaturedItem {
-  id              String        @id @default(cuid())
-  
+  id String @id @default(cuid())
+
   // Can feature a profile or a portfolio item
   talentProfile   TalentProfile? @relation(fields: [talentProfileId], references: [userId], onDelete: Cascade)
   talentProfileId String?
-  
+
   portfolioItem   PortfolioItem? @relation(fields: [portfolioItemId], references: [id], onDelete: Cascade)
   portfolioItemId String?
-  
-  title           String?       // Override title if needed
-  description     String?       // Override description
-  
-  slot            String        // e.g., "HOMEPAGE_HERO", "CATEGORY_TOP"
-  priority        Int           @default(0) // Higher shows first
-  
-  startDate       DateTime?
-  endDate         DateTime?
-  active          Boolean       @default(true)
-  
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
+
+  title       String? // Override title if needed
+  description String? // Override description
+
+  slot     String // e.g., "HOMEPAGE_HERO", "CATEGORY_TOP"
+  priority Int    @default(0) // Higher shows first
+
+  startDate DateTime?
+  endDate   DateTime?
+  active    Boolean   @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([slot, active])
   @@index([priority])
@@ -327,16 +351,16 @@ model FeaturedItem {
 
 // SubSubcategory model removed
 model PortfolioItem {
-  id              String            @id @default(cuid())
-  title           String
-  mediaUrl        String            @map("url")
-  type            PortfolioItemType
-  thumbnail       String?
-  imagekitFileId  String?
-  likeCount       Int               @default(0) @map("likes")
-  description     String?
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @default(now()) @updatedAt
+  id             String            @id @default(cuid())
+  title          String
+  mediaUrl       String            @map("url")
+  type           PortfolioItemType
+  thumbnail      String?
+  imagekitFileId String?
+  likeCount      Int               @default(0) @map("likes")
+  description    String?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @default(now()) @updatedAt
 
   talentProfile   TalentProfile @relation(fields: [talentProfileId], references: [userId])
   talentProfileId String
@@ -344,14 +368,13 @@ model PortfolioItem {
   comments Comment[]
   reports  ContentReport[]
   views    PortfolioView[]
-  
+
   featuredItems FeaturedItem[]
 
   @@index([type])
   @@index([talentProfileId])
   @@index([createdAt])
 }
-
 
 model Subscription {
   id     String @id @default(cuid())
@@ -572,38 +595,38 @@ model CommentLike {
 }
 
 model ContentReport {
-  id               String         @id @default(cuid())
-  
+  id String @id @default(cuid())
+
   // Who reported (required)
-  reportedBy       User           @relation("ReportedBy", fields: [reportedById], references: [id], onDelete: Cascade)
-  reportedById     String
-  
+  reportedBy   User   @relation("ReportedBy", fields: [reportedById], references: [id], onDelete: Cascade)
+  reportedById String
+
   // What was reported (can be a talent profile, portfolio item, or comment)
-  reportedProfile  TalentProfile? @relation(fields: [reportedProfileId], references: [userId], onDelete: Cascade)
+  reportedProfile   TalentProfile? @relation(fields: [reportedProfileId], references: [userId], onDelete: Cascade)
   reportedProfileId String?
-  
-  portfolioItem    PortfolioItem? @relation(fields: [portfolioItemId], references: [id], onDelete: Cascade)
-  portfolioItemId  String?
-  
-  comment          Comment?       @relation(fields: [commentId], references: [id], onDelete: Cascade)
-  commentId        String?
-  
+
+  portfolioItem   PortfolioItem? @relation(fields: [portfolioItemId], references: [id], onDelete: Cascade)
+  portfolioItemId String?
+
+  comment   Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  commentId String?
+
   // Who the report is about (can be the talent owner or comment author)
-  reportedUser     User           @relation("ReportedUser", fields: [reportedUserId], references: [id], onDelete: Cascade)
-  reportedUserId   String
-  
+  reportedUser   User   @relation("ReportedUser", fields: [reportedUserId], references: [id], onDelete: Cascade)
+  reportedUserId String
+
   // Who handled the report (admin)
-  handler          User?          @relation("ReportHandler", fields: [handlerId], references: [id], onDelete: SetNull)
-  handlerId        String?
-  
+  handler   User?   @relation("ReportHandler", fields: [handlerId], references: [id], onDelete: SetNull)
+  handlerId String?
+
   // Report details
-  type             ReportType
-  reason           String
-  status           ReportStatus   @default(PENDING)
-  resolution       String?        // Resolution notes from admin
-  
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
+  type       ReportType
+  reason     String
+  status     ReportStatus @default(PENDING)
+  resolution String? // Resolution notes from admin
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([reportedById])
   @@index([reportedProfileId])
@@ -721,28 +744,28 @@ model ProfileStats {
 
 // User Analytics & Sessions
 model UserSession {
-  id        String   @id @default(cuid())
-  
-  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
-  userId    String?
-  
+  id String @id @default(cuid())
+
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId String?
+
   ipAddress String?
   userAgent String?
-  
+
   startedAt    DateTime @default(now())
   lastActiveAt DateTime @default(now())
-  
-  duration     Int      @default(0) // in seconds
-  
-  deviceType   String?  // "mobile", "desktop"
-  browser      String?
-  os           String?
-  
-  path         String?  // Landing path
-  
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  
+
+  duration Int @default(0) // in seconds
+
+  deviceType String? // "mobile", "desktop"
+  browser    String?
+  os         String?
+
+  path String? // Landing path
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@index([userId])
   @@index([startedAt])
   @@index([ipAddress])
@@ -750,19 +773,19 @@ model UserSession {
 
 // Activity Logging (Audit Trail)
 model ActivityLog {
-  id        String   @id @default(cuid())
-  
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String
-  
-  action    String   // e.g., "LOGIN", "PROFILE_UPDATE", "PASSWORD_CHANGE"
-  details   Json?    // e.g., { field: "bio", oldValue: "...", newValue: "..." }
-  
+  id String @id @default(cuid())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
+  action  String // e.g., "LOGIN", "PROFILE_UPDATE", "PASSWORD_CHANGE"
+  details Json? // e.g., { field: "bio", oldValue: "...", newValue: "..." }
+
   ipAddress String?
   userAgent String?
-  
+
   createdAt DateTime @default(now())
-  
+
   @@index([userId])
   @@index([action])
   @@index([createdAt])
@@ -770,26 +793,26 @@ model ActivityLog {
 
 // Email Logs (Integration with Resend)
 model EmailLog {
-  id        String   @id @default(cuid())
-  
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String
-  
+  id String @id @default(cuid())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
   // Resend specific fields
   providerMessageId String? @unique // Resend ID
-  
+
   templateId String?
-  type      String   // e.g., "WELCOME", "RESET_PASSWORD", "MARKETING"
-  subject   String?
-  
-  status    EmailStatus @default(SENT)
-  error     String?
-  
+  type       String // e.g., "WELCOME", "RESET_PASSWORD", "MARKETING"
+  subject    String?
+
+  status EmailStatus @default(SENT)
+  error  String?
+
   openedAt  DateTime?
   clickedAt DateTime?
-  
+
   createdAt DateTime @default(now())
-  
+
   @@index([userId])
   @@index([type])
   @@index([status])
@@ -808,12 +831,12 @@ enum EmailStatus {
 
 // System Monitoring
 model SystemMetric {
-  id        String   @id @default(cuid())
+  id        String           @id @default(cuid())
   type      SystemMetricType
-  value     Float    // duration in ms, or count
-  name      String   // e.g., "api_request_duration", "db_query_duration"
-  tags      Json?    // e.g., { path: "/api/users", method: "GET" }
-  createdAt DateTime @default(now())
+  value     Float // duration in ms, or count
+  name      String // e.g., "api_request_duration", "db_query_duration"
+  tags      Json? // e.g., { path: "/api/users", method: "GET" }
+  createdAt DateTime         @default(now())
 
   @@index([type, createdAt])
 }
@@ -827,44 +850,44 @@ enum SystemMetricType {
 
 // CMS (Content Management System)
 model ContentPage {
-  slug        String   @id // e.g., "terms-of-service"
-  internalNote String?  @map("description") // Internal note: "Legal terms page"
-  
-  versions    ContentVersion[]
-  published   PublishedContent[] 
+  slug         String  @id // e.g., "terms-of-service"
+  internalNote String? @map("description") // Internal note: "Legal terms page"
+
+  versions  ContentVersion[]
+  published PublishedContent[]
 }
 
 // Stores the pointer to the currently active version for a specific locale
 model PublishedContent {
-  id        String      @id @default(cuid())
-  
-  page      ContentPage @relation(fields: [pageSlug], references: [slug], onDelete: Cascade)
-  pageSlug  String
-  
-  locale    String      // e.g., "en", "es", "fr"
-  
+  id String @id @default(cuid())
+
+  page     ContentPage @relation(fields: [pageSlug], references: [slug], onDelete: Cascade)
+  pageSlug String
+
+  locale String // e.g., "en", "es", "fr"
+
   version   ContentVersion @relation(fields: [versionId], references: [id])
   versionId String
-  
+
   @@unique([pageSlug, locale]) // Only one published version per page per locale
 }
 
 model ContentVersion {
-  id          String      @id @default(cuid())
-  
-  page        ContentPage @relation(fields: [pageSlug], references: [slug], onDelete: Cascade)
-  pageSlug    String
-  
-  locale      String      // Language of this specific version
-  title       String      // Localized title
-  content     String      @db.Text // HTML or Markdown
-  changeNote  String?     @map("changelog") // "Updated pricing section"
-  
-  authorId    String
-  author      User     @relation(fields: [authorId], references: [id])
-  
-  createdAt   DateTime @default(now())
-  
+  id String @id @default(cuid())
+
+  page     ContentPage @relation(fields: [pageSlug], references: [slug], onDelete: Cascade)
+  pageSlug String
+
+  locale     String // Language of this specific version
+  title      String // Localized title
+  content    String  @db.Text // HTML or Markdown
+  changeNote String? @map("changelog") // "Updated pricing section"
+
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id])
+
+  createdAt DateTime @default(now())
+
   // Back-relation to see if this version is published
   publishedEntry PublishedContent[]
 }
@@ -875,20 +898,20 @@ model EmailTemplate {
   name          String
   subject       String
   body          String   @db.Text // HTML with {{variables}}
-  preheaderText String?  // Short text shown in inbox preview
+  preheaderText String? // Short text shown in inbox preview
   variables     String[] // List of available variables for this template
   lastUpdated   DateTime @updatedAt
 }
 
 model GlobalNotification {
-  id          String   @id @default(cuid())
-  title       String
-  message     String
-  type        GlobalNotificationType // INFO, WARNING, CRITICAL
-  targetRole  UserRole? // Null = All, or specific role
-  active      Boolean  @default(true)
-  expiresAt   DateTime?
-  createdAt   DateTime @default(now())
+  id         String                 @id @default(cuid())
+  title      String
+  message    String
+  type       GlobalNotificationType // INFO, WARNING, CRITICAL
+  targetRole UserRole? // Null = All, or specific role
+  active     Boolean                @default(true)
+  expiresAt  DateTime?
+  createdAt  DateTime               @default(now())
 }
 
 enum GlobalNotificationType {
@@ -899,31 +922,31 @@ enum GlobalNotificationType {
 
 // Financials
 model FinancialTransaction {
-  id              String                    @id @default(cuid())
-  user            User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId          String
-  
-  type            FinancialTransactionType
-  amount          Int                       // in cents
-  currency        String                    @default("gbp")
-  status          FinancialTransactionStatus @default(COMPLETED)
-  
+  id     String @id @default(cuid())
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
+  type     FinancialTransactionType
+  amount   Int // in cents
+  currency String                     @default("gbp")
+  status   FinancialTransactionStatus @default(COMPLETED)
+
   // Links
-  subscription    Subscription?             @relation(fields: [subscriptionId], references: [id])
-  subscriptionId  String?
-  
-  payment         Payment?                  @relation(fields: [paymentId], references: [id])
-  paymentId       String?
-  
+  subscription   Subscription? @relation(fields: [subscriptionId], references: [id])
+  subscriptionId String?
+
+  payment   Payment? @relation(fields: [paymentId], references: [id])
+  paymentId String?
+
   // External references
-  stripeId        String?                   // PaymentIntent ID or Refund ID
-  invoiceId       String?
-  
-  description     String?
-  metadata        Json?
-  
-  createdAt       DateTime                  @default(now())
-  updatedAt       DateTime                  @updatedAt
+  stripeId  String? // PaymentIntent ID or Refund ID
+  invoiceId String?
+
+  description String?
+  metadata    Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([userId])
   @@index([type])
@@ -948,24 +971,24 @@ enum FinancialTransactionStatus {
 
 // Verification
 model VerificationRequest {
-  id              String             @id @default(cuid())
-  talentProfile   TalentProfile      @relation(fields: [talentProfileId], references: [userId], onDelete: Cascade)
+  id              String        @id @default(cuid())
+  talentProfile   TalentProfile @relation(fields: [talentProfileId], references: [userId], onDelete: Cascade)
   talentProfileId String
-  
-  type            VerificationType
-  status          VerificationStatus @default(PENDING)
-  
+
+  type   VerificationType
+  status VerificationStatus @default(PENDING)
+
   // Data
-  documents       String[]           // URLs to uploaded documents
-  notes           String?            // Admin internal notes
-  rejectionReason String?            // Reason sent to user
-  
+  documents       String[] // URLs to uploaded documents
+  notes           String? // Admin internal notes
+  rejectionReason String? // Reason sent to user
+
   // Admin handling
-  handler         User?              @relation(fields: [handlerId], references: [id])
-  handlerId       String?
-  
-  createdAt       DateTime           @default(now())
-  updatedAt       DateTime           @updatedAt
+  handler   User?   @relation(fields: [handlerId], references: [id])
+  handlerId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([talentProfileId])
   @@index([status])
@@ -986,19 +1009,19 @@ enum VerificationStatus {
 }
 
 model BackgroundCheck {
-  id              String                @id @default(cuid())
-  talentProfile   TalentProfile         @relation(fields: [talentProfileId], references: [userId], onDelete: Cascade)
+  id              String        @id @default(cuid())
+  talentProfile   TalentProfile @relation(fields: [talentProfileId], references: [userId], onDelete: Cascade)
   talentProfileId String
-  
-  provider        String?               // e.g., "Checkr"
-  providerId      String?               // External ID
-  
-  status          BackgroundCheckStatus @default(PENDING)
-  result          String?               // "CLEAR", "CONSIDER", etc.
-  reportUrl       String?
-  
-  createdAt       DateTime              @default(now())
-  updatedAt       DateTime              @updatedAt
+
+  provider   String? // e.g., "Checkr"
+  providerId String? // External ID
+
+  status    BackgroundCheckStatus @default(PENDING)
+  result    String? // "CLEAR", "CONSIDER", etc.
+  reportUrl String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([talentProfileId])
   @@index([status])
@@ -1011,33 +1034,34 @@ enum BackgroundCheckStatus {
   FAILED
 }
 
-
-
 // --- Support System ---
 
 model SupportTicket {
-  id          String   @id @default(cuid())
-  subject     String
-  message     String   @db.Text
-  status      SupportTicketStatus @default(OPEN)
-  priority    SupportTicketPriority @default(MEDIUM)
-  category    SupportTicketCategory @default(OTHER)
-  
+  id       String                @id @default(cuid())
+  subject  String
+  message  String                @db.Text
+  status   SupportTicketStatus   @default(OPEN)
+  priority SupportTicketPriority @default(MEDIUM)
+  category SupportTicketCategory @default(OTHER)
+
   // Creator (authenticated users only)
-  user        User?    @relation("TicketCreator", fields: [userId], references: [id], onDelete: SetNull)
-  userId      String?
-  guestEmail  String?  // Legacy field, kept for migration compatibility
+  user       User?   @relation("TicketCreator", fields: [userId], references: [id], onDelete: SetNull)
+  userId     String?
+  guestEmail String? // Legacy field, kept for migration compatibility
 
   // Assignment
-  assignedTo  User?    @relation("TicketAssignee", fields: [assignedToId], references: [id], onDelete: SetNull)
+  assignedTo   User?   @relation("TicketAssignee", fields: [assignedToId], references: [id], onDelete: SetNull)
   assignedToId String?
 
   // Internal
-  tags        String[] // ["billing", "technical"]
-  internalNotes String? @db.Text
+  tags          String[] // ["billing", "technical"]
+  internalNotes String?  @db.Text
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  // Threaded messages (admin/user replies)
+  messages SupportTicketMessage[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([userId])
   @@index([status])
@@ -1072,21 +1096,21 @@ enum SupportTicketCategory {
 }
 
 model KnowledgeBaseArticle {
-  id          String   @id @default(cuid())
-  title       String
-  slug        String   @unique
-  content     String   @db.Text
-  category    String   // e.g., "Getting Started", "Billing"
-  tags        String[]
-  
-  isPublished Boolean  @default(false)
-  viewCount   Int      @default(0)
-  
-  author      User     @relation(fields: [authorId], references: [id])
-  authorId    String
+  id       String   @id @default(cuid())
+  title    String
+  slug     String   @unique
+  content  String   @db.Text
+  category String // e.g., "Getting Started", "Billing"
+  tags     String[]
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  isPublished Boolean @default(false)
+  viewCount   Int     @default(0)
+
+  author   User   @relation(fields: [authorId], references: [id])
+  authorId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([category])
   @@index([slug])
@@ -1096,21 +1120,21 @@ model KnowledgeBaseArticle {
 // --- CMS System ---
 
 model MediaAsset {
-  id          String   @id @default(cuid())
-  filename    String
-  url         String
-  type        MediaType // IMAGE, VIDEO, DOCUMENT
-  mimeType    String?
-  size        Int?     // in bytes
-  
-  uploadedBy  User?    @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
-  uploadedById String?
-  
-  altText     String?
-  folder      String?  // e.g., "/avatars", "/posts"
+  id       String    @id @default(cuid())
+  filename String
+  url      String
+  type     MediaType // IMAGE, VIDEO, DOCUMENT
+  mimeType String?
+  size     Int? // in bytes
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  uploadedBy   User?   @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
+  uploadedById String?
+
+  altText String?
+  folder  String? // e.g., "/avatars", "/posts"
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([type])
   @@index([uploadedById])
@@ -1124,16 +1148,16 @@ enum MediaType {
 }
 
 model SeoMetadata {
-  id          String   @id @default(cuid())
-  route       String   @unique // e.g., "/", "/pricing", "/talent/[id]"
-  
+  id    String @id @default(cuid())
+  route String @unique // e.g., "/", "/pricing", "/talent/[id]"
+
   title       String
   description String?
   keywords    String[]
   ogImage     String?
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model AdminNotificationState {

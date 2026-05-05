@@ -14,9 +14,11 @@ import {
   Accessibility,
   Type,
   Eye,
+  Contrast,
   RotateCcw,
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useAdminTheme } from '@/components/admin/AdminThemeProvider';
 
 interface SettingsData {
   general: {
@@ -53,6 +55,7 @@ interface SettingsData {
   };
   accessibility: {
     fontSize: number;
+    highContrast: boolean;
     invertColors: boolean;
   };
 }
@@ -64,14 +67,21 @@ const DEFAULT_SETTINGS: SettingsData = {
   payments: { gateway: 'stripe', commission: 15, currency: 'GBP' },
   users: { maxPortfolioItems: 50, requireApproval: false, allowSelfDelete: true },
   notifications: { emailOnNewUser: true, emailOnReport: true, emailOnPayment: true },
-  accessibility: { fontSize: 16, invertColors: false },
+  accessibility: { fontSize: 16, highContrast: false, invertColors: false },
 };
 
 export default function SettingsPage() {
+  const { setFontSize, setHighContrast, setInverted } = useAdminTheme();
   const [activeTab, setActiveTab] = useState('general');
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [settings, setSettings] = useState<SettingsData>(DEFAULT_SETTINGS);
+
+  const applyAccessibilitySettings = useCallback((a11y: SettingsData['accessibility']) => {
+    setFontSize(a11y.fontSize);
+    setHighContrast(Boolean(a11y.highContrast));
+    setInverted(Boolean(a11y.invertColors));
+  }, [setFontSize, setHighContrast, setInverted]);
 
   const tabs = [
     { id: 'general', name: 'General', icon: SettingsIcon },
@@ -88,14 +98,33 @@ export default function SettingsPage() {
       const res = await fetch('/api/admin/settings');
       if (res.ok) {
         const data = await res.json();
-        if (data.settings) setSettings({ ...DEFAULT_SETTINGS, ...data.settings });
+        if (data.settings) {
+          const mergedSettings = {
+            ...DEFAULT_SETTINGS,
+            ...data.settings,
+            accessibility: {
+              ...DEFAULT_SETTINGS.accessibility,
+              ...(data.settings.accessibility ?? {}),
+            },
+          };
+          setSettings(mergedSettings);
+          applyAccessibilitySettings(mergedSettings.accessibility);
+        }
       }
     } catch {
       // use defaults
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [applyAccessibilitySettings]);
+
+  const updateAccessibility = useCallback((nextAccessibility: SettingsData['accessibility']) => {
+    setSettings(prev => ({
+      ...prev,
+      accessibility: nextAccessibility,
+    }));
+    applyAccessibilitySettings(nextAccessibility);
+  }, [applyAccessibilitySettings]);
 
   useEffect(() => { fetchSettings(); }, [fetchSettings]);
 
@@ -136,10 +165,14 @@ export default function SettingsPage() {
         <p className="text-sm text-[var(--admin-muted)]">{description}</p>
       </div>
       <button
+        type="button"
         onClick={() => onChange(!checked)}
         className={`relative w-11 h-6 rounded-full transition-colors ${checked ? 'bg-[var(--admin-primary)]' : 'bg-[var(--admin-border)]'}`}
+        role="switch"
+        aria-checked={checked}
+        aria-label={label}
       >
-        <span className={`absolute top-[2px] left-[2px] w-5 h-5 bg-white rounded-full transition-transform ${checked ? 'translate-x-5' : ''}`} />
+        <span className={`absolute top-[2px] left-[2px] w-5 h-5 bg-light-surface rounded-full transition-transform ${checked ? 'translate-x-5' : ''}`} />
       </button>
     </div>
   );
@@ -412,7 +445,10 @@ export default function SettingsPage() {
                           max={24}
                           step={1}
                           value={settings.accessibility.fontSize}
-                          onChange={e => updateField('accessibility', 'fontSize', Number(e.target.value))}
+                          onChange={e => {
+                            const fontSize = Number(e.target.value);
+                            updateAccessibility({ ...settings.accessibility, fontSize });
+                          }}
                           className="flex-1 h-2 bg-[var(--admin-border)] rounded-full appearance-none cursor-pointer accent-[var(--admin-primary)] [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-[var(--admin-primary)] [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:shadow-lg [&::-webkit-slider-thumb]:cursor-pointer"
                         />
                         <span className="text-xl font-bold text-[var(--admin-muted)] w-6">A</span>
@@ -434,6 +470,36 @@ export default function SettingsPage() {
                     </div>
                   </div>
 
+                  {/* High Contrast Toggle */}
+                  <div className="p-5 bg-[var(--admin-bg)] rounded-lg border border-[var(--admin-border)]">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <Contrast className="h-5 w-5 text-[var(--admin-primary)]" />
+                        <div>
+                          <p className="font-bold text-[var(--admin-text)]">High Contrast</p>
+                          <p className="text-sm text-[var(--admin-muted)]">Increase contrast to improve legibility of text and UI elements.</p>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const nextHighContrast = !settings.accessibility.highContrast;
+                          updateAccessibility({ ...settings.accessibility, highContrast: nextHighContrast });
+                        }}
+                        className={`relative w-14 h-7 rounded-full transition-colors shrink-0 ml-4 ${
+                          settings.accessibility.highContrast ? 'bg-[var(--admin-primary)]' : 'bg-[var(--admin-border)]'
+                        }`}
+                        role="switch"
+                        aria-checked={settings.accessibility.highContrast}
+                        aria-label="Toggle high contrast"
+                      >
+                        <span className={`absolute top-[3px] left-[3px] w-[22px] h-[22px] bg-light-surface rounded-full transition-transform shadow-sm ${
+                          settings.accessibility.highContrast ? 'translate-x-7' : ''
+                        }`} />
+                      </button>
+                    </div>
+                  </div>
+
                   {/* Invert Colors Toggle */}
                   <div className="p-5 bg-[var(--admin-bg)] rounded-lg border border-[var(--admin-border)]">
                     <div className="flex items-center justify-between">
@@ -445,12 +511,19 @@ export default function SettingsPage() {
                         </div>
                       </div>
                       <button
-                        onClick={() => updateField('accessibility', 'invertColors', !settings.accessibility.invertColors)}
+                        type="button"
+                        onClick={() => {
+                          const nextInverted = !settings.accessibility.invertColors;
+                          updateAccessibility({ ...settings.accessibility, invertColors: nextInverted });
+                        }}
                         className={`relative w-14 h-7 rounded-full transition-colors shrink-0 ml-4 ${
                           settings.accessibility.invertColors ? 'bg-[var(--admin-primary)]' : 'bg-[var(--admin-border)]'
                         }`}
+                        role="switch"
+                        aria-checked={settings.accessibility.invertColors}
+                        aria-label="Toggle colour inversion"
                       >
-                        <span className={`absolute top-[3px] left-[3px] w-[22px] h-[22px] bg-white rounded-full transition-transform shadow-sm ${
+                        <span className={`absolute top-[3px] left-[3px] w-[22px] h-[22px] bg-light-surface rounded-full transition-transform shadow-sm ${
                           settings.accessibility.invertColors ? 'translate-x-7' : ''
                         }`} />
                       </button>
@@ -458,7 +531,7 @@ export default function SettingsPage() {
                     {settings.accessibility.invertColors && (
                       <div className="mt-4 p-3 rounded-lg border border-yellow-500/30 bg-yellow-500/5">
                         <p className="text-xs text-yellow-600 dark:text-yellow-400 font-medium">
-                          Colour inversion is active. The admin panel colours will be inverted to improve readability. Save settings and refresh to apply globally.
+                          Colour inversion is active. UI colours are inverted while media is kept visually balanced for readability.
                         </p>
                       </div>
                     )}
@@ -467,9 +540,10 @@ export default function SettingsPage() {
                   {/* Reset Button */}
                   <div className="flex justify-end">
                     <button
+                      type="button"
                       onClick={() => {
-                        updateField('accessibility', 'fontSize', 16);
-                        updateField('accessibility', 'invertColors', false);
+                        const resetAccessibility = { fontSize: 16, highContrast: false, invertColors: false };
+                        updateAccessibility(resetAccessibility);
                       }}
                       className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-[var(--admin-muted)] hover:text-[var(--admin-text)] bg-[var(--admin-bg)] border border-[var(--admin-border)] rounded-lg hover:border-[var(--admin-primary)]/30 transition-all"
                     >

@@ -6,7 +6,7 @@ import { requireAdmin } from '@/lib/auth/middleware';
 // plus additional templates fitting the 3YESES talent platform
 // Dark mode classes applied throughout for prefers-color-scheme:dark support
 // Version is bumped whenever template content changes to trigger DB updates
-const TEMPLATES_VERSION = 4;
+const TEMPLATES_VERSION = 7;
 
 const SYSTEM_TEMPLATES = [
   {
@@ -14,29 +14,36 @@ const SYSTEM_TEMPLATES = [
     name: 'Email Verification',
     subject: 'Confirm your email — just one click to activate your profile',
     preheaderText: 'Verify your email address to unlock your 3YESES account.',
-    body: `<div style="margin-bottom:8px;">
-  <span style="display:inline-block;background:#eff6ff;color:#1d4ed8;font-size:11px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;padding:4px 12px;border-radius:100px;" class="dark-card">Email Verification</span>
+    body: `<div style="margin-bottom:10px;">
+  <span style="display:inline-block;background:#eff6ff;color:#1d4ed8;font-size:10px;font-weight:800;letter-spacing:1.1px;text-transform:uppercase;padding:5px 12px;border-radius:100px;" class="dark-card">Email Verification</span>
 </div>
 
-<h2 style="color:#020617;margin:0 0 8px 0;font-size:28px;font-weight:800;line-height:1.2;" class="dark-heading">Join the talent revolution</h2>
-<p style="color:#475569;margin:0 0 24px 0;font-size:15px;line-height:1.7;" class="dark-text">Confirm your email to access the platform connecting talent with opportunity in the entertainment industry.</p>
+<h2 style="color:#020617;margin:0 0 10px 0;font-size:33px;font-weight:700;line-height:1.15;font-family:Georgia,'Times New Roman',serif;" class="dark-heading">Welcome to 3YESES</h2>
+<p style="color:#475569;margin:0 0 22px 0;font-size:15px;line-height:1.75;" class="dark-text">Confirm your email to activate your profile and unlock your full dashboard experience.</p>
 
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:24px 0;">
+<div style="background:#f8fafc;border:1px solid #dbeafe;border-radius:12px;padding:16px 18px;margin:0 0 24px 0;" class="dark-card dark-border">
+  <p style="margin:0 0 8px 0;font-size:11px;color:#1d4ed8;letter-spacing:0.9px;text-transform:uppercase;font-weight:800;" class="dark-subtle">Why verify now</p>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+    <tr><td style="padding:4px 0;font-size:14px;color:#334155;" class="dark-text">&#10003; Secure account activation</td></tr>
+    <tr><td style="padding:4px 0;font-size:14px;color:#334155;" class="dark-text">&#10003; Immediate access to profile features</td></tr>
+    <tr><td style="padding:4px 0;font-size:14px;color:#334155;" class="dark-text">&#10003; Faster visibility in the talent ecosystem</td></tr>
+  </table>
+</div>
+
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 12px 0;">
   <tr><td align="center">
-    <a href="{{verificationUrl}}" style="display:inline-block;background:#1d4ed8;color:#ffffff;text-decoration:none;padding:14px 40px;border-radius:8px;font-size:16px;font-weight:700;box-shadow:0 4px 14px rgba(29,78,216,0.35);">Confirm Email</a>
+    <a href="{{verificationUrl}}" style="display:inline-block;background:#1d4ed8;color:#ffffff;text-decoration:none;padding:14px 44px;border-radius:999px;font-size:16px;font-weight:700;box-shadow:0 6px 16px rgba(29,78,216,0.34);">Verify My Email</a>
   </td></tr>
 </table>
 
-<p style="margin:0 0 24px 0;font-size:13px;color:#64748b;text-align:center;" class="dark-subtle">
-  If the button doesn&rsquo;t work, copy and paste this URL:<br>
-  <span style="color:#1d4ed8;font-family:'Courier New',monospace;word-break:break-all;">{{verificationUrl}}</span>
-</p>
+<p style="margin:0 0 20px 0;font-size:13px;color:#64748b;text-align:center;" class="dark-subtle">If the button doesn&rsquo;t work, copy and paste this secure URL:</p>
+<p style="margin:0 0 22px 0;font-size:12px;color:#1d4ed8;text-align:center;font-family:'Courier New',monospace;word-break:break-all;" class="dark-subtle">{{verificationUrl}}</p>
 
-<div style="border-left:3px solid #1d4ed8;background:#eff6ff;padding:14px 16px;border-radius:0 6px 6px 0;" class="dark-card dark-border">
-  <p style="margin:0;font-size:13px;color:#1e3a8a;line-height:1.6;" class="dark-text"><strong>&#9202; 24-hour expiration</strong><br>This link expires in 24 hours for your security.</p>
+<div style="border-left:3px solid #1d4ed8;background:#eff6ff;padding:14px 16px;border-radius:0 8px 8px 0;" class="dark-card dark-border">
+  <p style="margin:0;font-size:13px;color:#1e3a8a;line-height:1.65;" class="dark-text"><strong>&#9202; 24-hour expiration</strong><br>For security, this verification link expires in 24 hours.</p>
 </div>
 
-<p style="margin:24px 0 0 0;font-size:12px;color:#94a3b8;" class="dark-subtle">If you didn&rsquo;t create an account, you can safely ignore this email.</p>`,
+<p style="margin:20px 0 0 0;font-size:12px;color:#94a3b8;" class="dark-subtle">If you didn&rsquo;t create an account, you can safely ignore this email.</p>`,
     variables: ['verificationUrl', 'email'],
   },
   {
@@ -44,26 +51,33 @@ const SYSTEM_TEMPLATES = [
     name: 'Password Reset',
     subject: 'Reset your 3YESES password — secure link inside',
     preheaderText: 'A password reset was requested for your 3YESES account.',
-    body: `<div style="margin-bottom:8px;">
-  <span style="display:inline-block;background:#fef2f2;color:#ef4444;font-size:11px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;padding:4px 12px;border-radius:100px;" class="dark-card">Password Reset</span>
+    body: `<div style="margin-bottom:10px;">
+  <span style="display:inline-block;background:#fef2f2;color:#ef4444;font-size:10px;font-weight:800;letter-spacing:1.1px;text-transform:uppercase;padding:5px 12px;border-radius:100px;" class="dark-card">Security Action</span>
 </div>
 
-<h2 style="color:#020617;margin:0 0 8px 0;font-size:28px;font-weight:800;line-height:1.2;" class="dark-heading">Reset your password</h2>
-<p style="color:#475569;margin:0 0 24px 0;font-size:15px;line-height:1.7;" class="dark-text">We received a request to reset your 3YESES account password. Click below to create a new one.</p>
+<h2 style="color:#020617;margin:0 0 10px 0;font-size:33px;font-weight:700;line-height:1.15;font-family:Georgia,'Times New Roman',serif;" class="dark-heading">Reset your password</h2>
+<p style="color:#475569;margin:0 0 20px 0;font-size:15px;line-height:1.75;" class="dark-text">We received a request to reset your 3YESES account password. Use the secure button below to set a new one.</p>
 
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:24px 0;">
+<div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:16px 18px;margin:0 0 22px 0;" class="dark-card dark-border">
+  <p style="margin:0 0 8px 0;font-size:11px;color:#9a3412;letter-spacing:0.9px;text-transform:uppercase;font-weight:800;" class="dark-subtle">Account protection</p>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+    <tr><td style="padding:4px 0;font-size:14px;color:#7c2d12;" class="dark-text">&#128274; This link can only be used once</td></tr>
+    <tr><td style="padding:4px 0;font-size:14px;color:#7c2d12;" class="dark-text">&#9202; Link expires in 1 hour</td></tr>
+    <tr><td style="padding:4px 0;font-size:14px;color:#7c2d12;" class="dark-text">&#128737; Your current password stays active until reset</td></tr>
+  </table>
+</div>
+
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 12px 0;">
   <tr><td align="center">
-    <a href="{{resetUrl}}" style="display:inline-block;background:#1d4ed8;color:#ffffff;text-decoration:none;padding:14px 40px;border-radius:8px;font-size:16px;font-weight:700;box-shadow:0 4px 14px rgba(29,78,216,0.35);">Reset Password</a>
+    <a href="{{resetUrl}}" style="display:inline-block;background:#1d4ed8;color:#ffffff;text-decoration:none;padding:14px 44px;border-radius:999px;font-size:16px;font-weight:700;box-shadow:0 6px 16px rgba(29,78,216,0.34);">Reset Password</a>
   </td></tr>
 </table>
 
-<p style="margin:0 0 24px 0;font-size:13px;color:#64748b;text-align:center;" class="dark-subtle">
-  If the button doesn&rsquo;t work, copy and paste this URL:<br>
-  <span style="color:#1d4ed8;font-family:'Courier New',monospace;word-break:break-all;">{{resetUrl}}</span>
-</p>
+<p style="margin:0 0 20px 0;font-size:13px;color:#64748b;text-align:center;" class="dark-subtle">If the button doesn&rsquo;t work, copy and paste this secure URL:</p>
+<p style="margin:0 0 22px 0;font-size:12px;color:#1d4ed8;text-align:center;font-family:'Courier New',monospace;word-break:break-all;" class="dark-subtle">{{resetUrl}}</p>
 
-<div style="border-left:3px solid #ef4444;background:#fef2f2;padding:14px 16px;border-radius:0 6px 6px 0;" class="dark-card dark-border">
-  <p style="margin:0;font-size:13px;color:#991b1b;line-height:1.6;" class="dark-text"><strong>&#128274; Security Notice</strong><br>This link expires in 1 hour. If you didn&rsquo;t request this, ignore this email &mdash; your password remains unchanged.</p>
+<div style="border-left:3px solid #ef4444;background:#fef2f2;padding:14px 16px;border-radius:0 8px 8px 0;" class="dark-card dark-border">
+  <p style="margin:0;font-size:13px;color:#991b1b;line-height:1.65;" class="dark-text"><strong>&#128721; Didn&rsquo;t request this?</strong><br>Ignore this email and your password will remain unchanged.</p>
 </div>`,
     variables: ['resetUrl', 'email'],
   },
@@ -71,41 +85,46 @@ const SYSTEM_TEMPLATES = [
     id: 'welcome-email',
     name: 'Welcome Email',
     subject: 'Welcome to 3YESES — your talent journey starts now!',
-    preheaderText: 'Your account is live — complete your profile and start connecting.',
-    body: `<div style="margin-bottom:8px;">
-  <span style="display:inline-block;background:#f0fdf4;color:#16a34a;font-size:11px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;padding:4px 12px;border-radius:100px;" class="dark-card">Account Activated</span>
+    preheaderText: 'Your account is live — complete your profile and publish your portfolio.',
+    body: `<div style="margin-bottom:10px;">
+  <span style="display:inline-block;background:#f0fdf4;color:#16a34a;font-size:10px;font-weight:800;letter-spacing:1.1px;text-transform:uppercase;padding:5px 12px;border-radius:100px;" class="dark-card">Account Activated</span>
 </div>
 
-<h2 style="color:#020617;margin:0 0 8px 0;font-size:28px;font-weight:800;line-height:1.2;" class="dark-heading">Welcome, {{name}}!</h2>
-<p style="color:#475569;margin:0 0 24px 0;font-size:15px;line-height:1.7;" class="dark-text">Your email is verified and your account is live. You&rsquo;re now part of the 3YESES community &mdash; where talent meets opportunity.</p>
+<h2 style="color:#020617;margin:0 0 10px 0;font-size:34px;font-weight:700;line-height:1.12;font-family:Georgia,'Times New Roman',serif;" class="dark-heading">Welcome, {{name}}</h2>
+<p style="color:#475569;margin:0 0 22px 0;font-size:15px;line-height:1.75;" class="dark-text">Your account is now live. You&rsquo;re officially part of the 3YESES talent network.</p>
 
-<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:24px;margin:24px 0;" class="dark-card dark-border">
-  <p style="margin:0 0 16px 0;font-size:16px;font-weight:700;color:#020617;" class="dark-heading">&#128640; Quick Start Guide</p>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 18px 0;">
+  <tr>
+    <td style="width:50%;padding-right:6px;">
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px;" class="dark-card dark-border">
+        <p style="margin:0 0 6px 0;font-size:12px;color:#1d4ed8;font-weight:800;letter-spacing:0.7px;text-transform:uppercase;" class="dark-subtle">Profile Quality</p>
+        <p style="margin:0;font-size:13px;color:#475569;line-height:1.6;" class="dark-text">Add a strong bio, signature media, and your best skills to stand out.</p>
+      </div>
+    </td>
+    <td style="width:50%;padding-left:6px;">
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px;" class="dark-card dark-border">
+        <p style="margin:0 0 6px 0;font-size:12px;color:#1d4ed8;font-weight:800;letter-spacing:0.7px;text-transform:uppercase;" class="dark-subtle">Discovery</p>
+        <p style="margin:0;font-size:13px;color:#475569;line-height:1.6;" class="dark-text">Use your dashboard insights to refine profile performance over time.</p>
+      </div>
+    </td>
+  </tr>
+</table>
+
+<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:18px;margin:0 0 22px 0;" class="dark-card dark-border">
+  <p style="margin:0 0 10px 0;font-size:12px;color:#1d4ed8;letter-spacing:0.9px;text-transform:uppercase;font-weight:800;" class="dark-subtle">Premium onboarding checklist</p>
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-    <tr><td style="padding:6px 0;font-size:14px;color:#475569;" class="dark-text">
-      <span style="display:inline-block;width:28px;height:28px;background:#1d4ed8;color:#fff;border-radius:50%;text-align:center;line-height:28px;font-size:13px;font-weight:700;margin-right:12px;">1</span>
-      Complete your profile with photos &amp; bio
-    </td></tr>
-    <tr><td style="padding:6px 0;font-size:14px;color:#475569;" class="dark-text">
-      <span style="display:inline-block;width:28px;height:28px;background:#1d4ed8;color:#fff;border-radius:50%;text-align:center;line-height:28px;font-size:13px;font-weight:700;margin-right:12px;">2</span>
-      Upload your portfolio (images, videos, audio)
-    </td></tr>
-    <tr><td style="padding:6px 0;font-size:14px;color:#475569;" class="dark-text">
-      <span style="display:inline-block;width:28px;height:28px;background:#1d4ed8;color:#fff;border-radius:50%;text-align:center;line-height:28px;font-size:13px;font-weight:700;margin-right:12px;">3</span>
-      Subscribe for full Standard Access
-    </td></tr>
-    <tr><td style="padding:6px 0;font-size:14px;color:#475569;" class="dark-text">
-      <span style="display:inline-block;width:28px;height:28px;background:#1d4ed8;color:#fff;border-radius:50%;text-align:center;line-height:28px;font-size:13px;font-weight:700;margin-right:12px;">4</span>
-      Explore opportunities &amp; connect
-    </td></tr>
+    <tr><td style="padding:4px 0;font-size:14px;color:#334155;" class="dark-text">1. Complete your profile details</td></tr>
+    <tr><td style="padding:4px 0;font-size:14px;color:#334155;" class="dark-text">2. Upload your strongest portfolio samples</td></tr>
+    <tr><td style="padding:4px 0;font-size:14px;color:#334155;" class="dark-text">3. Review dashboard metrics weekly</td></tr>
   </table>
 </div>
 
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:24px 0;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 6px 0;">
   <tr><td align="center">
-    <a href="{{dashboardUrl}}" style="display:inline-block;background:#1d4ed8;color:#ffffff;text-decoration:none;padding:14px 40px;border-radius:8px;font-size:16px;font-weight:700;box-shadow:0 4px 14px rgba(29,78,216,0.35);">Go to Dashboard</a>
+    <a href="{{dashboardUrl}}" style="display:inline-block;background:#1d4ed8;color:#ffffff;text-decoration:none;padding:14px 44px;border-radius:999px;font-size:16px;font-weight:700;box-shadow:0 6px 16px rgba(29,78,216,0.34);">Open Dashboard</a>
   </td></tr>
-</table>`,
+</table>
+<p style="margin:0;font-size:12px;color:#64748b;text-align:center;" class="dark-subtle">You can update your profile anytime as your work evolves.</p>`,
     variables: ['name', 'email', 'dashboardUrl'],
   },
   {
@@ -113,35 +132,42 @@ const SYSTEM_TEMPLATES = [
     name: 'Parental Consent Request',
     subject: 'Parental Consent Required — {{childName}} wants to join 3YESES',
     preheaderText: '{{childName}} needs your consent to complete their 3YESES registration.',
-    body: `<div style="margin-bottom:8px;">
-  <span style="display:inline-block;background:#eff6ff;color:#1d4ed8;font-size:11px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;padding:4px 12px;border-radius:100px;" class="dark-card">Parental Consent</span>
+    body: `<div style="margin-bottom:10px;">
+  <span style="display:inline-block;background:#eff6ff;color:#1d4ed8;font-size:10px;font-weight:800;letter-spacing:1.1px;text-transform:uppercase;padding:5px 12px;border-radius:100px;" class="dark-card">Parental Consent</span>
 </div>
 
-<h2 style="color:#020617;margin:0 0 8px 0;font-size:28px;font-weight:800;line-height:1.2;" class="dark-heading">Consent Required for {{childName}}</h2>
-<p style="color:#475569;margin:0 0 24px 0;font-size:15px;line-height:1.7;" class="dark-text"><strong>{{childName}}</strong> has created an account on 3YESES and needs your consent to complete registration.</p>
+<h2 style="color:#020617;margin:0 0 10px 0;font-size:32px;font-weight:700;line-height:1.15;font-family:Georgia,'Times New Roman',serif;" class="dark-heading">Consent required for {{childName}}</h2>
+<p style="color:#475569;margin:0 0 22px 0;font-size:15px;line-height:1.75;" class="dark-text"><strong>{{childName}}</strong> has requested a 3YESES account and needs your approval to complete registration.</p>
 
-<div style="border-left:3px solid #1d4ed8;background:#eff6ff;padding:14px 16px;border-radius:0 6px 6px 0;margin:24px 0;" class="dark-card dark-border">
-  <p style="margin:0 0 8px 0;font-size:14px;font-weight:700;color:#1e3a8a;" class="dark-heading">&#8505;&#65039; What happens next?</p>
-  <ul style="margin:0;padding-left:20px;font-size:14px;color:#475569;line-height:1.8;" class="dark-text">
-    <li>{{childName}} will create and manage their own talent profile</li>
-    <li>They can showcase skills and connect with opportunities</li>
-    <li>Enhanced safety controls are active on their account</li>
-    <li>You can monitor the account at any time</li>
-  </ul>
-</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 18px 0;">
+  <tr>
+    <td style="width:50%;padding-right:6px;vertical-align:top;">
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px;" class="dark-card dark-border">
+        <p style="margin:0 0 6px 0;font-size:12px;color:#1d4ed8;font-weight:800;letter-spacing:0.7px;text-transform:uppercase;" class="dark-subtle">Account access</p>
+        <p style="margin:0;font-size:13px;color:#475569;line-height:1.6;" class="dark-text">{{childName}} can build and manage a personal profile and portfolio.</p>
+      </div>
+    </td>
+    <td style="width:50%;padding-left:6px;vertical-align:top;">
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px;" class="dark-card dark-border">
+        <p style="margin:0 0 6px 0;font-size:12px;color:#1d4ed8;font-weight:800;letter-spacing:0.7px;text-transform:uppercase;" class="dark-subtle">Safety controls</p>
+        <p style="margin:0;font-size:13px;color:#475569;line-height:1.6;" class="dark-text">Enhanced controls remain active, and you can request account oversight at any time.</p>
+      </div>
+    </td>
+  </tr>
+</table>
 
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:24px 0;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 12px 0;">
   <tr><td align="center">
-    <a href="{{consentUrl}}" style="display:inline-block;background:#1d4ed8;color:#ffffff;text-decoration:none;padding:14px 40px;border-radius:8px;font-size:16px;font-weight:700;box-shadow:0 4px 14px rgba(29,78,216,0.35);">Review &amp; Provide Consent</a>
+    <a href="{{consentUrl}}" style="display:inline-block;background:#1d4ed8;color:#ffffff;text-decoration:none;padding:14px 44px;border-radius:999px;font-size:16px;font-weight:700;box-shadow:0 6px 16px rgba(29,78,216,0.34);">Review &amp; Give Consent</a>
   </td></tr>
 </table>
 
-<p style="margin:0 0 24px 0;font-size:13px;color:#64748b;text-align:center;" class="dark-subtle">
-  If the button doesn&rsquo;t work, copy and paste this URL:<br>
-  <span style="color:#1d4ed8;font-family:'Courier New',monospace;word-break:break-all;">{{consentUrl}}</span>
-</p>
+<p style="margin:0 0 20px 0;font-size:13px;color:#64748b;text-align:center;" class="dark-subtle">If the button doesn&rsquo;t work, copy and paste this URL:</p>
+<p style="margin:0 0 20px 0;font-size:12px;color:#1d4ed8;text-align:center;font-family:'Courier New',monospace;word-break:break-all;" class="dark-subtle">{{consentUrl}}</p>
 
-<p style="font-size:12px;color:#94a3b8;margin:24px 0 0 0;" class="dark-subtle">This consent link expires in 48 hours. If you don&rsquo;t respond, the account will remain pending.</p>`,
+<div style="border-left:3px solid #1d4ed8;background:#eff6ff;padding:14px 16px;border-radius:0 8px 8px 0;" class="dark-card dark-border">
+  <p style="margin:0;font-size:13px;color:#1e3a8a;line-height:1.65;" class="dark-text"><strong>&#9202; Link validity</strong><br>This consent link expires in 48 hours. If no action is taken, the account remains pending.</p>
+</div>`,
     variables: ['childName', 'parentEmail', 'consentUrl'],
   },
   {
@@ -149,34 +175,43 @@ const SYSTEM_TEMPLATES = [
     name: 'Subscription Confirmed',
     subject: 'Your 3YESES Standard Access is now active!',
     preheaderText: 'Standard Access unlocked — unlimited uploads, priority ranking and more.',
-    body: `<div style="margin-bottom:8px;">
-  <span style="display:inline-block;background:#f0fdf4;color:#16a34a;font-size:11px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;padding:4px 12px;border-radius:100px;" class="dark-card">Subscription Active</span>
+    body: `<div style="margin-bottom:10px;">
+  <span style="display:inline-block;background:#f0fdf4;color:#16a34a;font-size:10px;font-weight:800;letter-spacing:1.1px;text-transform:uppercase;padding:5px 12px;border-radius:100px;" class="dark-card">Subscription Active</span>
 </div>
 
-<h2 style="color:#020617;margin:0 0 8px 0;font-size:28px;font-weight:800;line-height:1.2;" class="dark-heading">Subscription Confirmed</h2>
-<p style="color:#475569;margin:0 0 24px 0;font-size:15px;line-height:1.7;" class="dark-text">Hi {{name}}, your <strong>Standard Access</strong> subscription is now active. Here&rsquo;s everything you&rsquo;ve unlocked:</p>
+<h2 style="color:#020617;margin:0 0 10px 0;font-size:33px;font-weight:700;line-height:1.15;font-family:Georgia,'Times New Roman',serif;" class="dark-heading">Your access is confirmed</h2>
+<p style="color:#475569;margin:0 0 20px 0;font-size:15px;line-height:1.75;" class="dark-text">Hi {{name}}, your <strong>Standard Access</strong> subscription is active and your premium tools are fully unlocked.</p>
 
-<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:20px;margin:24px 0;" class="dark-card dark-border">
+<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:18px;margin:0 0 20px 0;" class="dark-card dark-border">
+  <p style="margin:0 0 10px 0;font-size:11px;color:#166534;letter-spacing:0.9px;text-transform:uppercase;font-weight:800;" class="dark-subtle">Included in your plan</p>
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-    <tr><td style="padding:5px 0;font-size:14px;color:#166534;" class="dark-text">&#10003; Full profile customisation</td></tr>
-    <tr><td style="padding:5px 0;font-size:14px;color:#166534;" class="dark-text">&#10003; Unlimited portfolio uploads (images, videos, audio)</td></tr>
-    <tr><td style="padding:5px 0;font-size:14px;color:#166534;" class="dark-text">&#10003; Priority search ranking</td></tr>
-    <tr><td style="padding:5px 0;font-size:14px;color:#166534;" class="dark-text">&#10003; Full dashboard analytics</td></tr>
+    <tr><td style="padding:4px 0;font-size:14px;color:#166534;" class="dark-text">&#10003; Full profile customisation</td></tr>
+    <tr><td style="padding:4px 0;font-size:14px;color:#166534;" class="dark-text">&#10003; Unlimited portfolio uploads</td></tr>
+    <tr><td style="padding:4px 0;font-size:14px;color:#166534;" class="dark-text">&#10003; Priority search ranking</td></tr>
+    <tr><td style="padding:4px 0;font-size:14px;color:#166534;" class="dark-text">&#10003; Full dashboard analytics</td></tr>
   </table>
 </div>
 
-<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:16px;margin:24px 0;" class="dark-card dark-border">
+<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:16px 18px;margin:0 0 22px 0;" class="dark-card dark-border">
+  <p style="margin:0 0 10px 0;font-size:11px;color:#1d4ed8;letter-spacing:0.9px;text-transform:uppercase;font-weight:800;" class="dark-subtle">Billing summary</p>
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-    <tr><td style="font-size:14px;color:#475569;padding:4px 0;" class="dark-text"><strong>Plan:</strong> Standard Access &mdash; &pound;10 / 6 months</td></tr>
-    <tr><td style="font-size:14px;color:#475569;padding:4px 0;" class="dark-text"><strong>Next renewal:</strong> {{renewalDate}}</td></tr>
+    <tr>
+      <td style="font-size:14px;color:#475569;padding:4px 0;" class="dark-text">Plan</td>
+      <td style="font-size:14px;color:#020617;padding:4px 0;text-align:right;font-weight:700;" class="dark-heading">Standard Access</td>
+    </tr>
+    <tr>
+      <td style="font-size:14px;color:#475569;padding:4px 0;" class="dark-text">Next renewal</td>
+      <td style="font-size:14px;color:#020617;padding:4px 0;text-align:right;font-weight:700;" class="dark-heading">{{renewalDate}}</td>
+    </tr>
   </table>
 </div>
 
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:24px 0;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 6px 0;">
   <tr><td align="center">
-    <a href="{{dashboardUrl}}" style="display:inline-block;background:#1d4ed8;color:#ffffff;text-decoration:none;padding:14px 40px;border-radius:8px;font-size:16px;font-weight:700;box-shadow:0 4px 14px rgba(29,78,216,0.35);">Go to Dashboard</a>
+    <a href="{{dashboardUrl}}" style="display:inline-block;background:#1d4ed8;color:#ffffff;text-decoration:none;padding:14px 44px;border-radius:999px;font-size:16px;font-weight:700;box-shadow:0 6px 16px rgba(29,78,216,0.34);">Go to Dashboard</a>
   </td></tr>
-</table>`,
+</table>
+<p style="margin:0;font-size:12px;color:#64748b;text-align:center;" class="dark-subtle">Use your dashboard to track profile growth and engagement trends.</p>`,
     variables: ['name', 'email', 'renewalDate', 'dashboardUrl'],
   },
   {
@@ -201,32 +236,32 @@ const SYSTEM_TEMPLATES = [
   </td></tr>
 </table>
 
-<p style="font-size:13px;color:#94a3b8;margin:24px 0 0 0;" class="dark-subtle">If your subscription lapses, your profile will remain but premium features will be limited.</p>`,
+<p style="font-size:13px;color:#94a3b8;margin:24px 0 0 0;" class="dark-subtle">If your subscription lapses, account access will pause until you resubscribe.</p>`,
     variables: ['name', 'email', 'expiryDate', 'billingUrl'],
   },
   {
     id: 'new-message',
-    name: 'New Message Notification',
-    subject: 'You have a new message on 3YESES from {{senderName}}',
-    preheaderText: '{{senderName}} sent you a message — tap to read and reply.',
+    name: 'Profile Activity Notification',
+    subject: 'New activity on your 3YESES profile from {{actorName}}',
+    preheaderText: '{{actorName}} interacted with your profile — review the update now.',
     body: `<div style="margin-bottom:8px;">
-  <span style="display:inline-block;background:#eff6ff;color:#1d4ed8;font-size:11px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;padding:4px 12px;border-radius:100px;" class="dark-card">New Message</span>
+  <span style="display:inline-block;background:#eff6ff;color:#1d4ed8;font-size:11px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;padding:4px 12px;border-radius:100px;" class="dark-card">Profile Activity</span>
 </div>
 
-<h2 style="color:#020617;margin:0 0 8px 0;font-size:28px;font-weight:800;line-height:1.2;" class="dark-heading">New Message</h2>
-<p style="color:#475569;margin:0 0 24px 0;font-size:15px;line-height:1.7;" class="dark-text">Hi {{recipientName}}, <strong>{{senderName}}</strong> sent you a message on 3YESES.</p>
+<h2 style="color:#020617;margin:0 0 8px 0;font-size:28px;font-weight:800;line-height:1.2;" class="dark-heading">New activity on your profile</h2>
+<p style="color:#475569;margin:0 0 24px 0;font-size:15px;line-height:1.7;" class="dark-text">Hi {{name}}, <strong>{{actorName}}</strong> interacted with your profile on 3YESES.</p>
 
 <div style="background:#f8fafc;border-left:3px solid #1d4ed8;border-radius:0 8px 8px 0;padding:20px;margin:24px 0;" class="dark-card dark-border">
-  <p style="margin:0 0 8px 0;font-size:11px;font-weight:700;color:#1d4ed8;text-transform:uppercase;letter-spacing:0.8px;">Message Preview</p>
-  <p style="margin:0;font-size:15px;color:#475569;font-style:italic;line-height:1.6;" class="dark-text">{{messagePreview}}</p>
+  <p style="margin:0 0 8px 0;font-size:11px;font-weight:700;color:#1d4ed8;text-transform:uppercase;letter-spacing:0.8px;">Activity Summary</p>
+  <p style="margin:0;font-size:15px;color:#475569;font-style:italic;line-height:1.6;" class="dark-text">{{activitySummary}}</p>
 </div>
 
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:24px 0;">
   <tr><td align="center">
-    <a href="{{messageUrl}}" style="display:inline-block;background:#1d4ed8;color:#ffffff;text-decoration:none;padding:14px 40px;border-radius:8px;font-size:16px;font-weight:700;box-shadow:0 4px 14px rgba(29,78,216,0.35);">View Message</a>
+    <a href="{{activityUrl}}" style="display:inline-block;background:#1d4ed8;color:#ffffff;text-decoration:none;padding:14px 40px;border-radius:8px;font-size:16px;font-weight:700;box-shadow:0 4px 14px rgba(29,78,216,0.35);">View Activity</a>
   </td></tr>
 </table>`,
-    variables: ['recipientName', 'senderName', 'messagePreview', 'messageUrl'],
+    variables: ['name', 'actorName', 'activitySummary', 'activityUrl'],
   },
   {
     id: 'profile-approved',
@@ -369,7 +404,7 @@ const SYSTEM_TEMPLATES = [
     subject: 'Your portfolio item "{{itemTitle}}" is getting noticed!',
     preheaderText: '"{{itemTitle}}" received {{viewCount}} views — see the full breakdown.',
     body: `<div style="margin-bottom:8px;">
-  <span style="display:inline-block;background:#faf5ff;color:#7c3aed;font-size:11px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;padding:4px 12px;border-radius:100px;" class="dark-card">Portfolio Insights</span>
+  <span style="display:inline-block;background:#eff6ff;color:#1d4ed8;font-size:11px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;padding:4px 12px;border-radius:100px;" class="dark-card">Portfolio Insights</span>
 </div>
 
 <h2 style="color:#020617;margin:0 0 8px 0;font-size:28px;font-weight:800;line-height:1.2;" class="dark-heading">Your Portfolio is Getting Noticed</h2>
@@ -390,7 +425,7 @@ const SYSTEM_TEMPLATES = [
   </table>
 </div>
 
-<p style="color:#475569;margin:0 0 24px 0;font-size:15px;line-height:1.7;" class="dark-text">Add more portfolio items to increase your visibility and attract new connections.</p>
+<p style="color:#475569;margin:0 0 24px 0;font-size:15px;line-height:1.7;" class="dark-text">Add more portfolio items to increase your visibility and improve discovery in search results.</p>
 
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:24px 0;">
   <tr><td align="center">
@@ -414,7 +449,7 @@ const SYSTEM_TEMPLATES = [
 <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:20px;margin:24px 0;" class="dark-card dark-border">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
     <tr><td style="padding:5px 0;font-size:14px;color:#475569;" class="dark-text">&#127775; New talent profiles in your category</td></tr>
-    <tr><td style="padding:5px 0;font-size:14px;color:#475569;" class="dark-text">&#128172; Unread messages waiting for you</td></tr>
+    <tr><td style="padding:5px 0;font-size:14px;color:#475569;" class="dark-text">&#128065; New profile views and engagement insights</td></tr>
     <tr><td style="padding:5px 0;font-size:14px;color:#475569;" class="dark-text">&#128200; Fresh dashboard analytics &amp; insights</td></tr>
     <tr><td style="padding:5px 0;font-size:14px;color:#475569;" class="dark-text">&#128247; New portfolio showcase features</td></tr>
   </table>

@@ -101,7 +101,7 @@ export default function ProfileOnboardingGuide({ isOpen, onClose, onStartEdit, p
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden border-2 border-blue-500/20 dark:border-red-500/20">
+      <div className="bg-light-surface dark:bg-dark-surface rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden border-2 border-blue-500/20 dark:border-red-500/20">
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-500 to-red-500 dark:from-red-600 dark:to-blue-600 p-6 text-white relative">
           <button
@@ -112,7 +112,7 @@ export default function ProfileOnboardingGuide({ isOpen, onClose, onStartEdit, p
             <X size={20} />
           </button>
           <div className="flex items-center gap-4 mb-4">
-            <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm">
+            <div className="w-16 h-16 bg-light-surface/20 dark:bg-dark-surface/20 rounded-2xl flex items-center justify-center backdrop-blur-sm">
               {currentStepData.icon}
             </div>
             <div className="flex-1">
@@ -122,9 +122,9 @@ export default function ProfileOnboardingGuide({ isOpen, onClose, onStartEdit, p
               <h2 className="text-2xl font-bold">{currentStepData.title}</h2>
             </div>
           </div>
-          <div className="w-full bg-white/20 rounded-full h-2 overflow-hidden">
+          <div className="w-full bg-light-surface/20 dark:bg-dark-surface/20 rounded-full h-2 overflow-hidden">
             <div
-              className="bg-white h-full transition-all duration-500 rounded-full"
+              className="bg-light-surface h-full transition-all duration-500 rounded-full"
               style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
             />
           </div>
@@ -132,7 +132,7 @@ export default function ProfileOnboardingGuide({ isOpen, onClose, onStartEdit, p
 
         {/* Content */}
         <div className="p-8">
-          <p className="text-lg text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
+          <p className="text-lg text-light-surface dark:text-dark-surface mb-6 leading-relaxed">
             {currentStepData.description}
           </p>
 
@@ -146,7 +146,7 @@ export default function ProfileOnboardingGuide({ isOpen, onClose, onStartEdit, p
                     className={`flex items-center gap-3 p-4 rounded-xl border-2 transition-all ${
                       isComplete
                         ? 'bg-green-50 dark:bg-green-900/20 border-green-500/50'
-                        : 'bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700'
+                        : 'bg-light-surface dark:bg-dark-surface border-gray-200 dark:border-gray-700'
                     }`}
                   >
                     <div
@@ -158,7 +158,7 @@ export default function ProfileOnboardingGuide({ isOpen, onClose, onStartEdit, p
                     >
                       {isComplete ? <Check size={16} /> : ''}
                     </div>
-                    <span className="font-medium text-gray-900 dark:text-white capitalize">
+                    <span className="font-medium text-light-surface dark:text-dark-surface capitalize">
                       {field === 'categoryId' ? 'Category' : field}
                     </span>
                     {isComplete && (
@@ -203,11 +203,11 @@ export default function ProfileOnboardingGuide({ isOpen, onClose, onStartEdit, p
         </div>
 
         {/* Footer */}
-        <div className="p-6 bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between gap-4">
+        <div className="p-6 bg-light-surface dark:bg-dark-surface border-t border-gray-200 dark:border-gray-700 flex items-center justify-between gap-4">
           <button
             onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
             disabled={currentStep === 0}
-            className="px-6 py-3 rounded-lg font-semibold transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-2 border-2 border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-red-500 text-gray-700 dark:text-gray-300"
+            className="px-6 py-3 rounded-lg font-semibold transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-2 border-2 border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-red-500 text-light-surface dark:text-dark-surface"
           >
             <ChevronLeft size={20} />
             Back
@@ -216,7 +216,7 @@ export default function ProfileOnboardingGuide({ isOpen, onClose, onStartEdit, p
           <div className="flex gap-3">
             <button
               onClick={onClose}
-              className="px-6 py-3 rounded-lg font-semibold transition-all text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+              className="px-6 py-3 rounded-lg font-semibold transition-all text-light-surface/70 dark:text-dark-surface/80 hover:text-light-surface dark:hover:text-dark-surface"
             >
               Skip for now
             </button>

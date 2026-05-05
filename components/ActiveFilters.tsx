@@ -143,7 +143,7 @@ const ActiveFilters: React.FC<ActiveFiltersProps> = ({
   }
 
   return (
-    <div className="w-full bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 py-3 px-4">
+    <div className="w-full bg-light-surface dark:bg-dark-surface border-b border-gray-200 dark:border-gray-700 py-3 px-4">
       <div className="container mx-auto flex flex-wrap items-center gap-3">
         <span className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mr-2">
           Active Filters:
@@ -152,12 +152,12 @@ const ActiveFilters: React.FC<ActiveFiltersProps> = ({
         {activeFilters.map((filter, index) => (
           <div
             key={`${filter.type}-${filter.value}-${index}`}
-            className="group flex items-center gap-2 px-3 py-1.5 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-lg text-sm font-medium border border-blue-100 dark:border-blue-800 transition-all hover:bg-blue-100 dark:hover:bg-blue-900/40 hover:shadow-sm"
+            className="group flex items-center gap-2 rounded-lg border border-[var(--brand-primary)]/15 bg-[var(--brand-primary)]/10 px-3 py-1.5 text-sm font-medium text-[var(--brand-primary)] transition-all hover:bg-[var(--brand-primary)]/16 hover:shadow-sm dark:border-[var(--brand-primary)]/25 dark:bg-[var(--brand-primary)]/14 dark:text-red-100 dark:hover:bg-[var(--brand-primary)]/20"
           >
             <span>{filter.label}</span>
             <button
               onClick={() => onRemoveFilter(filter.type, filter.value)}
-              className="p-0.5 rounded-full hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
+              className="rounded-full p-0.5 transition-colors hover:bg-[var(--brand-primary)]/15 dark:hover:bg-[var(--brand-primary)]/25"
               aria-label={`Remove ${filter.label} filter`}
             >
               <X size={14} />

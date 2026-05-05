@@ -42,6 +42,11 @@ export async function GET(request: NextRequest) {
           assignedTo: {
             select: { id: true, name: true, email: true },
           },
+          messages: {
+            orderBy: { createdAt: 'desc' },
+            take: 10,
+            include: { author: { select: { id: true, name: true, email: true } } },
+          },
         },
         orderBy: { createdAt: 'desc' },
         skip: (page - 1) * limit,

@@ -129,7 +129,7 @@ export default function ProfileSettings() {
     <div className="max-w-4xl mx-auto p-6">
   {/* aria-live region for assistive technologies */}
   <div aria-live="polite" className="sr-only" role="status">{announcement}</div>
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg">
+      <div className="bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg">
         <div className="p-6 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center gap-3">
             <Settings className="text-blue-600" size={24} />
@@ -213,7 +213,7 @@ export default function ProfileSettings() {
                     }`}
                   >
                     <span
-                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      className={`inline-block h-4 w-4 transform rounded-full bg-light-surface transition-transform ${
                         settings[key as keyof ProfileSettings] ? 'translate-x-6' : 'translate-x-1'
                       }`}
                     />
@@ -247,7 +247,7 @@ export default function ProfileSettings() {
                     }`}
                   >
                     <span
-                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      className={`inline-block h-4 w-4 transform rounded-full bg-light-surface transition-transform ${
                         settings[key as keyof ProfileSettings] ? 'translate-x-6' : 'translate-x-1'
                       }`}
                     />

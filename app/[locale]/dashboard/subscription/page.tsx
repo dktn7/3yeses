@@ -107,10 +107,10 @@ export default function SubscriptionPage() {
                        currentSubscription?.status === 'ACTIVE';
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 py-12 px-4">
+    <div className="min-h-screen py-12 px-4">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
             Choose the plan that's right for you.
           </h1>
           {isSubscribed && (
@@ -118,7 +118,7 @@ export default function SubscriptionPage() {
               <p className="text-green-400 font-medium">
                 You're currently subscribed to Standard Access
               </p>
-              <p className="text-gray-300 text-sm mt-1">
+              <p className="text-gray-600 dark:text-gray-300 text-sm mt-1">
                 Valid until: {new Date(currentSubscription.endDate).toLocaleDateString()}
               </p>
               <button
@@ -132,7 +132,7 @@ export default function SubscriptionPage() {
         </div>
 
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-white text-center mb-6">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white text-center mb-6">
             For Talents
           </h2>
         </div>
@@ -141,17 +141,17 @@ export default function SubscriptionPage() {
           {plans.map((plan) => (
             <div
               key={plan.id}
-              className="bg-gray-800/50 border border-blue-500/50 rounded-xl p-8 backdrop-blur-sm"
+              className="bg-white/80 dark:bg-dark-surface border border-blue-300 dark:border-red-500/40 rounded-xl p-8 backdrop-blur-sm"
             >
               <div className="text-center mb-6">
-                <h3 className="text-2xl font-bold text-white mb-4">
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
                   {plan.name}
                 </h3>
                 <div className="mb-2">
-                  <span className="text-5xl font-bold text-blue-400">
+                  <span className="text-5xl font-bold text-blue-600 dark:text-red-300">
                     {plan.priceDisplay}
                   </span>
-                  <span className="text-gray-400 ml-2">
+                  <span className="text-gray-500 dark:text-gray-400 ml-2">
                     / {plan.durationLabel}
                   </span>
                 </div>
@@ -161,7 +161,7 @@ export default function SubscriptionPage() {
                 {plan.features.map((feature, index) => (
                   <div key={index} className="flex items-start gap-3">
                     <Check className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
-                    <span className="text-gray-300">{feature}</span>
+                    <span className="text-gray-700 dark:text-gray-300">{feature}</span>
                   </div>
                 ))}
               </div>
@@ -169,7 +169,7 @@ export default function SubscriptionPage() {
               <button
                 onClick={() => handleSubscribe(plan.duration)}
                 disabled={subscribing !== null || isSubscribed}
-                className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-semibold py-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+                className="w-full bg-primary-blue dark:bg-accent-red hover:bg-primary-blueHover dark:hover:bg-accent-red/80 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-semibold py-4 rounded-lg transition-colors flex items-center justify-center gap-2"
               >
                 {subscribing === plan.duration ? (
                   <>
@@ -186,7 +186,7 @@ export default function SubscriptionPage() {
           ))}
         </div>
 
-        <div className="mt-12 text-center text-gray-400 text-sm">
+        <div className="mt-12 text-center text-gray-500 dark:text-gray-400 text-sm">
           <p>Secure payment processing by Stripe</p>
           <p className="mt-2">
             Questions? Contact us at support@3yeses.online

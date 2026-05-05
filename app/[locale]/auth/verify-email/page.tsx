@@ -77,7 +77,7 @@ function VerifyEmailContent() {
       case 'error':
         return <X className="h-16 w-16 text-red-500" />;
       case 'expired':
-        return <X className="h-16 w-16 text-orange-500" />;
+        return <X className="h-16 w-16 text-red-500" />;
       default:
         return <Mail className="h-16 w-16 text-primary-blue animate-pulse" />;
     }
@@ -125,7 +125,7 @@ function VerifyEmailContent() {
         <div className="mb-6">
           <Link 
             href="/auth/signin"
-            className="inline-flex items-center text-sm text-gray-600 dark:text-gray-400 hover:text-primary-blue transition-colors"
+            className="inline-flex items-center text-sm text-gray-600 dark:text-gray-300 hover:text-primary-blue dark:hover:text-accent-red focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/30 dark:focus-visible:ring-accent-red/35 rounded-sm transition-colors"
           >
             <ArrowLeft className="h-4 w-4 mr-1" />
             Back to Registration
@@ -144,7 +144,7 @@ function VerifyEmailContent() {
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white dark:bg-gray-800 py-8 px-4 shadow sm:rounded-lg sm:px-10">
+        <div className="bg-light-surface dark:bg-dark-surface py-8 px-4 shadow sm:rounded-lg sm:px-10">
           {/* Status Icon */}
           <div className="flex justify-center mb-6">
             {getStatusIcon()}
@@ -165,7 +165,7 @@ function VerifyEmailContent() {
             {verificationStatus === 'success' ? (
               <button
                 onClick={handleContinue}
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-primary-blue to-primary-red hover:from-blue-700 hover:to-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue transition-all duration-200"
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-primary-blue to-accent-blue dark:from-accent-red dark:to-primary-red hover:opacity-95 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue dark:focus:ring-accent-red transition-all duration-200"
               >
                 {status.action}
               </button>
@@ -173,7 +173,7 @@ function VerifyEmailContent() {
               <button
                 onClick={handleResendEmail}
                 disabled={loading || cooldownTime > 0 || resendCount >= 3}
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-red-600 hover:from-blue-700 hover:to-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-primary-blue to-accent-blue dark:from-accent-red dark:to-primary-red hover:opacity-95 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue dark:focus:ring-accent-red disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
               >
                 {loading ? (
                   <div className="flex items-center">
@@ -207,7 +207,7 @@ function VerifyEmailContent() {
           <div className="mt-6 text-center">
             <Link
               href={`/${locale}/contact`}
-              className="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+              className="text-sm text-primary-blue hover:text-accent-blue dark:text-accent-red dark:hover:text-red-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/30 dark:focus-visible:ring-accent-red/35 rounded-sm"
             >
               {t('needHelp')}
             </Link>
@@ -220,7 +220,7 @@ function VerifyEmailContent() {
 
 export default function VerifyEmail() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center">
+    <Suspense fallback={<div className="min-h-screen bg-light-surface dark:bg-dark-surface flex items-center justify-center">
       <div className="text-center">Loading...</div>
     </div>}>
       <VerifyEmailContent />

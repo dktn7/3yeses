@@ -511,7 +511,7 @@ export default function ApiKeysPage() {
       {activeTab === 'usage' && (
         <div className="space-y-6">
           {/* Usage Chart */}
-          <div className="bg-[var(--admin-surface)] border border-[var(--admin-border)] rounded-xl p-6">
+          <div className="bg-[var(--admin-surface)] border border-[var(--admin-border)] rounded-xl p-6 admin-invert-optout">
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h2 className="text-lg font-bold text-[var(--admin-text)]">
@@ -526,69 +526,69 @@ export default function ApiKeysPage() {
               <div className="h-72 bg-[var(--admin-bg)] rounded-lg animate-pulse" />
             ) : data?.usageData ? (
               <ResponsiveContainer width="100%" height={300}>
-                <AreaChart data={data.usageData}>
-                  <defs>
-                    <linearGradient id="colorStripe" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
-                    </linearGradient>
-                    <linearGradient id="colorResend" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid
-                    strokeDasharray="3 3"
-                    stroke="var(--admin-border)"
-                    opacity={0.5}
-                  />
-                  <XAxis
-                    dataKey="date"
-                    tick={{ fontSize: 10, fill: 'var(--admin-muted)' }}
-                    tickFormatter={(v: string) => formatAdminDate(v, { day: 'numeric', month: 'short' })}
-                    interval="preserveStartEnd"
-                  />
-                  <YAxis tick={{ fontSize: 10, fill: 'var(--admin-muted)' }} width={40} />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: 'var(--admin-surface)',
-                      border: '1px solid var(--admin-border)',
-                      borderRadius: '8px',
-                      fontSize: '12px',
-                      color: 'var(--admin-text)',
-                    }}
-                    labelFormatter={(v: string) =>
-                      formatAdminDate(v, {
-                        day: 'numeric',
-                        month: 'long',
-                        year: 'numeric',
-                      })
-                    }
-                  />
-                  <Legend
-                    iconType="circle"
-                    wrapperStyle={{ fontSize: '12px', paddingTop: '8px' }}
-                  />
-                  <Area
-                    type="monotone"
-                    dataKey="stripe"
-                    name="Stripe"
-                    stroke="#6366f1"
-                    fillOpacity={1}
-                    fill="url(#colorStripe)"
-                    strokeWidth={2}
-                  />
-                  <Area
-                    type="monotone"
-                    dataKey="resend"
-                    name="Resend"
-                    stroke="#10b981"
-                    fillOpacity={1}
-                    fill="url(#colorResend)"
-                    strokeWidth={2}
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
+                  <AreaChart data={data.usageData}>
+                    <defs>
+                      <linearGradient id="colorStripe" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
+                        <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
+                      </linearGradient>
+                      <linearGradient id="colorResend" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
+                        <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      stroke="var(--admin-border)"
+                      opacity={0.5}
+                    />
+                    <XAxis
+                      dataKey="date"
+                      tick={{ fontSize: 10, fill: 'var(--admin-muted)' }}
+                      tickFormatter={(v: string) => formatAdminDate(v, { day: 'numeric', month: 'short' })}
+                      interval="preserveStartEnd"
+                    />
+                    <YAxis tick={{ fontSize: 10, fill: 'var(--admin-muted)' }} width={40} />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: 'var(--admin-surface)',
+                        border: '1px solid var(--admin-border)',
+                        borderRadius: '8px',
+                        fontSize: '12px',
+                        color: 'var(--admin-text)',
+                      }}
+                      labelFormatter={(v: string) =>
+                        formatAdminDate(v, {
+                          day: 'numeric',
+                          month: 'long',
+                          year: 'numeric',
+                        })
+                      }
+                    />
+                    <Legend
+                      iconType="circle"
+                      wrapperStyle={{ fontSize: '12px', paddingTop: '8px' }}
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="stripe"
+                      name="Stripe"
+                      stroke="#6366f1"
+                      fillOpacity={1}
+                      fill="url(#colorStripe)"
+                      strokeWidth={2}
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="resend"
+                      name="Resend"
+                      stroke="#10b981"
+                      fillOpacity={1}
+                      fill="url(#colorResend)"
+                      strokeWidth={2}
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
             ) : null}
           </div>
 

@@ -134,7 +134,7 @@ export default function MediaOverlayInstagram({ media, allMedia, talents, onClos
           </div>
 
           {/* Right: Comments/Details Sidebar */}
-          <div className="w-[400px] bg-white dark:bg-black border-l border-gray-200 dark:border-white/10 flex flex-col hidden lg:flex">
+          <div className="w-[400px] bg-light-surface dark:bg-dark-surface border-l border-gray-200 dark:border-white/10 hidden lg:flex lg:flex-col">
             
             {/* Header */}
             <div className="p-4 border-b border-gray-200 dark:border-white/10 flex items-center justify-between">

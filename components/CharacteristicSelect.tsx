@@ -54,7 +54,7 @@ export default function CharacteristicSelect({ options, value, onChange, placeho
     <div ref={containerRef}>
       <div className="flex flex-wrap gap-2 mb-2">
         {selectedArray.map((s) => (
-          <span key={s} className="px-3 py-1 rounded-lg bg-blue-100 dark:bg-red-900/30 text-blue-700 dark:text-red-300 text-sm font-medium flex items-center gap-2">
+          <span key={s} className="px-3 py-1 rounded-lg bg-[var(--marketing-pill-bg)] dark:bg-[var(--marketing-pill-bg)] text-[var(--marketing-pill-icon)] dark:text-[var(--marketing-pill-icon)] border border-[var(--marketing-pill-border)] text-sm font-medium flex items-center gap-2">
             <span>{s}</span>
             <button onClick={() => remove(s)} className="text-sm opacity-80">×</button>
           </span>
@@ -73,15 +73,15 @@ export default function CharacteristicSelect({ options, value, onChange, placeho
           }}
           onFocus={() => setIsOpen(true)}
           placeholder={placeholder || 'Search...'}
-          className="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-red-500"
+          className="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-red-500"
         />
         {isOpen && filtered.length > 0 && (
-          <div className="absolute z-40 left-0 right-0 mt-1 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg max-h-40 overflow-auto">
+          <div className="absolute z-40 left-0 right-0 mt-1 bg-light-surface dark:bg-dark-surface border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg max-h-40 overflow-auto">
             {filtered.map(opt => (
               <button
                 key={opt}
                 onClick={() => add(opt)}
-                className="w-full text-left px-3 py-2 text-sm hover:bg-blue-50 dark:hover:bg-gray-800 text-gray-900 dark:text-white transition-colors"
+                className="w-full text-left px-3 py-2 text-sm hover-smart-bg text-gray-900 dark:text-white transition-colors"
               >
                 {opt}
               </button>

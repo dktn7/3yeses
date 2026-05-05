@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import SwoopingTick from '@/components/SwoopingTick';
 
 interface FormErrors {
   email?: string;
@@ -79,13 +80,13 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-red-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-blue-50 to-blue-200 dark:from-[#1a0508] dark:via-[#2d080d] dark:to-[#0f0204] px-4 py-12">
       <div className="max-w-md w-full">
         {/* Breadcrumb Navigation */}
         <nav className="mb-6 text-sm">
           <ol className="flex items-center space-x-2 text-gray-600 dark:text-gray-400">
             <li>
-              <Link href="/" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+              <Link href="/" className="hover:text-primary-blue dark:hover:text-accent-red transition-colors">
                 Home
               </Link>
             </li>
@@ -97,9 +98,12 @@ export default function SignInPage() {
         </nav>
 
         {/* Sign In Card */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700">
+        <div className="bg-light-surface dark:bg-dark-surface rounded-2xl shadow-2xl p-8 border border-blue-200 dark:border-gray-700">
           {/* Header */}
           <div className="text-center mb-8">
+            <div className="flex items-center justify-center mb-4">
+              <SwoopingTick size={52} className="text-primary-blue dark:text-accent-red" />
+            </div>
             <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-red-600 bg-clip-text text-transparent mb-2">
               {t('title')}
             </h1>
@@ -143,7 +147,7 @@ export default function SignInPage() {
                   errors.email
                     ? 'border-red-500 dark:border-red-500'
                     : 'border-gray-300 dark:border-gray-600'
-                } bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-all`}
+                } bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red focus:border-transparent transition-all`}
               />
               {errors.email && (
                 <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.email}</p>
@@ -166,7 +170,7 @@ export default function SignInPage() {
                     errors.password
                       ? 'border-red-500 dark:border-red-500'
                       : 'border-gray-300 dark:border-gray-600'
-                  } bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-all`}
+                  } bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red focus:border-transparent transition-all`}
                 />
                 <button
                   type="button"
@@ -193,7 +197,7 @@ export default function SignInPage() {
                   type="checkbox"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
-                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700"
+                  className="w-4 h-4 text-primary-blue dark:text-accent-red border-gray-300 rounded focus:ring-primary-blue dark:focus:ring-accent-red dark:border-gray-600 dark:bg-gray-700"
                 />
                 <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">
                   {t('rememberMe')}
@@ -201,7 +205,7 @@ export default function SignInPage() {
               </label>
               <Link
                 href="/auth/forgot-password"
-                className="text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
+                className="text-sm font-medium text-primary-blue hover:text-accent-blue dark:text-accent-red dark:hover:text-red-300 transition-colors"
               >
                 {t('forgotPassword')}
               </Link>
@@ -211,7 +215,7 @@ export default function SignInPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-red-600 hover:from-blue-700 hover:to-red-700 text-white font-medium rounded-lg transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-3 px-4 bg-gradient-to-r from-primary-blue to-accent-blue dark:from-accent-red dark:to-primary-red hover:opacity-95 text-white font-medium rounded-lg transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? (
                 <span className="flex items-center justify-center gap-2">
@@ -233,7 +237,7 @@ export default function SignInPage() {
               {t('noAccount')}{' '}
               <Link
                 href="/auth/signup"
-                className="font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
+                className="font-medium text-primary-blue hover:text-accent-blue dark:text-accent-red dark:hover:text-red-300 transition-colors"
               >
                 {t('signUpLink')}
               </Link>
@@ -243,11 +247,11 @@ export default function SignInPage() {
 
         {/* Footer Links */}
         <div className="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
-          <Link href="/privacy" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+          <Link href="/privacy" className="hover:text-primary-blue dark:hover:text-accent-red transition-colors">
             Privacy Policy
           </Link>
           <span className="mx-2">·</span>
-          <Link href="/terms" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+          <Link href="/terms" className="hover:text-primary-blue dark:hover:text-accent-red transition-colors">
             Terms of Service
           </Link>
         </div>

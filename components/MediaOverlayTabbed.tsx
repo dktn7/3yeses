@@ -21,6 +21,8 @@ import VideoPlayer from './VideoPlayer';
 import CommentsSection from './CommentsSection';
 import SwoopingTick from './SwoopingTick';
 import MediaThumbnailFallback from './MediaThumbnailFallback';
+import AuthRequiredModal from './AuthRequiredModal';
+import { useAuthRequired } from '@/hooks/useAuthRequired';
 import { useAuth } from '@/contexts/AuthContext';
 
 interface MediaItem {
@@ -59,6 +61,7 @@ export default function MediaOverlayTabbed({ media, allMedia, talents, onClose, 
   const router = useRouter();
   const locale = useLocale();
   const { user } = useAuth();
+  const { showAuthModal, openAuthModal, closeAuthModal } = useAuthRequired();
   
   const [activeTab, setActiveTab] = useState<'portfolio' | 'similar'>('portfolio');
   const [searchQuery, setSearchQuery] = useState('');
@@ -95,7 +98,7 @@ export default function MediaOverlayTabbed({ media, allMedia, talents, onClose, 
         body: JSON.stringify({ portfolioItemId: media.id }),
       }).catch(() => {});
     }
-  }, [media.id]);
+  }, [media.id, media.likeCount, media.talentProfile]);
 
   const formatNumber = (num: number) => {
     if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
@@ -109,12 +112,12 @@ export default function MediaOverlayTabbed({ media, allMedia, talents, onClose, 
   // Filter media for the current talent's portfolio
   const portfolioMedia = React.useMemo(() => {
     return allMedia.filter(m => ((m.talentProfile as any).userId ?? m.talentProfile.id) === ((talent as any).userId ?? talent.id));
-  }, [allMedia, talent.id]);
+  }, [allMedia, talent]);
 
   // Filter similar talents (excluding current)
   const similarTalents = React.useMemo(() => {
     return talents.filter(t => ((t as any).userId ?? t.id) !== ((talent as any).userId ?? talent.id));
-  }, [talents, talent.id]);
+  }, [talents, talent]);
 
   // Handle keyboard navigation
   useEffect(() => {
@@ -135,8 +138,7 @@ export default function MediaOverlayTabbed({ media, allMedia, talents, onClose, 
 
   const handleLike = async () => {
     if (!user) {
-      setShowLoginToast(true);
-      setTimeout(() => setShowLoginToast(false), 3000);
+      openAuthModal();
       return;
     }
 
@@ -213,7 +215,7 @@ export default function MediaOverlayTabbed({ media, allMedia, talents, onClose, 
           </div>
 
           {/* Info & Comments Section */}
-          <div className="flex-1 bg-white dark:bg-gray-900">
+          <div className="flex-1 bg-light-surface dark:bg-dark-surface">
             <div className="max-w-6xl mx-auto p-6">
               <div className="flex items-start justify-between mb-8 pb-6 border-b border-gray-200 dark:border-gray-800">
                 <div>
@@ -303,14 +305,14 @@ export default function MediaOverlayTabbed({ media, allMedia, talents, onClose, 
             <div className="mt-2 flex flex-col gap-1">
               <button
                 onClick={() => router.push(`/admin/users/${talentUserId}`)}
-                className="w-full py-1.5 text-[11px] font-medium rounded border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center justify-center gap-1"
+                className="w-full py-1.5 text-[11px] font-medium rounded border border-gray-200 dark:border-gray-700 bg-light-surface dark:bg-dark-surface text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center justify-center gap-1"
               >
                 <Wrench className="w-3 h-3" />
                 Admin: User
               </button>
               <button
                 onClick={() => router.push(`/admin/reports?userId=${encodeURIComponent(talentUserId)}`)}
-                className="w-full py-1.5 text-[11px] font-medium rounded border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center justify-center gap-1"
+                className="w-full py-1.5 text-[11px] font-medium rounded border border-gray-200 dark:border-gray-700 bg-light-surface dark:bg-dark-surface text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center justify-center gap-1"
               >
                 <Flag className="w-3 h-3" />
                 Admin: Reports
@@ -404,6 +406,14 @@ export default function MediaOverlayTabbed({ media, allMedia, talents, onClose, 
           ...
         </div> */}
       </div>
+
+      <AuthRequiredModal
+        isOpen={showAuthModal}
+        onClose={closeAuthModal}
+        title="Sign in to like"
+        message="You need an account to like media. Continue to sign in or create an account."
+        action="like media"
+      />
     </div>
   );
 }

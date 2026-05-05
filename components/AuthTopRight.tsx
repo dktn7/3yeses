@@ -47,7 +47,7 @@ export default function AuthTopRight() {
     <div className="flex gap-2 items-center">
       <Link
         href={`/${locale}/auth/signin`}
-        className="text-sm font-medium px-4 py-2 rounded-md border border-gray-300 bg-white text-black hover:bg-blue-100 hover:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-colors dark:bg-gray-700 dark:text-white dark:border-gray-500 dark:hover:bg-red-500"
+        className="text-sm font-medium px-4 py-2 rounded-md border border-gray-300 bg-light-surface text-light-surface hover:bg-blue-100 hover:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-colors dark:bg-dark-surface dark:text-dark-surface dark:border-gray-500 dark:hover:bg-red-500"
       >
         {t.login}
       </Link>

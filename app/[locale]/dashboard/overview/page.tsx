@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
+import NextImage from 'next/image';
 import { useTranslations } from 'next-intl';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import TalentCard from '@/components/TalentCard';
@@ -48,8 +49,10 @@ interface RecentActivity {
 
 interface Notification {
   id: string;
+  type: string;
+  title: string;
   message: string;
-  time: string;
+  timestamp: string;
   read: boolean;
 }
 
@@ -92,6 +95,10 @@ export default function DashboardOverview() {
   const [galleryIndex, setGalleryIndex] = useState(0);
   const [talentOverlay, setTalentOverlay] = useState<any>(null);
   const [showTalentOverlay, setShowTalentOverlay] = useState(false);
+
+  const warningNotifications = notifications.filter((n) =>
+    ['system', 'warning', 'critical', 'media_flag'].includes(n.type?.toLowerCase())
+  );
 
   // Helper to generate simple mock trend data for sparklines
   const generateTrendData = (baseValue: number, trend: number) => {
@@ -311,12 +318,55 @@ export default function DashboardOverview() {
           )}
         </div>
 
+        {/* Growth Hints Campaign (non-blocking) */}
+        <section className="mb-6 rounded-xl border border-blue-200/80 bg-blue-50/80 dark:bg-red-900/20 dark:border-red-400/40 p-5">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="text-sm font-bold text-blue-800 dark:text-red-100">New: Growth Hints</p>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Weekly actions to boost profile visibility</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">Complete one smart suggestion per week and we’ll promote you in the talent feed.</p>
+            </div>
+            <Link
+              href={`/${locale}/dashboard/profile#growth-hints`}
+              className="inline-flex items-center gap-2 rounded-lg bg-primary-blue dark:bg-accent-red text-white px-4 py-2 text-sm font-semibold hover:bg-primary-blueHover dark:hover:bg-accent-red/80 transition-all"
+            >
+              Explore hints
+            </Link>
+          </div>
+        </section>
+
+        {warningNotifications.length > 0 && (
+          <section className="mb-6 rounded-xl border border-amber-300/30 bg-amber-50/70 dark:bg-amber-900/20 dark:border-amber-400/40 p-5">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-lg font-bold text-amber-800 dark:text-amber-100">Action Required</h2>
+                <p className="text-sm text-amber-600 dark:text-amber-200">You have active account warnings from your admin team.</p>
+              </div>
+              <Link
+                href={`/${locale}/dashboard/notifications`}
+                className="text-xs font-semibold text-amber-700 dark:text-amber-200 hover:underline"
+              >
+                View all
+              </Link>
+            </div>
+            <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
+              {warningNotifications.slice(0, 3).map((n) => (
+                <div key={n.id} className="rounded-lg border border-amber-200 dark:border-amber-500/60 bg-light-surface dark:bg-dark-surface p-3">
+                  <p className="text-sm font-semibold text-amber-700 dark:text-amber-100">{n.title || 'Warning'}</p>
+                  <p className="text-sm text-amber-700/90 dark:text-amber-200 mt-1">{n.message}</p>
+                  <p className="text-xs text-amber-600 dark:text-amber-300 mt-2">{new Date(n.timestamp).toLocaleString(locale)}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
         {!hideContent && (
         <>
         {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           {/* Profile Views */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border-l-4 border-brand-500">
+          <div className="bg-light-surface dark:bg-dark-surface rounded-xl shadow-lg p-6 border-l-4 border-brand-500">
             <div className="flex justify-between items-start">
               <div>
                 <p className="text-sm font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wide">
@@ -343,8 +393,8 @@ export default function DashboardOverview() {
                   )}
                 </div>
               </div>
-              <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
-                <Eye className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+              <div className="p-3 bg-[var(--marketing-surface)] dark:bg-[var(--marketing-surface)] rounded-lg">
+                <Eye className="h-6 w-6 text-[var(--marketing-pill-icon)] dark:text-[var(--marketing-pill-icon)]" />
               </div>
             </div>
             {viewsHistory.length > 0 && (
@@ -363,7 +413,7 @@ export default function DashboardOverview() {
           </div>
 
           {/* Profile Likes */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border-l-4 border-brand-600">
+          <div className="bg-light-surface dark:bg-dark-surface rounded-xl shadow-lg p-6 border-l-4 border-brand-600">
             <div className="flex justify-between items-start">
               <div>
                 <p className="text-sm font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wide">
@@ -410,7 +460,7 @@ export default function DashboardOverview() {
           </div>
 
           {/* Saved Talents */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border-l-4 border-purple-500">
+          <div className="bg-light-surface dark:bg-dark-surface rounded-xl shadow-lg p-6 border-l-4 border-purple-500">
             <div className="flex justify-between items-start">
               <div>
                 <p className="text-sm font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wide">
@@ -434,10 +484,10 @@ export default function DashboardOverview() {
 
         {/* Media Performance Analytics */}
         {talentProfile && portfolioPerformance && portfolioPerformance.topPerformers?.length > 0 && (
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-8">
+          <div className="bg-light-surface dark:bg-dark-surface rounded-xl shadow-lg p-6 mb-8">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-semibold text-gray-900 dark:text-white flex items-center">
-                <Target className="h-6 w-6 mr-2 text-orange-500" />
+                <Target className="h-6 w-6 mr-2 text-red-500" />
                 {t('overview.topPerformingMedia')}
               </h2>
               <Link href={`/${locale}/dashboard/insights`} className="text-sm text-blue-600 dark:text-red-400 hover:underline font-medium">
@@ -477,14 +527,14 @@ export default function DashboardOverview() {
             <div className="space-y-3">
               {portfolioPerformance.topPerformers.map((item: any, index: number) => (
                 <div key={item.id} className="flex items-center space-x-4 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center text-white font-bold text-sm">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-yellow-400 to-red-500 flex items-center justify-center text-white font-bold text-sm">
                     #{index + 1}
                   </div>
-                  <div className="flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-600">
+                  <div className="flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-600 relative">
                     {item.type === 'IMAGE' ? (
-                      <img src={item.mediaUrl} alt={item.title} className="w-full h-full object-cover" />
+                      <NextImage src={item.mediaUrl} alt={item.title} fill className="w-full h-full object-cover" unoptimized />
                     ) : item.type === 'VIDEO' && item.thumbnailUrl ? (
-                      <img src={item.thumbnailUrl} alt={item.title} className="w-full h-full object-cover" />
+                      <NextImage src={item.thumbnailUrl} alt={item.title} fill className="w-full h-full object-cover" unoptimized />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
                         <BarChart3 className="h-6 w-6 text-gray-400" />
@@ -517,7 +567,7 @@ export default function DashboardOverview() {
 
         {/* Media Section */}
         {talentProfile && portfolioItems.length > 0 && (
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-8">
+          <div className="bg-light-surface dark:bg-dark-surface rounded-xl shadow-lg p-6 mb-8">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-semibold text-gray-900 dark:text-white flex items-center">
                 <BarChart3 className="h-6 w-6 mr-2 text-blue-600 dark:text-red-400" />
@@ -538,19 +588,23 @@ export default function DashboardOverview() {
                   }}
                 >
                   {item.type === 'IMAGE' && (
-                    <img 
+                    <NextImage 
                       src={item.mediaUrl} 
                       alt={item.title} 
+                      fill
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                      unoptimized
                     />
                   )}
                   {item.type === 'VIDEO' && (
                     <div className="relative w-full h-full">
                       {item.thumbnailUrl ? (
-                        <img 
+                        <NextImage 
                           src={item.thumbnailUrl} 
                           alt={item.title} 
+                          fill
                           className="w-full h-full object-cover"
+                          unoptimized
                         />
                       ) : (
                         <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-600 dark:to-gray-700" />
@@ -595,18 +649,18 @@ export default function DashboardOverview() {
         {/* Recent Activity & Comments */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           {/* Recent Activity */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 relative overflow-hidden">
+          <div className="bg-light-surface dark:bg-dark-surface rounded-xl shadow-lg p-6 relative overflow-hidden">
             {/* Background Icon */}
             <div className="absolute top-0 right-0 opacity-5 dark:opacity-10">
-              <Clock className="h-48 w-48 text-blue-600 dark:text-blue-400 transform rotate-12" />
+              <Clock className="h-48 w-48 text-blue-600 dark:text-red-300 transform rotate-12" />
             </div>
             <div className="relative z-10">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
-                  <Clock className="h-5 w-5 mr-2 text-blue-600 dark:text-blue-400" />
+                  <Clock className="h-5 w-5 mr-2 text-blue-600 dark:text-red-300" />
                   {t('recentActivity')}
                 </h2>
-                <Link href={`/${locale}/dashboard/activity`} className="text-sm text-blue-600 dark:text-blue-400 hover:underline">
+                <Link href={`/${locale}/dashboard/activity`} className="text-sm text-blue-600 dark:text-red-300 hover:underline">
                   {t('viewAll')}
                 </Link>
               </div>
@@ -617,11 +671,11 @@ export default function DashboardOverview() {
                       <div className={`p-2 rounded-lg ${
                         activity.type === 'comment' ? 'bg-green-100 dark:bg-green-900/30' :
                         activity.type === 'like' ? 'bg-red-100 dark:bg-red-900/30' :
-                        'bg-blue-100 dark:bg-blue-900/30'
+                        'bg-[var(--marketing-surface)] dark:bg-[var(--marketing-surface)]'
                       }`}>
                         {activity.type === 'comment' && <MessageSquare className="h-4 w-4 text-green-600 dark:text-green-400" />}
                         {activity.type === 'like' && <SwoopingTick size={16} />}
-                        {activity.type === 'view' && <Eye className="h-4 w-4 text-blue-600 dark:text-blue-400" />}
+                        {activity.type === 'view' && <Eye className="h-4 w-4 text-[var(--marketing-pill-icon)] dark:text-[var(--marketing-pill-icon)]" />}
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm text-gray-900 dark:text-white font-medium">{activity.talent?.name}</p>
@@ -640,7 +694,7 @@ export default function DashboardOverview() {
           </div>
 
           {/* Recent Notifications */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 relative overflow-hidden">
+          <div className="bg-light-surface dark:bg-dark-surface rounded-xl shadow-lg p-6 relative overflow-hidden">
             {/* Background Icon */}
             <div className="absolute top-0 right-0 opacity-5 dark:opacity-10">
               <Bell className="h-48 w-48 text-purple-600 dark:text-purple-400 transform -rotate-12" />
@@ -651,7 +705,7 @@ export default function DashboardOverview() {
                   <Bell className="h-5 w-5 mr-2 text-purple-600 dark:text-purple-400" />
                   {t('recentNotifications')}
                 </h2>
-                <Link href={`/${locale}/dashboard/notifications`} className="text-sm text-blue-600 dark:text-blue-400 hover:underline">
+                <Link href={`/${locale}/dashboard/notifications`} className="text-sm text-blue-600 dark:text-red-300 hover:underline">
                   {t('viewAll')}
                 </Link>
               </div>
@@ -660,15 +714,15 @@ export default function DashboardOverview() {
                   notifications.slice(0, 5).map((notification) => (
                     <div key={notification.id} className={`flex items-start space-x-3 p-3 rounded-lg transition-colors ${
                       !notification.read 
-                        ? 'bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800' 
+                        ? 'bg-[var(--marketing-surface)] dark:bg-[var(--marketing-surface)] border border-[var(--marketing-pill-border)]' 
                         : 'bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700'
                     }`}>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm text-gray-900 dark:text-white">{notification.message}</p>
-                        <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">{notification.time}</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">{notification.timestamp}</p>
                       </div>
                       {!notification.read && (
-                        <div className="h-2 w-2 bg-blue-600 rounded-full"></div>
+                        <div className="h-2 w-2 bg-[var(--marketing-pill-icon)] rounded-full"></div>
                       )}
                     </div>
                   ))
@@ -685,7 +739,7 @@ export default function DashboardOverview() {
         {/* Saved & Viewed Talents - Scrollable Grids */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Saved Talents */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 relative overflow-hidden">
+          <div className="bg-light-surface dark:bg-dark-surface rounded-xl shadow-lg p-6 relative overflow-hidden">
             {/* Background Icon */}
             <div className="absolute bottom-0 right-0 opacity-5 dark:opacity-10">
               <SwoopingTick size={256} />
@@ -696,7 +750,7 @@ export default function DashboardOverview() {
                   <SwoopingTick size={20} />
                   <span className="ml-2">{t('savedTalents')}</span>
                 </h2>
-                <Link href={`/${locale}/dashboard/saved`} className="text-sm text-blue-600 dark:text-blue-400 hover:underline">
+                <Link href={`/${locale}/dashboard/saved`} className="text-sm text-blue-600 dark:text-red-300 hover:underline">
                   {t('viewAll')}
                 </Link>
               </div>
@@ -755,18 +809,18 @@ export default function DashboardOverview() {
           </div>
 
           {/* Viewed Talents */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 relative overflow-hidden">
+          <div className="bg-light-surface dark:bg-dark-surface rounded-xl shadow-lg p-6 relative overflow-hidden">
             {/* Background Icon */}
             <div className="absolute bottom-0 right-0 opacity-5 dark:opacity-10">
-              <Eye className="h-64 w-64 text-blue-600 dark:text-blue-400" />
+              <Eye className="h-64 w-64 text-blue-600 dark:text-red-300" />
             </div>
             <div className="relative z-10">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
-                  <Eye className="h-5 w-5 mr-2 text-blue-600 dark:text-blue-400" />
+                  <Eye className="h-5 w-5 mr-2 text-blue-600 dark:text-red-300" />
                   {t('viewedHistory')}
                 </h2>
-                <Link href={`/${locale}/dashboard/history`} className="text-sm text-blue-600 dark:text-blue-400 hover:underline">
+                <Link href={`/${locale}/dashboard/history`} className="text-sm text-blue-600 dark:text-red-300 hover:underline">
                   {t('viewAll')}
                 </Link>
               </div>

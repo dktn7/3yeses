@@ -175,7 +175,7 @@ export default function CommentsModeration() {
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {[
-          { title: 'Total Comments', value: stats.total.toLocaleString(), icon: MessageSquare, colorClass: 'text-blue-600 dark:text-blue-400' },
+          { title: 'Total Comments', value: stats.total.toLocaleString(), icon: MessageSquare, colorClass: 'text-blue-600 dark:text-red-400' },
           { title: 'Pending Review', value: stats.pending.toString(), icon: AlertTriangle, colorClass: 'text-yellow-600 dark:text-yellow-400' },
           { title: 'Flagged', value: stats.flagged.toString(), icon: Flag, colorClass: 'text-red-600 dark:text-red-400' },
           { title: 'Approved Today', value: stats.approvedToday.toString(), icon: CheckCircle, colorClass: 'text-green-600 dark:text-green-400' },
@@ -224,7 +224,7 @@ export default function CommentsModeration() {
                       />
                     ) : (
                       <div className="h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-500/20 flex items-center justify-center">
-                        <span className="text-blue-600 dark:text-blue-400 font-medium">
+                        <span className="text-blue-600 dark:text-red-400 font-medium">
                           {comment.user.name.charAt(0)}
                         </span>
                       </div>

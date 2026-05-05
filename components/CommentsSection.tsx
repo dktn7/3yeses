@@ -9,6 +9,8 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLocale } from 'next-intl';
+import { useAuthRequired } from '@/hooks/useAuthRequired';
+import AuthRequiredModal from '@/components/AuthRequiredModal';
 
 interface MentionUser {
   id: string;
@@ -140,7 +142,7 @@ function MentionInput({
         onBlur={() => setTimeout(() => setShowMentions(false), 200)}
       />
       {showMentions && (
-        <div className="absolute bottom-full left-0 right-0 mb-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl z-50 overflow-hidden max-h-48 overflow-y-auto">
+        <div className="absolute bottom-full left-0 right-0 mb-1 bg-light-surface dark:bg-dark-surface border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl z-50 overflow-hidden max-h-48 overflow-y-auto">
           {mentionLoading ? (
             <div className="p-3 text-center"><Loader2 className="w-4 h-4 animate-spin mx-auto text-gray-400" /></div>
           ) : (
@@ -218,6 +220,7 @@ function mapComment(c: any): Comment {
 export default function CommentsSection({ mediaId, mediaOwnerId }: CommentsSectionProps) {
   const { user } = useAuth();
   const locale = useLocale();
+  const { showAuthModal, openAuthModal, closeAuthModal } = useAuthRequired();
   const [sortOrder, setSortOrder] = useState<'newest' | 'top'>('newest');
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
@@ -264,7 +267,12 @@ export default function CommentsSection({ mediaId, mediaOwnerId }: CommentsSecti
   // Post comment
   const handlePostComment = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newComment.trim() || !user) return;
+    if (!newComment.trim()) return;
+    
+    if (!user) {
+      openAuthModal();
+      return;
+    }
 
     setSubmitting(true);
     try {
@@ -303,7 +311,10 @@ export default function CommentsSection({ mediaId, mediaOwnerId }: CommentsSecti
 
   // Like / unlike
   const handleCommentLike = async (commentId: string) => {
-    if (!user) return;
+    if (!user) {
+      openAuthModal();
+      return;
+    }
 
     // Optimistic update
     setComments(prev => prev.map(c =>
@@ -435,7 +446,12 @@ export default function CommentsSection({ mediaId, mediaOwnerId }: CommentsSecti
   };
 
   const handleReplySubmit = async (parentCommentId: string) => {
-    if (!replyContent.trim() || !user) return;
+    if (!replyContent.trim()) return;
+    
+    if (!user) {
+      openAuthModal();
+      return;
+    }
 
     setReplySubmitting(true);
     try {
@@ -748,7 +764,7 @@ export default function CommentsSection({ mediaId, mediaOwnerId }: CommentsSecti
   );
 
   return (
-    <div className="flex flex-col bg-white dark:bg-gray-900">
+    <div className="flex flex-col bg-light-surface dark:bg-dark-surface">
       {/* Header with Sort */}
       <div className="p-4 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
@@ -761,7 +777,7 @@ export default function CommentsSection({ mediaId, mediaOwnerId }: CommentsSecti
             {sortOrder === 'newest' ? 'Newest First' : 'Top Comments'}
             <ChevronDown className="w-4 h-4" />
           </button>
-          <div className="absolute right-0 top-full mt-1 w-40 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 py-1 hidden group-hover/sort:block z-10">
+          <div className="absolute right-0 top-full mt-1 w-40 bg-light-surface dark:bg-dark-surface rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 py-1 hidden group-hover/sort:block z-10">
             <button
               onClick={() => setSortOrder('newest')}
               className={`w-full text-left px-4 py-2 text-sm ${sortOrder === 'newest' ? 'bg-gray-100 dark:bg-gray-700 text-primary-blue dark:text-accent-red' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'}`}
@@ -836,6 +852,15 @@ export default function CommentsSection({ mediaId, mediaOwnerId }: CommentsSecti
           </div>
         )}
       </div>
+
+      {/* Auth Modal */}
+      <AuthRequiredModal
+        isOpen={showAuthModal}
+        onClose={closeAuthModal}
+        title="Sign in to comment"
+        message="You need an account to comment on talent profiles. Continue to sign in or create an account."
+        action="comment on profiles"
+      />
     </div>
   );
 }

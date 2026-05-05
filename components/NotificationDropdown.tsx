@@ -273,7 +273,7 @@ export default function NotificationDropdown() {
         )}
       </button>
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50">
+        <div className="absolute right-0 mt-2 w-80 bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50">
           {!showSettings ? (
             <>
               <div className="p-4 border-b border-gray-200 dark:border-gray-700">
@@ -286,7 +286,7 @@ export default function NotificationDropdown() {
                     {notifications.length > 0 && (
                       <>
                         {unreadCount > 0 && (
-                          <button onClick={markAllAsRead} className="text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 hover:underline">{t('markAllRead')}</button>
+                          <button onClick={markAllAsRead} className="text-sm text-blue-600 hover:text-blue-700 dark:text-red-400 hover:underline">{t('markAllRead')}</button>
                         )}
                         <button onClick={clearAllNotifications} className="text-sm text-red-600 hover:text-red-700 dark:text-red-400 hover:underline">{t('clearAll')}</button>
                       </>
@@ -379,7 +379,7 @@ export default function NotificationDropdown() {
                         }`}
                       >
                         <span
-                          className={`inline-block h-3 w-3 transform rounded-full bg-white transition-transform ${
+                          className={`inline-block h-3 w-3 transform rounded-full bg-light-surface transition-transform ${
                             settings[key as keyof NotificationSettings] ? 'translate-x-5' : 'translate-x-1'
                           }`}
                         />
@@ -403,7 +403,7 @@ export default function NotificationDropdown() {
                     }`}
                   >
                     <span
-                      className={`inline-block h-3 w-3 transform rounded-full bg-white transition-transform ${
+                      className={`inline-block h-3 w-3 transform rounded-full bg-light-surface transition-transform ${
                         settings.soundEnabled ? 'translate-x-5' : 'translate-x-1'
                       }`}
                     />

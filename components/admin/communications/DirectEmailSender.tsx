@@ -256,7 +256,7 @@ export default function DirectEmailSender() {
                                     return `<!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="color-scheme" content="light dark">
 <style>body{margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;background:#f3f4f6;}a{color:#1d4ed8;}
-@media(prefers-color-scheme:dark){.dark-bg{background-color:#020617!important;}.dark-card{background-color:#0f172a!important;}.dark-text{color:#e2e8f0!important;}.dark-heading{color:#fff!important;}.dark-subtle{color:#94a3b8!important;}.dark-blob{opacity:.08!important;}}</style></head>
+@media(prefers-color-scheme:dark){.dark-bg{background-color:#020617!important;}.dark-card{background-color:#1e293b!important;}.dark-text{color:#e2e8f0!important;}.dark-heading{color:#fff!important;}.dark-subtle{color:#94a3b8!important;}.dark-blob{opacity:.08!important;}}</style></head>
 <body class="dark-bg"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f3f4f6;" class="dark-bg"><tr><td align="center" style="padding:40px 16px;">
 <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.06);">
 <tr><td style="background:#fff;padding:32px 40px 0 40px;position:relative;" class="dark-card">
@@ -267,7 +267,6 @@ export default function DirectEmailSender() {
 <table role="presentation" cellpadding="0" cellspacing="0"><tr>
 <td style="vertical-align:middle;padding-right:14px;"><img src="${LOGO}" alt="3YESES" width="40" height="40" style="display:block;border:0;" /></td>
 <td style="vertical-align:middle;"><span style="font-size:24px;font-weight:800;color:#020617;letter-spacing:-.5px;line-height:1;" class="dark-heading">3YESES</span></td>
-<td style="vertical-align:middle;padding-left:14px;"><span style="font-size:12px;color:#64748b;font-weight:500;letter-spacing:.3px;" class="dark-subtle">Talent &middot; Casting &middot; Opportunities</span></td>
 </tr></table></td></tr></table>
 <div style="height:3px;border-radius:2px;background:linear-gradient(90deg,#1d4ed8 0%,#ef4444 100%);"></div>
 </td></tr>

@@ -1,0 +1,887 @@
+{
+  "generatedAt": "2026-03-25T02:09:20.316Z",
+  "results": [
+    {
+      "file": "messages/en.json",
+      "duplicates": [
+        {
+          "path": "$root",
+          "key": "Pages",
+          "occurrences": [
+            {
+              "line": 700,
+              "valueText": "{",
+              "valueType": "object"
+            },
+            {
+              "line": 1412,
+              "valueText": "{",
+              "valueType": "object"
+            }
+          ]
+        },
+        {
+          "path": "$root",
+          "key": "title",
+          "occurrences": [
+            {
+              "line": 1509,
+              "valueText": "\"Build your profile\"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 1518,
+              "valueText": "\"Upload your portfolio\"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 1527,
+              "valueText": "\"Get discovered\"",
+              "valueType": "primitive"
+            }
+          ]
+        },
+        {
+          "path": "$root",
+          "key": "desc",
+          "occurrences": [
+            {
+              "line": 1510,
+              "valueText": "\"Add everything that makes you stand out: your professional title, bio, skills, languages, experience level, category, and personal details.\"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 1519,
+              "valueText": "\"Add your best work — photos, videos, audio clips, and a demo reel. Each item gets its own title, description, and thumbnail.\"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 1528,
+              "valueText": "\"Your profile goes live in search results. Clients browse, filter, and reach out directly. Track your performance through your analytics dashboard.\"",
+              "valueType": "primitive"
+            }
+          ]
+        },
+        {
+          "path": "$root",
+          "key": "details",
+          "occurrences": [
+            {
+              "line": 1511,
+              "valueText": "[",
+              "valueType": "array"
+            },
+            {
+              "line": 1520,
+              "valueText": "[",
+              "valueType": "array"
+            },
+            {
+              "line": 1529,
+              "valueText": "[",
+              "valueType": "array"
+            }
+          ]
+        },
+        {
+          "path": "Pages",
+          "key": "privacy",
+          "occurrences": [
+            {
+              "line": 705,
+              "valueText": "{",
+              "valueType": "object"
+            },
+            {
+              "line": 1426,
+              "valueText": "{",
+              "valueType": "object"
+            }
+          ]
+        },
+        {
+          "path": "Pages",
+          "key": "terms",
+          "occurrences": [
+            {
+              "line": 716,
+              "valueText": "{",
+              "valueType": "object"
+            },
+            {
+              "line": 1413,
+              "valueText": "{",
+              "valueType": "object"
+            }
+          ]
+        },
+        {
+          "path": "Pages.privacy",
+          "key": "badge",
+          "occurrences": [
+            {
+              "line": 708,
+              "valueText": "\"Legal\"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 1427,
+              "valueText": "\"Privacy Policy\"",
+              "valueType": "primitive"
+            }
+          ]
+        },
+        {
+          "path": "Pages.privacy",
+          "key": "heroTitle",
+          "occurrences": [
+            {
+              "line": 709,
+              "valueText": "\"Privacy \"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 1428,
+              "valueText": "\"Your privacy matters\"",
+              "valueType": "primitive"
+            }
+          ]
+        },
+        {
+          "path": "Pages.privacy",
+          "key": "heroAccent",
+          "occurrences": [
+            {
+              "line": 710,
+              "valueText": "\"Policy\"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 1429,
+              "valueText": "\"How we handle your data\"",
+              "valueType": "primitive"
+            }
+          ]
+        },
+        {
+          "path": "Pages.privacy",
+          "key": "contents",
+          "occurrences": [
+            {
+              "line": 711,
+              "valueText": "\"Contents\"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 1430,
+              "valueText": "\"Contents\"",
+              "valueType": "primitive"
+            }
+          ]
+        },
+        {
+          "path": "Pages.privacy",
+          "key": "introP1",
+          "occurrences": [
+            {
+              "line": 713,
+              "valueText": "\"This Privacy Policy explains how 3YESES (\\\"Platform\\\", \\\"we\\\", \\\"us\\\", \\\"our\\\") collects, uses, stores, and protects your personal data when you use our subscription-based talent marketplace at 3yeses.online.\"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 1431,
+              "valueText": "\"This Privacy Policy explains how 3YESES (\\\"Platform\\\", \\\"we\\\", \\\"us\\\", \\\"our\\\") collects, uses, stores, and protects your personal data when you use our subscription-based talent marketplace at 3yeses.online.\"",
+              "valueType": "primitive"
+            }
+          ]
+        },
+        {
+          "path": "Pages.privacy",
+          "key": "introP2",
+          "occurrences": [
+            {
+              "line": 714,
+              "valueText": "\"We are committed to protecting your privacy and handling your personal data in compliance with the UK GDPR, the Data Protection Act 2018, and, where applicable, the EU GDPR.\"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 1432,
+              "valueText": "\"We are committed to protecting your privacy and handling your personal data in compliance with the UK General Data Protection Regulation (UK GDPR), the Data Protection Act 2018, and, where applicable, the EU General Data Protection Regulation (GDPR).\"",
+              "valueType": "primitive"
+            }
+          ]
+        },
+        {
+          "path": "Pages.terms",
+          "key": "badge",
+          "occurrences": [
+            {
+              "line": 719,
+              "valueText": "\"Legal\"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 1414,
+              "valueText": "\"Terms & Conditions\"",
+              "valueType": "primitive"
+            }
+          ]
+        },
+        {
+          "path": "Pages.terms",
+          "key": "heroTitle",
+          "occurrences": [
+            {
+              "line": 720,
+              "valueText": "\"Terms & \"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 1415,
+              "valueText": "\"Terms of Service\"",
+              "valueType": "primitive"
+            }
+          ]
+        },
+        {
+          "path": "Pages.terms",
+          "key": "heroAccent",
+          "occurrences": [
+            {
+              "line": 721,
+              "valueText": "\"Conditions\"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 1416,
+              "valueText": "\"\"",
+              "valueType": "primitive"
+            }
+          ]
+        },
+        {
+          "path": "Pages.terms",
+          "key": "contents",
+          "occurrences": [
+            {
+              "line": 722,
+              "valueText": "\"Contents\"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 1417,
+              "valueText": "\"Contents\"",
+              "valueType": "primitive"
+            }
+          ]
+        },
+        {
+          "path": "Pages.terms",
+          "key": "sections",
+          "occurrences": [
+            {
+              "line": 724,
+              "valueText": "{",
+              "valueType": "object"
+            },
+            {
+              "line": 1418,
+              "valueText": "{",
+              "valueType": "object"
+            }
+          ]
+        },
+        {
+          "path": "Pages.terms.sections",
+          "key": "overview",
+          "occurrences": [
+            {
+              "line": 725,
+              "valueText": "{",
+              "valueType": "object"
+            },
+            {
+              "line": 1419,
+              "valueText": "{",
+              "valueType": "object"
+            }
+          ]
+        },
+        {
+          "path": "Pages.terms.sections.overview",
+          "key": "p1",
+          "occurrences": [
+            {
+              "line": 726,
+              "valueText": "\"These Terms and Conditions (\\\"Terms\\\") govern your use of the 3YESES platform (\\\"Platform\\\", \\\"we\\\", \\\"us\\\", \\\"our\\\"). By creating an account or using any part of the Platform, you agree to be bound by these Terms.\"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 1421,
+              "valueText": "\"These Terms and Conditions (\\\"Terms\\\") govern your use of the 3YESES platform (\\\"Platform\\\", \\\"we\\\", \\\"us\\\", \\\"our\\\"), a subscription-based talent marketplace operated at 3yeses.online. By creating an account or using any part of the Platform, you agree to be bound by these Terms.\"",
+              "valueType": "primitive"
+            }
+          ]
+        },
+        {
+          "path": "Pages.terms.sections.overview",
+          "key": "p2",
+          "occurrences": [
+            {
+              "line": 727,
+              "valueText": "\"3YESES is a platform where creative professionals — actors, musicians, models, dancers, voice artists, photographers, videographers, DJs, presenters, comedians, and other performers — create profiles, upload portfolio media (photos, videos, audio), and get discovered. The Platform includes a searchable talent directory, a media hub, analytics dashboards, and community features such as comments, likes, and content sharing.\"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 1422,
+              "valueText": "\"3YESES is a platform where creative professionals — actors, musicians, models, dancers, voice artists, photographers, videographers, DJs, presenters, comedians, and other performers — create profiles, upload portfolio media (photos, videos, audio), and get discovered. The Platform includes a searchable talent directory, a media hub, analytics dashboards, and community features such as comments, likes, and content sharing.\"",
+              "valueType": "primitive"
+            }
+          ]
+        },
+        {
+          "path": "dashboard",
+          "key": "profile",
+          "occurrences": [
+            {
+              "line": 876,
+              "valueText": "\"profile\"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 1068,
+              "valueText": "{",
+              "valueType": "object"
+            }
+          ]
+        },
+        {
+          "path": "dashboard",
+          "key": "settings",
+          "occurrences": [
+            {
+              "line": 886,
+              "valueText": "\"Settings\"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 1034,
+              "valueText": "{",
+              "valueType": "object"
+            }
+          ]
+        },
+        {
+          "path": "dashboard",
+          "key": "likes",
+          "occurrences": [
+            {
+              "line": 890,
+              "valueText": "\"Likes\"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 931,
+              "valueText": "\"likes\"",
+              "valueType": "primitive"
+            }
+          ]
+        },
+        {
+          "path": "dashboard",
+          "key": "analytics",
+          "occurrences": [
+            {
+              "line": 910,
+              "valueText": "\"Analytics\"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 937,
+              "valueText": "\"Analytics\"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 1006,
+              "valueText": "{",
+              "valueType": "object"
+            }
+          ]
+        },
+        {
+          "path": "dashboard",
+          "key": "gallery",
+          "occurrences": [
+            {
+              "line": 912,
+              "valueText": "\"Gallery\"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 1159,
+              "valueText": "{",
+              "valueType": "object"
+            }
+          ]
+        },
+        {
+          "path": "dashboard",
+          "key": "thisWeek",
+          "occurrences": [
+            {
+              "line": 929,
+              "valueText": "\"This Week\"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 944,
+              "valueText": "\"This Week\"",
+              "valueType": "primitive"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "messages/en-gb.json",
+      "duplicates": [
+        {
+          "path": "$root",
+          "key": "Pages",
+          "occurrences": [
+            {
+              "line": 700,
+              "valueText": "{",
+              "valueType": "object"
+            },
+            {
+              "line": 1412,
+              "valueText": "{",
+              "valueType": "object"
+            }
+          ]
+        },
+        {
+          "path": "$root",
+          "key": "title",
+          "occurrences": [
+            {
+              "line": 1509,
+              "valueText": "\"Build your profile\"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 1518,
+              "valueText": "\"Upload your portfolio\"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 1527,
+              "valueText": "\"Get discovered\"",
+              "valueType": "primitive"
+            }
+          ]
+        },
+        {
+          "path": "$root",
+          "key": "desc",
+          "occurrences": [
+            {
+              "line": 1510,
+              "valueText": "\"Add everything that makes you stand out: your professional title, bio, skills, languages, experience level, category, and personal details.\"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 1519,
+              "valueText": "\"Add your best work — photos, videos, audio clips, and a demo reel. Each item gets its own title, description, and thumbnail.\"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 1528,
+              "valueText": "\"Your profile goes live in search results. Clients browse, filter, and reach out directly. Track your performance through your analytics dashboard.\"",
+              "valueType": "primitive"
+            }
+          ]
+        },
+        {
+          "path": "$root",
+          "key": "details",
+          "occurrences": [
+            {
+              "line": 1511,
+              "valueText": "[",
+              "valueType": "array"
+            },
+            {
+              "line": 1520,
+              "valueText": "[",
+              "valueType": "array"
+            },
+            {
+              "line": 1529,
+              "valueText": "[",
+              "valueType": "array"
+            }
+          ]
+        },
+        {
+          "path": "Pages",
+          "key": "privacy",
+          "occurrences": [
+            {
+              "line": 705,
+              "valueText": "{",
+              "valueType": "object"
+            },
+            {
+              "line": 1426,
+              "valueText": "{",
+              "valueType": "object"
+            }
+          ]
+        },
+        {
+          "path": "Pages",
+          "key": "terms",
+          "occurrences": [
+            {
+              "line": 716,
+              "valueText": "{",
+              "valueType": "object"
+            },
+            {
+              "line": 1413,
+              "valueText": "{",
+              "valueType": "object"
+            }
+          ]
+        },
+        {
+          "path": "Pages.privacy",
+          "key": "badge",
+          "occurrences": [
+            {
+              "line": 708,
+              "valueText": "\"Legal\"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 1427,
+              "valueText": "\"Privacy Policy\"",
+              "valueType": "primitive"
+            }
+          ]
+        },
+        {
+          "path": "Pages.privacy",
+          "key": "heroTitle",
+          "occurrences": [
+            {
+              "line": 709,
+              "valueText": "\"Privacy \"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 1428,
+              "valueText": "\"Your privacy matters\"",
+              "valueType": "primitive"
+            }
+          ]
+        },
+        {
+          "path": "Pages.privacy",
+          "key": "heroAccent",
+          "occurrences": [
+            {
+              "line": 710,
+              "valueText": "\"Policy\"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 1429,
+              "valueText": "\"How we handle your data\"",
+              "valueType": "primitive"
+            }
+          ]
+        },
+        {
+          "path": "Pages.privacy",
+          "key": "contents",
+          "occurrences": [
+            {
+              "line": 711,
+              "valueText": "\"Contents\"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 1430,
+              "valueText": "\"Contents\"",
+              "valueType": "primitive"
+            }
+          ]
+        },
+        {
+          "path": "Pages.privacy",
+          "key": "introP1",
+          "occurrences": [
+            {
+              "line": 713,
+              "valueText": "\"This Privacy Policy explains how 3YESES (\\\"Platform\\\", \\\"we\\\", \\\"us\\\", \\\"our\\\") collects, uses, stores, and protects your personal data when you use our subscription-based talent marketplace at 3yeses.online.\"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 1431,
+              "valueText": "\"This Privacy Policy explains how 3YESES (\\\"Platform\\\", \\\"we\\\", \\\"us\\\", \\\"our\\\") collects, uses, stores, and protects your personal data when you use our subscription-based talent marketplace at 3yeses.online.\"",
+              "valueType": "primitive"
+            }
+          ]
+        },
+        {
+          "path": "Pages.privacy",
+          "key": "introP2",
+          "occurrences": [
+            {
+              "line": 714,
+              "valueText": "\"We are committed to protecting your privacy and handling your personal data in compliance with the UK GDPR, the Data Protection Act 2018, and, where applicable, the EU GDPR.\"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 1432,
+              "valueText": "\"We are committed to protecting your privacy and handling your personal data in compliance with the UK General Data Protection Regulation (UK GDPR), the Data Protection Act 2018, and, where applicable, the EU General Data Protection Regulation (GDPR).\"",
+              "valueType": "primitive"
+            }
+          ]
+        },
+        {
+          "path": "Pages.terms",
+          "key": "badge",
+          "occurrences": [
+            {
+              "line": 719,
+              "valueText": "\"Legal\"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 1414,
+              "valueText": "\"Terms & Conditions\"",
+              "valueType": "primitive"
+            }
+          ]
+        },
+        {
+          "path": "Pages.terms",
+          "key": "heroTitle",
+          "occurrences": [
+            {
+              "line": 720,
+              "valueText": "\"Terms & \"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 1415,
+              "valueText": "\"Terms of Service\"",
+              "valueType": "primitive"
+            }
+          ]
+        },
+        {
+          "path": "Pages.terms",
+          "key": "heroAccent",
+          "occurrences": [
+            {
+              "line": 721,
+              "valueText": "\"Conditions\"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 1416,
+              "valueText": "\"\"",
+              "valueType": "primitive"
+            }
+          ]
+        },
+        {
+          "path": "Pages.terms",
+          "key": "contents",
+          "occurrences": [
+            {
+              "line": 722,
+              "valueText": "\"Contents\"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 1417,
+              "valueText": "\"Contents\"",
+              "valueType": "primitive"
+            }
+          ]
+        },
+        {
+          "path": "Pages.terms",
+          "key": "sections",
+          "occurrences": [
+            {
+              "line": 724,
+              "valueText": "{",
+              "valueType": "object"
+            },
+            {
+              "line": 1418,
+              "valueText": "{",
+              "valueType": "object"
+            }
+          ]
+        },
+        {
+          "path": "Pages.terms.sections",
+          "key": "overview",
+          "occurrences": [
+            {
+              "line": 725,
+              "valueText": "{",
+              "valueType": "object"
+            },
+            {
+              "line": 1419,
+              "valueText": "{",
+              "valueType": "object"
+            }
+          ]
+        },
+        {
+          "path": "Pages.terms.sections.overview",
+          "key": "p1",
+          "occurrences": [
+            {
+              "line": 726,
+              "valueText": "\"These Terms and Conditions (\\\"Terms\\\") govern your use of the 3YESES platform (\\\"Platform\\\", \\\"we\\\", \\\"us\\\", \\\"our\\\"). By creating an account or using any part of the Platform, you agree to be bound by these Terms.\"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 1421,
+              "valueText": "\"These Terms and Conditions (\\\"Terms\\\") govern your use of the 3YESES platform (\\\"Platform\\\", \\\"we\\\", \\\"us\\\", \\\"our\\\"), a subscription-based talent marketplace operated at 3yeses.online. By creating an account or using any part of the Platform, you agree to be bound by these Terms.\"",
+              "valueType": "primitive"
+            }
+          ]
+        },
+        {
+          "path": "Pages.terms.sections.overview",
+          "key": "p2",
+          "occurrences": [
+            {
+              "line": 727,
+              "valueText": "\"3YESES is a platform where creative professionals — actors, musicians, models, dancers, voice artists, photographers, videographers, DJs, presenters, comedians, and other performers — create profiles, upload portfolio media (photos, videos, audio), and get discovered. The Platform includes a searchable talent directory, a media hub, analytics dashboards, and community features such as comments, likes, and content sharing.\"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 1422,
+              "valueText": "\"3YESES is a platform where creative professionals — actors, musicians, models, dancers, voice artists, photographers, videographers, DJs, presenters, comedians, and other performers — create profiles, upload portfolio media (photos, videos, audio), and get discovered. The Platform includes a searchable talent directory, a media hub, analytics dashboards, and community features such as comments, likes, and content sharing.\"",
+              "valueType": "primitive"
+            }
+          ]
+        },
+        {
+          "path": "dashboard",
+          "key": "profile",
+          "occurrences": [
+            {
+              "line": 876,
+              "valueText": "\"profile\"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 1068,
+              "valueText": "{",
+              "valueType": "object"
+            }
+          ]
+        },
+        {
+          "path": "dashboard",
+          "key": "settings",
+          "occurrences": [
+            {
+              "line": 886,
+              "valueText": "\"Settings\"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 1034,
+              "valueText": "{",
+              "valueType": "object"
+            }
+          ]
+        },
+        {
+          "path": "dashboard",
+          "key": "likes",
+          "occurrences": [
+            {
+              "line": 890,
+              "valueText": "\"Likes\"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 931,
+              "valueText": "\"likes\"",
+              "valueType": "primitive"
+            }
+          ]
+        },
+        {
+          "path": "dashboard",
+          "key": "analytics",
+          "occurrences": [
+            {
+              "line": 910,
+              "valueText": "\"Analytics\"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 937,
+              "valueText": "\"Analytics\"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 1006,
+              "valueText": "{",
+              "valueType": "object"
+            }
+          ]
+        },
+        {
+          "path": "dashboard",
+          "key": "gallery",
+          "occurrences": [
+            {
+              "line": 912,
+              "valueText": "\"Gallery\"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 1159,
+              "valueText": "{",
+              "valueType": "object"
+            }
+          ]
+        },
+        {
+          "path": "dashboard",
+          "key": "thisWeek",
+          "occurrences": [
+            {
+              "line": 929,
+              "valueText": "\"This Week\"",
+              "valueType": "primitive"
+            },
+            {
+              "line": 944,
+              "valueText": "\"This Week\"",
+              "valueType": "primitive"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

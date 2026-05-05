@@ -4,10 +4,12 @@ import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
-import { 
+import {
   Search, ArrowLeft, Loader2, X, SlidersHorizontal, 
   Sparkles, Users, Grid3X3, List, Tag
 } from 'lucide-react';
+import Fuse from 'fuse.js';
+import { getCategoryIconByName, getSubcategoryIconByName } from '@/lib/categoryIcons';
 import FeaturedTalentCard from '@/components/FeaturedTalentCard';
 import MediaOverlay from '@/components/MediaOverlay';
 import RangeSlider from '@/components/RangeSlider';
@@ -20,6 +22,7 @@ import { isAudioUrl, isValidImageUrl } from '@/lib/image-utils';
 interface Category {
   id: string;
   name: string;
+  icon?: string | null;
   subcategories: { id: string; name: string }[];
 }
 
@@ -54,6 +57,7 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
   
   // Search states
   const [searchTerm, setSearchTerm] = useState(searchParams.get('q') || '');
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
   const [showSearchSuggestions, setShowSearchSuggestions] = useState(false);
   
   // Multi-select categories/subcategories (from categories page)
@@ -93,6 +97,63 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
 
   const [categories, setCategories] = useState<Category[]>([]);
 
+  // Debounce search term to avoid heavy recompute on every keystroke
+  // Debounce search term and show micro-spinner when the user pauses typing
+  const [isSearching, setIsSearching] = useState(false);
+  const spinnerTimerRef = React.useRef<number | null>(null);
+  useEffect(() => {
+    if (spinnerTimerRef.current) {
+      clearTimeout(spinnerTimerRef.current);
+      spinnerTimerRef.current = null;
+    }
+
+    spinnerTimerRef.current = window.setTimeout(() => {
+      setIsSearching(true);
+    }, 150);
+
+    const id = window.setTimeout(() => {
+      if (spinnerTimerRef.current) {
+        clearTimeout(spinnerTimerRef.current);
+        spinnerTimerRef.current = null;
+      }
+      setIsSearching(false);
+      setDebouncedSearchTerm(searchTerm);
+    }, 180);
+
+    return () => {
+      if (spinnerTimerRef.current) {
+        clearTimeout(spinnerTimerRef.current);
+        spinnerTimerRef.current = null;
+      }
+      clearTimeout(id);
+    };
+  }, [searchTerm]);
+
+  // Precompute icon maps for categories/subcategories
+  const categoryIconMap = useMemo(() => {
+    const map = new Map<string, any>();
+    categories.forEach(cat => map.set(cat.id, getCategoryIconByName(cat.name, cat.icon)));
+    return map;
+  }, [categories]);
+
+  const subcategoryIconMap = useMemo(() => {
+    const map = new Map<string, any>();
+    categories.forEach(cat => cat.subcategories.forEach(sub => map.set(sub.id, getSubcategoryIconByName(sub.name, cat.name, cat.icon))));
+    return map;
+  }, [categories]);
+
+  // Flatten categories/subcategories for Fuse
+  const flatCategoryIndex = useMemo(() => {
+    const items: any[] = [];
+    categories.forEach(cat => {
+      items.push({ id: cat.id, type: 'category', name: cat.name, parentName: '' , icon: cat.icon});
+      cat.subcategories.forEach(sub => items.push({ id: sub.id, type: 'subcategory', name: sub.name, parentName: cat.name, icon: cat.icon }));
+    });
+    return items;
+  }, [categories]);
+
+  const fuse = useMemo(() => new Fuse(flatCategoryIndex, { keys: ['name', 'parentName'], threshold: 0.28, ignoreLocation: true, minMatchCharLength: 1 }), [flatCategoryIndex]);
+
   // Unified advanced filters state for TalentFilterPanel
   const [advancedFilters, setAdvancedFilters] = useState<TalentFilters>(() => ({
     gender: searchParams.get('gender')?.split(',').filter(Boolean) || [],
@@ -130,6 +191,7 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
     setHairColor(advancedFilters.hairColor || []);
     setSkills(advancedFilters.skills || []);
     setLanguages(advancedFilters.languages || []);
+    setDisabilities(advancedFilters.disabilities || []);
     setLocation(advancedFilters.location || '');
   }, [advancedFilters]);
 
@@ -153,33 +215,31 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
 
   // Smart search suggestions based on input
   const searchSuggestions = useMemo(() => {
-    if (!searchTerm.trim() || searchTerm.length < 2) return [];
-    const lowerInput = searchTerm.toLowerCase();
-    
-    const suggestions: { type: 'skill' | 'category' | 'subcategory'; name: string; parentName?: string }[] = [];
-    
-    // Match skills
-    POPULAR_SKILLS
-      .filter(skill => skill.toLowerCase().includes(lowerInput))
-      .slice(0, 3)
-      .forEach(skill => suggestions.push({ type: 'skill', name: skill }));
-    
-    // Match categories
-    categories
-      .filter(cat => cat.name.toLowerCase().includes(lowerInput))
-      .slice(0, 2)
-      .forEach(cat => suggestions.push({ type: 'category', name: cat.name }));
-    
-    // Match subcategories
-    categories.forEach(cat => {
-      cat.subcategories
-        .filter(sub => sub.name.toLowerCase().includes(lowerInput))
-        .slice(0, 2)
-        .forEach(sub => suggestions.push({ type: 'subcategory', name: sub.name, parentName: cat.name }));
-    });
-    
+    const term = (debouncedSearchTerm || '').trim();
+    if (!term || term.length < 2) return [] as any[];
+
+    const suggestions: any[] = [];
+
+    // skill matches (simple filter)
+    POPULAR_SKILLS.filter(s => s.toLowerCase().includes(term.toLowerCase())).slice(0, 3).forEach(skill => suggestions.push({ type: 'skill', name: skill }));
+
+    // Fuse category/subcategory matches
+    try {
+      const results = fuse.search(term, { limit: 6 });
+      results.forEach((r: any) => {
+        const item = r.item || r;
+        if (item.type === 'category') suggestions.push({ type: 'category', name: item.name, id: item.id });
+        else suggestions.push({ type: 'subcategory', name: item.name, id: item.id, parentName: item.parentName });
+      });
+    } catch (e) {
+      // fallback
+      const lower = term.toLowerCase();
+      categories.filter(c => c.name.toLowerCase().includes(lower)).slice(0, 3).forEach(c => suggestions.push({ type: 'category', name: c.name, id: c.id }));
+      categories.forEach(cat => cat.subcategories.filter(s => s.name.toLowerCase().includes(lower)).slice(0, 2).forEach(s => suggestions.push({ type: 'subcategory', name: s.name, id: s.id, parentName: cat.name })));
+    }
+
     return suggestions.slice(0, 8);
-  }, [searchTerm, categories]);
+  }, [debouncedSearchTerm, fuse, categories]);
 
   // Build search params for API
   const buildSearchParams = useCallback(() => {
@@ -283,6 +343,7 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
   // Clear all filters
   const clearFilters = () => {
     setCurrentPage(1); // Reset to first page
+    setAdvancedFilters(defaultFilters);
     setGender([]);
     setBodyType([]);
     setEthnicity([]);
@@ -323,20 +384,20 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
   // Count active filter badges
   const activeFilterCount = useMemo(() => {
     let count = 0;
-    if (advancedFilters.gender?.length) count++;
-    if (advancedFilters.bodyType?.length) count++;
-    if (advancedFilters.ethnicity?.length) count++;
-    if (advancedFilters.ageRange?.min !== 5 || advancedFilters.ageRange?.max !== 80) count++;
-    if (advancedFilters.heightRange?.min !== 150 || advancedFilters.heightRange?.max !== 200) count++;
-    if (advancedFilters.experience?.min !== 0 || advancedFilters.experience?.max !== 20) count++;
-    if (advancedFilters.eyeColor?.length) count++;
-    if (advancedFilters.hairColor?.length) count++;
-    if (advancedFilters.skills?.length) count++;
-    if (advancedFilters.languages?.length) count++;
-    if (advancedFilters.disabilities?.length) count++;
-    if (advancedFilters.location) count++;
+    if (gender.length) count++;
+    if (bodyType.length) count++;
+    if (ethnicity.length) count++;
+    if (ageRange.min !== 5 || ageRange.max !== 80) count++;
+    if (heightRange.min !== 140 || heightRange.max !== 220) count++;
+    if (experienceRange.min !== 0 || experienceRange.max !== 50) count++;
+    if (eyeColor.length) count++;
+    if (hairColor.length) count++;
+    if (skills.length) count++;
+    if (languages.length) count++;
+    if (disabilities.length) count++;
+    if (location) count++;
     return count;
-  }, [advancedFilters]);
+  }, [gender, bodyType, ethnicity, ageRange, heightRange, experienceRange, eyeColor, hairColor, skills, languages, disabilities, location]);
 
   // Process results for display
   const processedResults = useMemo(() => {
@@ -417,16 +478,17 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen">
+      <div>
       {/* Sticky Header */}
-      <section className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40 shadow-sm">
+      <section className="overflow-hidden bg-gradient-to-r from-blue-100/95 via-blue-50/95 to-blue-100/95 dark:from-red-950/95 dark:via-red-900/95 dark:to-red-950/95 border-b border-gray-200/80 dark:border-gray-700/80 backdrop-blur-sm sticky top-0 z-40 shadow-lg">
         <div className="max-w-screen-2xl mx-auto px-6 py-4">
           {/* Top Row: Back + Title + View Toggle */}
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-4">
               <button
                 onClick={() => router.push(`/${locale}/categories`)}
-                className="flex items-center justify-center w-10 h-10 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
+                className="flex items-center justify-center w-10 h-10 rounded-xl border border-gray-200 dark:border-gray-700 bg-light-surface dark:bg-dark-surface text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
               >
                 <ArrowLeft className="w-5 h-5" />
               </button>
@@ -443,18 +505,20 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
             </div>
             
             {/* View Toggle */}
-            <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
+            <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-700 rounded-xl p-1.5">
               <button
+                title="Grid view: compact cards"
                 onClick={() => setViewMode('grid')}
-                className={`p-2 rounded-lg transition-colors ${viewMode === 'grid' ? 'bg-white dark:bg-gray-600 shadow-sm' : ''}`}
+                className={`p-2 rounded-lg transition-all ${viewMode === 'grid' ? 'bg-primary-blue/90 dark:bg-accent-red/90 text-white shadow-lg' : 'bg-light-surface dark:bg-dark-surface text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'}`}
               >
-                <Grid3X3 className="w-4 h-4 text-gray-600 dark:text-gray-300" />
+                <Grid3X3 className="w-5 h-5" />
               </button>
               <button
+                title="List view: expanded lines"
                 onClick={() => setViewMode('list')}
-                className={`p-2 rounded-lg transition-colors ${viewMode === 'list' ? 'bg-white dark:bg-gray-600 shadow-sm' : ''}`}
+                className={`p-2 rounded-lg transition-all ${viewMode === 'list' ? 'bg-primary-blue/90 dark:bg-accent-red/90 text-white shadow-lg' : 'bg-light-surface dark:bg-dark-surface text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'}`}
               >
-                <List className="w-4 h-4 text-gray-600 dark:text-gray-300" />
+                <List className="w-5 h-5" />
               </button>
             </div>
           </div>
@@ -477,7 +541,11 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
                   onBlur={() => setTimeout(() => setShowSearchSuggestions(false), 150)}
                   className="w-full pl-12 pr-12 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white placeholder:text-gray-500 focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red focus:border-transparent transition-all"
                 />
-                {searchTerm && (
+                {isSearching ? (
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2 z-10">
+                    <span className="inline-block w-4 h-4 border-2 border-transparent border-t-current rounded-full animate-spin text-gray-600 dark:text-gray-300" />
+                  </div>
+                ) : searchTerm ? (
                   <button
                     type="button"
                     onClick={() => { setSearchTerm(''); setShowSearchSuggestions(false); }}
@@ -485,12 +553,12 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
                   >
                     <X className="w-4 h-4" />
                   </button>
-                )}
+                ) : null}
               </form>
 
               {/* Search Suggestions Dropdown */}
               {showSearchSuggestions && searchSuggestions.length > 0 && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg z-50 overflow-hidden">
+                <div className="absolute top-full left-0 right-0 mt-2 bg-light-surface dark:bg-dark-surface border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg z-50 overflow-hidden">
                   {searchSuggestions.map((suggestion, index) => (
                     <button
                       key={`${suggestion.type}-${suggestion.name}-${index}`}
@@ -517,17 +585,18 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
             {/* Filter Button */}
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className={`flex items-center gap-2 px-5 py-3 rounded-xl border transition-all font-medium whitespace-nowrap ${
+              title="Toggle advanced filters"
+              className={`flex items-center gap-2 px-5 py-3 rounded-xl border-2 transition-all font-semibold whitespace-nowrap ${
                 showFilters
-                  ? 'bg-primary-blue dark:bg-accent-red text-white border-transparent'
-                  : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
-              }`}
+                  ? 'bg-primary-blue dark:bg-accent-red text-white border-blue-400 dark:border-red-400 shadow-lg'
+                  : 'border-gray-200 dark:border-gray-600 bg-light-surface dark:bg-dark-surface text-gray-700 dark:text-gray-200 hover:border-primary-blue hover:text-primary-blue dark:hover:border-accent-red dark:hover:text-accent-red'}
+              `}
             >
               <SlidersHorizontal className="w-4 h-4" />
               <span>Filters</span>
               {activeFilterCount > 0 && (
                 <span className={`ml-1 px-2 py-0.5 rounded-full text-xs font-bold ${
-                  showFilters ? 'bg-white/20' : 'bg-primary-blue dark:bg-accent-red text-white'
+                  showFilters ? 'bg-white/20 text-white' : 'bg-primary-blue dark:bg-accent-red text-white'
                 }`}>
                   {activeFilterCount}
                 </span>
@@ -539,22 +608,32 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
           {hasCategoryFilters && (
             <div className="flex flex-wrap items-center gap-2 mt-4">
               <span className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">Browsing:</span>
-              {selectedCategories.map(cat => (
-                <span key={cat} className="inline-flex items-center gap-1 px-3 py-1 bg-primary-blue/10 dark:bg-accent-red/10 text-primary-blue dark:text-accent-red rounded-full text-sm font-medium">
-                  {cat}
-                  <button onClick={() => setSelectedCategories(prev => prev.filter(c => c !== cat))} className="ml-1 hover:bg-primary-blue/20 dark:hover:bg-accent-red/20 rounded-full p-0.5">
-                    <X className="w-3 h-3" />
-                  </button>
-                </span>
-              ))}
-              {selectedSubcategories.map(sub => (
-                <span key={sub} className="inline-flex items-center gap-1 px-3 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-full text-sm font-medium">
-                  {sub}
-                  <button onClick={() => setSelectedSubcategories(prev => prev.filter(s => s !== sub))} className="ml-1 hover:bg-purple-200 dark:hover:bg-purple-800 rounded-full p-0.5">
-                    <X className="w-3 h-3" />
-                  </button>
-                </span>
-              ))}
+              {selectedCategories.map(cat => {
+                const catObj = categories.find(c => c.name === cat || c.name.toLowerCase() === cat.toLowerCase());
+                const iconKey = catObj?.icon || null;
+                const CatIcon = getCategoryIconByName(cat, iconKey);
+                return (
+                  <span key={cat} className="inline-flex items-center gap-2 px-3 py-1 bg-primary-blue/10 dark:bg-accent-red/10 text-primary-blue dark:text-accent-red rounded-full text-sm font-medium">
+                    <CatIcon className="w-4 h-4" />
+                    <span>{cat}</span>
+                    <button onClick={() => setSelectedCategories(prev => prev.filter(c => c !== cat))} className="ml-1 hover:bg-primary-blue/20 dark:hover:bg-accent-red/20 rounded-full p-0.5">
+                      <X className="w-3 h-3" />
+                    </button>
+                  </span>
+                );
+              })}
+              {selectedSubcategories.map(sub => {
+                const SubIcon = getSubcategoryIconByName(sub);
+                return (
+                  <span key={sub} className="inline-flex items-center gap-2 px-3 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-full text-sm font-medium">
+                    <SubIcon className="w-4 h-4" />
+                    <span>{sub}</span>
+                    <button onClick={() => setSelectedSubcategories(prev => prev.filter(s => s !== sub))} className="ml-1 hover:bg-purple-200 dark:hover:bg-purple-800 rounded-full p-0.5">
+                      <X className="w-3 h-3" />
+                    </button>
+                  </span>
+                );
+              })}
               <button onClick={clearCategoryFilters} className="text-xs text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 underline">
                 Clear all
               </button>
@@ -569,6 +648,27 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
                 <span key={skill} className="inline-flex items-center gap-1 px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full text-sm font-medium">
                   {skill}
                   <button onClick={() => setSkills(prev => prev.filter(s => s !== skill))} className="ml-1 hover:bg-green-200 dark:hover:bg-green-800 rounded-full p-0.5">
+                    <X className="w-3 h-3" />
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
+
+          {disabilities.length > 0 && (
+            <div className="flex flex-wrap items-center gap-2 mt-3">
+              <span className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">Accessibility:</span>
+              {disabilities.map(disability => (
+                <span key={disability} className="inline-flex items-center gap-1 px-3 py-1 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 rounded-full text-sm font-medium">
+                  {disability}
+                  <button
+                    onClick={() => {
+                      const updated = disabilities.filter(d => d !== disability);
+                      setDisabilities(updated);
+                      setAdvancedFilters(prev => ({ ...prev, disabilities: updated }));
+                    }}
+                    className="ml-1 hover:bg-amber-200 dark:hover:bg-amber-800 rounded-full p-0.5"
+                  >
                     <X className="w-3 h-3" />
                   </button>
                 </span>
@@ -603,7 +703,7 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
             <span className="text-gray-600 dark:text-gray-400">Searching talents...</span>
           </div>
         ) : error ? (
-          <div className="text-center py-20 bg-white dark:bg-gray-800 rounded-2xl">
+          <div className="text-center py-20 bg-light-surface dark:bg-dark-surface rounded-2xl">
             <p className="text-red-600 dark:text-red-400 mb-4">{error}</p>
             <button
               onClick={() => fetchResults()}
@@ -613,8 +713,8 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
             </button>
           </div>
         ) : results.length === 0 ? (
-          <div className="text-center py-20 bg-white dark:bg-gray-800 rounded-2xl">
-            <Users className="w-20 h-20 mx-auto text-gray-300 dark:text-gray-600 mb-4" />
+          <div className="text-center py-20 bg-light-surface dark:bg-dark-surface rounded-2xl">
+            <Users className="w-20 h-20 mx-auto text-gray-400 dark:text-gray-500 mb-4" />
             <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">
               No talents found
             </h3>
@@ -653,7 +753,7 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
                     talent={talent.talentProfile}
                     mediaItems={talent.mediaItems}
                     onMediaClick={handleMediaSelect}
-                    onProfileClick={(profile) => router.push(`/talent/${(profile as any).userId ?? profile.id}`)}
+                    onProfileClick={(profile) => router.push(`/talent/${(profile as any).profileId ?? (profile as any).userId ?? profile.id}`)}
                     onSkillClick={handleSkillClick}
                   />
                 ))}
@@ -661,12 +761,12 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
             ) : (
               <div className="space-y-4">
                 {processedResults.map((talent: any, index: number) => (
-                  <div key={talent.id} className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-xl transition-shadow">
+                  <div key={talent.id} className="bg-light-surface dark:bg-dark-surface rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-xl transition-shadow">
                     <div className="flex flex-col sm:flex-row">
                       {/* Left: Avatar and Info */}
                       <div className="p-4 flex items-center gap-4 sm:w-64 sm:border-r border-b sm:border-b-0 border-gray-100 dark:border-gray-700">
                         <button
-                          onClick={() => router.push(`/talent/${(talent.talentProfile as any).userId ?? talent.talentProfile.id}`)}
+                          onClick={() => router.push(`/talent/${(talent.talentProfile as any).profileId ?? (talent.talentProfile as any).userId ?? talent.talentProfile.id}`)}
                           className="w-16 h-16 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700 flex-shrink-0 ring-2 ring-primary-blue/20 dark:ring-accent-red/20 hover:ring-4 transition-all"
                         >
                           {talent.talentProfile.avatarUrl ? (
@@ -773,14 +873,14 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
             <button
               onClick={() => setCurrentPage(1)}
               disabled={currentPage === 1}
-              className="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+              className="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-light-surface dark:bg-dark-surface text-gray-600 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
             >
               First
             </button>
             <button
               onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
               disabled={currentPage === 1}
-              className="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+              className="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-light-surface dark:bg-dark-surface text-gray-600 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
             >
               Previous
             </button>
@@ -804,7 +904,7 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
                     className={`w-10 h-10 rounded-lg font-medium transition-colors ${
                       currentPage === pageNum
                         ? 'bg-primary-blue dark:bg-accent-red text-white'
-                        : 'border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                        : 'border border-gray-200 dark:border-gray-700 bg-light-surface dark:bg-dark-surface text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                     }`}
                   >
                     {pageNum}
@@ -816,14 +916,14 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
             <button
               onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages}
-              className="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+              className="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-light-surface dark:bg-dark-surface text-gray-600 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
             >
               Next
             </button>
             <button
               onClick={() => setCurrentPage(totalPages)}
               disabled={currentPage === totalPages}
-              className="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+              className="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-light-surface dark:bg-dark-surface text-gray-600 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
             >
               Last
             </button>
@@ -845,5 +945,6 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
         />
       )}
     </div>
+  </div>
   );
 }

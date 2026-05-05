@@ -17,13 +17,13 @@ interface SearchResultsPageProps {
 
 const SearchResultsPage: React.FC<SearchResultsPageProps> = ({ query, results }) => {
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900">
+    <div className="min-h-screen bg-light-surface dark:bg-dark-surface">
       <div className="p-6 max-w-screen-2xl mx-auto">
         <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white mb-6 tracking-tight">
           Search Results
         </h1>
         <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">
-          Showing results for <span className="font-semibold text-blue-600 dark:text-red-400">&quot;{query}&quot;</span>
+          Showing results for <span className="font-semibold text-primary-blue dark:text-accent-red">&quot;{query}&quot;</span>
         </p>
         {results.length === 0 ? (
           <EmptyState
@@ -36,7 +36,7 @@ const SearchResultsPage: React.FC<SearchResultsPageProps> = ({ query, results })
             {results.map((result) => (
               <div
                 key={result.id}
-                className="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-200 dark:border-gray-700 p-6"
+                className="bg-light-surface dark:bg-dark-surface rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-200 dark:border-gray-700 p-6"
               >
                 <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
                   {result.name}

@@ -94,7 +94,8 @@ export function wrapEmailContent(innerHtml: string, options?: {
   <style>
     @media (prefers-color-scheme: dark) {
       .dark-bg   { background-color: #020617 !important; }
-      .dark-card  { background-color: #0f172a !important; }
+      .dark-card  { background-color: #1e293b !important; }
+      .dark-shell { background-color: #0b1224 !important; }
       .dark-text  { color: #e2e8f0 !important; }
       .dark-heading { color: #ffffff !important; }
       .dark-subtle { color: #94a3b8 !important; }
@@ -107,18 +108,23 @@ export function wrapEmailContent(innerHtml: string, options?: {
       .mobile-text  { font-size: 14px !important; }
       .mobile-h1    { font-size: 24px !important; }
       .mobile-hide  { display: none !important; }
+      .mobile-center { text-align: center !important; }
+      .mobile-stack td { display: block !important; width: 100% !important; text-align: center !important; }
     }
   </style>
 </head>
-<body style="margin:0;padding:0;word-spacing:normal;background-color:#f3f4f6;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;" class="dark-bg">
+<body style="margin:0;padding:0;word-spacing:normal;background-color:#eef2ff;background-image:radial-gradient(circle at 15% 15%,rgba(29,78,216,0.12),transparent 35%),radial-gradient(circle at 85% 85%,rgba(239,68,68,0.08),transparent 35%);font-family:'Avenir Next','Segoe UI','Helvetica Neue',Arial,sans-serif;" class="dark-bg">
   ${preheader ? `<div style="display:none;font-size:1px;color:#f3f4f6;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;mso-hide:all;">${preheader}&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;</div>` : ''}
 
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f3f4f6;" class="dark-bg">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#eef2ff;background-image:radial-gradient(circle at 15% 15%,rgba(29,78,216,0.12),transparent 35%),radial-gradient(circle at 85% 85%,rgba(239,68,68,0.08),transparent 35%);" class="dark-bg">
     <tr>
       <td align="center" style="padding:40px 16px;">
 
         <!-- ============ MAIN CARD ============ -->
-        <table role="presentation" width="600" cellpadding="0" cellspacing="0" class="mobile-full" style="max-width:600px;width:100%;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.06);">
+        <table role="presentation" width="620" cellpadding="0" cellspacing="0" class="mobile-full" style="max-width:620px;width:100%;background:rgba(255,255,255,0.55);border:1px solid rgba(15,23,42,0.10);border-radius:22px;padding:8px;box-shadow:0 24px 70px rgba(15,23,42,0.16);" class="dark-shell dark-border">
+          <tr>
+            <td>
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-radius:16px;overflow:hidden;border:1px solid rgba(15,23,42,0.08);background:#ffffff;" class="dark-card dark-border">
 
           <!-- ── TOP BRAND BAR ── -->
           <tr>
@@ -128,7 +134,7 @@ export function wrapEmailContent(innerHtml: string, options?: {
               <div style="position:absolute;top:30px;right:50px;width:60px;height:60px;border-radius:50%;background:radial-gradient(circle,rgba(239,68,68,0.10) 0%,transparent 70%);" class="dark-blob"></div>
               <div style="position:absolute;bottom:0;left:-20px;width:80px;height:80px;border-radius:50%;background:radial-gradient(circle,rgba(29,78,216,0.06) 0%,transparent 70%);" class="dark-blob"></div>
               <!-- Logo row -->
-              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" class="mobile-stack">
                 <tr>
                   <td style="padding-bottom:20px;">
                     <table role="presentation" cellpadding="0" cellspacing="0">
@@ -139,11 +145,11 @@ export function wrapEmailContent(innerHtml: string, options?: {
                         <td style="vertical-align:middle;">
                           <span style="font-size:24px;font-weight:800;color:#020617;letter-spacing:-0.5px;line-height:1;" class="dark-heading">${APP_NAME}</span>
                         </td>
-                        <td style="vertical-align:middle;padding-left:14px;" class="mobile-hide">
-                          <span style="font-size:12px;color:#64748b;font-weight:500;letter-spacing:0.3px;" class="dark-subtle">Talent &middot; Casting &middot; Opportunities</span>
-                        </td>
                       </tr>
                     </table>
+                  </td>
+                  <td align="right" style="padding-bottom:20px;" class="mobile-hide">
+                    <span style="display:inline-block;padding:6px 12px;border-radius:999px;background:#eff6ff;color:#1d4ed8;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;font-weight:700;">Member Communication</span>
                   </td>
                 </tr>
               </table>
@@ -188,6 +194,9 @@ export function wrapEmailContent(innerHtml: string, options?: {
                 &copy; ${year} ${APP_NAME}. All rights reserved.<br>
                 Sent to <a href="mailto:${email}" style="color:#60a5fa;text-decoration:none;">${email}</a>
               </p>
+            </td>
+          </tr>
+              </table>
             </td>
           </tr>
         </table>

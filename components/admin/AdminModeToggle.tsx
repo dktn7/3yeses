@@ -34,7 +34,7 @@ export function AdminModeToggle() {
   return (
     <button
       onClick={cycleTheme}
-      className="h-9 w-9 flex items-center justify-center rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/10 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-all relative group"
+      className="h-9 w-9 flex items-center justify-center rounded-lg border border-gray-200 dark:border-white/10 bg-light-surface dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/10 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-all relative group"
       title={`Current theme: ${theme}`}
     >
       <Sun className={`h-4 w-4 transition-all ${theme === 'light' ? 'rotate-0 scale-100' : 'rotate-90 scale-0 opacity-0'}`} />

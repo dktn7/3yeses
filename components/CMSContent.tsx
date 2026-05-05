@@ -64,7 +64,7 @@ export default function CMSContent({ slug, fallback }: CMSContentProps) {
   if (loading) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
+        <Loader2 className="w-8 h-8 text-primary-blue dark:text-accent-red animate-spin" />
       </div>
     );
   }
@@ -85,7 +85,7 @@ export default function CMSContent({ slug, fallback }: CMSContentProps) {
         </p>
         <Link
           href={`/${locale}`}
-          className="px-6 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+          className="px-6 py-2.5 rounded-lg font-medium text-white bg-gradient-to-r from-primary-blue to-accent-blue dark:from-accent-red dark:to-primary-red hover:opacity-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/35 dark:focus-visible:ring-accent-red/35 transition-colors"
         >
           Back to Home
         </Link>
@@ -105,7 +105,7 @@ export default function CMSContent({ slug, fallback }: CMSContentProps) {
         <nav className="mb-6">
           <ol className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
             <li>
-              <Link href={`/${locale}`} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+              <Link href={`/${locale}`} className="hover:text-primary-blue dark:hover:text-accent-red focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/30 dark:focus-visible:ring-accent-red/35 rounded-sm transition-colors">
                 Home
               </Link>
             </li>
@@ -121,12 +121,12 @@ export default function CMSContent({ slug, fallback }: CMSContentProps) {
           className="prose prose-lg dark:prose-invert max-w-none
             prose-headings:text-gray-900 dark:prose-headings:text-white
             prose-p:text-gray-700 dark:prose-p:text-gray-300
-            prose-a:text-blue-600 dark:prose-a:text-blue-400
+            prose-a:text-primary-blue dark:prose-a:text-accent-red
             prose-strong:text-gray-900 dark:prose-strong:text-white
             prose-ul:text-gray-700 dark:prose-ul:text-gray-300
             prose-ol:text-gray-700 dark:prose-ol:text-gray-300
             prose-li:text-gray-700 dark:prose-li:text-gray-300
-            prose-blockquote:border-blue-500 prose-blockquote:text-gray-600 dark:prose-blockquote:text-gray-400
+            prose-blockquote:border-primary-blue dark:prose-blockquote:border-accent-red prose-blockquote:text-gray-600 dark:prose-blockquote:text-gray-400
             prose-img:rounded-xl prose-img:shadow-lg"
           dangerouslySetInnerHTML={{ __html: content }}
         />

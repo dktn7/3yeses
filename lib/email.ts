@@ -10,6 +10,8 @@
  * - Nodemailer with SMTP
  */
 
+import { wrapEmailContent } from '@/lib/email/emailWrapper';
+
 interface EmailOptions {
   to: string;
   subject: string;
@@ -68,107 +70,59 @@ export async function sendParentalConsentEmail(
   const declineUrl = `${baseUrl}/auth/parental-consent/${consentToken}?action=decline`;
   
   const subject = `Parental Consent Required: ${teenName} wants to join 3YESES`;
-  
-  const html = `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Parental Consent Required</title>
-</head>
-<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f5f5f5;">
-  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f5f5f5; padding: 40px 0;">
-    <tr>
-      <td align="center">
-        <table width="600" cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-          
-          <!-- Header -->
-          <tr>
-            <td style="background: linear-gradient(135deg, #9333EA 0%, #3B82F6 100%); padding: 40px; text-align: center; border-radius: 8px 8px 0 0;">
-              <h1 style="color: #ffffff; margin: 0; font-size: 28px;">3YESES</h1>
-              <p style="color: #ffffff; margin: 10px 0 0 0; font-size: 16px; opacity: 0.9;">Talent Platform</p>
-            </td>
-          </tr>
-          
-          <!-- Content -->
-          <tr>
-            <td style="padding: 40px;">
-              <h2 style="color: #1f2937; margin: 0 0 20px 0; font-size: 24px;">Parental Consent Required</h2>
-              
-              <p style="color: #4b5563; font-size: 16px; line-height: 1.6; margin: 0 0 16px 0;">
-                Dear ${parentName},
-              </p>
-              
-              <p style="color: #4b5563; font-size: 16px; line-height: 1.6; margin: 0 0 16px 0;">
-                Your child, <strong>${teenName}</strong> (age ${teenAge}), has requested to create a self-managed account on 3YESES, our talent platform.
-              </p>
-              
-              <p style="color: #4b5563; font-size: 16px; line-height: 1.6; margin: 0 0 16px 0;">
-                As they are under 16 years old, we require your consent before their account can become active. They will have their own login credentials and will manage their profile directly, but we want to ensure you're aware and approve of this.
-              </p>
-              
-              <div style="background-color: #eff6ff; border-left: 4px solid: #3b82f6; padding: 16px; margin: 24px 0; border-radius: 4px;">
-                <h3 style="color: #1e40af; margin: 0 0 8px 0; font-size: 18px;">What does this mean?</h3>
-                <ul style="color: #1e40af; margin: 0; padding-left: 20px; font-size: 14px; line-height: 1.6;">
-                    <li>${teenName} will be able to create and manage their own talent profile</li>
-                  <li>They can apply for opportunities and showcase their skills</li>
-                  <li>Their profile will have enhanced safety controls</li>
-                  <li>You can request access to monitor the account at any time</li>
-                </ul>
-              </div>
-              
-              <p style="color: #4b5563; font-size: 16px; line-height: 1.6; margin: 24px 0;">
-                <strong>Please choose one of the following options:</strong>
-              </p>
-              
-              <!-- Action Buttons -->
-              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 24px 0;">
-                <tr>
-                  <td align="center" style="padding: 0 0 12px 0;">
-                    <a href="${approveUrl}" style="display: inline-block; background-color: #10b981; color: #ffffff; text-decoration: none; padding: 14px 32px; border-radius: 6px; font-size: 16px; font-weight: bold;">
-                      ✓ Approve Account
-                    </a>
-                  </td>
-                </tr>
-                <tr>
-                  <td align="center">
-                    <a href="${declineUrl}" style="display: inline-block; background-color: #ef4444; color: #ffffff; text-decoration: none; padding: 14px 32px; border-radius: 6px; font-size: 16px; font-weight: bold;">
-                      ✗ Decline Account
-                    </a>
-                  </td>
-                </tr>
-              </table>
-              
-              <p style="color: #6b7280; font-size: 14px; line-height: 1.6; margin: 24px 0 0 0; padding-top: 24px; border-top: 1px solid #e5e7eb;">
-                <strong>Important:</strong> This consent link will expire in 48 hours. If you don't respond, the account will remain pending until you approve or decline.
-              </p>
-              
-              <p style="color: #6b7280; font-size: 14px; line-height: 1.6; margin: 16px 0 0 0;">
-                If you have any questions or concerns, please contact our support team at <a href="mailto:support@3yeses.online" style="color: #3b82f6;">support@3yeses.online</a>
-              </p>
-            </td>
-          </tr>
-          
-          <!-- Footer -->
-          <tr>
-            <td style="background-color: #f9fafb; padding: 24px; text-align: center; border-radius: 0 0 8px 8px; border-top: 1px solid #e5e7eb;">
-              <p style="color: #6b7280; font-size: 12px; margin: 0 0 8px 0;">
-                © ${new Date().getFullYear()} 3YESES. All rights reserved.
-              </p>
-              <p style="color: #9ca3af; font-size: 11px; margin: 0;">
-                This email was sent to ${parentEmail} because your child requested to create an account.
-              </p>
-            </td>
-          </tr>
-          
-        </table>
-      </td>
-    </tr>
-  </table>
-</body>
-</html>
+  const innerHtml = `
+    <div style="margin-bottom:8px;">
+      <span style="display:inline-block;background:#eff6ff;color:#1d4ed8;font-size:11px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;padding:4px 12px;border-radius:100px;" class="dark-card dark-text">Parental Consent</span>
+    </div>
+
+    <h1 style="margin:0 0 12px 0;font-size:28px;font-weight:800;color:#020617;line-height:1.2;letter-spacing:-0.5px;" class="dark-heading mobile-h1">
+      Consent Required for ${teenName}
+    </h1>
+
+    <p style="margin:0 0 16px 0;font-size:16px;color:#475569;line-height:1.7;" class="dark-text mobile-text">
+      Dear ${parentName},
+    </p>
+
+    <p style="margin:0 0 16px 0;font-size:16px;color:#475569;line-height:1.7;" class="dark-text mobile-text">
+      <strong>${teenName}</strong> (age ${teenAge}) has requested a self-managed 3YESES account. As they are under 16, we need your consent before activation.
+    </p>
+
+    <div style="border-left:3px solid #1d4ed8;background:#eff6ff;padding:14px 16px;border-radius:0 6px 6px 0;margin:24px 0;">
+      <p style="margin:0 0 8px 0;font-size:14px;font-weight:700;color:#1e3a8a;" class="dark-heading">What this enables</p>
+      <ul style="margin:0;padding-left:18px;font-size:14px;color:#1e3a8a;line-height:1.7;" class="dark-text">
+        <li>${teenName} can manage their profile and portfolio</li>
+        <li>Enhanced safety controls remain active</li>
+        <li>You can request account monitoring access at any time</li>
+      </ul>
+    </div>
+
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:24px 0 12px 0;">
+      <tr>
+        <td align="center" style="padding-bottom:12px;">
+          <a href="${approveUrl}" style="display:inline-block;background:#1d4ed8;color:#ffffff;text-decoration:none;padding:14px 40px;border-radius:8px;font-size:16px;font-weight:600;min-width:220px;text-align:center;">Approve Account</a>
+        </td>
+      </tr>
+      <tr>
+        <td align="center">
+          <a href="${declineUrl}" style="display:inline-block;background:#ef4444;color:#ffffff;text-decoration:none;padding:14px 40px;border-radius:8px;font-size:16px;font-weight:600;min-width:220px;text-align:center;">Decline Account</a>
+        </td>
+      </tr>
+    </table>
+
+    <p style="margin:20px 0 0 0;font-size:13px;color:#64748b;line-height:1.7;" class="dark-subtle">
+      This consent link expires in 48 hours. If no action is taken, the account will stay pending.
+    </p>
+
+    <p style="margin:12px 0 0 0;font-size:13px;color:#64748b;line-height:1.7;" class="dark-subtle">
+      Need help? Contact <a href="mailto:support@3yeses.online" style="color:#1d4ed8;text-decoration:none;">support@3yeses.online</a>
+    </p>
   `;
+
+  const html = wrapEmailContent(innerHtml, {
+    subject,
+    recipientEmail: parentEmail,
+    preheaderText: `${teenName} needs your consent to activate their 3YESES account.`,
+  });
   
   const text = `
 Parental Consent Required
@@ -210,42 +164,33 @@ export async function sendConsentApprovedEmail(
   const loginUrl = `${baseUrl}/auth/signin`;
   
   const subject = 'Your account has been approved!';
-  
-  const html = `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>Account Approved</title>
-</head>
-<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f5f5f5;">
-  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f5f5f5; padding: 40px 0;">
-    <tr>
-      <td align="center">
-        <table width="600" cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; border-radius: 8px;">
-          <tr>
-            <td style="background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%); padding: 40px; text-align: center; border-radius: 8px 8px 0 0;">
-              <h1 style="color: #ffffff; margin: 0;">🎉 Account Approved!</h1>
-            </td>
-          </tr>
-          <tr>
-            <td style="padding: 40px;">
-              <p style="color: #4b5563; font-size: 16px;">Hi ${teenName},</p>
-              <p style="color: #4b5563; font-size: 16px;">Great news! Your parent/guardian has approved your 3YESES account. You can now start building your talent profile and exploring opportunities!</p>
-              <p style="text-align: center; margin: 32px 0;">
-                <a href="${loginUrl}" style="display: inline-block; background-color: #3b82f6; color: #ffffff; text-decoration: none; padding: 14px 32px; border-radius: 6px; font-size: 16px; font-weight: bold;">
-                  Sign In Now
-                </a>
-              </p>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
-</body>
-</html>
+  const innerHtml = `
+    <div style="margin-bottom:8px;">
+      <span style="display:inline-block;background:#f0fdf4;color:#16a34a;font-size:11px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;padding:4px 12px;border-radius:100px;" class="dark-card dark-text">Account Approved</span>
+    </div>
+
+    <h1 style="margin:0 0 12px 0;font-size:28px;font-weight:800;color:#020617;line-height:1.2;letter-spacing:-0.5px;" class="dark-heading mobile-h1">
+      Great news, ${teenName}
+    </h1>
+
+    <p style="margin:0 0 24px 0;font-size:16px;color:#475569;line-height:1.7;" class="dark-text mobile-text">
+      Your parent or guardian approved your 3YESES account. You can now sign in, build your profile, and start exploring opportunities.
+    </p>
+
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:24px 0;">
+      <tr>
+        <td align="center">
+          <a href="${loginUrl}" style="display:inline-block;background:#1d4ed8;color:#ffffff;text-decoration:none;padding:14px 40px;border-radius:8px;font-size:16px;font-weight:600;min-width:220px;text-align:center;">Sign In Now</a>
+        </td>
+      </tr>
+    </table>
   `;
+
+  const html = wrapEmailContent(innerHtml, {
+    subject,
+    recipientEmail: teenEmail,
+    preheaderText: 'Your 3YESES account is approved and ready to use.',
+  });
   
   return await sendEmail({
     to: teenEmail,

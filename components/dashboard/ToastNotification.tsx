@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { X } from 'lucide-react';
 
 export interface Toast {
@@ -19,6 +19,13 @@ interface ToastNotificationProps {
 function ToastNotification({ toast, onClose }: ToastNotificationProps) {
   const [isExiting, setIsExiting] = useState(false);
 
+  const handleClose = useCallback(() => {
+    setIsExiting(true);
+    setTimeout(() => {
+      onClose(toast.id);
+    }, 300);
+  }, [onClose, toast.id]);
+
   useEffect(() => {
     const duration = toast.duration || 5000;
     const timer = setTimeout(() => {
@@ -26,14 +33,7 @@ function ToastNotification({ toast, onClose }: ToastNotificationProps) {
     }, duration);
 
     return () => clearTimeout(timer);
-  }, [toast.id]);
-
-  const handleClose = () => {
-    setIsExiting(true);
-    setTimeout(() => {
-      onClose(toast.id);
-    }, 300);
-  };
+  }, [handleClose, toast.duration]);
 
   const bgColors = {
     success: 'bg-green-500',

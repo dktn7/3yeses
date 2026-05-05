@@ -55,7 +55,7 @@ export default function ActivityPage() {
 
   if (loading || !mounted) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
+      <div className="min-h-screen flex items-center justify-center bg-light-surface dark:bg-dark-surface">
         <div className="animate-spin">
           <SwoopingTick size={80} />
         </div>
@@ -76,7 +76,7 @@ export default function ActivityPage() {
 
   const getActivityColor = (type: string) => {
     switch (type) {
-      case 'view': return 'text-blue-600 dark:text-blue-400';
+      case 'view': return 'text-blue-600 dark:text-red-300';
       case 'comment': return 'text-green-600 dark:text-green-400';
       case 'like': return 'text-pink-600 dark:text-pink-400';
       default: return 'text-gray-600 dark:text-gray-400';
@@ -85,7 +85,7 @@ export default function ActivityPage() {
 
   const getActivityBg = (type: string) => {
     switch (type) {
-      case 'view': return 'bg-blue-500/10 dark:bg-blue-500/20';
+      case 'view': return 'bg-blue-500/10 dark:bg-red-500/20';
       case 'comment': return 'bg-green-500/10 dark:bg-green-500/20';
       case 'like': return 'bg-pink-500/10 dark:bg-pink-500/20';
       default: return 'bg-gray-500/10 dark:bg-gray-500/20';
@@ -93,7 +93,7 @@ export default function ActivityPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
+    <div className="min-h-screen">
       <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="relative overflow-hidden bg-primary-blue dark:bg-accent-red rounded-2xl shadow-2xl p-8 mb-8">
@@ -122,7 +122,7 @@ export default function ActivityPage() {
         </div>
 
         {/* Activity List */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg shadow-gray-200/50 dark:shadow-gray-900/50 border border-gray-100 dark:border-gray-700 overflow-hidden">
+        <div className="bg-light-surface dark:bg-dark-surface rounded-2xl shadow-lg shadow-gray-200/50 dark:shadow-gray-900/50 border border-gray-100 dark:border-gray-700 overflow-hidden">
           {loadingData ? (
             <div className="p-12 text-center">
             <LoadingSpinner />

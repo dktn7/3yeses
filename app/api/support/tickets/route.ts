@@ -64,6 +64,9 @@ export async function GET(request: NextRequest) {
     const tickets = await prisma.supportTicket.findMany({
       where: { userId: decoded.userId },
       orderBy: { createdAt: 'desc' },
+      include: {
+        messages: { orderBy: { createdAt: 'asc' } },
+      },
     });
 
     return NextResponse.json({ tickets });

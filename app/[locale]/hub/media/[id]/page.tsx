@@ -283,7 +283,7 @@ export default function MediaViewerPage() {
                     const prevIdx = (currentIdx - 1 + imageMedia.length) % imageMedia.length;
                     router.push(`/${locale}/hub/media/${imageMedia[prevIdx].id}`);
                   }}
-                  className="absolute left-4 w-12 h-12 bg-white/90 hover:bg-white dark:bg-black/50 dark:hover:bg-black/70 backdrop-blur-sm text-gray-900 dark:text-white rounded-full flex items-center justify-center transition-colors shadow-lg"
+                  className="absolute left-4 w-12 h-12 bg-white/90 hover:bg-light-surface dark:bg-black/50 dark:hover:bg-black/70 backdrop-blur-sm text-gray-900 dark:text-white rounded-full flex items-center justify-center transition-colors shadow-lg"
                 >
                   <ChevronRight className="w-6 h-6 rotate-180" />
                 </button>
@@ -294,7 +294,7 @@ export default function MediaViewerPage() {
                     const nextIdx = (currentIdx + 1) % imageMedia.length;
                     router.push(`/${locale}/hub/media/${imageMedia[nextIdx].id}`);
                   }}
-                  className="absolute right-4 w-12 h-12 bg-white/90 hover:bg-white dark:bg-black/50 dark:hover:bg-black/70 backdrop-blur-sm text-gray-900 dark:text-white rounded-full flex items-center justify-center transition-colors shadow-lg"
+                  className="absolute right-4 w-12 h-12 bg-white/90 hover:bg-light-surface dark:bg-black/50 dark:hover:bg-black/70 backdrop-blur-sm text-gray-900 dark:text-white rounded-full flex items-center justify-center transition-colors shadow-lg"
                 >
                   <ChevronRight className="w-6 h-6" />
                 </button>

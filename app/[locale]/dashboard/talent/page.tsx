@@ -35,21 +35,39 @@ export default function TalentDashboard() {
   });
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    // Simulate loading dashboard data
-    const loadDashboardData = async () => {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Mock data
-      setStats({
-        totalViews: 1247,
-        activeOpportunities: 3,
-        subscriptionPlan: 'STANDARD',
-        totalEarnings: 3450,
-        responseRate: 95
-      });
+  const [warningNotifications, setWarningNotifications] = useState<any[]>([]);
 
-      setLoading(false);
+  useEffect(() => {
+    const loadDashboardData = async () => {
+      try {
+        const [statsRes, notifRes] = await Promise.all([
+          fetch('/api/dashboard/stats', { credentials: 'include' }),
+          fetch('/api/notifications', { credentials: 'include' }),
+        ]);
+
+        if (statsRes.ok) {
+          const statsData = await statsRes.json();
+          setStats({
+            totalViews: statsData.profileViews || 0,
+            activeOpportunities: statsData.availableOpportunities || 0,
+            subscriptionPlan: statsData.subscriptionPlan || 'STANDARD',
+            totalEarnings: statsData.totalEarnings || 0,
+            responseRate: statsData.responseRate || 0,
+          });
+        } else {
+          setStats(prev => ({ ...prev, subscriptionPlan: 'STANDARD' }));
+        }
+
+        if (notifRes.ok) {
+          const notifData = await notifRes.json();
+          const warnings = (notifData.notifications || []).filter((n:any) => n.type === 'system' && !n.read);
+          setWarningNotifications(warnings);
+        }
+      } catch (err) {
+        console.error('Failed to fetch talent dashboard data:', err);
+      } finally {
+        setLoading(false);
+      }
     };
 
     loadDashboardData();
@@ -66,7 +84,7 @@ export default function TalentDashboard() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
-      <div className="bg-white dark:bg-gray-800 shadow">
+      <div className="bg-light-surface dark:bg-dark-surface shadow">
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div>
@@ -81,10 +99,30 @@ export default function TalentDashboard() {
         </div>
       </div>
 
+      {warningNotifications.length > 0 && (
+        <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="rounded-xl border border-amber-300/80 bg-amber-50 dark:bg-amber-900/20 dark:border-amber-600 p-4">
+            <p className="text-sm font-semibold text-amber-800 dark:text-amber-100">Admin warnings</p>
+            <p className="text-xs text-amber-600 dark:text-amber-200 mb-2">Please address these immediately to avoid account restrictions.</p>
+            <ul className="space-y-2">
+              {warningNotifications.map((warning) => (
+                <li key={warning.id} className="rounded-lg bg-light-surface dark:bg-dark-surface border border-amber-200 dark:border-amber-500 p-3">
+                  <p className="text-sm font-semibold text-amber-700 dark:text-amber-100">{warning.title}</p>
+                  <p className="text-sm text-amber-700 dark:text-amber-200">{warning.message}</p>
+                </li>
+              ))}
+            </ul>
+            <div className="mt-3">
+              <Link href="/dashboard/notifications" className="text-xs font-semibold text-amber-700 dark:text-amber-200 hover:underline">View all notifications</Link>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
+          <div className="bg-white/90 dark:bg-gray-900/70 border border-gray-200 dark:border-gray-700 backdrop-blur-sm shadow-xl rounded-2xl overflow-hidden">
             <div className="p-5">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
@@ -104,7 +142,7 @@ export default function TalentDashboard() {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
+          <div className="bg-white/90 dark:bg-gray-900/70 border border-gray-200 dark:border-gray-700 backdrop-blur-sm shadow-xl rounded-2xl overflow-hidden">
             <div className="p-5">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
@@ -124,7 +162,7 @@ export default function TalentDashboard() {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
+          <div className="bg-white/90 dark:bg-gray-900/70 border border-gray-200 dark:border-gray-700 backdrop-blur-sm shadow-xl rounded-2xl overflow-hidden">
             <div className="p-5">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
@@ -149,7 +187,7 @@ export default function TalentDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <Link
             href="/talent"
-            className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow hover:shadow-md transition-shadow"
+            className="bg-light-surface dark:bg-dark-surface p-6 rounded-lg shadow hover:shadow-md transition-shadow"
           >
             <div className="flex items-center">
               <User className="h-8 w-8 text-primary-blue" />
@@ -162,7 +200,7 @@ export default function TalentDashboard() {
 
           <Link
             href="/categories"
-            className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow hover:shadow-md transition-shadow"
+            className="bg-light-surface dark:bg-dark-surface p-6 rounded-lg shadow hover:shadow-md transition-shadow"
           >
             <div className="flex items-center">
               <Bell className="h-8 w-8 text-yellow-500" />
@@ -175,7 +213,7 @@ export default function TalentDashboard() {
 
           <Link
             href="/contact"
-            className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow hover:shadow-md transition-shadow"
+            className="bg-light-surface dark:bg-dark-surface p-6 rounded-lg shadow hover:shadow-md transition-shadow"
           >
             <div className="flex items-center">
               <Calendar className="h-8 w-8 text-green-500" />
@@ -188,7 +226,7 @@ export default function TalentDashboard() {
 
           <Link
             href="/dashboard/talent/settings"
-            className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow hover:shadow-md transition-shadow"
+            className="bg-light-surface dark:bg-dark-surface p-6 rounded-lg shadow hover:shadow-md transition-shadow"
           >
             <div className="flex items-center">
               <Settings className="h-8 w-8 text-blue-500" />

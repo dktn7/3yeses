@@ -3,37 +3,100 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+  THEME CONVENTION — single-mode utilities
+
+  Purpose:
+  - Make it explicit which styles target light mode vs dark mode.
+  - Avoid ambiguous classes like `bg-white` for generic surfaces; prefer `bg-light-surface` for neutral light surfaces.
+
+  Rules:
+  - Use `bg-light-surface` for light-mode surfaces (explicitly light).
+  - Use `dark:bg-dark-surface` for dark-mode surfaces (explicitly dark).
+  - Avoid raw `bg-white` / `bg-black` for generic surfaces; prefer `bg-light-surface` / `bg-dark-surface` role classes. Reserve opacity forms
+    (e.g. `bg-white/90` or `bg-light-surface/90`) only when a translucent glass effect is intended.
+  - Keep color-specific dark overrides (e.g. `dark:bg-red-950/50`) where they
+    intentionally apply a colour palette change in dark mode.
+
+  Examples:
+  - Good: `className="p-4 rounded bg-light-surface dark:bg-dark-surface"`
+  - Keep opacity: `className="p-4 bg-light-surface/90"` (preserves translucency)
+  - Avoid: `className="p-4 bg-white dark:bg-gray-800"` (ambiguous intent — prefer neutral role classes like `bg-light-surface dark:bg-dark-surface`)
+
+  Migration guidance:
+  - Replace plain `bg-white` (non-opacity) with `bg-light-surface`.
+  - Replace generic paired dark fallbacks like `dark:bg-gray-800` with
+    `dark:bg-dark-surface` only when the dark fallback is intended as a
+    neutral surface (not a colour accent).
+  - Preserve `bg-white/*` opacity tokens and colour-specific dark overrides.
+
+  This comment documents the naming convention used across the codebase.
+*/
+
+/* Per-mode colour focus
+ - Light mode: Blue-focused primary palette (use `--brand-blue` / `primary-blue` classes)
+ - Dark mode: Red-focused primary palette (use `--brand-red` / `accent-red` classes)
+
+ Component rules:
+ - Primary CTA: `bg-primary-blue` (light) / `dark:bg-accent-red` (dark), text-white for contrast.
+ - Neutral surfaces: `bg-light-surface` / `dark:bg-dark-surface`.
+ - Inputs, cards, and panels should prefer neutral surfaces; use explicit colour overrides only for status or emphasis.
+*/
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --progress-color: #3b82f6;
-  /* Brand/theme variables (light mode: blue primary, red accent) */
-  --brand-from: #2727FE; /* deeper blue chosen by user */
-  --brand-to: #1e1cff; /* deeper stop for richer blue */
-  --brand-ring: #93c5fd;
-  --brand-ring-bg: rgba(39,39,254,0.10);
-  --brand-border: rgba(39,39,254,0.10);
-  --brand-700: #1d4ed8; /* blue-700 */
-  --brand-accent: #6B78FF; /* lighter accent derived from true blue */
-  --brand-glow: rgba(39,39,254,0.22);
-  --brand-contrast: #ffffff; /* text on brand gradients */
-  --brand-contrast-inv: #0f172a; /* dark text for light brand surfaces */
-  /* Explicit blue/red anchors for mixed colourways */
-  --brand-blue: #2727FE; /* user-selected deep blue */
-  --brand-blue-glow: rgba(39,39,254,0.18);
-  --brand-red: #ef4444;
-  --brand-red-glow: rgba(239,68,68,0.12);
+  --foreground-muted: #475569;
+  --foreground-rgb: 23, 23, 23;
+  --progress-color: #2563eb;
+  /* Brand/theme variables (light mode: deeper blue primary, red accent) */
+  --brand-blue-50: #eff6ff;
+  --brand-blue-100: #dbeafe;
+  --brand-blue-200: #bfdbfe;
+  --brand-blue-300: #93c5fd;
+  --brand-blue-400: #60a5fa;
+  --brand-blue-500: #2563eb;
+  --brand-blue-600: #1d4ed8;
+  --brand-blue-700: #1e40af;
+  --brand-blue-800: #1e3a8a;
+  --brand-blue-900: #172554;
+  --brand-blue-950: #0c1629;
+
+  --brand-from: var(--brand-blue-500);
+  --brand-to: var(--brand-blue-600);
+  --brand-primary-rgb: 37,99,235;
+  --brand-ring: #60a5fa;
+  --brand-ring-bg: rgba(37,99,235,0.10);
+  --brand-border: rgba(37,99,235,0.10);
+  --brand-700: var(--brand-blue-700);
+  --brand-accent: var(--brand-blue-400);
+  --brand-glow: rgba(37,99,235,0.22);
+  --brand-contrast: #ffffff;
+  --brand-contrast-inv: #0f172a;
+  --brand-blue: var(--brand-blue-500);
+  --brand-blue-glow: rgba(37,99,235,0.18);
+  --brand-red: #B91C1C;
+  --brand-red-glow: rgba(185,28,28,0.12);
   --sparkline-positive: #a7f3d0;
   --sparkline-negative: #fecaca;
-  /* Landing page base bg — light mode: blue-tinted white */
-  --landing-bg: linear-gradient(180deg,#f0f8ff 0%,#e8f0ff 100%);
+  /* Landing page base bg — light mode keeps the page body soft and lets the top band carry the stronger blue */
+  --landing-bg: linear-gradient(180deg, #e9f0ff 0%, #edf3ff 44%, #d9e5fb 100%);
+  --landing-top-band: #2f63da;
+  --landing-wave-one: rgba(125, 154, 224, 0.34);
+  --landing-wave-two: rgba(78, 119, 214, 0.18);
+  --landing-wave-three: rgba(255, 255, 255, 0.34);
+  --landing-header-glow: rgba(59, 130, 246, 0.14);
+  --chrome-bg: rgba(255, 255, 255, 0.94);
+  --chrome-panel: rgba(255, 255, 255, 0.96);
+  --chrome-border: rgba(148, 163, 184, 0.24);
+  --chrome-hover: rgba(37, 99, 235, 0.08);
   /* Hero video overlay — light mode (blue-tinted) */
-  --hero-overlay-from: rgba(240,248,255,0.90);
-  --hero-overlay-to: rgba(232,240,255,0.70);
+  --hero-overlay-from: rgba(37,99,235,0.16);
+  --hero-overlay-to: rgba(37,99,235,0.08);
 
   /* Theme role aliases - light mode: blue primary, accent */
   --brand-primary: var(--brand-from);
-  --brand-accent: #6B78FF;
+  --brand-accent: #3b82f6;
 
   /* Dropdown tokens */
   --dropdown-bg: #ffffff;
@@ -42,14 +105,22 @@
   --dropdown-radius: 1.5rem;
   --dropdown-z: 60;
 
+  /* Marketing tokens (light mode) */
+  --marketing-pill-bg: #ffffff; /* pill background in light mode */
+  --marketing-pill-border: rgba(15,23,42,0.06); /* subtle border for pills */
+  --marketing-pill-icon: var(--brand-blue-600); /* icon / accent inside pill (light) */
+  --marketing-surface: rgba(255,255,255,0.96); /* marketing surface (cards, badges) */
+  --marketing-heading-blue: var(--brand-blue-700); /* prominent marketing heading color (light) */
+  --marketing-accent-dark: #b91c1c; /* semantic dark accent (used in dark-mode mirroring) */
+
   /* Admin Theme Defaults (Light Mode: Blue Accents) */
   --admin-bg: #f8fafc;        /* Slate 50 */
   --admin-surface: #ffffff;   /* White */
   --admin-border: #e2e8f0;    /* Slate 200 */
-  --admin-primary: #2727FE;   /* True blue - aligned with brand */
+  --admin-primary: #2563eb;   /* Deep blue - aligned with brand */
   --admin-text: #0f172a;      /* Slate 900 */
   --admin-muted: #64748b;     /* Slate 500 */
-  --admin-accent: #6B78FF;    /* Accent aligned with brand-accent */
+  --admin-accent: #3b82f6;    /* Accent aligned with brand-accent */
   --admin-glass: rgba(255, 255, 255, 0.8);
   --admin-glass-border: rgba(226, 232, 240, 0.7);
 }
@@ -57,30 +128,43 @@
 /* Class-based dark mode (for next-themes) */
 .dark {
   --background: #111827;
-  --foreground: #ededed;
+  /* Dark-mode body text — warm red tint to mirror light-mode hierarchy */
+  --foreground: #ffe4e6;
+  --foreground-muted: #fecdd3;
+  --foreground-rgb: 255,228,230;
   --progress-color: #ef4444;
   /* Dark mode: red theme */
   --brand-from: var(--brand-red); /* use bright brand red */
   --brand-to: var(--brand-red);
-  --brand-ring: #fb7185;
-  --brand-ring-bg: rgba(255,255,255,0.06);
-  --brand-border: rgba(255,255,255,0.04);
+  --brand-primary-rgb: 255,77,77;
+  --brand-ring: #dc2626;
+  --brand-ring-bg: rgba(220,38,38,0.12);
+  --brand-border: rgba(148,163,184,0.12);
   --brand-700: var(--brand-red);
-  --brand-accent: var(--brand-red);
+  --brand-accent: #dc2626;
   --brand-glow: var(--brand-red-glow);
   --brand-contrast: #ffffff;
-  --brand-contrast-inv: #0f172a;
+  --brand-contrast-inv: #1e293b;
   --brand-blue: #66a3ff;
-  --brand-red: #D30000;
+  --brand-red: #b91c1c;
   --brand-blue-glow: rgba(102,163,255,0.18);
-  --brand-red-glow: rgba(211,0,0,0.22);
+  --brand-red-glow: rgba(185,28,28,0.22);
   --sparkline-positive: #fecaca;
   --sparkline-negative: #a7f3d0;
-  /* Landing page base bg — dark mode: near-black */
-  --landing-bg: #06080f;
-  /* Hero video overlay — dark mode (deep navy) */
-  --hero-overlay-from: rgba(6,8,15,0.88);
-  --hero-overlay-to: rgba(6,8,15,0.65);
+  /* Landing page base bg — dark mode keeps a dark-grey base with red signal layers */
+  --landing-bg: linear-gradient(180deg, #1f2937 0%, #111827 42%, #0d0d14 100%);
+  --landing-top-band: #111827;
+  --landing-wave-one: rgba(127, 29, 29, 0.22);
+  --landing-wave-two: rgba(220, 38, 38, 0.12);
+  --landing-wave-three: rgba(248, 113, 113, 0.10);
+  --landing-header-glow: rgba(248, 113, 113, 0.14);
+  --chrome-bg: rgba(23, 23, 28, 0.95);
+  --chrome-panel: rgba(29, 29, 35, 0.97);
+  --chrome-border: rgba(255, 255, 255, 0.10);
+  --chrome-hover: rgba(255, 255, 255, 0.08);
+  /* Hero video overlay — dark mode (neutral dark) */
+  --hero-overlay-from: rgba(10,10,14,0.84);
+  --hero-overlay-to: rgba(10,10,14,0.62);
 
   /* Theme role aliases - dark mode: red primary, blue accent */
   --brand-primary: var(--brand-red);
@@ -88,14 +172,21 @@
 
   /* Admin Dark Theme (Professional Red) */
     --admin-bg: #020617;        /* Slate 950 */
-    --admin-surface: #0f172a;   /* Slate 900 */
+    --admin-surface: #1e293b;   /* Slate 800 */
     --admin-border: #1e293b;    /* Slate 800 */
-    --admin-primary: #D30000;   /* Red 500 */
+    --admin-primary: var(--brand-red);   /* match brand-red */
     --admin-text: #f8fafc;      /* Slate 50 */
     --admin-muted: #94a3b8;     /* Slate 400 */
-    --admin-accent: #dc2626;    /* Red 600 */
+    --admin-accent: #dc2626;
     --admin-glass: rgba(15, 23, 42, 0.7);
     --admin-glass-border: rgba(30, 41, 59, 0.6);
+    /* Marketing tokens (dark mode) */
+    --marketing-pill-bg: #111827; /* dark grey pill background in dark mode */
+    --marketing-pill-border: rgba(255,255,255,0.06); /* subtle light border to separate from bg */
+    --marketing-pill-icon: var(--brand-red); /* icon / accent inside pill (dark) */
+    --marketing-surface: rgba(31,41,55,0.95); /* marketing surface for dark mode */
+    --marketing-heading-blue: #f87171; /* vivid red-400: high-contrast heading accent in dark mode */
+    --marketing-accent-dark: #ef4444; /* slightly lighter red for accent usage in dark */
   }
   
   /* Admin Utility Classes */
@@ -113,6 +204,46 @@
   color: transparent;
 }
 
+/* Admin accessibility state classes are scoped to the admin shell only. */
+.admin-root.admin-high-contrast {
+  filter: contrast(1.15);
+}
+
+.admin-root.admin-inverted {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+.admin-root.admin-inverted.admin-high-contrast {
+  filter: invert(1) hue-rotate(180deg) contrast(1.15);
+}
+
+/* Opt out a specific admin region from inversion (double-invert to restore). */
+.admin-root.admin-inverted .admin-invert-optout {
+  filter: invert(1) hue-rotate(180deg);
+  background-color: inherit;
+  color: inherit;
+}
+
+/* Avoid triple inversion in opt-out regions for media/canvas-based widgets. */
+.admin-root.admin-inverted .admin-invert-optout img,
+.admin-root.admin-inverted .admin-invert-optout picture,
+.admin-root.admin-inverted .admin-invert-optout video,
+.admin-root.admin-inverted .admin-invert-optout canvas,
+.admin-root.admin-inverted .admin-invert-optout svg,
+.admin-root.admin-inverted .admin-invert-optout iframe {
+  filter: none;
+}
+
+/* Re-invert rich media so photos/videos/charts remain naturally readable. */
+.admin-root.admin-inverted img,
+.admin-root.admin-inverted picture,
+.admin-root.admin-inverted video,
+.admin-root.admin-inverted canvas,
+.admin-root.admin-inverted svg,
+.admin-root.admin-inverted iframe {
+  filter: invert(1) hue-rotate(180deg);
+}
+
 /* Fallback for prefers-color-scheme when no theme is set */
 @media (prefers-color-scheme: dark) {
   :root:not(.light):not(.dark) {
@@ -122,6 +253,9 @@
 }
 
 html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
   color: var(--foreground);
   background: var(--background);
   font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
@@ -164,6 +298,73 @@ body, p, span, label, input, button, select, textarea,
   animation: fadeIn 0.3s ease-out forwards;
 }
 
+/* Dark-mode typographic overrides — SCOPED TO <main> ONLY.
+   Applies the red-tinted --foreground to marketing/page content but does NOT
+   affect the global header (<header>), sidebar (<aside>), or footer (<footer>)
+   so those chrome elements keep their own explicit dark-mode colours.           */
+.dark main h1,
+.dark main h2,
+.dark main h3,
+.dark main h4,
+.dark main h5,
+.dark main h6,
+.dark main p,
+.dark main li,
+.dark main span,
+.dark main label,
+.dark main small,
+.dark main strong,
+.dark main em,
+.dark main .ui-text,
+.dark main .lead,
+.dark main .muted,
+.dark main .category-title,
+.dark main .talent-name,
+.dark main .profile-name,
+.dark main .talent-card__name,
+.dark main blockquote,
+.dark main dd,
+.dark main dt {
+  color: var(--foreground);
+}
+
+/* Unstyled links inside main content adopt the foreground tone in dark mode */
+.dark main a:not([class]) {
+  color: var(--foreground);
+}
+
+/* Marketing safeguard: convert hardcoded white text utilities to the dark red-tinted foreground */
+.dark main h1.text-white,
+.dark main h2.text-white,
+.dark main h3.text-white,
+.dark main h4.text-white,
+.dark main h5.text-white,
+.dark main h6.text-white,
+.dark main p.text-white,
+.dark main li.text-white,
+.dark main span.text-white,
+.dark main label.text-white,
+.dark main small.text-white,
+.dark main strong.text-white,
+.dark main em.text-white,
+.dark main a.text-white,
+.dark main h1[class*="dark:text-white"],
+.dark main h2[class*="dark:text-white"],
+.dark main h3[class*="dark:text-white"],
+.dark main h4[class*="dark:text-white"],
+.dark main h5[class*="dark:text-white"],
+.dark main h6[class*="dark:text-white"],
+.dark main p[class*="dark:text-white"],
+.dark main li[class*="dark:text-white"],
+.dark main span[class*="dark:text-white"],
+.dark main label[class*="dark:text-white"],
+.dark main small[class*="dark:text-white"],
+.dark main strong[class*="dark:text-white"],
+.dark main em[class*="dark:text-white"],
+.dark main a[class*="dark:text-white"] {
+  color: var(--foreground) !important;
+}
+
 /* Brand utility classes to ensure good contrast */
 .brand-foreground {
   color: var(--brand-contrast) !important;
@@ -172,13 +373,21 @@ body, p, span, label, input, button, select, textarea,
   color: var(--brand-contrast-inv) !important;
 }
 
+/* Theme-aware subtle hover background useful for marketing interactive elements */
+.hover-smart-bg {
+  transition: background-color 0.12s ease;
+}
+.hover-smart-bg:hover {
+  background-color: var(--chrome-hover);
+}
+
 /* Strong card surfaces for better legibility on busy backgrounds */
 .card-surface {
   background-color: rgba(255,255,255,0.95);
   box-shadow: 0 10px 30px rgba(15,23,42,0.10);
 }
 .dark .card-surface {
-  background-color: rgba(15,23,42,0.82);
+  background-color: rgba(31,32,36,0.82);
   box-shadow: 0 10px 30px rgba(0,0,0,0.55);
 }
 
@@ -197,8 +406,8 @@ body, p, span, label, input, button, select, textarea,
 /* Background patterns */
 .bg-grid-pattern {
   background-image: 
-    linear-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px);
+    linear-gradient(rgba(0, 0, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 255, 0.1) 1px, transparent 1px);
   background-size: 50px 50px;
 }
 
@@ -206,36 +415,444 @@ body, p, span, label, input, button, select, textarea,
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
 
-/* Landing background utility: use the full background shorthand so gradients work */
+/* Landing background utility: layers OVER the base --background colour.
+   Light mode: opaque blue gradient.
+   Dark mode: solid --background (#1E293B). */
 .landing-bg {
-  background: var(--landing-bg);
+  background-color: var(--background);
+  background-image: var(--landing-bg);
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
 }
 
+/* Hero contrast overlay — sits above decorative SVG waves but below content
+   Uses theme-aware variables so light mode brightens waves under text and
+   dark mode darkens them to improve legibility. Insert as an absolutely
+   positioned element inside hero/section nodes. */
+.hero-contrast-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: linear-gradient(180deg, var(--hero-overlay-from), var(--hero-overlay-to));
+  transition: background-image 240ms ease, opacity 240ms ease, mix-blend-mode 240ms ease;
+  /* Stronger opacity and blend to make the effect visible across themes */
+  opacity: 0.94;
+  z-index: 2;
+  mix-blend-mode: screen; /* light mode: brighten/soften decorative shapes */
+  will-change: background-image, opacity, mix-blend-mode;
+}
+
+/* Dark-mode inherits the overlay variables; use multiply so the overlay darkens waves beneath text */
+.dark .hero-contrast-overlay {
+  mix-blend-mode: multiply;
+  opacity: 0.9;
+}
+
+/* Marketing pages with brand-true-red may want a slightly stronger overlay */
+.brand-true-red .hero-contrast-overlay {
+  opacity: 0.96;
+}
+.dark .brand-true-red .hero-contrast-overlay {
+  mix-blend-mode: multiply;
+  opacity: 0.72;
+}
+
 /* Scoped utility to force the brand red to a true, vivid red for marketing/legal/home pages */
 .brand-true-red {
-  /* marker class — intentionally lightweight in light mode so original blue theme remains */
+  /* Marker for marketing pages. Color and overlay overrides
+     are applied only in dark mode via `.dark .brand-true-red`.
+     Keep the light-mode defaults untouched so pages remain blue. */
   --brand-true-red-enabled: 1;
 }
 
-/* Apply the true red variables only when dark mode is active */
+/* Hub card cosmetic refinements */
+.hub-root .hub-card .duration-badge {
+  background: rgba(0,0,0,0.7);
+  color: #ffffff;
+  padding: 0.15rem 0.5rem;
+  font-size: 11px;
+  border-radius: 6px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.hub-root .hub-card .media-hero-overlay {
+  pointer-events: none;
+}
+
+.hub-root .hub-card .meta-gradient {
+  background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.65) 60%);
+}
+
+/* Slightly stronger hover lift for hero-first cards */
+.hub-root .hub-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 32px 68px rgba(15,23,42,0.14);
+}
+
+/* Also ensure the same variables apply when dark mode class is present */
 .dark .brand-true-red {
-  --brand-red: #D30000;
-  --brand-red-glow: rgba(211,0,0,0.22);
-  /* force brand role aliases to true red family in dark mode */
-  --brand-from: #D30000;
-  --brand-to: #8B0000; /* darker stop to give depth */
-  --brand-accent: #FF4D3A;
+  --brand-true-red-enabled: 1;
+  --brand-red: #b91c1c;
+  --brand-red-glow: rgba(185,28,28,0.22);
+  --brand-from: #b91c1c;
+  --brand-to: #dc2626;
+  --brand-accent: #dc2626;
   --brand-primary: var(--brand-from);
   --brand-glow: var(--brand-red-glow);
-  /* landing background gradient for marketing/legal pages */
-  --landing-bg: linear-gradient(180deg, rgba(211,0,0,0.22) 0%, rgba(211,0,0,0.12) 30%, rgba(139,0,0,0.06) 60%, rgba(10,6,6,0.92) 100%);
-  /* hero overlay tweaks to preserve legibility */
-  --hero-overlay-from: rgba(211,0,0,0.12);
-  --hero-overlay-to: rgba(139,0,0,0.06);
+  /* Keep dark mode anchored to dark grey while allowing marketing art to read red. */
+  --background: #111827;
+  --landing-bg: linear-gradient(180deg, #1f2937 0%, rgba(127,29,29,0.18) 38%, #111827 100%);
+  --landing-top-band: #111827;
+  --landing-wave-one: rgba(127, 29, 29, 0.26);
+  --landing-wave-two: rgba(220, 38, 38, 0.14);
+  --landing-wave-three: rgba(248, 113, 113, 0.12);
+
+  /* Use darker overlays so the bright red base stays visible but copy remains isolated. */
+  --hero-overlay-from: rgba(10,10,14,0.72);
+  --hero-overlay-to: rgba(10,10,14,0.44);
 }
+
+/* Fallback: apply the same marketing dark overrides when the browser prefers
+   dark mode but the `dark` class has not been applied to <html> (next-themes
+   applies the class on the client; this ensures system-dark users see the
+   intended marketing palette on first paint). */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light):not(.dark) .brand-true-red {
+    --brand-true-red-enabled: 1;
+    --brand-red: #b91c1c;
+    --brand-red-glow: rgba(185,28,28,0.22);
+    --brand-from: #b91c1c;
+    --brand-to: #dc2626;
+    --brand-accent: #dc2626;
+    --brand-primary: var(--brand-from);
+    --brand-glow: var(--brand-red-glow);
+    --background: #111827;
+    --landing-bg: linear-gradient(180deg, #1f2937 0%, rgba(127,29,29,0.18) 38%, #111827 100%);
+    --landing-top-band: #111827;
+    --landing-wave-one: rgba(127, 29, 29, 0.26);
+    --landing-wave-two: rgba(220, 38, 38, 0.14);
+    --landing-wave-three: rgba(248, 113, 113, 0.12);
+    --hero-overlay-from: rgba(10,10,14,0.72);
+    --hero-overlay-to: rgba(10,10,14,0.44);
+  }
+
+  :root:not(.light):not(.dark) .brand-true-red svg {
+    filter: saturate(1.40) contrast(1.08) brightness(1.05);
+    transform: translateZ(0);
+    will-change: filter;
+  }
+
+  :root:not(.light):not(.dark) .brand-true-red svg stop {
+    stop-opacity: 0.92 !important;
+  }
+
+  :root:not(.light):not(.dark) .brand-true-red svg stop[stop-color^="var(--brand"] {
+    stop-opacity: 0.98 !important;
+  }
+
+  :root:not(.light):not(.dark) .brand-true-red svg [fill^="var(--brand"] {
+    opacity: 1 !important;
+    mix-blend-mode: screen;
+    isolation: isolate;
+  }
+
+  :root:not(.light):not(.dark) .brand-true-red {
+    --marketing-surface: rgba(10,14,22,0.78);
+    --marketing-surface-strong: rgba(248,113,113,0.22);
+    --marketing-muted: rgba(255,255,255,0.92);
+    --marketing-muted-weak: rgba(255,255,255,0.80);
+    --marketing-pill-bg: rgba(17, 24, 39, 0.90);
+    --marketing-pill-border: rgba(248,113,113,0.30);
+    --marketing-pill-text: #eff6ff;
+    --marketing-pill-icon: #dc2626;
+  }
+
+  :root:not(.light):not(.dark) .brand-true-red .card-surface {
+    background-color: var(--marketing-surface) !important;
+    border: 1px solid var(--marketing-surface-strong) !important;
+    color: var(--marketing-muted) !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.55) !important;
+  }
+
+  :root:not(.light):not(.dark) .brand-true-red .text-gray-600,
+  :root:not(.light):not(.dark) .brand-true-red .text-gray-500,
+  :root:not(.light):not(.dark) .brand-true-red .text-gray-400,
+  :root:not(.light):not(.dark) .brand-true-red .muted,
+  :root:not(.light):not(.dark) .brand-true-red .lead {
+    color: var(--marketing-muted-weak) !important;
+  }
+
+  :root:not(.light):not(.dark) .brand-true-red .text-red-100 { color: #f87171 !important; }
+  :root:not(.light):not(.dark) .brand-true-red .text-red-200 { color: #ef4444 !important; }
+  :root:not(.light):not(.dark) .brand-true-red .text-red-300 { color: #dc2626 !important; }
+  :root:not(.light):not(.dark) .brand-true-red .text-red-400 { color: #b91c1c !important; }
+
+  :root:not(.light):not(.dark) .brand-true-red a {
+    color: var(--brand-accent) !important;
+    text-decoration: underline;
+    text-underline-offset: 0.12em;
+  }
+}
+/* Inline SVG handling for marketing pages */
+.brand-true-red svg {
+  /* Keep light mode close to source colours for better balance */
+  filter: saturate(1.02) contrast(1.01) brightness(1.00);
+  transform: translateZ(0);
+  will-change: filter;
+}
+.dark .brand-true-red svg {
+  /* Keep layers distinct in dark mode instead of flattening every shape into the same red. */
+  filter: saturate(1.40) contrast(1.08) brightness(1.05);
+  transform: translateZ(0);
+  will-change: filter;
+}
+
+/* Keep gradients visible, but avoid flattening all SVG layers into a solid slab */
+.dark .brand-true-red svg stop {
+  stop-opacity: 0.92 !important;
+}
+
+/* Brand-colour stops should still read strong on dark backgrounds */
+.dark .brand-true-red svg stop[stop-color^="var(--brand"] {
+  stop-opacity: 0.98 !important;
+}
+
+/* Base handling for brand-filled shapes */
+.brand-true-red svg [fill^="var(--brand"] {
+  opacity: 1 !important;
+}
+.dark .brand-true-red svg [fill^="var(--brand"] {
+  opacity: 1 !important;
+  mix-blend-mode: screen;
+  isolation: isolate;
+}
+
+/* Make decorative wave paths stand out in dark mode */
+.dark .brand-true-red svg path[fill^="url(#"] {
+  opacity: 0.80 !important;
+  filter: drop-shadow(0 8px 24px rgba(255,0,0,0.18));
+}
+
+/* Keep gradient background rects subtle so content remains readable */
+.dark .brand-true-red svg rect[fill^="url(#"] {
+  opacity: 0.58 !important;
+}
+
+/* Ensure headings and prominent hero copy stay readable on marketing pages */
+.dark .brand-true-red h1,
+.dark .brand-true-red h2,
+.dark .brand-true-red h3,
+.dark .brand-true-red h4,
+.dark .brand-true-red h5,
+.dark .brand-true-red h6 {
+  color: var(--brand-contrast) !important;
+}
+
+/* Keep gradient accent spans (bg-clip-text) visible — avoid forcing -webkit-text-fill-color so bg-clip-text works */
+
+/* Stronger shadow for marketing dark pages */
+.dark .brand-true-red .text-primary-blue,
+.dark .brand-true-red .text-accent-red,
+.dark .brand-true-red .text-primary,
+.dark .brand-true-red .text-accent {
+  text-shadow: 0 2px 4px rgba(0,0,0,0.75);
+}
+
+.dark .brand-true-red p,
+.dark .brand-true-red .lead,
+.dark .brand-true-red .hero-subtitle {
+  color: var(--marketing-muted) !important;
+}
+
+/* Marketing component tokens (explicit values for both modes) */
+html:not(.dark) .brand-true-red {
+  --marketing-surface: rgba(255,255,255,0.98);
+  --marketing-surface-strong: rgba(30,64,175,0.18);
+  --marketing-muted: #1e293b;
+  --marketing-muted-weak: #334155;
+  --marketing-pill-bg: rgba(255,255,255,0.98);
+  --marketing-pill-border: rgba(30,64,175,0.22);
+  --marketing-pill-text: #0f172a;
+  --marketing-pill-icon: #1d4ed8;
+  --marketing-heading-blue: #1d4ed8;
+  --marketing-heading-blue-strong: #1e3a8a;
+}
+.dark .brand-true-red {
+  --marketing-surface: rgba(31,32,36,0.96);
+  --marketing-surface-strong: rgba(185,28,28,0.22);
+  --marketing-muted: rgba(241,245,249,0.96);
+  --marketing-muted-weak: rgba(203,213,225,0.90);
+  --marketing-pill-bg: rgba(31,32,36,0.96);
+  --marketing-pill-border: rgba(185,28,28,0.34);
+  --marketing-pill-text: #fff7ed;
+  --marketing-pill-icon: #b91c1c;
+  --marketing-heading-blue: #f87171;
+  --marketing-heading-blue-strong: #ef4444;
+}
+
+/* Smart hover helpers — adapt hover backgrounds to light/dark modes */
+.hover-smart-bg {
+  transition: background-color .18s ease, color .18s ease;
+}
+html:not(.dark) .hover-smart-bg:hover {
+  background-color: rgba(15,23,42,0.04) !important;
+}
+.dark .hover-smart-bg:hover {
+  background-color: rgba(255,255,255,0.04) !important;
+}
+.dark .brand-true-red .hover-smart-bg:hover {
+  background-color: rgba(255,255,255,0.03) !important;
+}
+
+/* Card / panel surfaces used throughout marketing pages */
+.dark .brand-true-red .card-surface {
+  background-color: var(--marketing-surface) !important;
+  border: 1px solid var(--marketing-surface-strong) !important;
+  color: var(--marketing-muted) !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.55) !important;
+}
+
+html:not(.dark) .brand-true-red .card-surface {
+  background-color: var(--marketing-surface) !important;
+  border: 1px solid var(--marketing-surface-strong) !important;
+  color: var(--marketing-muted) !important;
+  box-shadow: 0 10px 28px rgba(15,23,42,0.08) !important;
+}
+
+/* Make small / muted text more readable */
+.dark .brand-true-red .text-gray-600,
+.dark .brand-true-red .text-gray-500,
+.dark .brand-true-red .text-gray-400,
+.dark .brand-true-red .muted,
+.dark .brand-true-red .lead {
+  color: var(--marketing-muted-weak) !important;
+}
+
+html:not(.dark) .brand-true-red .text-gray-600,
+html:not(.dark) .brand-true-red .text-gray-500,
+html:not(.dark) .brand-true-red .text-gray-400,
+html:not(.dark) .brand-true-red .muted,
+html:not(.dark) .brand-true-red .lead {
+  color: var(--marketing-muted-weak) !important;
+}
+
+/* Pills, badges and small UI chips */
+.brand-true-red .badge,
+.brand-true-red .tag,
+.brand-true-red .pill,
+.brand-true-red .marketing-pill {
+  background-color: var(--marketing-pill-bg) !important;
+  color: var(--marketing-pill-text) !important;
+  border: 1px solid var(--marketing-pill-border) !important;
+}
+
+.dark .brand-true-red .badge,
+.dark .brand-true-red .tag,
+.dark .brand-true-red .pill,
+.dark .brand-true-red .marketing-pill {
+  box-shadow: 0 10px 24px rgba(0,0,0,0.34) !important;
+}
+
+.brand-true-red .marketing-surface {
+  background-color: var(--marketing-surface) !important;
+  border: 1px solid var(--marketing-surface-strong) !important;
+}
+
+/* Breadcrumb-specific visibility */
+html:not(.dark) .brand-true-red nav[class*="text-gray"] {
+  color: #475569 !important;
+}
+html:not(.dark) .brand-true-red nav a {
+  color: #1d4ed8 !important;
+}
+.dark .brand-true-red nav[class*="text-gray"] {
+  color: rgba(255,255,255,0.78) !important;
+}
+.dark .brand-true-red nav a {
+  color: var(--brand-accent) !important;
+}
+
+/* Stronger marketing red text on brand-true-red dark pages */
+.dark .brand-true-red .text-red-100 {
+  color: var(--marketing-pill-icon) !important;
+}
+.dark .brand-true-red .text-red-200 {
+  color: var(--marketing-pill-icon) !important;
+}
+.dark .brand-true-red .text-red-300 {
+  color: var(--marketing-pill-icon) !important;
+}
+.dark .brand-true-red .text-red-400 {
+  color: var(--marketing-pill-icon) !important;
+}
+
+/* Marketing pills/chips and compact badges should read as dark-blue anchors in dark mode */
+.dark .brand-true-red .rounded-full .text-primary-blue,
+.dark .brand-true-red .rounded-full .text-accent-red,
+.dark .brand-true-red .badge .text-primary-blue,
+.dark .brand-true-red .badge .text-accent-red,
+.dark .brand-true-red .tag .text-primary-blue,
+.dark .brand-true-red .tag .text-accent-red,
+.dark .brand-true-red .pill .text-primary-blue,
+.dark .brand-true-red .pill .text-accent-red,
+.dark .brand-true-red .rounded-full svg,
+.dark .brand-true-red .badge svg,
+.dark .brand-true-red .tag svg,
+.dark .brand-true-red .pill svg {
+  color: var(--marketing-pill-icon) !important;
+}
+
+.dark .brand-true-red .rounded-full span,
+.dark .brand-true-red .badge span,
+.dark .brand-true-red .tag span,
+.dark .brand-true-red .pill span {
+  color: inherit;
+}
+
+/* Utility colour classes that otherwise become red-on-red — prefer high contrast */
+.dark .brand-true-red .text-primary-blue:not(.bg-clip-text):not(.text-transparent),
+.dark .brand-true-red [class*="text-primary"]:not(.bg-clip-text):not(.text-transparent),
+.dark .brand-true-red .text-accent-red:not(.bg-clip-text):not(.text-transparent),
+.dark .brand-true-red [class*="text-accent"]:not(.bg-clip-text):not(.text-transparent) {
+  text-shadow: 0 1px 2px rgba(0,0,0,0.6) !important;
+}
+
+/* Links and actions */
+.dark .brand-true-red a {
+  color: var(--marketing-pill-icon) !important;
+  text-decoration: underline;
+  text-underline-offset: 0.12em;
+}
+.dark .brand-true-red a:hover {
+  color: var(--marketing-pill-icon) !important;
+}
+
+/* Buttons & simple controls: primary CTA stays vivid, secondary controls gain subtle outline */
+.dark .brand-true-red button,
+.dark .brand-true-red .btn {
+  color: var(--brand-contrast) !important;
+}
+.dark .brand-true-red .btn-primary,
+.dark .brand-true-red button[type="submit"] {
+  background-color: var(--brand-primary) !important;
+  border: 1px solid rgba(255,255,255,0.06) !important;
+  box-shadow: 0 8px 30px rgba(255,0,0,0.12) !important;
+}
+.dark .brand-true-red .btn-outline,
+.dark .brand-true-red .btn-secondary {
+  background-color: transparent !important;
+  color: var(--foreground) !important;
+  border: 1px solid rgba(255,255,255,0.06) !important;
+}
+
+/* Ensure icon colours used for emphasis are visible */
+.dark .brand-true-red svg[class*="text-"] {
+  color: var(--brand-contrast) !important;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6));
+}
+
 
 /* Phone Input Styling - Modern Design */
 .PhoneInput {
@@ -395,6 +1012,42 @@ body, p, span, label, input, button, select, textarea,
   border-color: rgb(239 68 68) !important;
 }
 
+/*
+  Explicit light-only / dark-only utilities
+  Use these when you need a color to remain the same regardless of the active
+  `.dark` class or runtime CSS variable swaps. These are intentionally
+  explicit (hard-coded to the light or dark palettes) so designers/devs can
+  pick a single-mode color without surprises.
+*/
+
+/*
+  Registered as Tailwind utilities so dark:/hover:/focus: variants work.
+  Previously these were plain CSS classes and `dark:bg-dark-surface` was
+  silently ignored because Tailwind didn't know about the base class.
+*/
+@layer utilities {
+  /* Light-mode specific utilities (use opacity CSS vars so slash-opacity classes can work) */
+  .bg-light-primary { background-color: rgba(37,99,235,var(--tw-bg-opacity,1)); }
+  .text-light-primary { color: rgba(37,99,235,var(--tw-text-opacity,1)); }
+  .border-light-primary { border-color: rgba(37,99,235,var(--tw-border-opacity,1)); }
+  .bg-light-surface { background-color: rgba(255,255,255,var(--tw-bg-opacity,1)); }
+  .text-light-surface { color: rgba(15,23,42,var(--tw-text-opacity,1)); }
+
+  /* Dark-mode specific utilities (use opacity CSS vars) */
+  .bg-dark-primary { background-color: rgba(211,0,0,var(--tw-bg-opacity,1)); }
+  .text-dark-primary { color: rgba(211,0,0,var(--tw-text-opacity,1)); }
+  .border-dark-primary { border-color: rgba(211,0,0,var(--tw-border-opacity,1)); }
+  .bg-dark-surface { background-color: rgba(31,32,36,var(--tw-bg-opacity,1)); }
+  .text-dark-surface { color: rgba(248,250,252,var(--tw-text-opacity,1)); }
+
+  /* Convenience combinations */
+  .bg-light-primary-contrast { background-color: rgba(37,99,235,var(--tw-bg-opacity,1)); color: rgba(255,255,255,var(--tw-text-opacity,1)); }
+  .bg-dark-primary-contrast { background-color: rgba(211,0,0,var(--tw-bg-opacity,1)); color: rgba(255,255,255,var(--tw-text-opacity,1)); }
+
+  /* Accessibility: ensure these utilities opt into forced color overrides when used */
+  .bg-light-primary, .bg-dark-primary, .bg-light-surface, .bg-dark-surface { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+
 /* Remove default select arrow in IE */
 .PhoneInputCountrySelect::-ms-expand {
   display: none;
@@ -495,3 +1148,263 @@ body, p, span, label, input, button, select, textarea,
 .animate-audio-pulse {
   animation: audio-pulse 1.5s ease-in-out infinite;
 }
+
+/* Pricing page visual enhancements */
+.ribbon {
+  background-image: linear-gradient(90deg, var(--brand-blue), var(--brand-accent));
+  color: white;
+  font-weight: 700;
+  font-size: 0.725rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 0.375rem;
+  box-shadow: 0 12px 30px rgba(15,23,42,0.12);
+  display: inline-block;
+  letter-spacing: 0.02em;
+}
+
+.percent-badge {
+  display: inline-block;
+  background: linear-gradient(90deg, #10b981, #059669);
+  color: white;
+  font-weight: 700;
+  font-size: 0.675rem;
+  padding: 0.22rem 0.5rem;
+  border-radius: 9999px;
+  box-shadow: 0 8px 20px rgba(16,185,129,0.12);
+}
+
+.cta-animate {
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.cta-animate:hover {
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 14px 30px rgba(37,99,235,0.16);
+}
+
+.hero-accent {
+  filter: drop-shadow(0 10px 18px rgba(15,23,42,0.06));
+}
+
+.featured-elevated {
+  transform: translateY(-6px);
+  box-shadow: 0 30px 60px rgba(15,23,42,0.18) !important;
+}
+
+/* Make decorative elements non-interactive */
+.ribbon, .percent-badge { pointer-events: none; }
+
+/* Hub-specific design tokens and utilities (Phase 1 redesign) */
+/* Scoped under .hub-root so changes only affect the Talent Hub subtree */
+.hub-root {
+  /* Light-mode hub background: soft, media-friendly canvas */
+  --background: linear-gradient(180deg, #f7fbff 0%, #f2f8ff 60%);
+  --hub-surface: #ffffff;
+  --hub-card-bg: rgba(255,255,255,0.96);
+  --hub-card-border: rgba(15,23,42,0.06);
+  --hub-shadow: 0 18px 42px rgba(15,23,42,0.08);
+  --hub-cta: var(--brand-blue);
+}
+
+.dark .hub-root {
+  /* Dark-mode hub background: deep, low-chroma canvas to make media pop */
+  --background: linear-gradient(180deg, rgba(6,8,15,0.88) 0%, rgba(6,8,15,0.98) 100%);
+  --hub-surface: #0b1116;
+  --hub-card-bg: rgba(12,16,20,0.72);
+  --hub-card-border: rgba(255,255,255,0.04);
+  --hub-shadow: 0 20px 56px rgba(0,0,0,0.60);
+  --hub-cta: var(--brand-red);
+}
+
+/* Hub layout utilities */
+.hub-root .hub-bg {
+  background: var(--background);
+}
+
+.hub-root .hub-card {
+  background-color: var(--hub-card-bg);
+  border: 1px solid var(--hub-card-border);
+  box-shadow: var(--hub-shadow);
+  border-radius: 1rem;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+
+.hub-root .hub-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 38px 90px rgba(15,23,42,0.16);
+  border-color: rgba(37,99,235,0.14);
+}
+
+.hub-root .hub-hero {
+  position: relative;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(24px);
+  padding: 1.75rem 2rem;
+  border-radius: 1.75rem;
+  border: 1px solid rgba(255,255,255,0.72);
+  box-shadow: 0 38px 110px rgba(15,23,42,0.12);
+  overflow: hidden;
+}
+
+.hub-root .hub-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at 15% 15%, rgba(59,130,246,0.14), transparent 20%), radial-gradient(circle at 80% 30%, rgba(59,130,246,0.08), transparent 18%);
+  pointer-events: none;
+}
+
+.dark .hub-root .hub-hero {
+  background: rgba(9,13,20,0.88);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.dark .hub-root .hub-hero::before {
+  background-image: radial-gradient(circle at 15% 15%, rgba(248,113,113,0.16), transparent 18%), radial-gradient(circle at 80% 30%, rgba(248,113,113,0.10), transparent 16%);
+}
+
+.hub-root .hub-hero .hub-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(59,130,246,0.18), rgba(59,130,246,0.05));
+  color: #1d4ed8;
+  padding: 0.55rem 0.95rem;
+  font-size: 0.69rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border: 1px solid rgba(59,130,246,0.16);
+}
+
+.dark .hub-root .hub-hero .hub-pill {
+  background: linear-gradient(135deg, rgba(248,113,113,0.22), rgba(248,113,113,0.08));
+  color: #fecaca;
+  border-color: rgba(248,113,113,0.18);
+}
+
+.hub-root .hub-hero .hub-stat {
+  border-radius: 1.4rem;
+  border: 1px solid rgba(59,130,246,0.14);
+  background: rgba(255,255,255,0.70);
+  padding: 1rem 1.15rem;
+  color: #0f172a;
+  backdrop-filter: blur(16px);
+}
+
+.dark .hub-root .hub-hero .hub-stat {
+  border-color: rgba(248,113,113,0.16);
+  background: rgba(15,23,42,0.72);
+  color: #f8fafc;
+}
+
+/* Responsive grid utility for media-first layout */
+.hub-root .hub-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+/* Small utility for duration badges on thumbnails */
+.hub-root .hub-duration-badge {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  background: rgba(0,0,0,0.65);
+  color: white;
+  font-size: 0.65rem;
+  padding: 0.18rem 0.45rem;
+  border-radius: 0.35rem;
+}
+
+/* Media tile styles for a fuller, platform-grade feel */
+.hub-root .hub-tile {
+  position: relative;
+  display: block;
+  border-radius: 0.85rem;
+  overflow: hidden;
+  background: var(--hub-surface);
+  border: 1px solid var(--hub-card-border);
+  box-shadow: var(--hub-shadow);
+  transition: transform 220ms cubic-bezier(.2,.9,.2,1), box-shadow 220ms ease, border-color 220ms ease;
+}
+
+.hub-root .hub-tile:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 32px 68px rgba(15,23,42,0.14);
+  border-color: rgba(37,99,235,0.12);
+}
+
+.hub-root .hub-tile .hub-media {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: #111;
+}
+
+.hub-root .hub-tile img,
+.hub-root .hub-tile video,
+.hub-root .hub-tile .hub-media img,
+.hub-root .hub-tile .hub-media video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 350ms ease, opacity 220ms ease;
+}
+
+.hub-root .hub-tile:hover .hub-media img,
+.hub-root .hub-tile:hover .hub-media video {
+  transform: scale(1.03);
+}
+
+.hub-root .hub-tile .hub-meta {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0.75rem 0.9rem;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.72) 65%);
+  color: white;
+  pointer-events: none;
+}
+
+.hub-root .hub-tile .hub-meta .title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  line-height: 1.1;
+  margin-bottom: 0.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hub-root .hub-tile .hub-meta .sub {
+  font-size: 0.78rem;
+  opacity: 0.9;
+}
+
+/* subtle play affordance */
+.hub-root .hub-tile .play-cta {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+.hub-root .hub-tile:hover .play-cta { opacity: 1; }
+
+/* Loading skeleton */
+.hub-root .hub-skeleton {
+  background: linear-gradient(90deg, #f0f4ff 0%, #edf3ff 40%, #f0f4ff 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s linear infinite;
+}
+
+

@@ -12,7 +12,7 @@ export async function PUT(
     try {
         const { id } = await context.params;
         const body = await req.json();
-        const { name, subject, body: templateBody, variables } = body;
+        const { name, subject, body: templateBody, variables, preheaderText } = body;
 
         const template = await prisma.emailTemplate.update({
             where: { id },
@@ -20,7 +20,8 @@ export async function PUT(
                 name,
                 subject,
                 body: templateBody,
-                variables
+                variables,
+                preheaderText: preheaderText || null,
             }
         });
 

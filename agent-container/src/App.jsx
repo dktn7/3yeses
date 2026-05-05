@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import AgentComponent from './AgentComponent';
 import { bootAgentContainer } from './agentSdk';
 
@@ -11,11 +11,11 @@ function App() {
   const [status, setStatus] = useState({ agentServer: 'closed', agentUI: 'closed' });
   const [logs, setLogs] = useState({ agentServer: [], agentUI: [], container: [] });
 
-  const addLog = (source, msg) =>
-    setLogs(prev => ({ ...prev, [source]: [...prev[source], removeAnsiCodes(msg)] }));
+  const addLog = useCallback((source, msg) =>
+    setLogs(prev => ({ ...prev, [source]: [...prev[source], removeAnsiCodes(msg)] })), []);
 
-  const makeWritable = (source) =>
-    new WritableStream({ write(chunk) { addLog(source, chunk.toString()); } });
+  const makeWritable = useCallback((source) =>
+    new WritableStream({ write(chunk) { addLog(source, chunk.toString()); } }), [addLog]);
 
   useEffect(() => {
     async function init() {
@@ -56,7 +56,7 @@ function App() {
       }
     }
     init();
-  }, []);
+  }, [addLog, makeWritable]);
 
   return <AgentComponent iframeUrl={iframeUrl} status={status} logs={logs} />;
 }

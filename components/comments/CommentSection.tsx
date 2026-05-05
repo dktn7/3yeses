@@ -102,7 +102,7 @@ export default function CommentSection({
           <button
             onClick={() => setPage((prev) => prev + 1)}
             disabled={loading}
-            className="px-6 py-2 text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 disabled:opacity-50 flex items-center justify-center gap-2"
+            className="px-6 py-2 text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-red-400 dark:hover:text-red-300 disabled:opacity-50 flex items-center justify-center gap-2"
           >
             {loading ? <LoadingSpinner size="small" className="p-0" /> : 'Load more comments'}
           </button>

@@ -70,12 +70,12 @@ export default function AdvancedSearchPanel({
   return (
     <div
       ref={panelRef}
-      className="absolute left-0 mt-2 z-40 w-full max-w-lg bg-white dark:bg-gray-900 rounded-2xl shadow-2xl p-6 border border-gray-200 dark:border-gray-700 animate-fadeIn"
+      className="absolute left-0 mt-2 z-40 w-full max-w-lg bg-light-surface dark:bg-dark-surface rounded-2xl shadow-2xl p-6 border border-gray-200 dark:border-gray-700 animate-fadeIn"
       style={{ minWidth: 320 }}
       tabIndex={-1}
     >
       {/* Pointer arrow */}
-      <div className="absolute -top-2 left-8 w-4 h-4 bg-white dark:bg-gray-900 border-l border-t border-gray-200 dark:border-gray-700 rotate-45 z-10"></div>
+      <div className="absolute -top-2 left-8 w-4 h-4 bg-light-surface dark:bg-dark-surface border-l border-t border-gray-200 dark:border-gray-700 rotate-45 z-10"></div>
       <h2 className="text-2xl font-bold mb-6 text-center text-gray-900 dark:text-white">Advanced Filters</h2>
       <div className="space-y-6">
         {/* Gender */}
@@ -124,7 +124,7 @@ export default function AdvancedSearchPanel({
             value={ethnicity}
             onChange={(e) => setEthnicity(e.target.value)}
             placeholder="Ethnicity (comma separated)"
-            className="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white"
+            className="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-700 bg-light-surface dark:bg-dark-surface text-light-surface dark:text-dark-surface"
           />
         </div>
         {/* Age */}
@@ -175,7 +175,7 @@ export default function AdvancedSearchPanel({
             value={languages}
             onChange={(e) => setLanguages(e.target.value)}
             placeholder="Languages (comma separated)"
-            className="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white"
+            className="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-700 bg-light-surface dark:bg-dark-surface text-light-surface dark:text-dark-surface"
           />
         </div>
       </div>

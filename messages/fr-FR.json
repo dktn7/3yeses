@@ -96,6 +96,11 @@
     "chipHair": "Cheveux: {value}",
     "chipSkills": "Compétences: {value}",
     "chipLang": "Langue: {value}",
+    "chipAccessibility": "Accessibilité : {value}",
+    "reelEyebrow": "Explorer les talents",
+    "reelTitlePrefix": "Chaque type de",
+    "reelTitleAccent": "talent créatif",
+    "reelTalentCount": "{count, plural, one {# talent} other {# talents}}",
     "findYourNextJob": "Trouvez votre prochain emploi et",
     "elevateYourCareer": "faites progresser votre carrière",
     "joinThousands": "Rejoignez des milliers de professionnels talentueux qui font confiance à 3YESES pour les mettre en contact avec les projets de leurs rêves.",
@@ -182,9 +187,9 @@
     "joinNow": "Rejoignez maintenant",
     "learnMore": "En savoir plus",
     "activeTalent": "Talents actifs",
-      "ctaBrowseTalent": "Parcourir les talents",
-      "visitTalentHub": "Visitez le Talent Hub",
-      "talentHubIntro": "Découvrez le Talent Hub — profils sélectionnés, filtres avancés, professionnels vérifiés et démos pour trouver rapidement le talent idéal.",
+    "ctaBrowseTalent": "Parcourir les talents",
+    "visitTalentHub": "Visitez le Talent Hub",
+    "talentHubIntro": "Découvrez le Talent Hub — profils sélectionnés, filtres avancés, professionnels vérifiés et démos pour trouver rapidement le talent idéal.",
     "projectsPosted": "Projets publiés",
     "successRate": "Taux de réussite",
     "support": "Support",
@@ -199,7 +204,8 @@
   },
   "About": {
     "hero": {
-      "title": {
+      "title": "Chaque talent mérite ",
+      "titleParts": {
         "part1": "Connecter les",
         "talent": "Talents",
         "part2": "avec les",
@@ -208,8 +214,8 @@
       "description": "3YESES est la plateforme de premier plan où les professionnels de la création et les créateurs d'opportunités se rencontrent pour donner vie à des projets extraordinaires.",
       "trusted": "Approuvé par des milliers",
       "leading": "Leader de l'industrie",
-      "accent": "a stage.",
-      "everyone": "everyone"
+      "accent": "une scène.",
+      "everyone": "tout le monde"
     },
     "stats": {
       "title": "Notre impact en chiffres",
@@ -281,7 +287,7 @@
       "diversityTitle": "Diversity First",
       "diversityDesc": "We celebrate every genre, style, and culture. From classical musicians in Tokyo to street dancers in Lagos to voice artists in São Paulo — every creative deserves a stage.",
       "communityTitle": "Community Driven",
-      "communityDesc": "Browse, like, comment, and share. Our hub brings performances and portfolios together so creatives can inspire each other and build real connections.",
+      "communityDesc": "Parcourez, aimez, commentez et partagez. Notre hub rassemble des performances et des medias selectionnes pour que les creatifs puissent s'inspirer mutuellement et creer de vraies connexions.",
       "fairTitle": "Fair & Affordable",
       "fairDesc": "One simple subscription — £10 for 6 months or £20 for 12 months. No commissions, no hidden fees, no premium tiers. Everyone gets the same full access."
     },
@@ -325,8 +331,8 @@
       "categoriesDesc": "Actors, musicians, models, dancers, DJs, voice artists, photographers, comedians, presenters and more.",
       "verifyTitle": "Verification Badges",
       "verifyDesc": "Complete your profile fully to earn a verified badge that builds trust and boosts visibility.",
-      "hubTitle": "Media Hub",
-      "hubDesc": "Explore trending portfolios across the platform. Filter by category, media type, and popularity."
+      "hubTitle": "Hub des Talents",
+      "hubDesc": "Decouvrez les medias selectionnes tendance sur toute la plateforme. Filtrez par categorie, type de media et popularite."
     },
     "howItWorks": {
       "title": "How it works",
@@ -893,6 +899,34 @@
           "title": "Overview",
           "p1": "These Terms and Conditions (\"Terms\") govern your use of the 3YESES platform (\"Platform\", \"we\", \"us\", \"our\"), a subscription-based talent marketplace operated at 3yeses.online. By creating an account or using any part of the Platform, you agree to be bound by these Terms.",
           "p2": "3YESES is a platform where creative professionals — actors, musicians, models, dancers, voice artists, photographers, videographers, DJs, presenters, comedians, and other performers — create profiles, upload portfolio media (photos, videos, audio), and get discovered. The Platform includes a searchable talent directory, a media hub, analytics dashboards, and community features such as comments, likes, and content sharing."
+        },
+        "eligibility": {
+          "p1": "You must be at least 13 years old to create an account. Users aged 13–17 require parental or guardian consent. Users under 13 must have a parent-managed account where the parent or guardian registers and manages the account on their behalf.",
+          "p2": "You are responsible for maintaining the confidentiality of your login credentials and for all activity under your account. Notify us immediately if you suspect unauthorised access.",
+          "p3": "Each individual may maintain only one account. Duplicate accounts may be suspended without notice.",
+          "p4": "You must provide accurate, current information during registration and keep your profile information up to date. Fraudulent or misleading profiles may be removed."
+        },
+        "subscription": {
+          "p1": "An active subscription is required to use the Platform. You subscribe during the sign-up process. Without an active subscription, you cannot access the Platform.",
+          "plansIntro": "We offer one plan — Standard Access — with two duration options:",
+          "plans": [
+            "6 months — £10, billed as a recurring subscription via Stripe.",
+            "12 months — £20, billed as a recurring subscription via Stripe."
+          ],
+          "p2": "Both plans include identical features: unlimited portfolio uploads, full profile customisation, priority search ranking, and full dashboard analytics."
+        },
+        "content": {
+          "ownership": "You retain full ownership of all content you upload to the Platform. By uploading content, you grant 3YESES a non-exclusive, worldwide, royalty-free licence to display, distribute, and promote your content on the Platform and in marketing materials related to the Platform.",
+          "permitted": "You may upload images (JPEG, PNG, WebP), videos (MP4, MOV), and audio files (MP3, WAV). Individual files must not exceed 50 MB. You may also embed external video links (e.g. YouTube, Vimeo).",
+          "prohibited": [
+            "Is sexually explicit, pornographic, or depicts nudity intended to be sexual in nature.",
+            "Contains violence, gore, or content depicting harm to individuals.",
+            "Promotes hate speech, discrimination, or harassment based on race, ethnicity, religion, gender, sexual orientation, disability, or any other protected characteristic.",
+            "Infringes on the intellectual property rights of others (copyright, trademark, etc.).",
+            "Contains malware, executable files, or any form of malicious code.",
+            "Is spam, misleading, or fraudulent.",
+            "Depicts minors in inappropriate contexts."
+          ]
         }
       }
     },

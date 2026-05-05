@@ -145,7 +145,7 @@ export default function SettingsPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+      <div className="bg-light-surface dark:bg-dark-surface rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{t('title')}</h1>
         <p className="mt-2 text-gray-600 dark:text-gray-400">
           {t('subtitle')}
@@ -163,7 +163,7 @@ export default function SettingsPage() {
       )}
 
       {/* Account Information */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+      <div className="bg-light-surface dark:bg-dark-surface rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{t('accountInfo')}</h2>
         
         <div className="space-y-4">
@@ -195,17 +195,17 @@ export default function SettingsPage() {
       </div>
 
       {/* Password Change Notice */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+      <div className="bg-light-surface dark:bg-dark-surface rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{t('password')}</h2>
-        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-          <p className="text-blue-800 dark:text-blue-300">
+        <div className="bg-blue-50 dark:bg-red-900/20 border border-blue-200 dark:border-red-800 rounded-lg p-4">
+          <p className="text-blue-800 dark:text-red-200">
             {t('passwordChangeNotice')}
           </p>
         </div>
       </div>
 
       {/* Notifications */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+      <div className="bg-light-surface dark:bg-dark-surface rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{t('notificationPrefs')}</h2>
         
         <div className="space-y-4">
@@ -232,7 +232,7 @@ export default function SettingsPage() {
       </div>
 
       {/* Privacy Settings */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+      <div className="bg-light-surface dark:bg-dark-surface rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{t('privacySettings')}</h2>
         
         <div className="space-y-4">
@@ -243,7 +243,7 @@ export default function SettingsPage() {
             <select
               value={settings.privacy.profileVisibility}
               onChange={(e) => handleSettingsChange('privacy', 'profileVisibility', e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red"
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red"
             >
               <option value="public">{t('visibilityPublic')}</option>
               <option value="members-only">{t('visibilityMembers')}</option>
@@ -282,7 +282,7 @@ export default function SettingsPage() {
       </div>
 
       {/* Danger Zone */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-red-200 dark:border-red-800">
+      <div className="bg-light-surface dark:bg-dark-surface rounded-lg shadow-sm p-6 border border-red-200 dark:border-red-800">
         <h2 className="text-xl font-semibold text-red-600 dark:text-red-400 mb-4">{t('dangerZone')}</h2>
         
         <div className="space-y-4">

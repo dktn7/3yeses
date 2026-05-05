@@ -24,8 +24,8 @@ const STATUS_STYLES: Record<string, { icon: typeof Clock; color: string; bg: str
   },
   IN_PROGRESS: {
     icon: Loader2,
-    color: 'text-blue-600 dark:text-blue-400',
-    bg: 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800',
+    color: 'text-blue-600 dark:text-red-300',
+    bg: 'bg-blue-50 dark:bg-red-900/20 border-blue-200 dark:border-red-800',
   },
   RESOLVED: {
     icon: CheckCircle2,
@@ -163,7 +163,7 @@ export default function TicketsPage() {
             className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all border ${
               filter === 'ALL'
                 ? 'bg-primary-blue dark:bg-accent-red text-white border-primary-blue dark:border-accent-red'
-                : 'bg-white/60 dark:bg-white/[0.06] text-gray-700 dark:text-gray-300 border-gray-200 dark:border-white/10 hover:bg-gray-100 dark:hover:bg-white/10'
+                : 'bg-white/60 dark:bg-dark-surface text-gray-700 dark:text-gray-300 border-gray-200 dark:border-red-400/20 hover:bg-gray-100 dark:hover:bg-red-950/25'
             }`}
           >
             {t('all')} ({tickets.length})
@@ -178,7 +178,7 @@ export default function TicketsPage() {
                 className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all border ${
                   filter === key
                     ? 'bg-primary-blue dark:bg-accent-red text-white border-primary-blue dark:border-accent-red'
-                    : 'bg-white/60 dark:bg-white/[0.06] text-gray-700 dark:text-gray-300 border-gray-200 dark:border-white/10 hover:bg-gray-100 dark:hover:bg-white/10'
+                    : 'bg-white/60 dark:bg-dark-surface text-gray-700 dark:text-gray-300 border-gray-200 dark:border-red-400/20 hover:bg-gray-100 dark:hover:bg-red-950/25'
                 }`}
               >
                 {t(STATUS_KEYS[key] || 'open')} ({count})
@@ -190,7 +190,7 @@ export default function TicketsPage() {
 
       {/* Tickets list */}
       {tickets.length === 0 ? (
-        <div className="rounded-[2rem] backdrop-blur-xl bg-white/60 dark:bg-white/[0.05] border border-gray-200/50 dark:border-white/10 shadow-lg p-12 text-center">
+        <div className="rounded-[2rem] backdrop-blur-xl bg-white/60 dark:bg-dark-surface border border-gray-200/50 dark:border-red-400/20 shadow-lg p-12 text-center">
           <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-blue/10 to-accent-blue/10 dark:from-accent-red/10 dark:to-primary-red/10 flex items-center justify-center mx-auto mb-5">
             <LifeBuoy className="w-8 h-8 text-primary-blue dark:text-accent-red" />
           </div>
@@ -211,7 +211,7 @@ export default function TicketsPage() {
           {filteredTickets.map((ticket) => (
             <div
               key={ticket.id}
-              className="group rounded-2xl backdrop-blur-xl bg-white/60 dark:bg-white/[0.05] border border-gray-200/50 dark:border-white/10 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 p-5 sm:p-6"
+              className="group rounded-2xl backdrop-blur-xl bg-white/60 dark:bg-dark-surface border border-gray-200/50 dark:border-red-400/20 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 p-5 sm:p-6"
             >
               <div className="flex flex-col sm:flex-row sm:items-start gap-4">
                 <div className="flex-1 min-w-0">

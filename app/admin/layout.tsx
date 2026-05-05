@@ -49,7 +49,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
     <QueryProvider>
       <AdminProvider>
         <AdminThemeProvider>
-          <div className="min-h-screen flex flex-col md:flex-row bg-[var(--admin-bg)] transition-colors duration-200">
+          <div className="-mt-16 min-h-screen md:h-screen flex flex-col md:flex-row bg-[var(--admin-bg)] transition-colors duration-200 md:overflow-hidden">
               
               {/* Mobile Header */}
             <div className="md:hidden flex items-center justify-between p-4 admin-glass sticky top-0 z-50">
@@ -61,7 +61,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
 
             {/* Sidebar */}
             <aside className={`
-                fixed inset-y-0 left-0 z-50 w-64 transform transition-transform duration-300 ease-in-out md:translate-x-0 md:sticky md:top-0 md:h-screen overflow-y-hidden
+              fixed inset-y-0 left-0 z-50 w-72 transform transition-transform duration-300 ease-in-out md:translate-x-0 md:sticky md:top-0 md:h-screen md:shrink-0
                 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
             `}>
                 <AdminSidebar />
@@ -76,7 +76,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
             )}
 
             {/* Main Content Area */}
-            <div className="flex-1 flex flex-col h-screen overflow-hidden">
+            <div className="flex-1 flex flex-col min-h-0 md:h-screen overflow-hidden">
                 
                 {/* Top Navigation Bar */}
                 <header className="h-14 admin-glass flex items-center justify-end px-6 z-10 shrink-0 sticky top-0">
@@ -111,11 +111,11 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                 />
 
                 {/* Main Content Scrollable Area */}
-                <main className="flex-1 overflow-y-auto p-6 md:p-8 bg-[var(--admin-bg)]">
+                <main className="flex-1 overflow-y-auto pb-6 px-5 md:px-8 pt-0 bg-[var(--admin-bg)]">
                     <div className="max-w-7xl mx-auto">
                         {children}
                     </div>
-                    <div className="mt-8">
+                  <div className="mt-6">
                         <AdminFooter />
                     </div>
                 </main>

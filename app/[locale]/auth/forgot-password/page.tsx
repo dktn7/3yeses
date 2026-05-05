@@ -59,13 +59,13 @@ export default function ForgotPasswordPage() {
         <nav className="mb-6 text-sm">
           <ol className="flex items-center space-x-2 text-gray-600 dark:text-gray-400">
             <li>
-              <Link href="/" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+              <Link href="/" className="hover:text-blue-600 dark:hover:text-red-300 transition-colors">
                 Home
               </Link>
             </li>
             <li className="flex items-center">
               <span className="mx-2">/</span>
-              <Link href="/auth/signin" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+              <Link href="/auth/signin" className="hover:text-blue-600 dark:hover:text-red-300 transition-colors">
                 Sign In
               </Link>
             </li>
@@ -77,7 +77,7 @@ export default function ForgotPasswordPage() {
         </nav>
 
         {/* Forgot Password Card */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700">
+        <div className="bg-light-surface dark:bg-dark-surface rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700">
           {!isSubmitted ? (
             <>
               {/* Header */}
@@ -118,14 +118,14 @@ export default function ForgotPasswordPage() {
                       error
                         ? 'border-red-500 dark:border-red-500'
                         : 'border-gray-300 dark:border-gray-600'
-                    } bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-all`}
+                    } bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red focus:border-transparent transition-all`}
                   />
                 </div>
 
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-red-600 hover:from-blue-700 hover:to-red-700 text-white font-medium rounded-lg transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full py-3 px-4 bg-gradient-to-r from-primary-blue to-accent-blue dark:from-accent-red dark:to-primary-red hover:opacity-95 text-white font-medium rounded-lg transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isLoading ? (
                     <span className="flex items-center justify-center gap-2">
@@ -145,7 +145,7 @@ export default function ForgotPasswordPage() {
               <div className="mt-6 text-center">
                 <Link
                   href="/auth/signin"
-                  className="text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
+                  className="text-sm font-medium text-primary-blue hover:text-accent-blue dark:text-accent-red dark:hover:text-red-300 transition-colors"
                 >
                   ← Back to Sign In
                 </Link>
@@ -169,7 +169,7 @@ export default function ForgotPasswordPage() {
                 </p>
                 <Link
                   href="/auth/signin"
-                  className="inline-block px-6 py-3 bg-gradient-to-r from-blue-600 to-red-600 hover:from-blue-700 hover:to-red-700 text-white font-medium rounded-lg transition-all shadow-lg hover:shadow-xl"
+                  className="inline-block px-6 py-3 bg-gradient-to-r from-primary-blue to-accent-blue dark:from-accent-red dark:to-primary-red hover:opacity-95 text-white font-medium rounded-lg transition-all shadow-lg hover:shadow-xl"
                 >
                   Back to Sign In
                 </Link>
@@ -184,7 +184,7 @@ export default function ForgotPasswordPage() {
             Remember your password?{' '}
             <Link
               href="/auth/signin"
-              className="font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
+              className="font-medium text-primary-blue hover:text-accent-blue dark:text-accent-red dark:hover:text-red-300 transition-colors"
             >
               Sign in
             </Link>

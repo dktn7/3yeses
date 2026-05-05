@@ -15,7 +15,7 @@ export default function GlobalHeader() {
   }
 
   return (
-    <header className="bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3 flex justify-between items-center fixed top-0 left-0 right-0 h-16 z-50">
+    <header className="bg-[var(--chrome-bg)] text-[var(--foreground)] shadow-sm border-b border-[var(--chrome-border)] px-4 py-3 flex justify-between items-center fixed top-0 left-0 right-0 h-16 z-50 backdrop-blur-sm">
       <div className="flex items-center gap-4">
         <DynamicHeader />
         <Tooltip text="Toggle theme">

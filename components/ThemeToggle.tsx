@@ -26,7 +26,7 @@ export function ModeToggle() {
   return (
     <div className="relative">
       <button
-        className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-transparent hover:bg-accent hover:text-accent-foreground dark:hover:bg-blue-500 dark:hover:text-white h-10 w-10"
+        className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-transparent hover:bg-accent hover:text-accent-foreground dark:hover:bg-red-500 dark:hover:text-white h-10 w-10"
         onClick={() => {
           if (theme === 'light') {
             setTheme('dark')

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChevronDown } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 
 interface SubcategoryCardProps {
   subcategory: {
@@ -31,7 +31,7 @@ export default function SubcategoryCard({ subcategory, onSelect }: SubcategoryCa
       tabIndex={0}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
-      className="group cursor-pointer bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 p-6 border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-red-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-red-500"
+      className="group cursor-pointer bg-light-surface dark:bg-dark-surface rounded-xl shadow-md hover:shadow-xl transition-all duration-300 p-6 border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-red-500 hover:-translate-y-0.5 active:scale-[0.98] active:translate-y-0 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-red-500"
       aria-label={`Browse ${subcategory.name} professionals`}
     >
       <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
@@ -43,7 +43,7 @@ export default function SubcategoryCard({ subcategory, onSelect }: SubcategoryCa
       </p>
       
       <div className="flex items-center justify-end text-sm text-gray-500 dark:text-gray-400">
-        <ChevronDown className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
+        <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
       </div>
     </div>
   );

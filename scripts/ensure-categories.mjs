@@ -28,7 +28,7 @@ async function ensureCategory(name) {
   // Try to find existing category by name
   let category = await prisma.talentCategory.findUnique({ where: { name } });
   if (!category) {
-    category = await prisma.talentCategory.create({ data: { name, description: `${name} (seeded)` } });
+    category = await prisma.talentCategory.create({ data: { name, description: `${name}` } });
     console.log(`Created category: ${name}`);
   } else {
     console.log(`Category exists: ${name}`);

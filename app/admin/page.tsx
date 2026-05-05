@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import {
   Users,
   Briefcase, 
@@ -67,11 +67,7 @@ export default function AdminDashboard() {
   const [recentActivity, setRecentActivity] = useState<RecentActivity[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    fetchDashboardData();
-  }, []);
-
-  const fetchDashboardData = async (isRetry = false) => {
+  const fetchDashboardData = useCallback(async (isRetry = false) => {
     try {
       const response = await fetch('/api/admin/dashboard', {
         credentials: 'include',
@@ -102,7 +98,11 @@ export default function AdminDashboard() {
     } finally {
       if (!isRetry) setIsLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, [fetchDashboardData]);
 
   if (isLoading) {
     return (

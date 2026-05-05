@@ -13,11 +13,8 @@ export async function GET(request: NextRequest, context: any) {
 
   try {
     // find talent profile by userId (TalentProfile uses userId as unique key)
-    let talent = await prisma.talentProfile.findUnique({ where: { userId: id }, select: { userId: true, likeCount: true } });
+    const talent = await prisma.talentProfile.findUnique({ where: { userId: id }, select: { userId: true, likeCount: true } });
     if (!talent) return NextResponse.json({ success: false, error: 'Talent not found' }, { status: 404 });
-
-    // compute likeCount and whether current user liked
-    const likeCount = await prisma.profileLike.count({ where: { talentProfileId: talent.userId } });
 
     // check token for current user (optional — don't require auth for GET)
     let isLiked = false;
@@ -31,7 +28,7 @@ export async function GET(request: NextRequest, context: any) {
       }
     }
 
-    return NextResponse.json({ success: true, likeCount, isLiked });
+    return NextResponse.json({ success: true, likeCount: talent.likeCount || 0, isLiked });
   } catch (error) {
     console.error('Error in GET like:', error);
     return NextResponse.json({ success: false, error: 'Internal error' }, { status: 500 });
@@ -52,33 +49,39 @@ export async function POST(request: NextRequest, context: any) {
     // authenticate
     const auth = await authenticateUser(request);
     if (!auth.authenticated || !auth.user) {
-      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(
+        { success: false, error: 'Authentication required', code: 'AUTH_REQUIRED' },
+        { status: 401 }
+      );
     }
-    const userId = auth.user.userId;
 
     // find talent profile by userId (TalentProfile uses userId as unique key)
-    let talent = await prisma.talentProfile.findUnique({ where: { userId: id }, select: { userId: true } });
+    const talent = await prisma.talentProfile.findUnique({ where: { userId: id }, select: { userId: true, likeCount: true } });
     if (!talent) return NextResponse.json({ success: false, error: 'Talent not found' }, { status: 404 });
 
-    const existing = await prisma.profileLike.findUnique({ where: { userId_talentProfileId: { userId, talentProfileId: talent.userId } } });
+    const targetId = talent.userId;
+
+    const userId = auth.user.userId;
+
+    const existing = await prisma.profileLike.findUnique({ where: { userId_talentProfileId: { userId, talentProfileId: targetId } } });
 
     if (likeRequested) {
       if (!existing) {
-        await prisma.profileLike.create({ data: { userId, talentProfileId: talent.userId } });
-        await prisma.talentProfile.update({ where: { userId: talent.userId }, data: { likeCount: { increment: 1 } as any } });
+        await prisma.profileLike.create({ data: { userId, talentProfileId: targetId } });
+        await prisma.talentProfile.update({ where: { userId: targetId }, data: { likeCount: { increment: 1 } as any } });
 
         // create a notification for the talent owner
         try {
           const actor = await prisma.user.findUnique({ where: { id: userId }, select: { id: true, name: true } });
-          const path = `/talent/${talent.userId}`;
+          const path = `/talent/${targetId}`;
 
           const title = actor?.name ? `${actor.name} liked your profile` : 'Someone liked your profile';
           const message = actor?.name ? `${actor.name} liked your talent profile.` : 'Someone liked your talent profile.';
 
           await prisma.talentNotification.create({
             data: {
-              userId: talent.userId,
-              talentProfileId: talent.userId,
+              userId: targetId,
+              talentProfileId: targetId,
               type: 'PROFILE_LIKE',
               title,
               message,
@@ -92,12 +95,14 @@ export async function POST(request: NextRequest, context: any) {
     } else {
       if (existing) {
         await prisma.profileLike.delete({ where: { id: existing.id } });
-        await prisma.talentProfile.update({ where: { userId: talent.userId }, data: { likeCount: { decrement: 1 } as any } });
+        if ((talent.likeCount || 0) > 0) {
+          await prisma.talentProfile.update({ where: { userId: targetId }, data: { likeCount: { decrement: 1 } as any } });
+        }
       }
     }
 
-    const likeCount = await prisma.profileLike.count({ where: { talentProfileId: talent.userId } });
-    return NextResponse.json({ success: true, likeCount, isLiked: likeRequested });
+    const updatedTalent = await prisma.talentProfile.findUnique({ where: { userId: targetId }, select: { likeCount: true } });
+    return NextResponse.json({ success: true, likeCount: updatedTalent?.likeCount || 0, isLiked: likeRequested });
   } catch (error) {
     console.error('Error in POST like:', error);
     return NextResponse.json({ success: false, error: 'Internal error' }, { status: 500 });

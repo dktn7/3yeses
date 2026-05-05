@@ -56,7 +56,7 @@ const LoadingSpinner = ({
 
   if (fullScreen) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white dark:bg-gray-900 transition-colors">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-light-surface dark:bg-dark-surface transition-colors">
         <div
           className="rounded-full border-4 border-gray-300 dark:border-gray-700 border-t-primary-blue dark:border-t-accent-red animate-spin"
           style={{ width: pixelSize, height: pixelSize }}

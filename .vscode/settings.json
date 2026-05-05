@@ -1,5 +1,6 @@
 {
     "chat.edits2.enabled": false,
+    "css.lint.unknownAtRules": "ignore",
     "chat.mcp.serverSampling": {
         "3yeses/.vscode/mcp.json: context7": {
             "allowedModels": [

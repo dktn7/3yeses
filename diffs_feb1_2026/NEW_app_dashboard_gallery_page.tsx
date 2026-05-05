@@ -411,7 +411,7 @@ export default function GalleryPage() {
       {/* Upload Modal - Multi-step Form */}
       {showUploadModal && (
         <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-xl max-h-[90vh] flex flex-col border border-gray-200 dark:border-gray-700 animate-in zoom-in duration-200" role="dialog" aria-modal="true">
+          <div className="bg-light-surface dark:bg-dark-surface rounded-2xl shadow-2xl w-full max-w-xl max-h-[90vh] flex flex-col border border-gray-200 dark:border-gray-700 animate-in zoom-in duration-200" role="dialog" aria-modal="true">
             {/* Header with step indicator - Fixed */}
             <div className="flex-shrink-0 p-8 pb-4">
               <div className="flex items-center justify-between mb-6">
@@ -461,7 +461,7 @@ export default function GalleryPage() {
                         fileInput.onchange = handleFileUpload as any;
                         fileInput.click();
                       }}
-                      className="flex flex-col items-center gap-3 p-4 bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600 rounded-xl hover:border-primary-blue dark:hover:border-accent-red transition-all hover:shadow-lg"
+                      className="flex flex-col items-center gap-3 p-4 bg-light-surface dark:bg-dark-surface border-2 border-gray-300 dark:border-gray-600 rounded-xl hover:border-primary-blue dark:hover:border-accent-red transition-all hover:shadow-lg"
                     >
                       <div className="text-3xl">📁</div>
                       <div className="text-center">
@@ -477,7 +477,7 @@ export default function GalleryPage() {
                         setUploadMethod('url');
                         setUploadStep('url-input');
                       }}
-                      className="flex flex-col items-center gap-3 p-4 bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600 rounded-xl hover:border-primary-blue dark:hover:border-accent-red transition-all hover:shadow-lg"
+                      className="flex flex-col items-center gap-3 p-4 bg-light-surface dark:bg-dark-surface border-2 border-gray-300 dark:border-gray-600 rounded-xl hover:border-primary-blue dark:hover:border-accent-red transition-all hover:shadow-lg"
                     >
                       <div className="text-3xl">🔗</div>
                       <div className="text-center">
@@ -509,7 +509,7 @@ export default function GalleryPage() {
                               className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
                                 pendingType === type
                                   ? 'bg-primary-blue dark:bg-accent-red text-white shadow-lg scale-105'
-                                  : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600'
+                                  : 'bg-light-surface dark:bg-dark-surface text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600'
                               }`}
                             >
                               {type === 'image' ? '🖼️' : type === 'video' ? '🎬' : '🎵'} {type.charAt(0).toUpperCase() + type.slice(1)}
@@ -526,7 +526,7 @@ export default function GalleryPage() {
                           value={pendingMediaUrl}
                           onChange={(e) => setPendingMediaUrl(e.target.value)}
                           placeholder="https://example.com/media.jpg"
-                          className="w-full px-4 py-3 rounded-xl bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:outline-none focus:border-primary-blue dark:focus:border-accent-red"
+                          className="w-full px-4 py-3 rounded-xl bg-light-surface dark:bg-dark-surface border-2 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:outline-none focus:border-primary-blue dark:focus:border-accent-red"
                         />
                         <p className="text-xs text-gray-500 dark:text-gray-400 mt-1.5">Must be a complete URL starting with https://</p>
                       </div>
@@ -575,7 +575,7 @@ export default function GalleryPage() {
                             <button
                               type="button"
                               onClick={() => setPendingThumbnailMethod(pendingThumbnailMethod === 'video' ? 'none' : 'video')}
-                              className={`px-4 py-3 rounded-xl font-semibold text-sm transition-all ${pendingThumbnailMethod === 'video' ? 'bg-gradient-to-r from-primary-blue to-blue-600 dark:from-accent-red dark:to-red-600 text-white shadow-lg scale-105' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:border-primary-blue dark:hover:border-accent-red'}`}
+                              className={`px-4 py-3 rounded-xl font-semibold text-sm transition-all ${pendingThumbnailMethod === 'video' ? 'bg-gradient-to-r from-primary-blue to-blue-600 dark:from-accent-red dark:to-red-600 text-white shadow-lg scale-105' : 'bg-light-surface dark:bg-dark-surface text-light-surface dark:text-dark-surface border border-gray-300 dark:border-gray-600 hover:border-primary-blue dark:hover:border-accent-red'}`}
                             >
                               🎬 From Video
                             </button>
@@ -583,21 +583,21 @@ export default function GalleryPage() {
                           <button
                             type="button"
                             onClick={() => setPendingThumbnailMethod(pendingThumbnailMethod === 'url' ? 'none' : 'url')}
-                            className={`px-4 py-3 rounded-xl font-semibold text-sm transition-all ${pendingThumbnailMethod === 'url' ? 'bg-gradient-to-r from-primary-blue to-blue-600 dark:from-accent-red dark:to-red-600 text-white shadow-lg scale-105' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:border-primary-blue dark:hover:border-accent-red'}`}
+                            className={`px-4 py-3 rounded-xl font-semibold text-sm transition-all ${pendingThumbnailMethod === 'url' ? 'bg-gradient-to-r from-primary-blue to-blue-600 dark:from-accent-red dark:to-red-600 text-white shadow-lg scale-105' : 'bg-light-surface dark:bg-dark-surface text-light-surface dark:text-dark-surface border border-gray-300 dark:border-gray-600 hover:border-primary-blue dark:hover:border-accent-red'}`}
                           >
                             🔗 URL
                           </button>
                           <button
                             type="button"
                             onClick={() => setPendingThumbnailMethod(pendingThumbnailMethod === 'file' ? 'none' : 'file')}
-                            className={`px-4 py-3 rounded-xl font-semibold text-sm transition-all ${pendingThumbnailMethod === 'file' ? 'bg-gradient-to-r from-primary-blue to-blue-600 dark:from-accent-red dark:to-red-600 text-white shadow-lg scale-105' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:border-primary-blue dark:hover:border-accent-red'}`}
+                            className={`px-4 py-3 rounded-xl font-semibold text-sm transition-all ${pendingThumbnailMethod === 'file' ? 'bg-gradient-to-r from-primary-blue to-blue-600 dark:from-accent-red dark:to-red-600 text-white shadow-lg scale-105' : 'bg-light-surface dark:bg-dark-surface text-light-surface dark:text-dark-surface border border-gray-300 dark:border-gray-600 hover:border-primary-blue dark:hover:border-accent-red'}`}
                           >
                             📁 Upload
                           </button>
                         </div>
 
                         {pendingThumbnailMethod === 'video' && videoPreviewUrl && pendingType === 'video' && (
-                          <div className="space-y-3 p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+                          <div className="space-y-3 p-4 bg-light-surface dark:bg-dark-surface rounded-xl border border-gray-200 dark:border-gray-700">
                             <div className="flex items-center justify-between">
                               <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Frame Position</label>
                               <span className="text-xs font-mono text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">{videoTimestamp.toFixed(1)}s</span>
@@ -634,7 +634,7 @@ export default function GalleryPage() {
                             type="url"
                             value={pendingThumbnail}
                             onChange={(e) => setPendingThumbnail(e.target.value)}
-                            className="w-full px-4 py-2.5 rounded-xl bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red"
+                            className="w-full px-4 py-2.5 rounded-xl bg-light-surface dark:bg-dark-surface border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red"
                             placeholder="https://example.com/thumbnail.jpg"
                           />
                         )}
@@ -645,7 +645,7 @@ export default function GalleryPage() {
                               type="file"
                               accept="image/*"
                               onChange={(e) => setPendingThumbnailFile(e.target.files?.[0] || null)}
-                              className="w-full px-4 py-2.5 rounded-xl bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-primary-blue dark:file:bg-accent-red file:text-white hover:file:bg-blue-600 dark:hover:file:bg-red-600"
+                              className="w-full px-4 py-2.5 rounded-xl bg-light-surface dark:bg-dark-surface border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-primary-blue dark:file:bg-accent-red file:text-white hover:file:bg-blue-600 dark:hover:file:bg-red-600"
                             />
                             {pendingThumbnailFile && (
                               <p className="text-xs text-green-600 dark:text-green-400 mt-2 font-medium flex items-center gap-1">
@@ -669,7 +669,7 @@ export default function GalleryPage() {
                       value={pendingTitle}
                       onChange={(e) => setPendingTitle(e.target.value)}
                       maxLength={100}
-                      className="w-full px-4 py-3 rounded-xl bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:outline-none focus:border-primary-blue dark:focus:border-accent-red transition-colors text-lg font-medium"
+                      className="w-full px-4 py-3 rounded-xl bg-light-surface dark:bg-dark-surface border-2 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:outline-none focus:border-primary-blue dark:focus:border-accent-red transition-colors text-lg font-medium"
                       placeholder="Give your work an eye-catching title..."
                     />
                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-1.5 flex items-center justify-between">
@@ -686,7 +686,7 @@ export default function GalleryPage() {
                       onChange={(e) => setPendingDescription(e.target.value)}
                       maxLength={500}
                       rows={4}
-                      className="w-full px-4 py-3 rounded-xl bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:outline-none focus:border-primary-blue dark:focus:border-accent-red resize-none transition-colors"
+                      className="w-full px-4 py-3 rounded-xl bg-light-surface dark:bg-dark-surface border-2 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:outline-none focus:border-primary-blue dark:focus:border-accent-red resize-none transition-colors"
                       placeholder="Tell the story behind your work, your inspiration, techniques used..."
                     />
                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-1.5 flex items-center justify-between">
@@ -756,7 +756,7 @@ export default function GalleryPage() {
                       value={pendingTitle}
                       onChange={(e) => setPendingTitle(e.target.value)}
                       maxLength={100}
-                      className="w-full px-4 py-3 rounded-xl bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:outline-none focus:border-primary-blue dark:focus:border-accent-red transition-colors text-lg font-medium"
+                      className="w-full px-4 py-3 rounded-xl bg-light-surface dark:bg-dark-surface border-2 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:outline-none focus:border-primary-blue dark:focus:border-accent-red transition-colors text-lg font-medium"
                       placeholder="Give your work an eye-catching title..."
                     />
                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-1.5 flex items-center justify-between">
@@ -773,7 +773,7 @@ export default function GalleryPage() {
                       onChange={(e) => setPendingDescription(e.target.value)}
                       maxLength={500}
                       rows={4}
-                      className="w-full px-4 py-3 rounded-xl bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:outline-none focus:border-primary-blue dark:focus:border-accent-red resize-none transition-colors"
+                      className="w-full px-4 py-3 rounded-xl bg-light-surface dark:bg-dark-surface border-2 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:outline-none focus:border-primary-blue dark:focus:border-accent-red resize-none transition-colors"
                       placeholder="Tell the story behind your work, your inspiration, techniques used..."
                     />
                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-1.5 flex items-center justify-between">
@@ -793,7 +793,7 @@ export default function GalleryPage() {
                         type="url"
                         value={pendingThumbnail}
                         onChange={(e) => setPendingThumbnail(e.target.value)}
-                        className="w-full px-4 py-2.5 rounded-xl bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red"
+                        className="w-full px-4 py-2.5 rounded-xl bg-light-surface dark:bg-dark-surface border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red"
                         placeholder="https://example.com/thumbnail.jpg"
                       />
                     </div>
@@ -837,7 +837,7 @@ export default function GalleryPage() {
             <div className="flex-shrink-0 px-8 pb-8 pt-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50">
               <div className="flex items-center justify-between gap-4">
                 <button 
-                  className="px-8 py-3 rounded-xl bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 font-semibold border-2 border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 transition-all hover:scale-105" 
+                  className="px-8 py-3 rounded-xl bg-light-surface dark:bg-dark-surface text-gray-800 dark:text-gray-200 font-semibold border-2 border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 transition-all hover:scale-105" 
                   onClick={() => { 
                     if (uploadStep === 'url-input') {
                       setUploadStep('select');
@@ -887,7 +887,7 @@ export default function GalleryPage() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-gray-700/50">
+        <div className="bg-light-surface dark:bg-dark-surface rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-gray-700/50">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total</p>
@@ -899,7 +899,7 @@ export default function GalleryPage() {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-gray-700/50">
+        <div className="bg-light-surface dark:bg-dark-surface rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-gray-700/50">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Photos</p>
@@ -913,7 +913,7 @@ export default function GalleryPage() {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-gray-700/50">
+        <div className="bg-light-surface dark:bg-dark-surface rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-gray-700/50">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Videos</p>
@@ -927,7 +927,7 @@ export default function GalleryPage() {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-gray-700/50">
+        <div className="bg-light-surface dark:bg-dark-surface rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-gray-700/50">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Audio</p>
@@ -943,7 +943,7 @@ export default function GalleryPage() {
       </div>
 
       {/* Gallery Grid */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-gray-700/50">
+      <div className="bg-light-surface dark:bg-dark-surface rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-gray-700/50">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white">Your Media</h2>
         </div>
@@ -980,7 +980,7 @@ export default function GalleryPage() {
                     setViewerIndex(index);
                     setIsViewerOpen(true);
                   }}
-                  className="group block bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer border border-gray-100 dark:border-gray-700 hover:scale-[1.02]"
+                  className="group block bg-light-surface dark:bg-dark-surface rounded-xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer border border-gray-100 dark:border-gray-700 hover:scale-[1.02]"
                 >
                   {/* Image/Video Thumbnail */}
                   <div className="relative aspect-video bg-gray-200 dark:bg-gray-700 overflow-hidden">
@@ -1106,8 +1106,8 @@ export default function GalleryPage() {
 
       {/* Edit Modal */}
       {editingItem && (
-        <div className="fixed inset-0 z-[100] bg-black/70 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[95vh] flex flex-col border border-gray-200 dark:border-gray-700 animate-in zoom-in-95 duration-200">
+            <div className="fixed inset-0 z-[100] bg-black/70 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="bg-light-surface dark:bg-dark-surface rounded-2xl shadow-2xl w-full max-w-2xl max-h-[95vh] flex flex-col border border-gray-200 dark:border-gray-700 animate-in zoom-in-95 duration-200">
             <div className="flex-shrink-0 px-6 md:px-8 py-6 border-b border-gray-200 dark:border-gray-700">
               <div className="flex items-center justify-between">
                 <div>
@@ -1323,7 +1323,7 @@ export default function GalleryPage() {
             {/* Fixed Footer */}
             <div className="flex-shrink-0 px-6 md:px-8 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 flex items-center justify-between gap-4">
               <button 
-                className="px-6 py-2.5 rounded-xl bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 font-semibold border-2 border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 transition-all hover:scale-105" 
+                className="px-6 py-2.5 rounded-xl bg-light-surface dark:bg-dark-surface text-gray-800 dark:text-gray-200 font-semibold border-2 border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 transition-all hover:scale-105" 
                 onClick={() => setEditingItem(null)}
               >
                 Cancel
@@ -1453,7 +1453,7 @@ export default function GalleryPage() {
       {/* Delete Confirmation Modal */}
       {deleteConfirm.show && (
         <div className="fixed inset-0 z-[200] bg-black/70 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md border border-red-500/60 dark:border-red-400/60 animate-in zoom-in-95 duration-200">
+          <div className="bg-light-surface dark:bg-dark-surface rounded-2xl shadow-2xl w-full max-w-md border border-red-500/60 dark:border-red-400/60 animate-in zoom-in-95 duration-200">
             <div className="p-8">
               <div className="flex items-center justify-center mb-6">
                 <div className="w-16 h-16 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">

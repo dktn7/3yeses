@@ -19,7 +19,7 @@ function getStepClasses(isCompleted: boolean, isCurrent: boolean): string {
     return 'bg-primary-blue border-primary-blue text-white scale-110 shadow-lg';
   }
   if (isCurrent) {
-    return 'bg-white dark:bg-gray-800 border-primary-blue text-primary-blue scale-110 shadow-lg animate-pulse';
+    return 'bg-light-surface dark:bg-dark-surface border-primary-blue text-primary-blue scale-110 shadow-lg animate-pulse';
   }
   return 'bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-400 dark:text-gray-500';
 }

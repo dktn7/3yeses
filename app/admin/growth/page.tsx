@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import { AnalyticsDashboard } from "@/components/admin/AnalyticsDashboard";
-import { AdManager } from "@/components/admin/AdManager";
+import AdManager from "@/components/admin/AdManager";
 import { FeaturedItemsManager } from "@/components/admin/FeaturedItemsManager";
 
 export default function AdminGrowthPage() {

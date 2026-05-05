@@ -108,7 +108,28 @@ async function patchHandler(request: NextRequest, context: any) {
         return NextResponse.json({ success: true, message: 'User unbanned' });
       }
 
-      // warn and suspend are just logged
+      if (action === 'warn') {
+        // Add a persistent talent notification for the warning
+        const talentProfile = await prisma.talentProfile.findUnique({ where: { userId: id } });
+
+        if (talentProfile) {
+          await prisma.talentNotification.create({
+            data: {
+              talentProfileId: talentProfile.userId,
+              type: 'SYSTEM',
+              title: 'Account Warning',
+              message: reason || 'Your account was flagged by the admin team for policy review. Please check your notifications for next steps.',
+              read: false,
+              dismissed: false,
+              metadata: { adminAction: 'warn', reason: reason || null },
+            },
+          });
+        }
+
+        return NextResponse.json({ success: true, message: 'User warned' });
+      }
+
+      // suspend is still logged, but we keep warn surfaced in notifications.
       return NextResponse.json({ success: true, message: `User ${action}ed` });
     }
 

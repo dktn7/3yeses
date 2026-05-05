@@ -36,10 +36,10 @@ export default function DynamicHeadline() {
   }, [headlines.length]);
 
   return (
-    <h2 className={`text-4xl md:text-6xl font-bold text-gray-800 dark:text-gray-100 mb-8 leading-tight transition-opacity duration-600 ${
+    <h2 className={`text-4xl md:text-6xl font-bold text-gray-800 dark:text-red-100 mb-8 leading-tight transition-opacity duration-600 dark:[text-shadow:0_6px_22px_rgba(0,0,0,0.34)] ${
       isVisible ? 'opacity-100' : 'opacity-0'
     }`}>
-      <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-blue via-accent-blue to-indigo-500 dark:from-accent-red dark:via-primary-red dark:to-orange-500">
+      <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#2563eb] via-[#4f7dff] to-[#9eb8ff] dark:from-red-400 dark:via-red-500 dark:to-rose-600">
         {headlines[currentIndex]}
       </span>
     </h2>

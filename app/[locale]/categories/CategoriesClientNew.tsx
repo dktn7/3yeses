@@ -3,53 +3,22 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { CheckCircle, Users, Music, Zap, Camera, UserCheck, Filter, X, Search, MapPin, Star, Calendar, Heart, Settings, BookOpen, Monitor, Trophy, Clapperboard, Sparkles, SlidersHorizontal, ArrowLeft, Loader2, Mic, Globe, PenTool, Flame, Tent, Smile, Aperture, Palette, Sliders, Smartphone, Scissors, Wrench, Film, Drama } from 'lucide-react';
+import { CheckCircle, Users, Filter, X, Search, MapPin, Calendar, Heart, Settings, BookOpen, Monitor, Trophy, Sparkles, SlidersHorizontal, ArrowLeft, Loader2, Folder } from 'lucide-react';
 import EmptyState from '@/components/EmptyState';
+import Breadcrumbs from '@/components/Breadcrumbs';
+import Fuse from 'fuse.js';
 import FeaturedTalentCard from '@/components/FeaturedTalentCard';
 import MediaOverlay from '@/components/MediaOverlay';
-import SkillMultiSelect from '@/components/SkillMultiSelect';
-import MultiSelect from '@/components/MultiSelect';
-import LocationAutocomplete from '@/components/LocationAutocomplete';
-import { TalentFilters } from '@/types';
+import TalentFilterPanel, { defaultFilters as sharedDefaultFilters, TalentFilters as SharedTalentFilters } from '@/components/TalentFilterPanel';
 import { getCategoryI18nKey } from '@/lib/categories';
+import { getCategoryIconByName, getSubcategoryIconByName } from '@/lib/categoryIcons';
 
-// Helper to get a styled icon for a category
-const getCategoryIcon = (iconName: string | null) => {
-  const iconClasses = 'w-12 h-12 text-primary-blue dark:text-accent-red group-hover:text-white dark:group-hover:text-white transition-colors';
-  const name = iconName || 'CheckCircle';
-  switch (name) {
-    case 'Mic':           return <Mic className={iconClasses} />;
-    case 'Globe':         return <Globe className={iconClasses} />;
-    case 'PenTool':       return <PenTool className={iconClasses} />;
-    case 'Music':         return <Music className={iconClasses} />;
-    case 'Clapperboard':  return <Clapperboard className={iconClasses} />;
-    case 'Drama':         return <Drama className={iconClasses} />;
-    case 'Camera':        return <Camera className={iconClasses} />;
-    case 'Users':         return <Users className={iconClasses} />;
-    case 'Heart':         return <Heart className={iconClasses} />;
-    case 'Trophy':        return <Trophy className={iconClasses} />;
-    case 'Flame':         return <Flame className={iconClasses} />;
-    case 'Sparkles':      return <Sparkles className={iconClasses} />;
-    case 'Tent':          return <Tent className={iconClasses} />;
-    case 'Smile':         return <Smile className={iconClasses} />;
-    case 'Aperture':      return <Aperture className={iconClasses} />;
-    case 'Palette':       return <Palette className={iconClasses} />;
-    case 'Sliders':       return <Sliders className={iconClasses} />;
-    case 'Smartphone':    return <Smartphone className={iconClasses} />;
-    case 'Scissors':      return <Scissors className={iconClasses} />;
-    case 'Wrench':        return <Wrench className={iconClasses} />;
-    case 'Film':          return <Film className={iconClasses} />;
-    case 'Zap':           return <Zap className={iconClasses} />;
-    case 'UserCheck':     return <UserCheck className={iconClasses} />;
-    case 'MapPin':        return <MapPin className={iconClasses} />;
-    case 'Star':          return <Star className={iconClasses} />;
-    case 'Calendar':      return <Calendar className={iconClasses} />;
-    case 'Settings':      return <Settings className={iconClasses} />;
-    case 'BookOpen':      return <BookOpen className={iconClasses} />;
-    case 'Monitor':       return <Monitor className={iconClasses} />;
-    default:              return <CheckCircle className={iconClasses} />;
-  }
-};
+const CATEGORY_ICON_CLASSES = 'w-14 h-14 text-white transition-colors';
+const SMALL_ICON_CLASSES = 'w-4 h-4 shrink-0';
+
+function getChipIconClasses(isSelected: boolean) {
+  return `${SMALL_ICON_CLASSES} ${isSelected ? 'text-white' : 'text-primary-blue dark:text-accent-red'}`;
+}
 
 interface Subcategory {
   id: string;
@@ -109,9 +78,6 @@ interface CategoriesClientProps {
   params: { locale: string };
 }
 
-// Range filter operator type
-type RangeOperator = 'between' | 'exactly' | 'atLeast' | 'atMost';
-
 export default function CategoriesClient({ categories, params }: Readonly<CategoriesClientProps>) {
   const t = useTranslations('Categories');
   const locale = useLocale();
@@ -133,9 +99,43 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
   const [showFilters, setShowFilters] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchInputValue, setSearchInputValue] = useState('');
+  const [debouncedSearchInput, setDebouncedSearchInput] = useState(searchInputValue);
+  // Debounce input and show a delayed micro-spinner when searches take longer than ~150ms
+  const [isSearching, setIsSearching] = useState(false);
+  const spinnerTimerRef = React.useRef<number | null>(null);
+  useEffect(() => {
+    // clear previous timers
+    if (spinnerTimerRef.current) {
+      clearTimeout(spinnerTimerRef.current);
+      spinnerTimerRef.current = null;
+    }
+
+    // start spinner if search takes longer than 150ms
+    spinnerTimerRef.current = window.setTimeout(() => {
+      setIsSearching(true);
+    }, 150);
+
+    const debounceId = window.setTimeout(() => {
+      // debounce finished; cancel spinner and apply value
+      if (spinnerTimerRef.current) {
+        clearTimeout(spinnerTimerRef.current);
+        spinnerTimerRef.current = null;
+      }
+      setIsSearching(false);
+      setDebouncedSearchInput(searchInputValue);
+    }, 180);
+
+    return () => {
+      if (spinnerTimerRef.current) {
+        clearTimeout(spinnerTimerRef.current);
+        spinnerTimerRef.current = null;
+      }
+      clearTimeout(debounceId);
+    };
+  }, [searchInputValue]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   
-  // Multi-select for categories and subcategories (for first two phases)
+  // Multi-select state stores stable IDs while labels are derived from the category data.
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedSubcategories, setSelectedSubcategories] = useState<string[]>([]);
   
@@ -148,49 +148,110 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
   const [combinedPage, setCombinedPage] = useState(1);
   
   // Range filter operators (for advanced filtering)
-  const [ageOperator, setAgeOperator] = useState<RangeOperator>('between');
-  const [heightOperator, setHeightOperator] = useState<RangeOperator>('between');
-  const [experienceOperator, setExperienceOperator] = useState<RangeOperator>('between');
-  
-  // Track which preset is selected (null = custom)
-  const [agePreset, setAgePreset] = useState<string | null>(null);
-  const [heightPreset, setHeightPreset] = useState<string | null>(null);
-  const [experiencePreset, setExperiencePreset] = useState<string | null>(null);
-  
-  // Filter tab state
-  const [filterTab, setFilterTab] = useState<'main' | 'more'>('main');
-  
-  // Advanced filters state
-  const [filters, setFilters] = useState<TalentFilters>({
-    gender: [],
-    ethnicity: [],
-    ageRange: { min: 5, max: 80 },
-    heightRange: { min: 150, max: 200 },
-    bodyType: [],
-    experience: { min: 0, max: 20 },
-    location: '',
-    eyeColor: [],
-    hairColor: [],
-    skills: [],
-    languages: []
-  });
+  const [filters, setFilters] = useState<SharedTalentFilters>({ ...sharedDefaultFilters });
 
   // Search suggestions based on categories/subcategories
-  const searchSuggestions = useMemo(() => {
+  // Build a flattened index of categories and subcategories for Fuse
+  const flatCategoryIndex = useMemo(() => {
+    const items: Array<any> = [];
+    categories.forEach(cat => {
+      items.push({
+        id: cat.id,
+        type: 'category',
+        name: cat.name,
+        parentName: '',
+        icon: cat.icon || null,
+      });
+      cat.subcategories.forEach(sub => {
+        items.push({
+          id: sub.id,
+          type: 'subcategory',
+          name: sub.name,
+          parentName: cat.name,
+          icon: cat.icon || null,
+          parentId: cat.id,
+        });
+      });
+    });
+    return items;
+  }, [categories]);
+
+  const fuse = useMemo(() => {
+    return new Fuse(flatCategoryIndex, {
+      keys: ['name', 'parentName'],
+      threshold: 0.28,
+      ignoreLocation: true,
+      minMatchCharLength: 1,
+    });
+  }, [flatCategoryIndex]);
+
+  const flatSubcategoryResults = useMemo(() => {
     if (!searchInputValue.trim()) return [];
-    const lowerInput = searchInputValue.toLowerCase();
-    
-    const categoryMatches = categories
-      .filter(cat => cat.name.toLowerCase().includes(lowerInput))
-      .map(cat => ({ type: 'category' as const, name: cat.name, id: cat.id }));
-    
-    const subcategoryMatches = categories
-      .flatMap(cat => cat.subcategories.map(sub => ({ ...sub, parentName: cat.name, parentId: cat.id })))
-      .filter(sub => sub.name.toLowerCase().includes(lowerInput))
-      .map(sub => ({ type: 'subcategory' as const, name: sub.name, id: sub.id, parentName: sub.parentName }));
-    
-    return [...categoryMatches.slice(0, 3), ...subcategoryMatches.slice(0, 4)].slice(0, 6);
+    const lowerQuery = searchInputValue.toLowerCase();
+    const results: Array<{
+      id: string;
+      name: string;
+      description: string | null;
+      parentId: string;
+      parentName: string;
+      parentIcon: string | null;
+      isViewAll: boolean;
+    }> = [];
+    categories.forEach(cat => {
+      const catMatches = cat.name.toLowerCase().includes(lowerQuery);
+      cat.subcategories.forEach(sub => {
+        if (sub.name.toLowerCase().includes(lowerQuery) || catMatches) {
+          results.push({
+            id: sub.id,
+            name: sub.name,
+            description: sub.description,
+            parentId: cat.id,
+            parentName: cat.name,
+            parentIcon: cat.icon,
+            isViewAll: false,
+          });
+        }
+      });
+      if (catMatches) {
+        results.push({
+          id: `__viewall__${cat.id}`,
+          name: cat.name,
+          description: cat.description,
+          parentId: cat.id,
+          parentName: cat.name,
+          parentIcon: cat.icon,
+          isViewAll: true,
+        });
+      }
+    });
+    const seen = new Set<string>();
+    return results.filter(r => {
+      if (seen.has(r.id)) return false;
+      seen.add(r.id);
+      return true;
+    });
   }, [searchInputValue, categories]);
+
+  interface Suggestion { type: 'category' | 'subcategory'; name: string; id: string; parentName?: string }
+
+  const searchSuggestions = useMemo<Suggestion[]>(() => {
+    const input = debouncedSearchInput || '';
+    if (!input.trim()) return [];
+    try {
+      const results = fuse.search(input, { limit: 6 });
+      return results.map((r: any) => {
+        const item = r.item || r;
+        if (item.type === 'category') return { type: 'category' as const, name: item.name, id: item.id };
+        return { type: 'subcategory' as const, name: item.name, id: item.id, parentName: item.parentName };
+      });
+    } catch (e) {
+      // Fallback to simple filtering on error
+      const lowerInput = input.toLowerCase();
+      const catMatches = categories.filter(c => c.name.toLowerCase().includes(lowerInput)).slice(0, 3).map(c => ({ type: 'category' as const, name: c.name, id: c.id }));
+      const subMatches = flatCategoryIndex.filter(s => s.type === 'subcategory' && s.name.toLowerCase().includes(lowerInput)).slice(0, 3).map(s => ({ type: 'subcategory' as const, name: s.name, id: s.id, parentName: s.parentName }));
+      return [...catMatches, ...subMatches].slice(0, 6);
+    }
+  }, [debouncedSearchInput, fuse, categories, flatCategoryIndex]);
 
   // State for phase 3 suggestions visibility
   const [showPhase3Suggestions, setShowPhase3Suggestions] = useState(false);
@@ -226,13 +287,13 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
     
     // Get category/subcategory suggestions
     const catSuggestions = categories
-      .filter(c => c.name.toLowerCase().includes(lowerQuery) && !selectedCategories.includes(c.name))
+      .filter(c => c.name.toLowerCase().includes(lowerQuery) && !selectedCategories.includes(c.id))
       .slice(0, 2)
       .map(c => ({ type: 'category' as const, name: c.name, id: c.id }));
     
     const subSuggestions = categories
       .flatMap(cat => cat.subcategories.filter(sub => 
-        sub.name.toLowerCase().includes(lowerQuery) && !selectedSubcategories.includes(sub.name)
+        sub.name.toLowerCase().includes(lowerQuery) && !selectedSubcategories.includes(sub.id)
       ).map(sub => ({ ...sub, parentName: cat.name })))
       .slice(0, 2)
       .map(s => ({ type: 'subcategory' as const, name: s.name, id: s.id, parentName: s.parentName }));
@@ -272,20 +333,62 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
     });
   }, [combinedTalents, searchQuery]);
 
+  // Precompute icon components for categories and subcategories to avoid recomputing icons on every render
+  const categoryIconMap = useMemo(() => {
+    const map = new Map<string, any>();
+    categories.forEach(cat => map.set(cat.id, getCategoryIconByName(cat.name, cat.icon)));
+    return map;
+  }, [categories]);
+
+  const subcategoryIconMap = useMemo(() => {
+    const map = new Map<string, any>();
+    categories.forEach(cat => {
+      cat.subcategories.forEach(sub => map.set(sub.id, getSubcategoryIconByName(sub.name, cat.name, cat.icon)));
+    });
+    return map;
+  }, [categories]);
+
+  const categoryById = useMemo(() => {
+    const map = new Map<string, Category>();
+    categories.forEach((category) => {
+      map.set(category.id, category);
+    });
+    return map;
+  }, [categories]);
+
+  const subcategoryById = useMemo(() => {
+    const map = new Map<string, { subcategory: Subcategory; category: Category }>();
+    categories.forEach((category) => {
+      category.subcategories.forEach((subcategory) => {
+        map.set(subcategory.id, { subcategory, category });
+      });
+    });
+    return map;
+  }, [categories]);
+
+  const selectedCategoryLabels = useMemo(
+    () => selectedCategories.map((id) => translateCategoryName(categoryById.get(id)?.name ?? id)),
+    [selectedCategories, categoryById]
+  );
+
+  const selectedSubcategoryLabels = useMemo(
+    () => selectedSubcategories.map((id) => subcategoryById.get(id)?.subcategory.name ?? id),
+    [selectedSubcategories, subcategoryById]
+  );
   // Dynamic header title and description
   const dynamicHeaderTitle = useMemo(() => {
     if (selectedCategories.length === 0 && selectedSubcategories.length === 0) {
       return selectedSubcategory?.name || 'Talents';
     }
     if (selectedCategories.length === 1 && selectedSubcategories.length === 0) {
-      return selectedCategories[0];
+      return selectedCategoryLabels[0] || 'Talents';
     }
     if (selectedSubcategories.length === 1 && selectedCategories.length === 0) {
-      return selectedSubcategories[0];
+      return selectedSubcategoryLabels[0] || 'Talents';
     }
     const totalItems = selectedCategories.length + selectedSubcategories.length;
     return `${totalItems} Selection${totalItems > 1 ? 's' : ''}`;
-  }, [selectedCategories, selectedSubcategories, selectedSubcategory]);
+  }, [selectedCategories, selectedSubcategories, selectedSubcategory, selectedCategoryLabels, selectedSubcategoryLabels]);
 
   const dynamicHeaderDescription = useMemo(() => {
     const totalResults = isCombinedMode ? 
@@ -360,7 +463,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
       }
     };
     fetchTalents();
-  }, [selectedSubcategory, filters, page, pageSize, t]);
+  }, [selectedSubcategory, selectedCategory?.id, filters, page, pageSize, t]);
 
   const allMediaItems = useMemo(() => {
     return talents.flatMap(talent => 
@@ -462,26 +565,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
   };
 
   const clearFilters = () => {
-    setFilters({
-      gender: [],
-      ethnicity: [],
-      ageRange: { min: 5, max: 80 },
-      heightRange: { min: 150, max: 200 },
-      bodyType: [],
-      experience: { min: 0, max: 20 },
-      location: '',
-      eyeColor: [],
-      hairColor: [],
-      skills: [],
-      languages: []
-    });
-    // Reset operators and presets
-    setAgeOperator('between');
-    setHeightOperator('between');
-    setExperienceOperator('between');
-    setAgePreset(null);
-    setHeightPreset(null);
-    setExperiencePreset(null);
+    setFilters({ ...sharedDefaultFilters });
   };
 
   const applyFilters = () => {
@@ -596,12 +680,12 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
 
   // Category Filter Panel (for phases 1 & 2)
   const renderCategoryFilterPanel = () => (
-    <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 animate-in fade-in slide-in-from-top-2 duration-200 max-h-[60vh] overflow-y-auto">
-      <div className="mb-4">
-        <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
-          📁 Select Multiple Categories to Browse Together
+    <div className="mt-5 p-5 bg-sky-50 dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 animate-in fade-in slide-in-from-top-2 duration-200 max-h-[70vh] overflow-y-auto">
+      <div className="mb-5">
+        <h3 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-3 flex items-center gap-2">
+          <Filter className="w-5 h-5 flex-shrink-0 text-primary-blue dark:text-accent-red" /> Select Multiple Categories to Browse Together
         </h3>
-        <p className="text-xs text-gray-500 dark:text-gray-400 mb-4">
+        <p className="text-sm text-gray-600 dark:text-gray-300 mb-4 leading-relaxed">
           Choose categories you want to explore. For example, select both &quot;Musical Theater&quot; and &quot;Voice Actors&quot; to see talents from both.
         </p>
         <div className="flex flex-wrap gap-2">
@@ -610,20 +694,22 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
               key={category.id}
               onClick={() => {
                 setSelectedCategories(prev => 
-                  prev.includes(category.name)
-                    ? prev.filter(c => c !== category.name)
-                    : [...prev, category.name]
+                  prev.includes(category.id)
+                    ? prev.filter(c => c !== category.id)
+                    : [...prev, category.id]
                 );
               }}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${
-                selectedCategories.includes(category.name)
+              className={`px-5 py-3 rounded-xl text-base font-semibold transition-all flex items-center gap-2 ${
+                selectedCategories.includes(category.id)
                   ? 'bg-primary-blue dark:bg-accent-red text-white shadow-md'
-                  : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                  : 'bg-light-surface dark:bg-dark-surface border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
               }`}
             >
-              {getCategoryIcon(category.icon)}
+              {(() => {
+                const Icon = categoryIconMap.get(category.id);
+                return <Icon className={getChipIconClasses(selectedCategories.includes(category.id))} />;
+              })()}
               <span>{translateCategoryName(category.name)}</span>
-              <span className="text-xs opacity-75">({category._count.talentProfiles})</span>
             </button>
           ))}
         </div>
@@ -631,30 +717,34 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
 
       {/* Show subcategories of selected categories */}
       {selectedCategories.length > 0 && (
-        <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
-          <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
-            📂 Subcategories (from selected categories)
+        <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700 bg-white/90 dark:bg-slate-900/80 rounded-xl p-3 shadow-sm">
+          <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2">
+            <Filter className="w-4 h-4 flex-shrink-0" /> Subcategories (from selected categories)
           </h3>
           <div className="flex flex-wrap gap-2">
             {categories
-              .filter(cat => selectedCategories.includes(cat.name))
+              .filter(cat => selectedCategories.includes(cat.id))
               .flatMap(cat => cat.subcategories.map(sub => ({ ...sub, parentName: cat.name })))
               .map((subcategory) => (
                 <button
                   key={subcategory.id}
                   onClick={() => {
                     setSelectedSubcategories(prev => 
-                      prev.includes(subcategory.name)
-                        ? prev.filter(s => s !== subcategory.name)
-                        : [...prev, subcategory.name]
+                      prev.includes(subcategory.id)
+                        ? prev.filter(s => s !== subcategory.id)
+                        : [...prev, subcategory.id]
                     );
                   }}
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                    selectedSubcategories.includes(subcategory.name)
+                    selectedSubcategories.includes(subcategory.id)
                       ? 'bg-primary-blue dark:bg-accent-red text-white'
-                      : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                      : 'bg-light-surface dark:bg-dark-surface border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                   }`}
                 >
+                  {(() => {
+                    const Icon = subcategoryIconMap.get(subcategory.id);
+                    return <Icon className={`${selectedSubcategories.includes(subcategory.id) ? 'text-white' : 'text-primary-blue dark:text-accent-red'} w-3.5 h-3.5 inline-block mr-1`} />;
+                  })()}
                   {subcategory.name}
                   <span className="ml-1 opacity-75">({subcategory.parentName})</span>
                 </button>
@@ -704,8 +794,8 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
     return (
       <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 animate-in fade-in slide-in-from-top-2 duration-200 max-h-[60vh] overflow-y-auto">
         <div className="mb-4">
-          <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
-            📂 Select Multiple Subcategories to Browse Together
+          <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2">
+            <Filter className="w-4 h-4 flex-shrink-0" /> Select Multiple Subcategories to Browse Together
           </h3>
           <p className="text-xs text-gray-500 dark:text-gray-400 mb-4">
             Choose subcategories from &quot;{selectedCategory.name}&quot; or add from other categories too.
@@ -722,21 +812,18 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                   key={subcategory.id}
                   onClick={() => {
                     setSelectedSubcategories(prev => 
-                      prev.includes(subcategory.name)
-                        ? prev.filter(s => s !== subcategory.name)
-                        : [...prev, subcategory.name]
+                      prev.includes(subcategory.id)
+                        ? prev.filter(s => s !== subcategory.id)
+                        : [...prev, subcategory.id]
                     );
                   }}
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                    selectedSubcategories.includes(subcategory.name)
+                    selectedSubcategories.includes(subcategory.id)
                       ? 'bg-primary-blue dark:bg-accent-red text-white'
-                      : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                      : 'bg-light-surface dark:bg-dark-surface border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                   }`}
                 >
                   {subcategory.name}
-                  {subcategory._count?.talentProfiles > 0 && (
-                    <span className="ml-1 opacity-75">({subcategory._count.talentProfiles})</span>
-                  )}
                 </button>
               ))}
             </div>
@@ -755,17 +842,20 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                     <button
                       onClick={() => {
                         // Toggle all subcategories from this category
-                        const subNames = category.subcategories.map(s => s.name);
-                        const allSelected = subNames.every(n => selectedSubcategories.includes(n));
+                        const subIds = category.subcategories.map(s => s.id);
+                        const allSelected = subIds.every(id => selectedSubcategories.includes(id));
                         if (allSelected) {
-                          setSelectedSubcategories(prev => prev.filter(s => !subNames.includes(s)));
+                          setSelectedSubcategories(prev => prev.filter(id => !subIds.includes(id)));
                         } else {
-                          setSelectedSubcategories(prev => [...new Set([...prev, ...subNames])]);
+                          setSelectedSubcategories(prev => [...new Set([...prev, ...subIds])]);
                         }
                       }}
                       className="text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-primary-blue dark:hover:text-accent-red transition-colors flex items-center gap-1"
                     >
-                      {getCategoryIcon(category.icon)}
+                        {(() => {
+                          const Icon = categoryIconMap.get(category.id);
+                          return <Icon className="w-3.5 h-3.5" />;
+                        })()}
                       {translateCategoryName(category.name)}
                     </button>
                     <div className="flex flex-wrap gap-1.5 mt-1.5 ml-5">
@@ -774,17 +864,21 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                           key={sub.id}
                           onClick={() => {
                             setSelectedSubcategories(prev => 
-                              prev.includes(sub.name)
-                                ? prev.filter(s => s !== sub.name)
-                                : [...prev, sub.name]
+                              prev.includes(sub.id)
+                                ? prev.filter(s => s !== sub.id)
+                                : [...prev, sub.id]
                             );
                           }}
                           className={`px-2 py-1 rounded text-[11px] font-medium transition-all ${
-                            selectedSubcategories.includes(sub.name)
+                            selectedSubcategories.includes(sub.id)
                               ? 'bg-primary-blue dark:bg-accent-red text-white'
                               : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700'
                           }`}
                         >
+                          {(() => {
+                            const Icon = subcategoryIconMap.get(sub.id);
+                            return <Icon className={`${selectedSubcategories.includes(sub.id) ? 'text-white' : 'text-primary-blue dark:text-accent-red'} w-3 h-3 inline-block mr-1`} />;
+                          })()}
                           {sub.name}
                         </button>
                       ))}
@@ -836,392 +930,25 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
     if (filters.hairColor?.length) count++;
     if (filters.skills?.length) count++;
     if (filters.languages?.length) count++;
-    if ((filters as any).disabilities?.length) count++;
+    if (filters.disabilities?.length) count++;
     if (filters.location) count++;
     return count;
   }, [filters]);
-
-  // Inline Filter Panel Component (for phase 3 - talents view)
-  const renderFilterPanel = () => {
-    return (
-    <div className="my-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg animate-in fade-in slide-in-from-top-2 duration-200">
-      <div className="p-4">
-        {/* Header with Close */}
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-sm font-bold text-gray-900 dark:text-white flex items-center gap-2">
-            <SlidersHorizontal className="w-4 h-4" />
-            Filter Talents
-            {activeFilterCount > 0 && (
-              <span className="px-1.5 py-0.5 bg-blue-600 dark:bg-red-500 text-white text-xs rounded-full">{activeFilterCount}</span>
-            )}
-          </h3>
-          <button
-            type="button"
-            onClick={() => setShowFilters(false)}
-            className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-          >
-            <X className="w-4 h-4 text-gray-500" />
-          </button>
-        </div>
-        
-        {/* Tab Navigation */}
-        <div className="flex gap-2 mb-4 border-b border-gray-200 dark:border-gray-700">
-          <button
-            type="button"
-            onClick={() => setFilterTab('main')}
-            className={`px-4 py-2 text-sm font-medium transition-colors border-b-2 ${
-              filterTab === 'main'
-                ? 'border-blue-600 dark:border-red-500 text-blue-600 dark:text-red-500'
-                : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300'
-            }`}
-          >
-            Main Filters
-          </button>
-          <button
-            type="button"
-            onClick={() => setFilterTab('more')}
-            className={`px-4 py-2 text-sm font-medium transition-colors border-b-2 ${
-              filterTab === 'more'
-                ? 'border-blue-600 dark:border-red-500 text-blue-600 dark:text-red-500'
-                : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300'
-            }`}
-          >
-            More Filters
-          </button>
-        </div>
-
-        {/* TAB 1: Main Filters */}
-        {filterTab === 'main' && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          {/* Left Column */}
-          <div className="space-y-4">
-            {/* Quick Filters: Gender */}
-            <div>
-              <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-2">Gender</label>
-              <div className="flex flex-wrap gap-1.5">
-                {['male', 'female', 'non-binary', 'other'].map((g) => (
-                  <button
-                    key={g}
-                    type="button"
-                    onClick={() => {
-                      const current = filters.gender || [];
-                      const updated = current.includes(g) ? current.filter(x => x !== g) : [...current, g];
-                      setFilters(prev => ({ ...prev, gender: updated }));
-                    }}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all capitalize ${
-                      filters.gender?.includes(g)
-                        ? 'bg-blue-600 text-white shadow-sm'
-                        : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                    }`}
-                  >
-                    {g}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Quick Filters: Body Type */}
-            <div>
-              <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-2">Body Type</label>
-              <div className="flex flex-wrap gap-1.5">
-                {['slim', 'athletic', 'average', 'curvy', 'muscular'].map((b) => (
-                  <button
-                    key={b}
-                    type="button"
-                    onClick={() => {
-                      const current = filters.bodyType || [];
-                      const updated = current.includes(b) ? current.filter(x => x !== b) : [...current, b];
-                      setFilters(prev => ({ ...prev, bodyType: updated }));
-                    }}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all capitalize ${
-                      filters.bodyType?.includes(b)
-                        ? 'bg-blue-600 text-white shadow-sm'
-                        : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                    }`}
-                  >
-                    {b}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Right Column */}
-          <div className="space-y-4">
-            {/* Skills */}
-            <div>
-              <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-2">Skills</label>
-              <SkillMultiSelect
-                value={filters.skills || []}
-                onChange={(vals) => setFilters(prev => ({ ...prev, skills: vals }))}
-                placeholder="Type to search skills..."
-              />
-            </div>
-
-            {/* Location */}
-            <div>
-              <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-2">Location</label>
-              <div className="flex gap-1">
-                <LocationAutocomplete
-                  value={filters.location || ''}
-                  onChange={(v) => setFilters(prev => ({ ...prev, location: v }))}
-                  placeholder="City or region..."
-                />
-                <button
-                  type="button"
-                  className="px-2 py-1.5 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-sm flex-shrink-0"
-                  title="Use my location"
-                  onClick={async () => {
-                    if (navigator.geolocation) {
-                      navigator.geolocation.getCurrentPosition(async (pos) => {
-                        const { latitude, longitude } = pos.coords;
-                        try {
-                          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
-                          const data = await res.json();
-                          const city = data.address?.city || data.address?.town || data.address?.village || data.address?.state || '';
-                          setFilters(prev => ({ ...prev, location: city }));
-                        } catch { /* ignore */ }
-                      });
-                    }
-                  }}
-                >
-                  📍
-                </button>
-              </div>
-            </div>
-
-            {/* Appearance Dropdowns - Compact Grid */}
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">Ethnicity</label>
-                <MultiSelect
-                  options={[
-                    { label: 'White/Caucasian', value: 'WHITE_CAUCASIAN' },
-                    { label: 'Black/African', value: 'BLACK_AFRICAN' },
-                    { label: 'Asian', value: 'ASIAN' },
-                    { label: 'Hispanic/Latino', value: 'HISPANIC_LATINO' },
-                    { label: 'Middle Eastern', value: 'MIDDLE_EASTERN' },
-                    { label: 'Mixed', value: 'MIXED_MULTIRACIAL' },
-                    { label: 'Other', value: 'OTHER' },
-                  ]}
-                  value={filters.ethnicity || []}
-                  onChange={(vals) => setFilters(prev => ({ ...prev, ethnicity: vals }))}
-                  placeholder="Any"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">Eye Color</label>
-                <MultiSelect
-                  options={[
-                    { label: 'Blue', value: 'Blue' },
-                    { label: 'Brown', value: 'Brown' },
-                    { label: 'Green', value: 'Green' },
-                    { label: 'Hazel', value: 'Hazel' },
-                    { label: 'Gray', value: 'Gray' },
-                  ]}
-                  value={filters.eyeColor || []}
-                  onChange={(vals) => setFilters(prev => ({ ...prev, eyeColor: vals }))}
-                  placeholder="Any"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">Hair Color</label>
-                <MultiSelect
-                  options={[
-                    { label: 'Black', value: 'Black' },
-                    { label: 'Brown', value: 'Brown' },
-                    { label: 'Blonde', value: 'Blonde' },
-                    { label: 'Red', value: 'Red' },
-                    { label: 'Gray', value: 'Gray' },
-                  ]}
-                  value={filters.hairColor || []}
-                  onChange={(vals) => setFilters(prev => ({ ...prev, hairColor: vals }))}
-                  placeholder="Any"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">Languages</label>
-                <MultiSelect
-                  options={[
-                    { label: 'English', value: 'English' },
-                    { label: 'Spanish', value: 'Spanish' },
-                    { label: 'French', value: 'French' },
-                    { label: 'German', value: 'German' },
-                    { label: 'Mandarin', value: 'Mandarin' },
-                    { label: 'Japanese', value: 'Japanese' },
-                  ]}
-                  value={filters.languages || []}
-                  onChange={(vals) => setFilters(prev => ({ ...prev, languages: vals }))}
-                  placeholder="Any"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-        )}
-
-        {/* TAB 2: More Filters (Age, Height, Experience) */}
-        {filterTab === 'more' && (
-        <div className="space-y-5">
-          {/* Age - Single Input + Range Presets + Range Inputs */}
-          <div>
-            <div className="flex items-center justify-between mb-3">
-              <label className="text-xs font-semibold text-gray-600 dark:text-gray-400">Age</label>
-              {(filters.ageRange?.min !== 5 || filters.ageRange?.max !== 80) && (
-                <button type="button" onClick={() => { setFilters(prev => ({ ...prev, ageRange: { min: 5, max: 80 } })); setAgePreset(null); }} className="text-xs text-blue-600 dark:text-red-400">Reset</button>
-              )}
-            </div>
-            <div className="mb-3">
-              <input
-                type="number"
-                min="5"
-                max="80"
-                value={filters.ageRange?.min || 25}
-                onChange={(e) => setFilters(prev => ({ ...prev, ageRange: { min: parseInt(e.target.value) || 25, max: parseInt(e.target.value) || 25 } }))}
-                className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white text-center text-base mb-2"
-                placeholder="Enter specific age..."
-              />
-              <div className="text-xs text-gray-400">Looking for talent aged {filters.ageRange?.min || 25}</div>
-            </div>
-            <div className="flex flex-wrap gap-1.5 mb-3">
-              {[
-                { label: 'Any', min: 5, max: 80, key: 'any' },
-                { label: '5-17', min: 5, max: 17, key: 'child' },
-                { label: '18-25', min: 18, max: 25, key: 'young' },
-                { label: '25-35', min: 25, max: 35, key: 'adult' },
-                { label: '35-50', min: 35, max: 50, key: 'middle' },
-                { label: '50+', min: 50, max: 80, key: 'senior' },
-              ].map((preset) => (
-                <button
-                  key={preset.key}
-                  type="button"
-                  onClick={() => { setFilters(prev => ({ ...prev, ageRange: { min: preset.min, max: preset.max } })); setAgePreset(preset.key); }}
-                  className={`px-2 py-1 rounded text-xs font-medium transition-all ${
-                    agePreset === preset.key ? 'bg-blue-600 dark:bg-red-500 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200'
-                  }`}
-                >
-                  {preset.label}
-                </button>
-              ))}
-            </div>
-            <div className="flex items-center gap-2">
-              <input type="number" min="5" max="80" value={filters.ageRange?.min || 5}
-                onChange={(e) => { setFilters(prev => ({ ...prev, ageRange: { min: parseInt(e.target.value) || 5, max: prev.ageRange?.max || 80 } })); setAgePreset(null); }}
-                className="w-16 px-2 py-1 rounded border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-center"
-              />
-              <span className="text-xs text-gray-400">to</span>
-              <input type="number" min="5" max="80" value={filters.ageRange?.max || 80}
-                onChange={(e) => { setFilters(prev => ({ ...prev, ageRange: { min: prev.ageRange?.min || 5, max: parseInt(e.target.value) || 80 } })); setAgePreset(null); }}
-                className="w-16 px-2 py-1 rounded border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-center"
-              />
-              <span className="text-xs text-gray-400">years</span>
-            </div>
-          </div>
-
-          {/* Height - Single Input + Range Presets + Range Inputs */}
-          <div>
-            <div className="flex items-center justify-between mb-3">
-              <label className="text-xs font-semibold text-gray-600 dark:text-gray-400">Height</label>
-              {(filters.heightRange?.min !== 150 || filters.heightRange?.max !== 200) && (
-                <button type="button" onClick={() => { setFilters(prev => ({ ...prev, heightRange: { min: 150, max: 200 } })); setHeightPreset(null); }} className="text-xs text-blue-600 dark:text-red-400">Reset</button>
-              )}
-            </div>
-            <div className="mb-3">
-              <input
-                type="number"
-                min="100"
-                max="250"
-                value={filters.heightRange?.min || 170}
-                onChange={(e) => setFilters(prev => ({ ...prev, heightRange: { min: parseInt(e.target.value) || 170, max: parseInt(e.target.value) || 170 } }))}
-                className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white text-center text-base mb-2"
-                placeholder="Enter specific height..."
-              />
-              <div className="text-xs text-gray-400">Looking for talent {filters.heightRange?.min || 170} cm tall</div>
-            </div>
-            <div className="flex flex-wrap gap-1.5 mb-3">
-              {[
-                { label: 'Any', min: 150, max: 200, key: 'any' },
-                { label: '<160', min: 150, max: 160, key: 'short' },
-                { label: '160-170', min: 160, max: 170, key: 'medium' },
-                { label: '170-180', min: 170, max: 180, key: 'average' },
-                { label: '180+', min: 180, max: 220, key: 'tall' },
-              ].map((preset) => (
-                <button
-                  key={preset.key}
-                  type="button"
-                  onClick={() => { setFilters(prev => ({ ...prev, heightRange: { min: preset.min, max: preset.max } })); setHeightPreset(preset.key); }}
-                  className={`px-2 py-1 rounded text-xs font-medium transition-all ${
-                    heightPreset === preset.key ? 'bg-blue-600 dark:bg-red-500 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200'
-                  }`}
-                >
-                  {preset.label}
-                </button>
-              ))}
-            </div>
-            <div className="flex items-center gap-2">
-              <input type="number" min="100" max="250" value={filters.heightRange?.min || 150}
-                onChange={(e) => { setFilters(prev => ({ ...prev, heightRange: { min: parseInt(e.target.value) || 150, max: prev.heightRange?.max || 200 } })); setHeightPreset(null); }}
-                className="w-16 px-2 py-1 rounded border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-center"
-              />
-              <span className="text-xs text-gray-400">to</span>
-              <input type="number" min="100" max="250" value={filters.heightRange?.max || 200}
-                onChange={(e) => { setFilters(prev => ({ ...prev, heightRange: { min: prev.heightRange?.min || 150, max: parseInt(e.target.value) || 200 } })); setHeightPreset(null); }}
-                className="w-16 px-2 py-1 rounded border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-center"
-              />
-              <span className="text-xs text-gray-400">cm</span>
-            </div>
-          </div>
-
-          {/* Experience */}
-          <div>
-            <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-3">Experience</label>
-            <div className="flex flex-wrap gap-2">
-              {[
-                { label: 'Any', min: 0, max: 20, key: 'any' },
-                { label: 'Beginner', min: 0, max: 2, key: 'beginner' },
-                { label: '2-5 yrs', min: 2, max: 5, key: 'some' },
-                { label: '5-10 yrs', min: 5, max: 10, key: 'experienced' },
-                { label: '10+ yrs', min: 10, max: 30, key: 'veteran' },
-              ].map((preset) => (
-                <button
-                  key={preset.key}
-                  type="button"
-                  onClick={() => { setFilters(prev => ({ ...prev, experience: { min: preset.min, max: preset.max } })); setExperiencePreset(preset.key); }}
-                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-                    experiencePreset === preset.key ? 'bg-blue-600 dark:bg-red-500 text-white shadow-md' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600'
-                  }`}
-                >
-                  {preset.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-        )}
-
-        {/* Actions */}
-        <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-100 dark:border-gray-700">
-          <button
-            type="button"
-            onClick={clearFilters}
-            className="px-4 py-2 text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
-          >
-            Clear All
-          </button>
-          <button
-            type="button"
-            onClick={() => setShowFilters(false)}
-            className="px-5 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-red-500 dark:hover:bg-red-600 text-white rounded-lg text-sm font-medium shadow-md"
-          >
-            Apply Filters
-          </button>
-        </div>
-      </div>
+  // Shared filter panel used by search-results and categories phase 3.
+  const renderFilterPanel = () => (
+    <div className='my-4'>
+      <TalentFilterPanel
+        filters={filters}
+        onFiltersChange={(nextFilters) => setFilters(nextFilters)}
+        onClose={() => setShowFilters(false)}
+        onApply={() => setShowFilters(false)}
+        showHeader
+        compact={false}
+      />
     </div>
-    );
-  };
+  );
 
-  // Combined Mode View - shows talents from multiple categories/subcategories
+// Combined Mode View - shows talents from multiple categories/subcategories
   if (isCombinedMode) {
     const combinedMediaItems = combinedTalents.flatMap((talent: any) => 
       (talent.portfolio || []).map((item: any, index: number) => ({
@@ -1244,21 +971,21 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
     );
 
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen brand-true-red categories-page">
         {/* Sticky Header */}
-        <section className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40 shadow-sm">
+        <section className="bg-gradient-to-r from-blue-100/95 via-blue-50/95 to-blue-100/95 dark:from-red-950/95 dark:via-red-900/95 dark:to-red-950/95 border-b border-gray-200/80 dark:border-red-400/20 sticky top-0 z-40 shadow-lg backdrop-blur-sm">
           <div className="max-w-screen-2xl mx-auto px-3 sm:px-6 py-3 sm:py-4">
             {/* Top Row: Back + Title + Search + Filter */}
             <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
               <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-shrink-0">
                 <button
                   onClick={exitCombinedMode}
-                  className="flex-shrink-0 flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
+                  className="flex-shrink-0 flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl border border-gray-200 dark:border-gray-700 bg-light-surface dark:bg-dark-surface text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
                 >
                   <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
                 </button>
                 <div className="min-w-0">
-                  <h1 className="text-lg sm:text-2xl font-bold text-gray-900 dark:text-white truncate">
+                  <h1 className="text-lg sm:text-2xl font-bold tracking-tight text-gray-900 dark:text-white truncate">
                     {dynamicHeaderTitle}
                   </h1>
                   <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 truncate">
@@ -1282,9 +1009,13 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                     }}
                     onFocus={() => searchQuery && setShowPhase3Suggestions(true)}
                     onBlur={() => setTimeout(() => setShowPhase3Suggestions(false), 200)}
-                    className="w-full pl-9 pr-8 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 dark:focus:ring-red-500 focus:border-transparent transition-all"
+                    className="w-full pl-9 pr-8 py-2.5 rounded-xl border border-blue-200 dark:border-red-400/25 bg-white/90 dark:bg-slate-900/85 text-sm text-gray-900 dark:text-white placeholder:text-gray-500 focus:ring-2 focus:ring-primary-blue dark:focus:ring-red-400 focus:border-transparent shadow-sm transition-all"
                   />
-                  {searchQuery && (
+                  {isSearching ? (
+                    <div className="absolute right-2 top-1/2 -translate-y-1/2 z-10">
+                      <span className="inline-block w-4 h-4 border-2 border-transparent border-t-current rounded-full animate-spin text-gray-600 dark:text-gray-300" />
+                    </div>
+                  ) : searchQuery ? (
                     <button
                       type="button"
                       onClick={() => { setSearchQuery(''); setShowPhase3Suggestions(false); }}
@@ -1292,11 +1023,11 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                     >
                       <X className="w-3 h-3" />
                     </button>
-                  )}
+                  ) : null}
                   
                   {/* Smart Suggestions Dropdown */}
                   {showPhase3Suggestions && phase3SearchSuggestions.length > 0 && (
-                    <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl z-50 overflow-hidden">
+                    <div className="absolute top-full left-0 right-0 mt-1 bg-light-surface dark:bg-dark-surface border border-gray-200 dark:border-gray-700 rounded-xl shadow-[0_8px_32px_rgba(15,23,42,0.10)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.48)] z-50 overflow-hidden">
                       {phase3SearchSuggestions.map((suggestion, idx) => (
                         <button
                           key={`${suggestion.type}-${suggestion.name}-${idx}`}
@@ -1310,13 +1041,13 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                               }));
                               setSearchQuery('');
                             } else if (suggestion.type === 'category') {
-                              if (!selectedCategories.includes(suggestion.name)) {
-                                setSelectedCategories(prev => [...prev, suggestion.name]);
+                              if (!selectedCategories.includes(suggestion.id)) {
+                                setSelectedCategories(prev => [...prev, suggestion.id]);
                               }
                               setSearchQuery('');
                             } else if (suggestion.type === 'subcategory') {
-                              if (!selectedSubcategories.includes(suggestion.name)) {
-                                setSelectedSubcategories(prev => [...prev, suggestion.name]);
+                              if (!selectedSubcategories.includes(suggestion.id)) {
+                                setSelectedSubcategories(prev => [...prev, suggestion.id]);
                               }
                               setSearchQuery('');
                             } else {
@@ -1326,10 +1057,10 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                           }}
                           className="w-full px-3 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 transition-colors"
                         >
-                          {suggestion.type === 'skill' && <Sparkles className="w-4 h-4 text-purple-500" />}
-                          {suggestion.type === 'talent' && <Users className="w-4 h-4 text-blue-500" />}
-                          {suggestion.type === 'category' && <span className="text-sm">📁</span>}
-                          {suggestion.type === 'subcategory' && <span className="text-sm">📂</span>}
+                          {suggestion.type === 'skill' && <Sparkles className="w-4 h-4 text-primary-blue dark:text-red-300" />}
+                          {suggestion.type === 'talent' && <Users className="w-4 h-4 text-primary-blue dark:text-red-300" />}
+                          {suggestion.type === 'category' && <Folder className="w-4 h-4 text-primary-blue dark:text-red-300" />}
+                          {suggestion.type === 'subcategory' && <Folder className="w-4 h-4 text-gray-400 dark:text-gray-500" />}
                           <span className="text-gray-900 dark:text-white">{suggestion.name}</span>
                           <span className="text-xs text-gray-400 ml-auto capitalize">{suggestion.type}</span>
                         </button>
@@ -1347,16 +1078,16 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                 <button
                   type="button"
                   onClick={() => setShowFilters(!showFilters)}
-                  className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-lg border transition-all font-medium text-sm ${
+                  className={`flex-shrink-0 flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl border-2 transition-all font-semibold text-sm ${
                     showFilters
-                      ? 'bg-blue-600 dark:bg-red-500 text-white border-transparent shadow-md'
-                      : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                      ? 'bg-primary-blue dark:bg-[rgba(17,24,39,0.90)] text-white border-blue-300 dark:border-red-400/35 shadow-lg'
+                      : 'border-blue-200 dark:border-red-400/25 bg-white/90 dark:bg-slate-900/85 text-gray-700 dark:text-gray-200 hover:border-primary-blue dark:hover:border-red-300/45 hover:text-primary-blue dark:hover:text-red-200'
                   }`}
                 >
                   <SlidersHorizontal className="w-4 h-4" />
                   <span className="hidden sm:inline">Filters</span>
                   {activeFilterCount > 0 && (
-                    <span className={`px-1.5 py-0.5 text-xs rounded-full font-bold ${showFilters ? 'bg-white/20 text-white' : 'bg-blue-600 dark:bg-red-500 text-white'}`}>
+                    <span className={`px-1.5 py-0.5 text-xs rounded-full font-bold ${showFilters ? 'bg-white/20 text-white' : 'bg-primary-blue dark:bg-[rgba(17,24,39,0.90)] text-white'}`}>
                       {activeFilterCount}
                     </span>
                   )}
@@ -1371,8 +1102,8 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                 <>
                   <span className="text-[10px] text-gray-500 dark:text-gray-400 uppercase tracking-wide">In:</span>
                   {selectedCategories.map(cat => (
-                    <span key={cat} className="inline-flex items-center gap-1 px-2 py-0.5 bg-blue-500 text-white rounded-full text-xs font-medium">
-                      {cat}
+                    <span key={cat} className="inline-flex items-center gap-1 px-2 py-0.5 bg-primary-blue dark:bg-accent-red text-white rounded-full text-xs font-medium">
+                      {selectedCategoryLabels[selectedCategories.indexOf(cat)] || cat}
                       <button 
                         onClick={() => {
                           setSelectedCategories(prev => prev.filter(c => c !== cat));
@@ -1380,15 +1111,15 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                             exitCombinedMode();
                           }
                         }} 
-                        className="hover:bg-blue-600 rounded-full"
+                        className="hover:bg-primary-blue/90 dark:hover:bg-accent-red/90 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70" aria-label={`Remove ${selectedCategoryLabels[selectedCategories.indexOf(cat)] || cat}`}
                       >
                         <X className="w-3 h-3" />
                       </button>
                     </span>
                   ))}
                   {selectedSubcategories.map(sub => (
-                    <span key={sub} className="inline-flex items-center gap-1 px-2 py-0.5 bg-purple-500 text-white rounded-full text-xs font-medium">
-                      {sub}
+                    <span key={sub} className="inline-flex items-center gap-1 px-2 py-0.5 bg-primary-blue dark:bg-[rgba(17,24,39,0.90)] text-white rounded-full text-xs font-medium">
+                      {selectedSubcategoryLabels[selectedSubcategories.indexOf(sub)] || sub}
                       <button 
                         onClick={() => {
                           setSelectedSubcategories(prev => prev.filter(s => s !== sub));
@@ -1396,7 +1127,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                             exitCombinedMode();
                           }
                         }} 
-                        className="hover:bg-purple-600 rounded-full"
+                        className="hover:bg-primary-blue/90 dark:hover:bg-accent-red/90 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70" aria-label={`Remove ${selectedSubcategoryLabels[selectedSubcategories.indexOf(sub)] || sub}`}
                       >
                         <X className="w-3 h-3" />
                       </button>
@@ -1410,7 +1141,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                 <>
                   <span className="text-gray-300 dark:text-gray-600">|</span>
                   {filters.gender?.slice(0, 2).map(g => (
-                    <span key={g} className="inline-flex items-center gap-1 px-2 py-0.5 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full text-xs capitalize">
+                    <span key={g} className="inline-flex items-center gap-1 px-2 py-0.5 bg-[var(--brand-primary)]/10 dark:bg-[var(--brand-primary)]/18 text-[var(--brand-primary)] dark:text-red-100 rounded-full text-xs capitalize">
                       {g} <button onClick={() => setFilters(prev => ({ ...prev, gender: prev.gender?.filter(x => x !== g) }))}><X className="w-3 h-3" /></button>
                     </span>
                   ))}
@@ -1420,7 +1151,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                     </span>
                   ))}
                   {filters.skills?.slice(0, 2).map(s => (
-                    <span key={s} className="inline-flex items-center gap-1 px-2 py-0.5 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-full text-xs">
+                    <span key={s} className="inline-flex items-center gap-1 px-2 py-0.5 bg-primary-blue/10 dark:bg-accent-red/10 text-primary-blue dark:text-accent-red rounded-full text-xs">
                       {s} <button onClick={() => setFilters(prev => ({ ...prev, skills: prev.skills?.filter(x => x !== s) }))}><X className="w-3 h-3" /></button>
                     </span>
                   ))}
@@ -1446,12 +1177,30 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
         {/* Results Content */}
         <div className="max-w-screen-2xl mx-auto p-3 sm:p-6">
           {combinedLoading ? (
-            <div className="flex flex-col items-center justify-center py-12 sm:py-20">
-              <Loader2 className="w-10 h-10 animate-spin text-primary-blue dark:text-accent-red mb-4" />
-              <span className="text-gray-600 dark:text-gray-400">Searching talents...</span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 sm:gap-4 lg:gap-6">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div key={i} className="bg-light-surface dark:bg-dark-surface rounded-2xl border border-gray-200/70 dark:border-gray-700/40 overflow-hidden animate-pulse">
+                  <div className="p-5 flex items-center gap-4 border-b border-gray-100/80 dark:border-gray-800">
+                    <div className="w-14 h-14 rounded-full bg-gray-200 dark:bg-gray-700 flex-shrink-0" />
+                    <div className="flex-1 space-y-2">
+                      <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded-md w-3/4" />
+                      <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded-md w-1/2" />
+                    </div>
+                  </div>
+                  <div className="px-4 py-3 border-b border-gray-100/80 dark:border-gray-800 flex gap-2">
+                    <div className="h-5 w-14 bg-gray-200 dark:bg-gray-700 rounded-full" />
+                    <div className="h-5 w-16 bg-gray-200 dark:bg-gray-700 rounded-full" />
+                    <div className="h-5 w-10 bg-gray-200 dark:bg-gray-700 rounded-full" />
+                  </div>
+                  <div className="h-[210px] bg-gray-100 dark:bg-gray-800" />
+                  <div className="p-4">
+                    <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded-lg" />
+                  </div>
+                </div>
+              ))}
             </div>
           ) : combinedError ? (
-            <div className="text-center py-20 bg-white dark:bg-gray-800 rounded-2xl">
+            <div className="text-center py-20 bg-light-surface dark:bg-dark-surface rounded-2xl">
               <p className="text-red-600 dark:text-red-400 mb-4">{combinedError}</p>
               <button
                 onClick={() => setCombinedPage(1)}
@@ -1461,23 +1210,16 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
               </button>
             </div>
           ) : filteredCombinedTalents.length === 0 ? (
-            <div className="text-center py-20 bg-white dark:bg-gray-800 rounded-2xl">
-              <Users className="w-20 h-20 mx-auto text-gray-300 dark:text-gray-600 mb-4" />
-              <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">
-                {searchQuery ? 'No matching talents' : 'No talents found'}
-              </h3>
-              <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto">
-                {searchQuery 
-                  ? `No talents match "${searchQuery}". Try different keywords or clear your search.`
-                  : 'Try selecting different categories or adjusting your filters.'
-                }
-              </p>
-              <button
-                onClick={() => { searchQuery ? setSearchQuery('') : clearFilters(); setCombinedPage(1); }}
-                className="px-4 py-2 bg-blue-600 dark:bg-red-500 text-white rounded-lg hover:opacity-90 transition-colors font-medium"
-              >
-                {searchQuery ? 'Clear Search' : 'Clear Filters'}
-              </button>
+            <div className='rounded-2xl border border-gray-200/70 dark:border-gray-700/50 bg-white/95 dark:bg-slate-900 p-8 sm:p-10 text-center shadow-[0_6px_22px_rgba(15,23,42,0.08)] dark:shadow-[0_8px_24px_rgba(0,0,0,0.45)]'>
+              <div className='mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary-blue/10 dark:bg-accent-red/15'>
+                <Users className='w-8 h-8 text-primary-blue dark:text-accent-red' />
+              </div>
+              <h3 className='text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white mb-2'>{searchQuery ? 'No talents match this category search' : 'No talents in this category mix yet'}</h3>
+              <p className='text-gray-600 dark:text-gray-400 mb-6 max-w-xl mx-auto'>{searchQuery ? 'No talents matched your query within the selected categories and subcategories.' : 'Try broadening your category selection or relaxing filters to discover more profiles.'}</p>
+              <div className='flex flex-wrap items-center justify-center gap-3'>
+                <button onClick={() => { searchQuery ? setSearchQuery('') : clearFilters(); setCombinedPage(1); }} className='px-4 py-2 bg-primary-blue dark:bg-[rgba(17,24,39,0.90)] text-white rounded-lg hover:opacity-90 transition-colors font-medium'>{searchQuery ? 'Clear Search' : 'Clear Filters'}</button>
+                <button onClick={exitCombinedMode} className='px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-medium'>Choose Different Categories</button>
+              </div>
             </div>
           ) : (
             <>
@@ -1532,7 +1274,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                   <button
                     onClick={() => setCombinedPage(p => Math.max(1, p - 1))}
                     disabled={combinedPage === 1}
-                    className="px-3 py-2 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50"
+                    className="px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-40 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue dark:focus-visible:ring-accent-red"
                   >
                     Previous
                   </button>
@@ -1540,7 +1282,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                     <button
                       key={pg}
                       onClick={() => setCombinedPage(pg)}
-                      className={`px-3 py-2 rounded transition-all duration-300 ${combinedPage === pg ? 'bg-primary-blue dark:bg-accent-red text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'}`}
+                      className={`min-w-[40px] px-3 py-2 rounded-lg transition-all duration-200 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue dark:focus-visible:ring-accent-red ${combinedPage === pg ? 'bg-primary-blue dark:bg-accent-red text-white shadow-sm' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600'}`}
                     >
                       {pg}
                     </button>
@@ -1548,7 +1290,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                   <button
                     onClick={() => setCombinedPage(p => p + 1)}
                     disabled={combinedPage * 12 >= combinedTotal}
-                    className="px-3 py-2 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50"
+                    className="px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-40 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue dark:focus-visible:ring-accent-red"
                   >
                     Next
                   </button>
@@ -1588,14 +1330,46 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
     );
 
     return (
-      <div className="min-h-screen bg-white dark:bg-gray-900">
+      <div className="relative min-h-screen brand-true-red categories-page bg-sky-50/60 dark:bg-[#140809] [--cat-from:#dbeafe] [--cat-to:#3b82f6] [--cat-glow:#93c5fd] dark:[--cat-from:#ff2a2a] dark:[--cat-to:#ff4d4d] dark:[--cat-glow:#ffb4b4]">
+        {/* Wave Background */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none z-0" aria-hidden="true">
+          <svg className="w-full h-full opacity-70 dark:opacity-35" preserveAspectRatio="none" viewBox="0 0 1440 900" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="catBg1" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stopColor="var(--cat-from)" stopOpacity="0.22" />
+                <stop offset="100%" stopColor="transparent" />
+              </linearGradient>
+              <linearGradient id="catWave1a" x1="0" x2="1" y1="0" y2="1">
+                <stop offset="0%" stopColor="var(--cat-from)" stopOpacity="0.22" />
+                <stop offset="100%" stopColor="var(--cat-to)" stopOpacity="0.09" />
+              </linearGradient>
+              <linearGradient id="catWave2a" x1="1" x2="0" y1="0" y2="1">
+                <stop offset="0%" stopColor="var(--cat-from)" stopOpacity="0.14" />
+                <stop offset="100%" stopColor="var(--cat-to)" stopOpacity="0.06" />
+              </linearGradient>
+              <radialGradient id="catGlow1" cx="50%" cy="0%" r="70%">
+                <stop offset="0%" stopColor="var(--cat-glow)" stopOpacity="0.10" />
+                <stop offset="100%" stopColor="transparent" />
+              </radialGradient>
+            </defs>
+            <rect width="1440" height="900" fill="url(#catBg1)" />
+            <rect width="1440" height="900" fill="url(#catGlow1)" />
+            <path d="M0 320 Q360 220 720 300 T1440 260 V900 H0Z" fill="url(#catWave1a)" />
+            <path d="M0 500 Q400 420 800 480 T1440 440 V900 H0Z" fill="url(#catWave2a)" />
+            <path d="M0 80 C360 140 720 40 1080 100 C1260 130 1380 90 1440 110 L1440 0 L0 0 Z" fill="var(--cat-from)" opacity="0.10" />
+            <circle cx="200" cy="150" r="200" fill="var(--cat-to)" opacity="0.07" />
+            <circle cx="1250" cy="700" r="260" fill="var(--cat-from)" opacity="0.06" />
+            <circle cx="720" cy="450" r="300" fill="var(--cat-glow)" opacity="0.04" />
+          </svg>
+        </div>
         {/* Sticky Header with Search */}
-        <section className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40 shadow-sm">
-          <div className="max-w-screen-2xl mx-auto px-6 py-4">
+        <section className="bg-gradient-to-r from-blue-100/95 via-blue-50/95 to-blue-100/95 dark:from-red-950/95 dark:via-red-900/95 dark:to-red-950/95 border-b border-gray-200/80 dark:border-red-400/20 sticky top-0 z-40 shadow-lg backdrop-blur-sm">
+          <div className="max-w-screen-2xl mx-auto px-6 pt-3 pb-4">
+            <Breadcrumbs items={[{ label: 'Home', href: `/${locale}` }, { label: 'Categories' }]} />
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
               <div className="flex items-center gap-8">
                 <div>
-                  <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                  <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
                     {t('main.title')}
                   </h1>
                   <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
@@ -1607,79 +1381,31 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
               {/* Search Bar - Hub Style */}
               <div className="flex-1 max-w-xl w-full relative">
                 <div className="relative group">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-primary-blue dark:group-focus-within:text-accent-red transition-colors z-10" />
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-primary-blue dark:group-focus-within:text-red-300 transition-colors z-10" />
                   <input
                     type="text"
-                    placeholder={t('search.placeholder') || "Search categories, talents, or skills..."}
+                    placeholder={t('search.placeholder') || "Search categories or roles…"}
                     value={searchInputValue}
                     onChange={(e) => {
                       setSearchInputValue(e.target.value);
                       setSearchQuery(e.target.value);
-                      setShowSuggestions(true);
                     }}
                     onKeyDown={(e) => {
                       if (e.key === 'Escape') {
-                        setShowSuggestions(false);
+                        setSearchInputValue('');
+                        setSearchQuery('');
                       }
                     }}
-                    onFocus={() => searchInputValue && setShowSuggestions(true)}
-                    onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
-                    className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white placeholder:text-gray-500 focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red focus:border-transparent transition-all"
+                    className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-gray-200 dark:border-red-400/25 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white placeholder:text-gray-500 focus:ring-2 focus:ring-primary-blue dark:focus:ring-red-400 focus:border-transparent transition-all"
                   />
                   {searchInputValue && (
                     <button
-                      onClick={() => { setSearchInputValue(''); setSearchQuery(''); setShowSuggestions(false); }}
+                      onClick={() => { setSearchInputValue(''); setSearchQuery(''); }}
                       className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors z-10"
                       aria-label="Clear search"
                     >
                       <X className="w-4 h-4" />
                     </button>
-                  )}
-                  
-                  {/* Search Suggestions Dropdown */}
-                  {showSuggestions && searchSuggestions.length > 0 && (
-                    <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg z-50 overflow-hidden">
-                      {searchSuggestions.map((suggestion, index) => (
-                        <button
-                          key={index}
-                          onClick={() => {
-                            if (suggestion.type === 'category') {
-                              const cat = categories.find(c => c.id === suggestion.id);
-                              if (cat) handleCategorySelect(cat);
-                            } else {
-                              const parentCat = categories.find(c => 
-                                c.subcategories.some(s => s.id === suggestion.id)
-                              );
-                              if (parentCat) {
-                                const sub = parentCat.subcategories.find(s => s.id === suggestion.id);
-                                if (sub) {
-                                  const params = new URLSearchParams();
-                                  params.set('category', parentCat.name);
-                                  params.set('subcategory', sub.name);
-                                  router.push(`?${params.toString()}`);
-                                }
-                              }
-                            }
-                            setShowSuggestions(false);
-                            setSearchInputValue('');
-                            setSearchQuery('');
-                          }}
-                          className="w-full px-4 py-2.5 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-3 transition-colors"
-                        >
-                          {suggestion.type === 'category' ? (
-                            <Sparkles className="w-4 h-4 text-primary-blue dark:text-accent-red" />
-                          ) : (
-                            <Search className="w-4 h-4 text-gray-400" />
-                          )}
-                          <div className="flex flex-col">
-                            <span className="font-medium">{suggestion.name}</span>
-                            {suggestion.type === 'subcategory' && 'parentName' in suggestion && (
-                              <span className="text-xs text-gray-500">in {suggestion.parentName}</span>
-                            )}
-                          </div>
-                        </button>
-                      ))}
-                    </div>
                   )}
                 </div>
               </div>
@@ -1689,8 +1415,8 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                 onClick={() => setShowFilters(!showFilters)}
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border transition-all font-medium ${
                   showFilters
-                    ? 'bg-primary-blue dark:bg-accent-red text-white border-transparent'
-                    : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                    ? 'bg-primary-blue dark:bg-[rgba(17,24,39,0.90)] text-white border-transparent'
+                    : 'border-gray-200 dark:border-gray-700 bg-light-surface dark:bg-dark-surface text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                 }`}
               >
                 <SlidersHorizontal className="w-4 h-4" />
@@ -1715,22 +1441,99 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
         {/* Main Content */}
         <div className="p-6">
           <div className="max-w-screen-2xl mx-auto">
-            {/* Categories List */}
-            {filteredCategories.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {filteredCategories.map((category) => (
+            {/* Categories List / Search Results */}
+            {searchInputValue.trim() ? (
+              // SEARCH MODE: flat subcategory results inline in the grid
+              flatSubcategoryResults.length > 0 ? (
+                <>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                    <span className="font-semibold text-gray-900 dark:text-white">{flatSubcategoryResults.length}</span> result{flatSubcategoryResults.length !== 1 ? 's' : ''} for &ldquo;{searchInputValue}&rdquo;
+                  </p>
+                  <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-5">
+                    {flatSubcategoryResults.map((result) => (
+                      <div
+                        key={result.id}
+                        role="button"
+                        tabIndex={0}
+                        className="group p-8 border border-blue-100/80 dark:border-red-400/20 rounded-xl bg-white/95 dark:bg-slate-900 hover:bg-primary-blue shadow-[0_2px_10px_rgba(37,99,235,0.10)] dark:shadow-[0_6px_18px_rgba(0,0,0,0.45)] hover:shadow-[0_10px_26px_rgba(37,99,235,0.18)] dark:hover:shadow-[0_10px_28px_rgba(127,29,29,0.26)] hover:border-blue-300 dark:hover:border-red-300/45 hover:-translate-y-0.5 active:scale-[0.98] active:translate-y-0 transition-all duration-200 cursor-pointer min-h-[260px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue dark:focus-visible:ring-red-400 focus-visible:ring-offset-2"
+                        onClick={() => {
+                          const params = new URLSearchParams();
+                          params.set('category', result.parentName);
+                          params.set('subcategory', result.isViewAll ? '__all__' : result.name);
+                          setSearchInputValue('');
+                          setSearchQuery('');
+                          router.push(`?${params.toString()}`);
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            const params = new URLSearchParams();
+                            params.set('category', result.parentName);
+                            params.set('subcategory', result.isViewAll ? '__all__' : result.name);
+                            setSearchInputValue('');
+                            setSearchQuery('');
+                            router.push(`?${params.toString()}`);
+                          }
+                        }}
+                      >
+                        <div className="flex flex-col h-full items-center justify-center text-center gap-2">
+                          <div className="p-4 rounded-2xl bg-primary-blue dark:bg-accent-red group-hover:bg-white/20 dark:group-hover:bg-accent-red/90 transition-colors">
+                            {(() => {
+                              const Icon = result.isViewAll
+                                ? getCategoryIconByName(result.parentName, result.parentIcon)
+                                : getSubcategoryIconByName(result.name, result.parentName, result.parentIcon);
+                              return <Icon className={CATEGORY_ICON_CLASSES} />;
+                            })()}
+                          </div>
+                          <div>
+                            <h2 className="text-base font-semibold tracking-tight text-gray-900 dark:text-white group-hover:text-white transition-colors leading-snug">
+                              {result.isViewAll ? `All ${translateCategoryName(result.parentName)}` : result.name}
+                            </h2>
+                            <p className="text-xs font-medium text-primary-blue dark:text-red-300 group-hover:text-white/80 transition-colors mt-0.5">
+                              {translateCategoryName(result.parentName)}
+                            </p>
+                            {result.description && (
+                              <p className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-white/90 transition-colors mt-1 line-clamp-1">
+                                {result.description}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <EmptyState
+                  icon={<Search className="w-12 h-12" />}
+                  title="No results found"
+                  description={`Nothing matched \u201c${searchInputValue}\u201d. Try a different term or browse by category.`}
+                />
+              )
+            ) : (
+              // NORMAL MODE: show all category cards
+              <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-5">
+                {categories.map((category) => (
                   <div
                     key={category.id}
-                    className="group p-3 border rounded-lg shadow-md hover:bg-primary-blue dark:hover:bg-accent-red transition-colors cursor-pointer aspect-square"
+                    role="button"
+                    tabIndex={0}
+                    className="group p-8 border border-blue-100/80 dark:border-red-400/20 rounded-xl bg-white/95 dark:bg-slate-900 hover:bg-primary-blue shadow-[0_2px_10px_rgba(37,99,235,0.10)] dark:shadow-[0_6px_18px_rgba(0,0,0,0.45)] hover:shadow-[0_10px_26px_rgba(37,99,235,0.18)] dark:hover:shadow-[0_10px_28px_rgba(127,29,29,0.26)] hover:border-blue-300 dark:hover:border-red-300/45 hover:-translate-y-0.5 active:scale-[0.98] active:translate-y-0 transition-all duration-200 cursor-pointer min-h-[260px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue dark:focus-visible:ring-red-400 focus-visible:ring-offset-2"
                     onClick={() => handleCategorySelect(category)}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleCategorySelect(category); } }}
                   >
-                    <div className="flex items-center gap-2">
-                      {getCategoryIcon(category.icon)}
+                    <div className="flex flex-col h-full items-center justify-center text-center gap-2">
+                      <div className="p-4 rounded-2xl bg-primary-blue dark:bg-[rgba(17,24,39,0.90)] group-hover:bg-white/20 dark:group-hover:bg-[rgba(17,24,39,0.98)] transition-colors">
+                        {(() => {
+                          const Icon = getCategoryIconByName(category.name, category.icon);
+                          return <Icon className={CATEGORY_ICON_CLASSES} />;
+                        })()}
+                      </div>
                       <div>
-                        <h2 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-white transition-colors">
+                        <h2 className="text-base font-semibold tracking-tight text-gray-900 dark:text-white group-hover:text-white transition-colors leading-snug">
                           {translateCategoryName(category.name)}
                         </h2>
-                        <p className="text-xs text-gray-700 dark:text-gray-200 group-hover:text-white transition-colors">
+                        <p className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-white/90 transition-colors mt-1 line-clamp-2">
                           {category.description}
                         </p>
                       </div>
@@ -1738,12 +1541,6 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                   </div>
                 ))}
               </div>
-            ) : (
-              <EmptyState
-                icon={<Search className="w-12 h-12" />}
-                title="No categories found"
-                description={`We couldn't find any categories matching "${searchQuery}". Try adjusting your search terms.`}
-              />
             )}
           </div>
         </div>
@@ -1758,10 +1555,42 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
     );
 
     return (
-      <div className="min-h-screen bg-white dark:bg-gray-900">
+      <div className="relative min-h-screen brand-true-red categories-page bg-sky-50/60 dark:bg-[#140809] [--cat-from:#dbeafe] [--cat-to:#3b82f6] [--cat-glow:#93c5fd] dark:[--cat-from:#ff2a2a] dark:[--cat-to:#ff4d4d] dark:[--cat-glow:#ffb4b4]">
+        {/* Wave Background */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none z-0" aria-hidden="true">
+          <svg className="w-full h-full opacity-70 dark:opacity-35" preserveAspectRatio="none" viewBox="0 0 1440 900" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="catBg" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stopColor="var(--cat-from)" stopOpacity="0.22" />
+                <stop offset="100%" stopColor="transparent" />
+              </linearGradient>
+              <linearGradient id="catWave1" x1="0" x2="1" y1="0" y2="1">
+                <stop offset="0%" stopColor="var(--cat-from)" stopOpacity="0.22" />
+                <stop offset="100%" stopColor="var(--cat-to)" stopOpacity="0.09" />
+              </linearGradient>
+              <linearGradient id="catWave2" x1="1" x2="0" y1="0" y2="1">
+                <stop offset="0%" stopColor="var(--cat-from)" stopOpacity="0.14" />
+                <stop offset="100%" stopColor="var(--cat-to)" stopOpacity="0.06" />
+              </linearGradient>
+              <radialGradient id="catGlow" cx="50%" cy="0%" r="70%">
+                <stop offset="0%" stopColor="var(--cat-glow)" stopOpacity="0.10" />
+                <stop offset="100%" stopColor="transparent" />
+              </radialGradient>
+            </defs>
+            <rect width="1440" height="900" fill="url(#catBg)" />
+            <rect width="1440" height="900" fill="url(#catGlow)" />
+            <path d="M0 320 Q360 220 720 300 T1440 260 V900 H0Z" fill="url(#catWave1)" />
+            <path d="M0 500 Q400 420 800 480 T1440 440 V900 H0Z" fill="url(#catWave2)" />
+            <path d="M0 80 C360 140 720 40 1080 100 C1260 130 1380 90 1440 110 L1440 0 L0 0 Z" fill="var(--cat-from)" opacity="0.10" />
+            <circle cx="200" cy="150" r="200" fill="var(--cat-to)" opacity="0.07" />
+            <circle cx="1250" cy="700" r="260" fill="var(--cat-from)" opacity="0.06" />
+            <circle cx="720" cy="450" r="300" fill="var(--cat-glow)" opacity="0.04" />
+          </svg>
+        </div>
         {/* Sticky Header with Search */}
-        <section className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40 shadow-sm">
-          <div className="max-w-screen-2xl mx-auto px-6 py-4">
+        <section className="bg-gradient-to-r from-blue-100/95 via-blue-50/95 to-blue-100/95 dark:from-red-950/95 dark:via-red-900/95 dark:to-red-950/95 border-b border-gray-200/80 dark:border-red-400/20 sticky top-0 z-40 shadow-lg backdrop-blur-sm">
+          <div className="max-w-screen-2xl mx-auto px-6 pt-3 pb-4">
+            <Breadcrumbs items={[{ label: 'Home', href: `/${locale}` }, { label: 'Categories', href: `/${locale}/categories` }, { label: translateCategoryName(selectedCategory.name) }]} />
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
               <div className="flex items-center gap-4">
                 {/* Back Button */}
@@ -1772,12 +1601,12 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                     params.delete('subcategory');
                     router.push(`?${params.toString()}`);
                   }}
-                  className="flex items-center justify-center w-10 h-10 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
+                  className="flex items-center justify-center w-10 h-10 rounded-xl border border-gray-200 dark:border-gray-700 bg-light-surface dark:bg-dark-surface text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
                 >
                   <X className="w-5 h-5" />
                 </button>
                 <div>
-                  <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                  <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
                     {translateCategoryName(selectedCategory.name)}
                   </h1>
                   <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
@@ -1818,7 +1647,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border transition-all font-medium ${
                   showFilters
                     ? 'bg-primary-blue dark:bg-accent-red text-white border-transparent'
-                    : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                    : 'border-gray-200 dark:border-gray-700 bg-light-surface dark:bg-dark-surface text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                 }`}
               >
                 <SlidersHorizontal className="w-4 h-4" />
@@ -1845,46 +1674,73 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
           <div className="max-w-screen-2xl mx-auto">
             {/* Subcategories Grid - Same shape as main categories */}
             {filteredSubcategories.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-5">
                 {/* View All card — shows all talents in this category */}
                 <div
-                  className="group p-3 border-2 border-primary-blue dark:border-accent-red rounded-lg shadow-md hover:bg-primary-blue dark:hover:bg-accent-red transition-colors cursor-pointer aspect-square"
+                  role="button"
+                  tabIndex={0}
+                  className="group p-8 border border-blue-100/80 dark:border-red-900/50 rounded-xl bg-white/95 dark:bg-slate-900 hover:bg-primary-blue shadow-[0_2px_10px_rgba(37,99,235,0.10)] dark:shadow-[0_6px_18px_rgba(0,0,0,0.45)] hover:shadow-[0_10px_26px_rgba(37,99,235,0.18)] dark:hover:shadow-[0_10px_28px_rgba(220,38,38,0.20)] hover:border-blue-300 dark:hover:border-red-600 hover:-translate-y-0.5 active:scale-[0.98] active:translate-y-0 transition-all duration-200 cursor-pointer min-h-[260px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue dark:focus-visible:ring-accent-red focus-visible:ring-offset-2"
                   onClick={() => {
                     const params = new URLSearchParams(searchParams.toString());
                     params.set('subcategory', '__all__');
                     router.push(`?${params.toString()}`);
                   }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      const params = new URLSearchParams(searchParams.toString());
+                      params.set('subcategory', '__all__');
+                      router.push(`?${params.toString()}`);
+                    }
+                  }}
                 >
-                  <div className="flex flex-col h-full items-center justify-center text-center">
-                    {getCategoryIcon(selectedCategory.icon)}
-                    <h2 className="text-lg font-bold text-primary-blue dark:text-accent-red group-hover:text-white transition-colors mt-3">
+                  <div className="flex flex-col h-full items-center justify-center text-center gap-2">
+                    <div className="p-4 rounded-2xl bg-primary-blue dark:bg-accent-red group-hover:bg-white/20 dark:group-hover:bg-accent-red/90 transition-colors">
+                      {(() => {
+                        const Icon = getCategoryIconByName(selectedCategory.name, selectedCategory.icon);
+                        return <Icon className={CATEGORY_ICON_CLASSES} />;
+                      })()}
+                    </div>
+                    <h2 className="text-base font-semibold tracking-tight text-primary-blue dark:text-red-300 group-hover:text-white transition-colors mt-1 leading-snug">
                       View All
                     </h2>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 group-hover:text-white/80 transition-colors mt-1">
+                    <p className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-white/90 transition-colors mt-1 line-clamp-2">
                       Browse all talents in {translateCategoryName(selectedCategory.name)}
                     </p>
-                    <span className="text-xs px-2 py-1 rounded-full bg-primary-blue/10 dark:bg-accent-red/20 text-primary-blue dark:text-accent-red group-hover:bg-white/20 group-hover:text-white transition-colors mt-3">
-                      {selectedCategory._count.talentProfiles} talents
-                    </span>
                   </div>
                 </div>
 
                 {filteredSubcategories.map((subcategory) => (
                   <div
                     key={subcategory.id}
-                    className="group p-3 border rounded-lg shadow-md hover:bg-primary-blue dark:hover:bg-accent-red transition-colors cursor-pointer aspect-square"
+                    role="button"
+                    tabIndex={0}
+                    className="group p-8 border border-blue-100/80 dark:border-red-400/20 rounded-xl bg-white/95 dark:bg-slate-900 hover:bg-primary-blue shadow-[0_2px_10px_rgba(37,99,235,0.10)] dark:shadow-[0_6px_18px_rgba(0,0,0,0.45)] hover:shadow-[0_10px_26px_rgba(37,99,235,0.18)] dark:hover:shadow-[0_10px_28px_rgba(127,29,29,0.26)] hover:border-blue-300 dark:hover:border-red-300/45 hover:-translate-y-0.5 active:scale-[0.98] active:translate-y-0 transition-all duration-200 cursor-pointer min-h-[260px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue dark:focus-visible:ring-red-400 focus-visible:ring-offset-2"
                     onClick={() => {
                       const params = new URLSearchParams(searchParams.toString());
                       params.set('subcategory', subcategory.name);
                       router.push(`?${params.toString()}`);
                     }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        const params = new URLSearchParams(searchParams.toString());
+                        params.set('subcategory', subcategory.name);
+                        router.push(`?${params.toString()}`);
+                      }
+                    }}
                   >
-                    <div className="flex flex-col h-full items-center justify-center text-center">
-                      {getCategoryIcon(selectedCategory.icon)}
-                      <h2 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-white transition-colors mt-3">
+                    <div className="flex flex-col h-full items-center justify-center text-center gap-2">
+                      <div className="p-4 rounded-2xl bg-primary-blue dark:bg-accent-red group-hover:bg-white/20 dark:group-hover:bg-accent-red/90 transition-colors">
+                        {(() => {
+                          const Icon = getSubcategoryIconByName(subcategory.name, selectedCategory.name, selectedCategory.icon);
+                          return <Icon className={CATEGORY_ICON_CLASSES} />;
+                        })()}
+                      </div>
+                      <h2 className="text-base font-semibold tracking-tight text-gray-900 dark:text-white group-hover:text-white transition-colors mt-1 leading-snug">
                         {subcategory.name}
                       </h2>
-                      <p className="text-xs text-gray-700 dark:text-gray-200 group-hover:text-white/80 transition-colors mt-1">
+                      <p className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-white/90 transition-colors mt-1 line-clamp-2">
                         {subcategory.description}
                       </p>
                     </div>
@@ -1906,31 +1762,31 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
 
   // Talents view (Phase 3 - single subcategory)
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen brand-true-red categories-page">
       {/* Sticky Header */}
-      <section className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40 shadow-sm">
+      <section className="bg-gradient-to-r from-blue-100/95 via-blue-50/95 to-blue-100/95 dark:from-red-950/95 dark:via-red-900/95 dark:to-red-950/95 border-b border-gray-200/80 dark:border-red-400/20 sticky top-0 z-40 shadow-lg backdrop-blur-sm">
         <div className="max-w-screen-2xl mx-auto px-3 sm:px-6 py-3 sm:py-4">
           {/* Breadcrumb */}
           <nav className="mb-2 sm:mb-3 overflow-x-auto">
             <ol className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap">
               <li>
-                <button 
+                <button
                   onClick={() => {
                     const params = new URLSearchParams(searchParams.toString());
                     params.delete('category');
                     params.delete('subcategory');
                     router.push(`?${params.toString()}`);
                   }}
-                  className="hover:text-blue-600 dark:hover:text-red-500 transition-colors"
+                  className="hover:text-primary-blue dark:hover:text-red-300 transition-colors"
                 >
                   Categories
                 </button>
               </li>
               <li className="flex items-center">
                 <span className="mx-1 sm:mx-2">/</span>
-                <button 
+                <button
                   onClick={handleBackToSubcategories}
-                  className="hover:text-blue-600 dark:hover:text-red-500 transition-colors truncate max-w-[100px] sm:max-w-none"
+                  className="hover:text-primary-blue dark:hover:text-red-300 transition-colors truncate max-w-[100px] sm:max-w-none"
                 >
                   {selectedCategory?.name}
                 </button>
@@ -1947,12 +1803,12 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
             <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-shrink-0">
               <button
                 onClick={handleBackToSubcategories}
-                className="flex-shrink-0 flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
+                className="flex-shrink-0 flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl border border-gray-200 dark:border-gray-700 bg-light-surface dark:bg-dark-surface text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
               >
                 <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
               <div className="min-w-0">
-                <h1 className="text-lg sm:text-2xl font-bold text-gray-900 dark:text-white truncate">
+                <h1 className="text-lg sm:text-2xl font-bold tracking-tight text-gray-900 dark:text-white truncate">
                   {dynamicHeaderTitle}
                 </h1>
                 <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 truncate">
@@ -1976,7 +1832,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                   }}
                   onFocus={() => searchQuery && setShowPhase3Suggestions(true)}
                   onBlur={() => setTimeout(() => setShowPhase3Suggestions(false), 200)}
-                  className="w-full pl-9 pr-8 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 dark:focus:ring-red-500 focus:border-transparent transition-all"
+                  className="w-full pl-9 pr-8 py-2.5 rounded-xl border border-blue-200 dark:border-red-400/25 bg-white/90 dark:bg-slate-900/85 text-sm text-gray-900 dark:text-white placeholder:text-gray-500 focus:ring-2 focus:ring-primary-blue dark:focus:ring-red-400 focus:border-transparent shadow-sm transition-all"
                 />
                 {searchQuery && (
                   <button
@@ -1990,7 +1846,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                 
                 {/* Smart Suggestions Dropdown */}
                 {showPhase3Suggestions && phase3SearchSuggestions.length > 0 && (
-                  <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl z-50 overflow-hidden">
+                  <div className="absolute top-full left-0 right-0 mt-1 bg-light-surface dark:bg-dark-surface border border-gray-200 dark:border-gray-700 rounded-xl shadow-[0_8px_32px_rgba(15,23,42,0.10)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.48)] z-50 overflow-hidden">
                     {phase3SearchSuggestions.map((suggestion, idx) => (
                       <button
                         key={`${suggestion.type}-${suggestion.name}-${idx}`}
@@ -2004,13 +1860,13 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                             }));
                             setSearchQuery('');
                           } else if (suggestion.type === 'category') {
-                            if (!selectedCategories.includes(suggestion.name)) {
-                              setSelectedCategories(prev => [...prev, suggestion.name]);
+                            if (!selectedCategories.includes(suggestion.id)) {
+                              setSelectedCategories(prev => [...prev, suggestion.id]);
                             }
                             setSearchQuery('');
                           } else if (suggestion.type === 'subcategory') {
-                            if (!selectedSubcategories.includes(suggestion.name)) {
-                              setSelectedSubcategories(prev => [...prev, suggestion.name]);
+                            if (!selectedSubcategories.includes(suggestion.id)) {
+                              setSelectedSubcategories(prev => [...prev, suggestion.id]);
                             }
                             setSearchQuery('');
                           } else {
@@ -2020,10 +1876,10 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                         }}
                         className="w-full px-3 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 transition-colors"
                       >
-                        {suggestion.type === 'skill' && <Sparkles className="w-4 h-4 text-purple-500" />}
-                        {suggestion.type === 'talent' && <Users className="w-4 h-4 text-blue-500" />}
-                        {suggestion.type === 'category' && <span className="text-sm">📁</span>}
-                        {suggestion.type === 'subcategory' && <span className="text-sm">📂</span>}
+                        {suggestion.type === 'skill' && <Sparkles className="w-4 h-4 text-primary-blue dark:text-red-300" />}
+                        {suggestion.type === 'talent' && <Users className="w-4 h-4 text-primary-blue dark:text-red-300" />}
+                        {suggestion.type === 'category' && <Folder className="w-4 h-4 text-primary-blue dark:text-red-300" />}
+                        {suggestion.type === 'subcategory' && <Folder className="w-4 h-4 text-gray-400 dark:text-gray-500" />}
                         <span className="text-gray-900 dark:text-white">{suggestion.name}</span>
                         <span className="text-xs text-gray-400 ml-auto capitalize">{suggestion.type}</span>
                       </button>
@@ -2041,16 +1897,16 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
               <button
                 type="button"
                 onClick={() => setShowFilters(!showFilters)}
-                className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-lg border transition-all font-medium text-sm ${
+                className={`flex-shrink-0 flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl border-2 transition-all font-semibold text-sm ${
                   showFilters
-                    ? 'bg-blue-600 dark:bg-red-500 text-white border-transparent shadow-md'
-                    : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                    ? 'bg-primary-blue dark:bg-[rgba(17,24,39,0.90)] text-white border-blue-300 dark:border-red-400/35 shadow-lg'
+                    : 'border-blue-200 dark:border-red-400/25 bg-white/90 dark:bg-slate-900/85 text-gray-700 dark:text-gray-200 hover:border-primary-blue dark:hover:border-red-300/45 hover:text-primary-blue dark:hover:text-red-200'
                 }`}
               >
                 <SlidersHorizontal className="w-4 h-4" />
                 <span className="hidden sm:inline">Filters</span>
                 {activeFilterCount > 0 && (
-                  <span className={`px-1.5 py-0.5 text-xs rounded-full font-bold ${showFilters ? 'bg-white/20 text-white' : 'bg-blue-600 dark:bg-red-500 text-white'}`}>
+                  <span className={`px-1.5 py-0.5 text-xs rounded-full font-bold ${showFilters ? 'bg-white/20 text-white' : 'bg-primary-blue dark:bg-[rgba(17,24,39,0.90)] text-white'}`}>
                     {activeFilterCount}
                   </span>
                 )}
@@ -2064,7 +1920,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
               <span className="text-xs font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">Active:</span>
               <div className="flex flex-wrap gap-1.5">
                 {filters.gender?.slice(0, 2).map(g => (
-                  <span key={g} className="inline-flex items-center gap-1 px-2 py-0.5 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full text-xs whitespace-nowrap">
+                  <span key={g} className="inline-flex items-center gap-1 px-2 py-0.5 bg-[var(--brand-primary)]/10 dark:bg-[var(--brand-primary)]/18 text-[var(--brand-primary)] dark:text-red-100 rounded-full text-xs whitespace-nowrap">
                     {g} <button onClick={() => setFilters(prev => ({ ...prev, gender: prev.gender?.filter(x => x !== g) }))}><X className="w-3 h-3" /></button>
                   </span>
                 ))}
@@ -2074,7 +1930,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                   </span>
                 ))}
                 {filters.skills?.slice(0, 2).map(s => (
-                  <span key={s} className="inline-flex items-center gap-1 px-2 py-0.5 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-full text-xs whitespace-nowrap">
+                  <span key={s} className="inline-flex items-center gap-1 px-2 py-0.5 bg-primary-blue/10 dark:bg-red-950/35 text-primary-blue dark:text-red-300 rounded-full text-xs whitespace-nowrap">
                     {s} <button onClick={() => setFilters(prev => ({ ...prev, skills: prev.skills?.filter(x => x !== s) }))}><X className="w-3 h-3" /></button>
                   </span>
                 ))}
@@ -2084,7 +1940,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
               </div>
               <button
                 onClick={clearFilters}
-                className="ml-auto text-xs text-primary-blue dark:text-accent-red hover:underline whitespace-nowrap"
+                className="ml-auto text-xs text-primary-blue dark:text-red-300 hover:underline whitespace-nowrap"
               >
                 Clear all
               </button>
@@ -2103,11 +1959,29 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
       {/* Results Content */}
       <div className="max-w-screen-2xl mx-auto p-3 sm:p-6">
 
-          {/* Loading State */}
+          {/* Loading State - Skeletal */}
           {isLoading && (
-            <div className="flex flex-col items-center justify-center py-8 sm:py-12">
-              <div className="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-blue-600 dark:border-red-500 mb-4"></div>
-              <span className="text-sm sm:text-base text-gray-600 dark:text-gray-300">{t('loading')}</span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 sm:gap-4 lg:gap-6">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div key={i} className="bg-light-surface dark:bg-dark-surface rounded-2xl border border-gray-200/70 dark:border-gray-700/40 overflow-hidden animate-pulse">
+                  <div className="p-5 flex items-center gap-4 border-b border-gray-100/80 dark:border-gray-800">
+                    <div className="w-14 h-14 rounded-full bg-gray-200 dark:bg-gray-700 flex-shrink-0" />
+                    <div className="flex-1 space-y-2">
+                      <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded-md w-3/4" />
+                      <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded-md w-1/2" />
+                    </div>
+                  </div>
+                  <div className="px-4 py-3 border-b border-gray-100/80 dark:border-gray-800 flex gap-2">
+                    <div className="h-5 w-14 bg-gray-200 dark:bg-gray-700 rounded-full" />
+                    <div className="h-5 w-16 bg-gray-200 dark:bg-gray-700 rounded-full" />
+                    <div className="h-5 w-10 bg-gray-200 dark:bg-gray-700 rounded-full" />
+                  </div>
+                  <div className="h-[210px] bg-gray-100 dark:bg-gray-800" />
+                  <div className="p-4">
+                    <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded-lg" />
+                  </div>
+                </div>
+              ))}
             </div>
           )}
 
@@ -2119,7 +1993,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
               </p>
               <button
                 onClick={() => setPage(1)}
-                className="mt-2 px-4 py-2 bg-blue-600 dark:bg-red-500 text-white rounded hover:bg-blue-700 dark:hover:bg-red-600"
+                className="mt-2 px-4 py-2 bg-primary-blue dark:bg-accent-red text-white rounded hover:bg-primary-blue/90 dark:hover:bg-accent-red/90"
               >
                 {t('retry')}
               </button>
@@ -2180,7 +2054,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                     <button
                       onClick={() => setPage((p) => Math.max(1, p - 1))}
                       disabled={page === 1}
-                      className="px-3 py-2 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50"
+                      className="px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-40 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue dark:focus-visible:ring-accent-red"
                     >
                       {t('pagination.previous')}
                     </button>
@@ -2188,7 +2062,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                       <button
                         key={pg}
                         onClick={() => setPage(pg)}
-                        className={`px-3 py-2 rounded transition-all duration-300 ${page === pg ? 'bg-primary-blue text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'}`}
+                        className={`min-w-[40px] px-3 py-2 rounded-lg transition-all duration-200 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue dark:focus-visible:ring-accent-red ${page === pg ? 'bg-primary-blue dark:bg-accent-red text-white shadow-sm' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600'}`}
                       >
                         {pg}
                       </button>
@@ -2196,18 +2070,24 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                     <button
                       onClick={() => setPage((p) => p + 1)}
                       disabled={page * pageSize >= total}
-                      className="px-3 py-2 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50"
+                      className="px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-40 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue dark:focus-visible:ring-accent-red"
                     >
                       {t('pagination.next')}
                     </button>
                   </div>
                 </>
               ) : (
-                <EmptyState
-                  title={searchQuery ? 'No matching talents' : t('talents.noTalents.title')}
-                  description={searchQuery ? `No talents match "${searchQuery}". Try different keywords or clear your search.` : t('talents.noTalents.description')}
-                  icon="Search"
-                />
+                <div className='rounded-2xl border border-gray-200/70 dark:border-gray-700/50 bg-white/95 dark:bg-slate-900 p-8 sm:p-10 text-center shadow-[0_6px_22px_rgba(15,23,42,0.08)] dark:shadow-[0_8px_24px_rgba(0,0,0,0.45)]'>
+                  <div className='mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary-blue/10 dark:bg-accent-red/15'>
+                    <Search className='w-8 h-8 text-primary-blue dark:text-accent-red' />
+                  </div>
+                  <h3 className='text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white mb-2'>{searchQuery ? 'No matching talents in this subcategory' : 'No talents listed in this subcategory yet'}</h3>
+                  <p className='text-gray-600 dark:text-gray-400 mb-6 max-w-xl mx-auto'>{searchQuery ? 'No talents matched your search within this subcategory.' : 'Try widening your filters or browse another subcategory to find more talent.'}</p>
+                  <div className='flex flex-wrap items-center justify-center gap-3'>
+                    <button onClick={() => { searchQuery ? setSearchQuery('') : clearFilters(); }} className='px-4 py-2 bg-primary-blue dark:bg-accent-red text-white rounded-lg hover:opacity-90 transition-colors font-medium'>{searchQuery ? 'Clear Search' : 'Clear Filters'}</button>
+                    <button onClick={handleBackToSubcategories} className='px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-medium'>Back To Subcategories</button>
+                  </div>
+                </div>
               )}
             </>
           )}
@@ -2230,3 +2110,8 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
     </div>
   );
 }
+
+
+
+
+

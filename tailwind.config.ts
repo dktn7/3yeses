@@ -15,6 +15,12 @@ export default {
         'bg-primary-red', 'border-primary-red', 'text-primary-red', 'hover:bg-primary-red/90', 'focus:ring-primary-red',
         // Admin safelist
         'admin-theme-blue', 'text-scale-1', 'text-scale-2', 'text-scale-3',
+        /* Explicit single-mode utilities (prevent purging) */
+        'bg-light-primary', 'text-light-primary', 'border-light-primary', 'bg-light-surface', 'text-light-surface',
+        'bg-dark-primary', 'text-dark-primary', 'border-dark-primary', 'bg-dark-surface', 'text-dark-surface',
+        'bg-light-primary-contrast', 'bg-dark-primary-contrast',
+        /* Common state variants to preserve */
+        'hover:bg-light-primary', 'hover:bg-dark-primary', 'focus:ring-light-primary', 'focus:ring-dark-primary',
       ],
       colors: {
         // Link utility color names to runtime CSS variables so Tailwind classes
@@ -24,21 +30,39 @@ export default {
         'accent-blue': 'var(--brand-accent)',
 
         primary: {
-          DEFAULT: '#2563EB', // blue
-          red: '#DC2626',
-          blue: '#2563EB',
-          redHover: '#B91C1C',
-          blueHover: '#1D4ED8',
+          DEFAULT: '#2563eb',
+          red: '#B91C1C',
+          blue: '#2563eb',
+          redHover: '#7f1d1d',
+          blueHover: '#1d4ed8',
+        },
+        // Override the built-in blue scale with deeper brand blues so all
+        // blue-* utility classes across the codebase reflect the brand blue.
+        blue: {
+          50: '#eff6ff',
+          100: '#dbeafe',
+          200: '#bfdbfe',
+          300: '#93c5fd',
+          400: '#60a5fa',
+          500: '#2563eb',
+          600: '#1d4ed8',
+          700: '#1e40af',
+          800: '#1e3a8a',
+          900: '#172554',
+          950: '#0c1629',
         },
         accent: {
-          DEFAULT: '#DC2626', // red
-          red: '#EF4444',
-          blue: '#3B82F6',
+          // Resolve accent colors to runtime CSS variables so Tailwind
+          // classes like `dark:text-accent-red` pick up per-page overrides
+          // (for example `.brand-true-red` sets `--brand-red`).
+          DEFAULT: 'var(--brand-accent)',
+          red: 'var(--brand-red)',
+          blue: 'var(--brand-blue)',
         },
         background: {
           light: '#FFFFFF',
           white: '#FFFFFF',
-          dark: '#111827',
+          dark: '#1E293B',
         },
         text: {
           primary: '#1E293B',

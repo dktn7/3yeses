@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import LoadingSpinner from '@/components/LoadingSpinner';
@@ -42,11 +42,7 @@ export default function BillingPage() {
   const [billingData, setBillingData] = useState<BillingData | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchBillingData();
-  }, []);
-
-  const fetchBillingData = async () => {
+  const fetchBillingData = useCallback(async () => {
     try {
       const response = await fetch('/api/payments/history', {
         credentials: 'include',
@@ -66,7 +62,11 @@ export default function BillingPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [t]);
+
+  useEffect(() => {
+    fetchBillingData();
+  }, [fetchBillingData]);
 
   const formatCurrency = (amount: number, currency: string) => {
     return new Intl.NumberFormat('en-GB', {
@@ -107,7 +107,7 @@ export default function BillingPage() {
       case 'PENDING':
         return 'text-yellow-700 bg-yellow-100 dark:bg-yellow-900/20 dark:text-yellow-300';
       case 'REFUNDED':
-        return 'text-blue-700 bg-blue-100 dark:bg-blue-900/20 dark:text-blue-300';
+        return 'text-blue-700 bg-blue-100 dark:bg-red-900/20 dark:text-red-300';
       default:
         return 'text-gray-700 bg-gray-100 dark:bg-gray-900/20 dark:text-gray-300';
     }
@@ -132,7 +132,7 @@ export default function BillingPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+      <div className="bg-light-surface dark:bg-dark-surface rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{t('title')}</h1>
         <p className="mt-2 text-gray-600 dark:text-gray-400">
           {t('subtitle')}
@@ -141,7 +141,7 @@ export default function BillingPage() {
 
       {/* Current Subscription */}
       {billingData?.subscription && (
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+        <div className="bg-light-surface dark:bg-dark-surface rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
             <CreditCard className="w-5 h-5" />
             {t('currentSubscription')}
@@ -183,7 +183,7 @@ export default function BillingPage() {
       )}
 
       {/* Payment History */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+      <div className="bg-light-surface dark:bg-dark-surface rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
           <Receipt className="w-5 h-5" />
           {t('paymentHistory')}

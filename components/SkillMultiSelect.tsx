@@ -106,7 +106,7 @@ export default function SkillMultiSelect({ value, onChange, placeholder }: Props
           onFocus={() => setShowSuggestions(true)}
           onKeyDown={handleKeyDown}
           placeholder={loading ? 'Loading skills...' : (placeholder || 'Type to search skills...')}
-          className="w-full px-3 py-2 ring-1 ring-slate-900/8 dark:ring-white/[0.08] rounded-full bg-slate-50 dark:bg-slate-900/90 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)]/30 transition-all"
+          className="w-full px-3 py-2 ring-1 ring-slate-900/8 dark:ring-white/[0.08] rounded-full bg-slate-50 dark:bg-gray-900/90 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)]/30 transition-all"
         />
         {showSuggestions && (filteredSuggestions.length > 0 || input.trim()) && (
           <DropdownPanel portal anchorRef={inputRef} className="p-2 w-64 max-w-[90vw]">

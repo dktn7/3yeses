@@ -226,7 +226,7 @@ export default function ProfilePage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+      <div className="bg-light-surface dark:bg-dark-surface rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{t('editProfile')}</h1>
         <div className="mt-2 flex items-center gap-4">
           <p className="text-gray-600 dark:text-gray-400">
@@ -257,7 +257,7 @@ export default function ProfilePage() {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Profile Picture Section */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+        <div className="bg-light-surface dark:bg-dark-surface rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{t('profilePicture')}</h2>
           
           <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
@@ -290,7 +290,7 @@ export default function ProfilePage() {
                   type="url"
                   value={profile.avatarUrl || ''}
                   onChange={(e) => handleInputChange('avatarUrl', e.target.value)}
-                  className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red"
+                  className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red"
                   placeholder={t('enterImageUrl')}
                 />
                 {profile.avatarUrl && (
@@ -311,7 +311,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Basic Information */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+        <div className="bg-light-surface dark:bg-dark-surface rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{t('basicInfo')}</h2>
           
           <div className="space-y-4">
@@ -324,7 +324,7 @@ export default function ProfilePage() {
                 value={profile.bio || ''}
                 onChange={(e) => handleInputChange('bio', e.target.value)}
                 rows={5}
-                className={`w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red ${
+                className={`w-full px-4 py-2 border rounded-lg bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red ${
                   errors.bio ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
                 }`}
                 placeholder={t('bioPlaceholder')}
@@ -344,7 +344,7 @@ export default function ProfilePage() {
                 type="text"
                 value={profile.location || ''}
                 onChange={(e) => handleInputChange('location', e.target.value)}
-                className={`w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red ${
+                className={`w-full px-4 py-2 border rounded-lg bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red ${
                   errors.location ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
                 }`}
                 placeholder={t('locationPlaceholder')}
@@ -362,7 +362,7 @@ export default function ProfilePage() {
                 min="0"
                 value={profile.experienceLevel ?? ''}
                 onChange={(e) => handleInputChange('experienceLevel', parseInt(e.target.value) || 0)}
-                className={`w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red ${
+                className={`w-full px-4 py-2 border rounded-lg bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red ${
                   errors.experience ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
                 }`}
                 placeholder="0"
@@ -379,14 +379,14 @@ export default function ProfilePage() {
                 type="date"
                 value={profile.dateOfBirth?.split('T')[0] || ''}
                 onChange={(e) => handleInputChange('dateOfBirth', e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red"
               />
             </div>
           </div>
         </div>
 
         {/* Category Selection */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+        <div className="bg-light-surface dark:bg-dark-surface rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{t('categoryAndSpecialty')}</h2>
           
           <div className="space-y-4">
@@ -398,7 +398,7 @@ export default function ProfilePage() {
               <select
                 value={selectedCategoryId}
                 onChange={(e) => handleCategoryChange(e.target.value)}
-                className={`w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red ${
+                className={`w-full px-4 py-2 border rounded-lg bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red ${
                   errors.categoryId ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
                 }`}
               >
@@ -421,7 +421,7 @@ export default function ProfilePage() {
                 value={selectedSubcategoryId}
                 onChange={(e) => handleSubcategoryChange(e.target.value)}
                 disabled={!selectedCategoryId}
-                className={`w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red disabled:opacity-50 disabled:cursor-not-allowed ${
+                className={`w-full px-4 py-2 border rounded-lg bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red disabled:opacity-50 disabled:cursor-not-allowed ${
                   errors.subcategoryId ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
                 }`}
               >
@@ -440,7 +440,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Physical Characteristics */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+        <div className="bg-light-surface dark:bg-dark-surface rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{t('physicalCharacteristics')}</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -452,7 +452,7 @@ export default function ProfilePage() {
               <select
                 value={profile.gender || ''}
                 onChange={(e) => handleInputChange('gender', e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red"
               >
                 <option value="">{t('selectGender')}</option>
                 <option value="male">{t('genderMale')}</option>
@@ -472,7 +472,7 @@ export default function ProfilePage() {
                 type="number"
                 value={profile.height ?? ''}
                 onChange={(e) => handleInputChange('height', parseInt(e.target.value) || null)}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red"
                 placeholder={t('heightPlaceholder')}
               />
             </div>
@@ -485,7 +485,7 @@ export default function ProfilePage() {
               <select
                 value={profile.ethnicity || ''}
                 onChange={(e) => handleInputChange('ethnicity', e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red"
               >
                 <option value="">{t('selectEthnicity')}</option>
                 <option value="white">{t('ethnicityWhite')}</option>
@@ -506,7 +506,7 @@ export default function ProfilePage() {
               <select
                 value={profile.bodyType || ''}
                 onChange={(e) => handleInputChange('bodyType', e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red"
               >
                 <option value="">{t('selectBodyType')}</option>
                 <option value="slim">{t('bodyTypeSlim')}</option>
@@ -527,7 +527,7 @@ export default function ProfilePage() {
                 type="text"
                 value={profile.eyeColor || ''}
                 onChange={(e) => handleInputChange('eyeColor', e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red"
                 placeholder={t('eyeColorPlaceholder')}
               />
             </div>
@@ -541,7 +541,7 @@ export default function ProfilePage() {
                 type="text"
                 value={profile.hairColor || ''}
                 onChange={(e) => handleInputChange('hairColor', e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red"
                 placeholder={t('hairColorPlaceholder')}
               />
             </div>
@@ -549,7 +549,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Skills & Expertise */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+        <div className="bg-light-surface dark:bg-dark-surface rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
             {t('skillsAndExpertise')}
           </h2>
@@ -621,7 +621,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Work History */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+        <div className="bg-light-surface dark:bg-dark-surface rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
           <WorkHistoryManager
             items={profile.workHistory || []}
             onUpdate={(newItems) => handleInputChange('workHistory', newItems)}
@@ -629,7 +629,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Social Media */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+        <div className="bg-light-surface dark:bg-dark-surface rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{t('socialMedia')}</h2>
           
           <div className="space-y-4">
@@ -641,7 +641,7 @@ export default function ProfilePage() {
                 type="text"
                 value={profile.socialMedia?.instagram || ''}
                 onChange={(e) => handleInputChange('socialMedia', { ...profile.socialMedia, instagram: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red"
                 placeholder={t('usernamePlaceholder')}
               />
             </div>
@@ -654,7 +654,7 @@ export default function ProfilePage() {
                 type="text"
                 value={profile.socialMedia?.twitter || ''}
                 onChange={(e) => handleInputChange('socialMedia', { ...profile.socialMedia, twitter: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red"
                 placeholder={t('usernamePlaceholder')}
               />
             </div>
@@ -667,7 +667,7 @@ export default function ProfilePage() {
                 type="text"
                 value={profile.socialMedia?.youtube || ''}
                 onChange={(e) => handleInputChange('socialMedia', { ...profile.socialMedia, youtube: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red"
                 placeholder={t('channelUrl')}
               />
             </div>

@@ -8,6 +8,7 @@ type EmailTemplate = {
     id: string;
     name: string;
     subject: string;
+    preheaderText?: string | null;
     body: string;
     variables: string[];
     lastUpdated: string;
@@ -17,6 +18,7 @@ export default function EmailTemplateManager() {
     const [templates, setTemplates] = useState<EmailTemplate[]>([]);
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
     const [editingTemplate, setEditingTemplate] = useState<EmailTemplate | null>(null);
+    const [viewingTemplate, setViewingTemplate] = useState<EmailTemplate | null>(null);
     const [previewMode, setPreviewMode] = useState(false);
     const [loading, setLoading] = useState(true);
 
@@ -25,6 +27,7 @@ export default function EmailTemplateManager() {
         id: '',
         name: '',
         subject: '',
+        preheaderText: '',
         body: '',
         variables: []
     });
@@ -55,9 +58,13 @@ export default function EmailTemplateManager() {
     };
 
     const handleCreate = () => {
-        setEditingTemplate({ id: '', name: '', subject: '', body: '', variables: [], lastUpdated: '' });
-        setFormData({ id: '', name: '', subject: '', body: '', variables: [] });
+        setEditingTemplate({ id: '', name: '', subject: '', preheaderText: '', body: '', variables: [], lastUpdated: '' });
+        setFormData({ id: '', name: '', subject: '', preheaderText: '', body: '', variables: [] });
         setPreviewMode(false);
+    };
+
+    const handleView = (template: EmailTemplate) => {
+        setViewingTemplate(template);
     };
 
     const handleDelete = async (id: string) => {
@@ -116,6 +123,12 @@ export default function EmailTemplateManager() {
         return getMockContent(formData.body || '', formData.variables || []);
     };
 
+    const getTemplatePreheader = (template: EmailTemplate | null) => {
+        if (!template) return '';
+        const raw = template.preheaderText || '';
+        return getMockContent(raw, template.variables || []);
+    };
+
     // Shared mock-data substitution for any template
     const getMockContent = (body: string, variables: string[]) => {
         let content = body;
@@ -131,10 +144,9 @@ export default function EmailTemplateManager() {
             '{{renewalDate}}': new Date(Date.now() + 180 * 86400000).toLocaleDateString(),
             '{{expiryDate}}': new Date(Date.now() + 14 * 86400000).toLocaleDateString(),
             '{{billingUrl}}': 'https://3yeses.online/billing',
-            '{{recipientName}}': 'Jane Doe',
-            '{{senderName}}': 'John Smith',
-            '{{messagePreview}}': 'Hi Jane, I saw your portfolio and would love to discuss an opportunity...',
-            '{{messageUrl}}': 'https://3yeses.online/messages/123',
+            '{{actorName}}': 'Casting Team',
+            '{{activitySummary}}': 'Your profile received new views and a portfolio comment today.',
+            '{{activityUrl}}': 'https://3yeses.online/dashboard',
             '{{profileUrl}}': 'https://3yeses.online/profile/jane-doe',
             '{{reason}}': 'Violation of community guidelines',
             '{{termsUrl}}': 'https://3yeses.online/terms',
@@ -178,12 +190,13 @@ export default function EmailTemplateManager() {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="light dark">
   <title>${subject}</title>
-  <style>
-    body { margin:0; padding:0; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif; background-color:#f3f4f6; }
+    <style>
+        body { margin:0; padding:0; font-family:'Avenir Next','Segoe UI','Helvetica Neue',Arial,sans-serif; background-color:#eef2ff; background-image:radial-gradient(circle at 15% 15%,rgba(29,78,216,0.12),transparent 35%),radial-gradient(circle at 85% 85%,rgba(239,68,68,0.08),transparent 35%); }
     a { color:#1d4ed8; }
     @media (prefers-color-scheme: dark) {
       .dark-bg   { background-color: #020617 !important; }
-      .dark-card  { background-color: #0f172a !important; }
+      .dark-card  { background-color: #1e293b !important; }
+            .dark-shell { background-color: #0b1224 !important; }
       .dark-text  { color: #e2e8f0 !important; }
       .dark-heading { color: #ffffff !important; }
       .dark-subtle { color: #94a3b8 !important; }
@@ -193,10 +206,13 @@ export default function EmailTemplateManager() {
   </style>
 </head>
 <body class="dark-bg">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f3f4f6;" class="dark-bg">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#eef2ff;background-image:radial-gradient(circle at 15% 15%,rgba(29,78,216,0.12),transparent 35%),radial-gradient(circle at 85% 85%,rgba(239,68,68,0.08),transparent 35%);" class="dark-bg">
     <tr>
       <td align="center" style="padding:40px 16px;">
-        <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.06);">
+                                    <table role="presentation" width="620" cellpadding="0" cellspacing="0" style="max-width:620px;width:100%;background:rgba(255,255,255,0.55);border:1px solid rgba(15,23,42,0.10);border-radius:22px;padding:8px;box-shadow:0 24px 70px rgba(15,23,42,0.16);" class="dark-shell dark-border">
+                    <tr>
+                        <td>
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-radius:16px;overflow:hidden;border:1px solid rgba(15,23,42,0.08);background:#ffffff;" class="dark-card dark-border">
           <!-- Brand Bar -->
           <tr>
             <td style="background:#ffffff;padding:32px 40px 0 40px;position:relative;" class="dark-card">
@@ -214,12 +230,12 @@ export default function EmailTemplateManager() {
                         <td style="vertical-align:middle;">
                           <span style="font-size:24px;font-weight:800;color:#020617;letter-spacing:-0.5px;line-height:1;" class="dark-heading">3YESES</span>
                         </td>
-                        <td style="vertical-align:middle;padding-left:14px;">
-                          <span style="font-size:12px;color:#64748b;font-weight:500;letter-spacing:0.3px;" class="dark-subtle">Talent &middot; Casting &middot; Opportunities</span>
-                        </td>
                       </tr>
                     </table>
                   </td>
+                                    <td align="right" style="padding-bottom:20px;">
+                                        <span style="display:inline-block;padding:6px 12px;border-radius:999px;background:#eff6ff;color:#1d4ed8;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;font-weight:700;">Member Communication</span>
+                                    </td>
                 </tr>
               </table>
               <div style="height:3px;border-radius:2px;background:linear-gradient(90deg,#1d4ed8 0%,#ef4444 100%);"></div>
@@ -260,7 +276,10 @@ export default function EmailTemplateManager() {
               </p>
             </td>
           </tr>
-        </table>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
       </td>
     </tr>
   </table>
@@ -372,6 +391,16 @@ export default function EmailTemplateManager() {
                                 />
                             </div>
                             <div>
+                                <label className="block text-sm font-medium mb-1 text-[var(--admin-muted)]">Preheader Text</label>
+                                <input
+                                    type="text"
+                                    value={formData.preheaderText || ''}
+                                    onChange={e => setFormData({...formData, preheaderText: e.target.value})}
+                                    className="w-full px-3 py-2 border rounded-lg bg-[var(--admin-bg)] border-[var(--admin-border)] text-[var(--admin-text)] focus:border-[var(--admin-primary)] focus:outline-none"
+                                    placeholder="Short inbox preview text shown after subject"
+                                />
+                            </div>
+                            <div>
                                 <label className="block text-sm font-medium mb-1 text-[var(--admin-muted)]">HTML Body</label>
                                 <textarea
                                     value={formData.body}
@@ -459,7 +488,7 @@ export default function EmailTemplateManager() {
             {viewMode === 'grid' ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {templates.map(template => (
-                        <div key={template.id} className="admin-glass rounded-xl border border-[var(--admin-border)] shadow-sm hover:border-[var(--admin-primary)]/50 transition-all group overflow-hidden cursor-pointer" onClick={() => handleEdit(template)}>
+                        <div key={template.id} className="admin-glass rounded-xl border border-[var(--admin-border)] shadow-sm hover:border-[var(--admin-primary)]/50 transition-all group overflow-hidden cursor-pointer" onClick={() => handleView(template)}>
                             {/* Mini email preview */}
                             <div className="h-48 bg-[#f0f2f5] border-b border-[var(--admin-border)] relative overflow-hidden">
                                 <iframe
@@ -479,6 +508,13 @@ export default function EmailTemplateManager() {
                                 <div className="flex justify-between items-center">
                                     <span className="text-[10px] text-[var(--admin-muted)] font-mono">{template.id}</span>
                                     <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <button
+                                            onClick={(e) => { e.stopPropagation(); handleView(template); }}
+                                            className="p-1.5 text-[var(--admin-muted)] hover:text-[var(--admin-primary)] hover:bg-[var(--admin-primary)]/10 rounded-lg"
+                                            title="View"
+                                        >
+                                            <Eye size={14} />
+                                        </button>
                                         <button
                                             onClick={(e) => { e.stopPropagation(); handleEdit(template); }}
                                             className="p-1.5 text-[var(--admin-muted)] hover:text-[var(--admin-primary)] hover:bg-[var(--admin-primary)]/10 rounded-lg"
@@ -523,6 +559,13 @@ export default function EmailTemplateManager() {
                                     <td className="px-6 py-4 text-right">
                                         <div className="flex justify-end gap-2">
                                             <button
+                                                onClick={() => handleView(template)}
+                                                className="text-[var(--admin-primary)] hover:opacity-80"
+                                                title="View"
+                                            >
+                                                <Eye size={16} />
+                                            </button>
+                                            <button
                                                 onClick={() => handleEdit(template)}
                                                 className="text-[var(--admin-primary)] hover:opacity-80"
                                             >
@@ -540,6 +583,47 @@ export default function EmailTemplateManager() {
                             ))}
                         </tbody>
                     </table>
+                </div>
+            )}
+
+            {viewingTemplate && (
+                <div className="fixed inset-0 z-[120] bg-black/60 backdrop-blur-sm p-4 md:p-8">
+                    <div className="max-w-6xl mx-auto h-full bg-[var(--admin-surface)] rounded-xl border border-[var(--admin-border)] overflow-hidden flex flex-col">
+                        <div className="px-6 py-4 border-b border-[var(--admin-border)] flex items-start justify-between gap-4">
+                            <div>
+                                <h3 className="text-lg font-bold text-[var(--admin-text)]">{viewingTemplate.name}</h3>
+                                <p className="text-sm text-[var(--admin-muted)] mt-1">{viewingTemplate.subject}</p>
+                                {viewingTemplate.preheaderText && (
+                                    <p className="text-xs text-[var(--admin-muted)] mt-1">Preheader: {getTemplatePreheader(viewingTemplate)}</p>
+                                )}
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <button
+                                    onClick={() => {
+                                        handleEdit(viewingTemplate);
+                                        setViewingTemplate(null);
+                                    }}
+                                    className="px-3 py-2 text-sm bg-[var(--admin-primary)] text-white rounded-lg hover:opacity-90"
+                                >
+                                    Edit Template
+                                </button>
+                                <button
+                                    onClick={() => setViewingTemplate(null)}
+                                    className="px-3 py-2 text-sm border border-[var(--admin-border)] rounded-lg text-[var(--admin-text)] hover:bg-[var(--admin-bg)]"
+                                >
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+                        <div className="flex-1 bg-[#e5e7eb]">
+                            <iframe
+                                srcDoc={getTemplatePreviewHtml(viewingTemplate)}
+                                title={`Full preview: ${viewingTemplate.name}`}
+                                className="w-full h-full border-0"
+                                sandbox="allow-same-origin"
+                            />
+                        </div>
+                    </div>
                 </div>
             )}
         </div>

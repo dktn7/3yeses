@@ -22,13 +22,13 @@ export async function POST(req: NextRequest) {
 
     try {
         const body = await req.json();
-        const { id, name, subject, body: content, variables } = body;
+        const { id, name, subject, body: content, variables, preheaderText } = body;
 
         // Upsert
         const template = await prisma.emailTemplate.upsert({
             where: { id },
-            update: { name, subject, body: content, variables },
-            create: { id, name, subject, body: content, variables }
+            update: { name, subject, body: content, variables, preheaderText: preheaderText || null },
+            create: { id, name, subject, body: content, variables, preheaderText: preheaderText || null }
         });
 
         return NextResponse.json(template);

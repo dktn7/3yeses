@@ -77,38 +77,44 @@ const TALENT_CATEGORIES = [
 
 export default function AboutPage() {
   const t = useTranslations('About');
+  const emphasisToken = '__EVERYONE__';
+  const heroDescription = t('hero.description', { everyone: emphasisToken });
+  const [heroBefore, heroAfter = ''] = heroDescription.split(emphasisToken);
+
   return (
-    <div className="relative min-h-screen overflow-hidden bg-white dark:bg-gray-950">
+    <div className="relative min-h-screen overflow-hidden landing-bg brand-true-red isolate">
       <AboutBgDecoration />
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-24">
 
         <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: t('badge') || 'About' }]} />
         <div className="text-center mb-20">
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <SwoopingTick className="w-8 h-8 text-primary-blue dark:text-accent-red" />
-            <span className="text-xs font-bold uppercase tracking-[0.25em] text-primary-blue dark:text-accent-red">
-              {t('badge')}
+            <div className="flex justify-center mb-6">
+            <span className="marketing-pill inline-flex items-center gap-3 rounded-full px-5 py-2.5 backdrop-blur-md bg-light-surface dark:bg-dark-surface border border-gray-200/60 dark:border-[var(--marketing-pill-border)] shadow-sm">
+              <SwoopingTick className="w-9 h-9 shrink-0 text-primary-blue dark:text-accent-red" />
+              <span className="text-xs font-bold uppercase tracking-[0.25em] text-primary-blue dark:text-accent-red">
+                {t('badge')}
+              </span>
             </span>
           </div>
 
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight mb-6">
             <span className="text-gray-900 dark:text-white">{t('hero.title')}</span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-blue via-accent-blue to-indigo-500 dark:from-accent-red dark:via-primary-red dark:to-orange-500">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-blue via-accent-blue to-indigo-500 dark:from-accent-red dark:via-primary-red dark:to-red-500">
               {t('hero.accent')}
             </span>
           </h1>
 
           <p className="max-w-3xl mx-auto text-gray-600 dark:text-gray-300 text-base sm:text-lg leading-relaxed">
-            {t.rich('hero.description', {
-              everyone: (chunks) => <strong className="text-gray-900 dark:text-white">{chunks}</strong>
-            })}
+            {heroBefore}
+            <strong className="text-gray-900 dark:text-white">{t('hero.everyone')}</strong>
+            {heroAfter}
           </p>
         </div>
 
         {/* ── Origin Story ── */}
         <section className="mb-20">
-          <div className="rounded-[2rem] backdrop-blur-xl bg-white/60 dark:bg-white/[0.05] border border-gray-200/50 dark:border-white/10 shadow-lg p-8 md:p-12">
+          <div className="rounded-[2rem] backdrop-blur-xl bg-white/60 dark:bg-dark-surface/72 border border-gray-200/50 dark:border-red-400/20 shadow-lg p-8 md:p-12">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-6">
               {t('origin.title')}
             </h2>
@@ -142,7 +148,7 @@ export default function AboutPage() {
               return (
                 <div
                   key={v.titleKey}
-                  className="rounded-[1.5rem] backdrop-blur-xl bg-white/60 dark:bg-white/[0.06] border border-gray-200/50 dark:border-white/10 p-7 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
+                  className="rounded-[1.5rem] backdrop-blur-xl bg-white/60 dark:bg-dark-surface/72 border border-gray-200/50 dark:border-red-400/20 p-7 shadow-sm hover:shadow-lg hover:-translate-y-0.5 hover:border-primary-blue/30 dark:hover:border-red-300/40 transition-all duration-300"
                 >
                   <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style={{ background: 'linear-gradient(135deg, color-mix(in srgb, var(--brand-primary) 12%, transparent), color-mix(in srgb, var(--brand-accent) 12%, transparent))' }}>
                     <Icon className="w-6 h-6" style={{ color: 'var(--brand-primary)' }} strokeWidth={1.5} />
@@ -168,7 +174,7 @@ export default function AboutPage() {
               {TALENT_CATEGORIES.map((cat) => (
                 <span
                   key={cat}
-                  className="px-4 py-2 rounded-full text-sm font-medium backdrop-blur-md bg-white/70 dark:bg-white/[0.08] border border-gray-200/50 dark:border-white/10 text-gray-700 dark:text-gray-200 shadow-sm"
+                  className="marketing-pill px-4 py-2 rounded-full text-sm font-medium backdrop-blur-md bg-light-surface dark:bg-dark-surface border border-gray-200/50 dark:border-[var(--marketing-pill-border)] text-gray-700 dark:text-slate-50 shadow-sm"
                 >
                   {cat}
                 </span>
@@ -194,7 +200,7 @@ export default function AboutPage() {
               return (
                 <div
                   key={f.titleKey}
-                  className="rounded-[1.5rem] backdrop-blur-xl bg-white/60 dark:bg-white/[0.06] border border-gray-200/50 dark:border-white/10 p-6 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
+                  className="rounded-[1.5rem] backdrop-blur-xl bg-white/60 dark:bg-dark-surface/72 border border-gray-200/50 dark:border-red-400/20 p-6 shadow-sm hover:shadow-lg hover:-translate-y-0.5 hover:border-primary-blue/30 dark:hover:border-red-300/40 transition-all duration-300"
                 >
                   <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary-blue/10 to-accent-blue/10 dark:from-accent-red/10 dark:to-primary-red/10 flex items-center justify-center mb-3">
                     <Icon className="w-5 h-5 text-primary-blue dark:text-accent-red" strokeWidth={1.5} />
@@ -209,7 +215,7 @@ export default function AboutPage() {
 
         {/* ── How it works ── */}
         <section className="mb-20">
-          <div className="rounded-[2rem] backdrop-blur-xl bg-white/60 dark:bg-white/[0.05] border border-gray-200/50 dark:border-white/10 shadow-lg p-8 md:p-12">
+          <div className="rounded-[2rem] backdrop-blur-xl bg-white/60 dark:bg-dark-surface/72 border border-gray-200/50 dark:border-red-400/20 shadow-lg p-8 md:p-12">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-8 text-center">
               {t('howItWorks.title')}
             </h2>
@@ -244,13 +250,13 @@ export default function AboutPage() {
             <div className="flex flex-wrap justify-center gap-4">
               <Link
                 href="/auth/signup"
-                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-primary-blue to-accent-blue dark:from-accent-red dark:to-primary-red text-white font-semibold px-8 py-3.5 text-sm shadow-lg shadow-primary-blue/20 dark:shadow-accent-red/20 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200"
+                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-primary-blue to-accent-blue dark:from-accent-red dark:to-primary-red text-white font-semibold px-8 py-3.5 text-sm shadow-lg shadow-primary-blue/20 dark:shadow-accent-red/20 hover:shadow-xl hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/35 dark:focus-visible:ring-accent-red/35 transition-all duration-200"
               >
                 {t('cta.getStarted')} <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
                 href="/pricing"
-                className="inline-flex items-center gap-2 rounded-xl backdrop-blur-xl bg-white/70 dark:bg-white/[0.08] border border-gray-200/60 dark:border-white/10 text-gray-900 dark:text-white font-semibold px-8 py-3.5 text-sm shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
+                className="inline-flex items-center gap-2 rounded-xl backdrop-blur-xl bg-white/70 dark:bg-dark-surface/72 border border-gray-200/60 dark:border-red-400/20 text-gray-900 dark:text-white font-semibold px-8 py-3.5 text-sm shadow-sm hover:shadow-lg hover:-translate-y-0.5 hover:text-primary-blue dark:hover:text-accent-red focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/35 dark:focus-visible:ring-accent-red/35 transition-all duration-200"
               >
                 {t('cta.viewPricing')}
               </Link>

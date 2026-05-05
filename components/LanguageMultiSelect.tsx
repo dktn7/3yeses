@@ -98,7 +98,7 @@ export default function LanguageMultiSelect({ value, onChange, placeholder }: Pr
     <div ref={wrapperRef}>
       <div className="flex flex-wrap gap-2 mb-3">
         {value.map(v => (
-          <span key={v} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-100 dark:bg-red-900/30 text-blue-700 dark:text-red-300 text-sm font-medium">
+          <span key={v} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--marketing-pill-bg)] dark:bg-[var(--marketing-pill-bg)] text-[var(--marketing-pill-icon)] dark:text-[var(--marketing-pill-icon)] border border-[var(--marketing-pill-border)] text-sm font-medium">
             <CheckCircle2 size={14} className="text-green-500" />
             {v}
             <button type="button" onClick={() => remove(v)} className="ml-0.5 hover:text-red-500 transition-colors">
@@ -118,18 +118,18 @@ export default function LanguageMultiSelect({ value, onChange, placeholder }: Pr
             onFocus={() => setShowSuggestions(true)}
             onKeyDown={handleKeyDown}
             placeholder={placeholder || 'Search languages...'}
-            className="w-full pl-9 pr-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-red-500"
+            className="w-full pl-9 pr-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-red-500"
           />
         </div>
 
         {showSuggestions && (filtered.length > 0 || isCustom) && (
-          <div className="absolute z-50 mt-1 left-0 right-0 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl max-h-56 overflow-auto">
+          <div className="absolute z-50 mt-1 left-0 right-0 bg-light-surface dark:bg-dark-surface border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl max-h-56 overflow-auto">
             {filtered.slice(0, 20).map(l => (
               <button
                 key={l}
                 type="button"
                 onClick={() => add(l)}
-                className="w-full text-left px-3 py-2 hover:bg-blue-50 dark:hover:bg-red-900/20 text-sm text-gray-900 dark:text-white transition-colors"
+                className="w-full text-left px-3 py-2 hover-smart-bg text-sm text-gray-900 dark:text-white transition-colors"
               >
                 {l}
               </button>
@@ -138,7 +138,7 @@ export default function LanguageMultiSelect({ value, onChange, placeholder }: Pr
               <button
                 type="button"
                 onClick={addCustom}
-                className="w-full text-left px-3 py-2 hover:bg-blue-50 dark:hover:bg-red-900/20 text-sm text-blue-600 dark:text-red-400 font-medium border-t border-gray-100 dark:border-gray-800"
+                className="w-full text-left px-3 py-2 hover-smart-bg text-sm text-blue-600 dark:text-red-400 font-medium border-t border-gray-100 dark:border-gray-800"
               >
                 + Add &ldquo;{inputTrimmed}&rdquo; as custom language
               </button>

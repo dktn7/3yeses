@@ -23,9 +23,9 @@ export default function Navbar() {
   const isActive = (path: string) => pathname?.includes(path);
 
   return (
-    <header className="bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3 flex justify-between items-center fixed top-0 left-0 right-0 h-16 z-50">
+    <header className="fixed top-0 left-0 right-0 z-50 flex h-16 items-center justify-between border-b border-[var(--chrome-border)] bg-[var(--chrome-bg)] px-4 py-3 backdrop-blur-md shadow-[0_1px_0_rgba(255,255,255,0.35)] dark:shadow-[0_1px_0_rgba(255,255,255,0.02)]">
       <div className="flex items-center gap-4">
-        <Link href={`/${locale}`} className="flex items-center gap-2 font-bold text-2xl text-blue-600 dark:text-red-500 hover:opacity-80 transition-opacity cursor-pointer">
+        <Link href={`/${locale}`} className="flex cursor-pointer items-center gap-2 text-2xl font-bold text-primary-blue transition-opacity hover:opacity-80 dark:text-accent-red">
           3YESES
           <SwoopingTick size={32} />
         </Link>
@@ -41,8 +41,8 @@ export default function Navbar() {
             href={`/${locale}/dashboard/saved`}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
               isActive('/saved')
-                ? 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400'
-                : 'text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700'
+                ? 'bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] ring-1 ring-[var(--brand-primary)]/15'
+                : 'text-gray-600 dark:text-red-200/85 hover:bg-[var(--chrome-hover)] hover:text-gray-900 dark:hover:text-red-50'
             }`}
           >
             <SwoopingTick size={16} />
@@ -52,8 +52,8 @@ export default function Navbar() {
             href={`/${locale}/dashboard/history`}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
               isActive('/history')
-                ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'
-                : 'text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700'
+                ? 'bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] ring-1 ring-[var(--brand-primary)]/15'
+                : 'text-gray-600 dark:text-red-200/85 hover:bg-[var(--chrome-hover)] hover:text-gray-900 dark:hover:text-red-50'
             }`}
           >
             <Eye className="h-4 w-4" />

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
 type AdminTheme = 'light' | 'dark' | 'default' | 'blue-light';
 type TextSize = 1 | 2 | 3;
@@ -10,6 +10,8 @@ interface AdminThemeContextType {
   setTheme: (theme: AdminTheme) => void;
   textSize: TextSize;
   setTextSize: (size: TextSize) => void;
+  fontSize: number;
+  setFontSize: (size: number) => void;
   highContrast: boolean;
   setHighContrast: (v: boolean) => void;
   inverted: boolean;
@@ -20,10 +22,30 @@ const AdminThemeContext = createContext<AdminThemeContextType | undefined>(undef
 
 export function AdminThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<AdminTheme>('light');
-  const [textSize, setTextSize] = useState<TextSize>(1);
+  const [textSize, setTextSizeState] = useState<TextSize>(1);
+  const [fontSize, setFontSizeState] = useState(16);
   const [highContrast, setHighContrast] = useState(false);
   const [inverted, setInverted] = useState(false);
   const [mounted, setMounted] = useState(false);
+
+  const setTextSize = useCallback((size: TextSize) => {
+    setTextSizeState(size);
+    if (size === 1) setFontSizeState(16);
+    if (size === 2) setFontSizeState(18);
+    if (size === 3) setFontSizeState(20);
+  }, []);
+
+  const setFontSize = useCallback((size: number) => {
+    const clamped = Math.max(12, Math.min(24, Math.round(size)));
+    setFontSizeState(clamped);
+    if (clamped >= 20) {
+      setTextSizeState(3);
+    } else if (clamped >= 17) {
+      setTextSizeState(2);
+    } else {
+      setTextSizeState(1);
+    }
+  }, []);
 
   useEffect(() => {
     // Load preferences from localStorage
@@ -32,7 +54,12 @@ export function AdminThemeProvider({ children }: { children: React.ReactNode }) 
       try {
         const parsed = JSON.parse(saved);
         setTheme(parsed.theme || 'light');
-        setTextSize(parsed.textSize || 1);
+        const parsedTextSize = parsed.textSize || 1;
+        const parsedFontSize = typeof parsed.fontSize === 'number'
+          ? parsed.fontSize
+          : (parsedTextSize === 3 ? 20 : parsedTextSize === 2 ? 18 : 16);
+        setTextSizeState(parsedTextSize);
+        setFontSize(parsedFontSize);
         setHighContrast(parsed.highContrast || false);
         setInverted(parsed.inverted || false);
       } catch (e) {
@@ -45,58 +72,41 @@ export function AdminThemeProvider({ children }: { children: React.ReactNode }) 
         }
     }
     setMounted(true);
-  }, []);
+  }, [setFontSize]);
 
   useEffect(() => {
     if (mounted) {
       localStorage.setItem('admin_theme_prefs', JSON.stringify({
         theme,
         textSize,
+        fontSize,
         highContrast,
         inverted,
       }));
     }
-  }, [theme, textSize, highContrast, inverted, mounted]);
+  }, [theme, textSize, fontSize, highContrast, inverted, mounted]);
 
-  // Apply CSS variables based on theme
   useEffect(() => {
+    if (!mounted) return;
     const root = document.documentElement;
-
-    // Apply font size scaling
-    if (textSize === 2) {
-      root.style.fontSize = '105%';
-    } else if (textSize === 3) {
-      root.style.fontSize = '110%';
-    } else {
-      root.style.fontSize = '100%';
-    }
-    
-    // We no longer toggle dark mode class here because next-themes handles it globally.
-    // The theme state here is kept for backward compatibility if needed by other admin components.
-
-  }, [theme, textSize]);
-
-  // Apply accessibility filters
-  useEffect(() => {
-    const root = document.documentElement;
-    const filters: string[] = [];
-    if (highContrast) filters.push('contrast(1.4)');
-    if (inverted) filters.push('invert(1) hue-rotate(180deg)');
-    root.style.filter = filters.length > 0 ? filters.join(' ') : '';
-    return () => { root.style.filter = ''; };
-  }, [highContrast, inverted]);
-
-  if (!mounted) return <>{children}</>;
+    const previousFontSize = root.style.fontSize;
+    root.style.fontSize = `${fontSize}px`;
+    return () => {
+      root.style.fontSize = previousFontSize;
+    };
+  }, [fontSize, mounted]);
 
   return (
     <AdminThemeContext.Provider value={{
       theme, setTheme,
       textSize, setTextSize,
+      fontSize, setFontSize,
       highContrast, setHighContrast,
       inverted, setInverted,
     }}>
       <div 
-        className="admin-root min-h-screen bg-[var(--admin-bg)] text-[var(--admin-text)] font-sans transition-colors duration-200"
+        className={`admin-root min-h-screen bg-[var(--admin-bg)] text-[var(--admin-text)] font-sans transition-colors duration-200 ${highContrast ? 'admin-high-contrast' : ''} ${inverted ? 'admin-inverted' : ''}`}
+        style={{ fontSize: `${fontSize}px` }}
       >
         {children}
       </div>

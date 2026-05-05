@@ -68,7 +68,7 @@ export default function VideoTalentCard({
 
   return (
     <div 
-      className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 dark:border-gray-800 group cursor-pointer w-full text-left focus:outline-none focus:ring-2 focus:ring-blue-500"
+      className="relative bg-light-surface dark:bg-dark-surface rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 dark:border-gray-800 group cursor-pointer w-full text-left focus:outline-none focus:ring-2 focus:ring-blue-500"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -99,8 +99,8 @@ export default function VideoTalentCard({
         {talent?.videoUrl && (
           <div className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ${isHovered ? 'bg-black/40' : 'bg-transparent'}`}>
             {(isHovered || !isYoutube) && (
-               <div className={`bg-white/90 backdrop-blur-sm rounded-full p-3 shadow-lg transition-all duration-300 ${isHovered ? 'scale-110 opacity-100' : 'scale-100 opacity-0'}`}>
-                 <Play className="w-8 h-8 text-gray-800 fill-gray-800" />
+               <div className={`bg-light-surface backdrop-blur-sm rounded-full p-3 shadow-lg transition-all duration-300 ${isHovered ? 'scale-110 opacity-100' : 'scale-100 opacity-0'}`}>
+                 <Play className="w-8 h-8 text-gray-800 dark:text-white fill-gray-800 dark:fill-white" />
                </div>
             )}
           </div>
@@ -117,7 +117,7 @@ export default function VideoTalentCard({
             e.stopPropagation();
             setIsFavorited(!isFavorited);
           }}
-          className="absolute top-4 right-4 p-2 rounded-full bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm shadow-lg hover:scale-110 transition-all duration-200 z-20"
+          className="absolute top-4 right-4 p-2 rounded-full bg-light-surface dark:bg-dark-surface/90 backdrop-blur-sm shadow-lg hover:scale-110 transition-all duration-200 z-20"
         >
           <SwoopingTick 
             size={20}
@@ -136,10 +136,10 @@ export default function VideoTalentCard({
       </div>
 
       {/* Content Section */}
-      <div className="p-4 space-y-3">
+          <div className="p-4 space-y-3">
         <div>
           <div className="flex justify-between items-start mb-1">
-            <h3 className="font-bold text-lg text-gray-900 dark:text-white line-clamp-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+            <h3 className="font-bold text-lg text-light-surface dark:text-dark-surface line-clamp-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
               {displayTitle}
             </h3>
             {/* Rating removed per platform decision */}
@@ -160,7 +160,7 @@ export default function VideoTalentCard({
 
         <div className="pt-3 border-t border-gray-100 dark:border-gray-800 flex items-center justify-between">
           <div className="text-xs font-medium text-gray-500 dark:text-gray-400">
-            <span className="text-gray-900 dark:text-white font-bold text-sm">{displayProjects}</span> projects
+            <span className="text-light-surface dark:text-dark-surface font-bold text-sm">{displayProjects}</span> projects
           </div>
           <div className="flex -space-x-2">
             {[1, 2, 3].map((i) => (

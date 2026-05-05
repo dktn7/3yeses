@@ -81,7 +81,7 @@ export default function ViewHistoryPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-light-surface dark:bg-dark-surface">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
@@ -95,8 +95,8 @@ export default function ViewHistoryPage() {
           
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <div className="bg-blue-100 dark:bg-blue-900/20 p-3 rounded-xl">
-                <Eye className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+              <div className="p-3 rounded-xl bg-[var(--marketing-pill-bg)] border border-[var(--marketing-pill-border)]">
+                <Eye className="h-8 w-8 text-[var(--marketing-pill-icon)]" />
               </div>
               <div>
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
@@ -114,7 +114,7 @@ export default function ViewHistoryPage() {
               <select
                 value={timeFilter}
                 onChange={(e) => setTimeFilter(e.target.value)}
-                className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="bg-light-surface dark:bg-dark-surface border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red"
               >
                 <option value="all">{t('dashboard.allTime')}</option>
                 <option value="today">{t('dashboard.today')}</option>
@@ -127,7 +127,7 @@ export default function ViewHistoryPage() {
 
         {/* Talents List with Timeline */}
         {filteredTalents.length === 0 ? (
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-12 text-center">
+          <div className="bg-light-surface dark:bg-dark-surface rounded-xl shadow-sm p-12 text-center">
             <Eye className="h-16 w-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
               {t('dashboard.noViewHistory')}
@@ -137,7 +137,7 @@ export default function ViewHistoryPage() {
             </p>
             <Link
               href={`/${locale}/talents`}
-              className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+              className="inline-block bg-gradient-to-r from-primary-blue to-accent-blue dark:from-accent-red dark:to-primary-red hover:opacity-95 text-white px-6 py-2 rounded-lg font-medium transition-colors"
             >
               {t('dashboard.browseTalents')}
             </Link>

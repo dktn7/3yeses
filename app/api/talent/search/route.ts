@@ -1,26 +1,66 @@
 import { NextResponse } from 'next/server';
 import { getPrisma } from '@/lib/prisma';
 
+const DISABILITY_VALUE_MAP: Record<string, string[]> = {
+  wheelchair: ['wheelchair', 'Wheelchair User', 'WHEELCHAIR_USER'],
+  visual: ['visual', 'Visual Impairment', 'Visual Impairment/Blindness'],
+  hearing: ['hearing', 'Hearing Impairment', 'Hearing Impairment/Deafness'],
+  mobility: ['mobility', 'Mobility Impairment', 'Mobility Aid', 'Wheelchair User'],
+  limb_difference: ['limb_difference', 'Limb Difference', 'Limb Difference/Amputation'],
+  dwarfism: ['dwarfism', 'Dwarfism'],
+  other: ['other', 'Other'],
+};
+
+function toCsvList(value: string | null): string[] {
+  if (!value) return [];
+  return value.split(',').map((item) => item.trim()).filter(Boolean);
+}
+
+function mapEthnicity(value: string): string {
+  const lower = value.toLowerCase();
+  if (lower === 'white') return 'WHITE_CAUCASIAN';
+  if (lower === 'black/african' || lower === 'black') return 'BLACK_AFRICAN';
+  if (lower === 'hispanic/latino') return 'HISPANIC_LATINO';
+  if (lower === 'asian') return 'ASIAN';
+  if (lower === 'middle eastern') return 'MIDDLE_EASTERN';
+  if (lower === 'mixed race' || lower === 'mixed') return 'MIXED_MULTIRACIAL';
+  if (lower === 'other') return 'OTHER';
+  return value.toUpperCase().replace(/[\s/-]/g, '_');
+}
+
+function mapDisabilities(values: string[]): string[] {
+  const mapped = values.flatMap((value) => {
+    const key = value.toLowerCase().replace(/\s+/g, '_').replace(/-/g, '_');
+    return DISABILITY_VALUE_MAP[key] || [value];
+  });
+  return Array.from(new Set(mapped));
+}
+
 export async function GET(request: Request) {
   const prisma = getPrisma();
   try {
     const { searchParams } = new URL(request.url);
     
     const category = searchParams.get('category');
+    const categories = toCsvList(searchParams.get('categories'));
     const subcategory = searchParams.get('subcategory');
+    const subcategories = toCsvList(searchParams.get('subcategories'));
     const query = searchParams.get('q');
     const location = searchParams.get('location');
-    const gender = searchParams.get('gender')?.split(',').filter(Boolean);
-    const bodyType = searchParams.get('bodyType')?.split(',').filter(Boolean);
-    const ethnicity = searchParams.get('ethnicity');
+    const gender = toCsvList(searchParams.get('gender'));
+    const bodyType = toCsvList(searchParams.get('bodyType'));
+    const ethnicity = toCsvList(searchParams.get('ethnicity'));
     const minAge = searchParams.get('minAge');
     const maxAge = searchParams.get('maxAge');
     const minHeight = searchParams.get('minHeight');
     const maxHeight = searchParams.get('maxHeight');
-    const eyeColor = searchParams.get('eyeColor')?.split(',').filter(Boolean);
-    const hairColor = searchParams.get('hairColor')?.split(',').filter(Boolean);
-    const skills = searchParams.get('skills')?.split(',').filter(Boolean);
-    const languages = searchParams.get('languages')?.split(',').filter(Boolean);
+    const minExp = searchParams.get('minExp');
+    const maxExp = searchParams.get('maxExp');
+    const eyeColor = toCsvList(searchParams.get('eyeColor'));
+    const hairColor = toCsvList(searchParams.get('hairColor'));
+    const skills = toCsvList(searchParams.get('skills'));
+    const languages = toCsvList(searchParams.get('languages'));
+    const disabilities = toCsvList(searchParams.get('disabilities'));
     const sortBy = searchParams.get('sortBy') || 'relevance';
 
     const page = parseInt(searchParams.get('page') || '1');
@@ -32,11 +72,51 @@ export async function GET(request: Request) {
 
     // Apply filters based on query parameters
     if (category) {
-      whereClause.categoryId = category;
+      whereClause.AND = [
+        ...(whereClause.AND || []),
+        {
+          OR: [
+            { categoryId: category },
+            { category: { name: { equals: category, mode: 'insensitive' } } }
+          ]
+        }
+      ];
+    }
+
+    if (categories.length > 0) {
+      whereClause.AND = [
+        ...(whereClause.AND || []),
+        {
+          OR: [
+            ...categories.map((id) => ({ categoryId: id })),
+            ...categories.map((name) => ({ category: { name: { equals: name, mode: 'insensitive' } } }))
+          ]
+        }
+      ];
     }
     
     if (subcategory) {
-      whereClause.subcategoryId = subcategory;
+      whereClause.AND = [
+        ...(whereClause.AND || []),
+        {
+          OR: [
+            { subcategoryId: subcategory },
+            { subcategory: { name: { equals: subcategory, mode: 'insensitive' } } }
+          ]
+        }
+      ];
+    }
+
+    if (subcategories.length > 0) {
+      whereClause.AND = [
+        ...(whereClause.AND || []),
+        {
+          OR: [
+            ...subcategories.map((id) => ({ subcategoryId: id })),
+            ...subcategories.map((name) => ({ subcategory: { name: { equals: name, mode: 'insensitive' } } }))
+          ]
+        }
+      ];
     }
 
     if (query) {
@@ -73,20 +153,8 @@ export async function GET(request: Request) {
       whereClause.bodyType = { in: mappedBodyType };
     }
 
-    if (ethnicity) {
-      const e = ethnicity;
-      const lower = e.toLowerCase();
-      let mappedEthnicity = e.toUpperCase().replace(/[\s/-]/g, '_');
-      
-      if (lower === 'white') mappedEthnicity = 'WHITE_CAUCASIAN';
-      else if (lower === 'black/african' || lower === 'black') mappedEthnicity = 'BLACK_AFRICAN';
-      else if (lower === 'hispanic/latino') mappedEthnicity = 'HISPANIC_LATINO';
-      else if (lower === 'asian') mappedEthnicity = 'ASIAN';
-      else if (lower === 'middle eastern') mappedEthnicity = 'MIDDLE_EASTERN';
-      else if (lower === 'mixed race' || lower === 'mixed') mappedEthnicity = 'MIXED_MULTIRACIAL';
-      else if (lower === 'other') mappedEthnicity = 'OTHER';
-      
-      whereClause.ethnicity = mappedEthnicity;
+    if (ethnicity.length > 0) {
+      whereClause.ethnicity = { in: ethnicity.map(mapEthnicity) };
     }
 
     if (minAge || maxAge) {
@@ -101,6 +169,30 @@ export async function GET(request: Request) {
       if (maxHeight) whereClause.height.lte = parseInt(maxHeight);
     }
 
+    if (minExp || maxExp) {
+      // experienceLevel is stored as string labels in database, so map numeric bounds to the appropriate buckets.
+      const min = minExp ? parseInt(minExp) : 0;
+      const max = maxExp ? parseInt(maxExp) : Number.MAX_SAFE_INTEGER;
+
+      const experienceBuckets: Array<{ label: string; min: number; max: number }> = [
+        { label: 'Beginner', min: 0, max: 2 },
+        { label: 'Intermediate', min: 3, max: 5 },
+        { label: 'Advanced', min: 6, max: 10 },
+        { label: 'Expert', min: 11, max: Number.MAX_SAFE_INTEGER }
+      ];
+
+      const selectedBuckets = experienceBuckets
+        .filter((bucket) => !(max < bucket.min || min > bucket.max))
+        .map((bucket) => ({ experienceLevel: { contains: bucket.label, mode: 'insensitive' } }));
+
+      if (selectedBuckets.length > 0) {
+        whereClause.AND = [
+          ...(whereClause.AND || []),
+          { OR: selectedBuckets }
+        ];
+      }
+    }
+
     if (eyeColor && eyeColor.length > 0) {
       whereClause.eyeColor = { in: eyeColor };
     }
@@ -111,6 +203,10 @@ export async function GET(request: Request) {
 
     if (skills && skills.length > 0) {
       whereClause.skills = { hasSome: skills };
+    }
+
+    if (disabilities.length > 0) {
+      whereClause.disabilities = { hasSome: mapDisabilities(disabilities) };
     }
 
     // Languages is a relation (Language model with name/proficiency)
@@ -155,7 +251,7 @@ export async function GET(request: Request) {
             }
           },
           category: {
-            select: { id: true, name: true }
+            select: { id: true, name: true, icon: true }
           },
           subcategory: {
             select: { id: true, name: true }
@@ -184,6 +280,8 @@ export async function GET(request: Request) {
     // Transform data to match client expectation
     const transformedTalents = talents.map((talent) => ({
       id: (talent as any).userId,
+      // explicit profileId (user id) for client routing
+      profileId: (talent as any).userId,
       name: (talent as any).user?.name || '',
       role: talent.performerTitle || '',
       title: talent.performerTitle || '',
@@ -193,6 +291,7 @@ export async function GET(request: Request) {
       avatarUrl: talent.avatarUrl,
       videoUrl: talent.videoUrl,
       category: talent.category?.name || '',
+      categoryIcon: talent.category?.icon || null,
       subcategory: talent.subcategory?.name || '',
       skills: talent.skills || [],
       featuredSkills: (talent as any).featuredSkills || [],
@@ -260,7 +359,8 @@ export async function POST(request: Request) {
       eyeColor,
       hairColor,
       skills,
-      languages
+      languages,
+      disabilities
     } = body;
 
     const skip = (page - 1) * pageSize;
@@ -333,6 +433,10 @@ export async function POST(request: Request) {
       whereClause.skills = { hasSome: skills };
     }
 
+    if (disabilities && disabilities.length > 0) {
+      whereClause.disabilities = { hasSome: mapDisabilities(disabilities) };
+    }
+
     // Languages in schema is a relation `languages Language[]`
     // Client sends string array.
     if (languages && languages.length > 0) {
@@ -343,10 +447,15 @@ export async function POST(request: Request) {
       };
     }
 
-    // Experience is String in schema, but client sends range.
-    // We can't easily filter string ranges in DB.
-    // We might need to fetch and filter in memory or ignore for now if the schema is incompatible.
-    // Ignoring experience filter for now to prevent errors.
+    if (experienceLevel && typeof experienceLevel === 'object') {
+      const min = (experienceLevel as any).min;
+      const max = (experienceLevel as any).max;
+      if (min !== undefined || max !== undefined) {
+        whereClause.experienceLevel = {};
+        if (min !== undefined) whereClause.experienceLevel.gte = min;
+        if (max !== undefined) whereClause.experienceLevel.lte = max;
+      }
+    }
 
     console.log('Talent Search WhereClause:', JSON.stringify(whereClause, null, 2));
 
@@ -362,7 +471,7 @@ export async function POST(request: Request) {
             }
           },
           category: {
-            select: { id: true, name: true }
+            select: { id: true, name: true, icon: true }
           },
           subcategory: {
             select: { id: true, name: true }
@@ -397,6 +506,8 @@ export async function POST(request: Request) {
     // Transform data to match client expectation
     const transformedTalents = talents.map(talent => ({
       id: talent.userId,
+      // explicit profileId (user id) for client routing
+      profileId: talent.userId,
       name: talent.user.name, // For VideoTalentCard
       role: talent.performerTitle || '', // For VideoTalentCard
       title: talent.performerTitle || '',
@@ -416,6 +527,7 @@ export async function POST(request: Request) {
       avatarUrl: talent.avatarUrl, // For VideoTalentCard
       videoUrl: talent.videoUrl, // For VideoTalentCard
       category: talent.category?.name || '',
+      categoryIcon: talent.category?.icon || null,
       subcategory: talent.subcategory?.name || '',
       skills: talent.skills || [],
       featuredSkills: (talent as any).featuredSkills || [],

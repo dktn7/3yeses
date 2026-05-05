@@ -59,9 +59,9 @@ export default function MessagesPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900">
+    <div className="min-h-screen bg-light-surface dark:bg-dark-surface">
       {/* Header */}
-      <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 p-4">
+      <header className="bg-light-surface dark:bg-dark-surface border-b border-gray-200 dark:border-gray-700 p-4">
         <div className="max-w-7xl mx-auto flex items-center justify-center">
           <Link href="/" className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-primary-blue dark:bg-accent-red flex items-center justify-center">
@@ -74,7 +74,7 @@ export default function MessagesPage() {
 
       <div className="flex">
         {/* Messages List */}
-        <div className="w-1/3 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700">
+        <div className="w-1/3 bg-light-surface dark:bg-dark-surface border-r border-gray-200 dark:border-gray-700">
         <div className="p-4 border-b border-gray-200 dark:border-gray-700">
           <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Messages</h1>
           <div className="relative">
@@ -93,7 +93,7 @@ export default function MessagesPage() {
               key={message.id}
               onClick={() => setSelectedMessage(index)}
               className={`p-4 border-b border-gray-100 dark:border-gray-700 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 ${
-                selectedMessage === index ? 'bg-blue-50 dark:bg-blue-900/20' : ''
+                selectedMessage === index ? 'bg-blue-50 dark:bg-red-900/20' : ''
               }`}
             >
               <div className="flex items-start space-x-3">
@@ -112,7 +112,7 @@ export default function MessagesPage() {
                     {message.lastMessage}
                   </p>
                   {message.unread && (
-                    <div className="w-2 h-2 bg-blue-500 rounded-full mt-1"></div>
+                    <div className="w-2 h-2 bg-primary-blue dark:bg-accent-red rounded-full mt-1"></div>
                   )}
                 </div>
               </div>
@@ -124,7 +124,7 @@ export default function MessagesPage() {
       {/* Chat Area */}
       <div className="flex-1 flex flex-col">
         {/* Chat Header */}
-        <div className="p-4 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+        <div className="p-4 bg-light-surface dark:bg-dark-surface border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center space-x-3">
             <div className="w-8 h-8 bg-primary-blue dark:bg-accent-red rounded-full flex items-center justify-center">
               <span className="text-white text-sm font-medium">{messages[selectedMessage].avatar}</span>
@@ -153,7 +153,7 @@ export default function MessagesPage() {
                 }`}
               >
                 <p className="text-sm">{msg.message}</p>
-                <p className={`text-xs mt-1 ${msg.isMe ? 'text-blue-100' : 'text-gray-500'}`}>
+                <p className={`text-xs mt-1 ${msg.isMe ? 'text-red-100' : 'text-gray-500'}`}>
                   {msg.time}
                 </p>
               </div>
@@ -162,7 +162,7 @@ export default function MessagesPage() {
         </div>
 
         {/* Message Input */}
-        <div className="p-4 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
+        <div className="p-4 bg-light-surface dark:bg-dark-surface border-t border-gray-200 dark:border-gray-700">
           <div className="flex items-center space-x-2">
             <input
               type="text"

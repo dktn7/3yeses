@@ -15,4 +15,6 @@ export const eyeColorOptions = ['Brown', 'Blue', 'Green', 'Hazel', 'Gray', 'Othe
 
 export const hairColorOptions = ['Black', 'Brown', 'Blonde', 'Red', 'Gray', 'Other'];
 
-export default {};
+const characteristics = {};
+
+export default characteristics;

@@ -5,7 +5,8 @@ import { Inter } from "next/font/google";
 import React from "react";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { AuthProvider } from "@/contexts/AuthContext";
-import { getTranslations } from 'next-intl/server';
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages, getTranslations } from 'next-intl/server';
 
 const inter = Inter({
     subsets: ["latin"],
@@ -25,29 +26,34 @@ export default async function RootLayout({
                                    }: Readonly<{
     children: React.ReactNode;
 }>) {
+    const locale = await getLocale();
+    const messages = await getMessages();
+
     return (
       <html suppressHydrationWarning>
         <head>
           <link rel="preload" as="image" href="/images/hero-poster.webp" type="image/webp" />
         </head>
-        <body className={`${inter.className} bg-white dark:bg-gray-900`}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <AuthProvider>
-              <div className="flex flex-col min-h-screen">
-                <GlobalHeader />
+        <body className={`${inter.className} landing-bg`}>
+          <NextIntlClientProvider locale={locale} messages={messages}>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <AuthProvider>
+                <div className="flex flex-col min-h-screen">
+                  <GlobalHeader />
 
-                {/* Main Content Area — pt-16 offsets the fixed h-16 GlobalHeader */}
-                <div className="min-h-screen flex flex-col pt-16">
-                  {children}
+                  {/* Main Content Area - pt-16 offsets the fixed h-16 GlobalHeader */}
+                  <div className="min-h-screen flex flex-col pt-16">
+                    {children}
+                  </div>
                 </div>
-              </div>
-            </AuthProvider>
-          </ThemeProvider>
+              </AuthProvider>
+            </ThemeProvider>
+          </NextIntlClientProvider>
           <div id="tooltip-root"></div>
         </body>
       </html>

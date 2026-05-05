@@ -16,7 +16,7 @@ interface StatCardProps {
 
 function StatCard({ icon: Icon, number, label, description }: StatCardProps) {
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 text-center hover:shadow-xl transition-shadow duration-300">
+    <div className="bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg p-6 text-center hover:shadow-xl transition-shadow duration-300">
       <Icon className="h-12 w-12 text-primary-blue dark:text-accent-red mx-auto mb-4" />
       <div className="text-3xl font-bold text-gray-900 dark:text-white mb-2">{number}</div>
       <div className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">{label}</div>
@@ -73,15 +73,15 @@ export default function AboutPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900">
+    <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-primary-blue/10 to-accent-red/10 dark:from-gray-900 dark:to-gray-800 py-20">
+      <section className="bg-white/40 dark:bg-white/[0.03] py-20">
         <div className="container mx-auto px-6">
           {/* Breadcrumb Navigation */}
           <nav className="mb-8">
             <ol className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
               <li>
-                <a href="/" className="hover:text-blue-600 dark:hover:text-red-500 transition-colors">
+                <a href="/" className="hover:text-primary-blue dark:hover:text-accent-red transition-colors">
                   Home
                 </a>
               </li>
@@ -119,7 +119,7 @@ export default function AboutPage() {
       </section>
 
       {/* Live Stats Section */}
-      <section className="py-16 bg-white dark:bg-gray-800">
+      <section className="py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12">
             {t('stats.title')}
@@ -154,7 +154,7 @@ export default function AboutPage() {
       </section>
 
       {/* Our Story Section */}
-      <section className="py-16 bg-gray-50 dark:bg-gray-900">
+      <section className="py-16 bg-white/40 dark:bg-white/[0.03]">
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12">
@@ -170,7 +170,7 @@ export default function AboutPage() {
       </section>
 
       {/* Timeline Section */}
-      <section className="py-16 bg-white dark:bg-gray-800">
+      <section className="py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12">
             {t('journey.title')}
@@ -204,7 +204,7 @@ export default function AboutPage() {
       </section>
 
       {/* Mission & Vision */}
-      <section className="py-16 bg-gray-50 dark:bg-gray-900">
+      <section className="py-16 bg-white/40 dark:bg-white/[0.03]">
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div>
@@ -234,7 +234,7 @@ export default function AboutPage() {
       </section>
 
       {/* Values Section */}
-      <section className="py-16 bg-white dark:bg-gray-800">
+      <section className="py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12">
             {t('values.title')}
@@ -285,7 +285,7 @@ export default function AboutPage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
               href="/auth/signup"
-              className="bg-white text-primary-blue px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+              className="bg-light-surface text-primary-blue px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
             >
               {t('cta.joinAsTalent')}
             </a>

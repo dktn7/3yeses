@@ -8,7 +8,7 @@ import SwoopingTick from '@/components/SwoopingTick';
 /* ── Background decoration ─────────────────────────────────────────── */
 function PrivacyBgDecoration() {
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0" aria-hidden="true">
+    <div className="absolute inset-0 overflow-hidden pointer-events-none select-none z-0 dark:opacity-90" aria-hidden="true">
       <svg className="w-full h-full" preserveAspectRatio="none" viewBox="0 0 1440 900" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <linearGradient id="pBg" x1="0" x2="0" y1="0" y2="1">
@@ -79,10 +79,12 @@ export default function PrivacyPolicyPage() {
 
         {/* Header */}
         <div className="text-center mb-14">
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <SwoopingTick className="w-8 h-8 text-primary-blue dark:text-accent-red" />
-            <span className="text-xs font-bold uppercase tracking-[0.25em] text-primary-blue dark:text-accent-red">
-              {t('badge')}
+            <div className="flex justify-center mb-6">
+            <span className="marketing-pill inline-flex items-center gap-3 rounded-full px-5 py-2.5 backdrop-blur-md bg-light-surface dark:bg-dark-surface border border-gray-200/60 dark:border-[var(--marketing-pill-border)] shadow-sm">
+              <SwoopingTick className="w-9 h-9 shrink-0 text-primary-blue dark:text-accent-red" />
+              <span className="text-xs font-bold uppercase tracking-[0.25em] text-primary-blue dark:text-accent-red">
+                {t('badge')}
+              </span>
             </span>
           </div>
 
@@ -96,14 +98,14 @@ export default function PrivacyPolicyPage() {
         </div>
 
         {/* Table of Contents */}
-        <nav className="rounded-[1.5rem] backdrop-blur-xl bg-white/60 dark:bg-white/[0.05] border border-gray-200/50 dark:border-white/10 shadow-sm p-6 mb-10">
+        <nav className="rounded-[1.5rem] backdrop-blur-xl bg-white/60 dark:bg-dark-surface/72 border border-gray-200/50 dark:border-red-400/20 shadow-sm p-6 mb-10">
           <h2 className="text-sm font-bold text-gray-900 dark:text-white mb-3 uppercase tracking-wider">{t('contents')}</h2>
           <ol className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-sm">
             {TOC.map(([id, label], i) => (
               <li key={id}>
                 <a
                   href={`#${id}`}
-                  className="text-gray-600 dark:text-gray-300 hover:text-primary-blue dark:hover:text-accent-red transition-colors"
+                  className="rounded-sm text-gray-600 dark:text-slate-200 hover:text-primary-blue dark:hover:text-accent-red focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/30 dark:focus-visible:ring-accent-red/35 transition-colors"
                 >
                   <span className="text-primary-blue dark:text-accent-red font-mono mr-1.5">{i + 1}.</span>
                   {label}
@@ -114,7 +116,7 @@ export default function PrivacyPolicyPage() {
         </nav>
 
         {/* Policy Content */}
-        <div className="rounded-[2rem] backdrop-blur-xl bg-white/60 dark:bg-white/[0.05] border border-gray-200/50 dark:border-white/10 shadow-lg p-8 md:p-12 space-y-10">
+        <div className="rounded-[2rem] backdrop-blur-xl bg-white/60 dark:bg-dark-surface/72 border border-gray-200/50 dark:border-red-400/20 shadow-lg p-8 md:p-12 space-y-10">
 
           <div className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed space-y-3">
             <p>{t('introP1')}</p>
@@ -126,7 +128,7 @@ export default function PrivacyPolicyPage() {
             <p>
               3YESES is the data controller for the personal data processed through the Platform.
               If you have any questions about how we handle your data, you can reach us through our{' '}
-              <Link href="/support/submit-ticket" className="text-primary-blue dark:text-accent-red hover:underline font-medium">
+              <Link href="/support/submit-ticket" className="rounded-sm text-primary-blue dark:text-accent-red hover:underline font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/30 dark:focus-visible:ring-accent-red/35">
                 Support Centre
               </Link>.
             </p>
@@ -193,10 +195,10 @@ export default function PrivacyPolicyPage() {
             <ul className="list-disc pl-5 space-y-1">
               <li><strong className="text-gray-900 dark:text-white">Other users:</strong> your public profile information, portfolio items, comments, and likes are visible to other Platform users (subject to your privacy visibility settings: Public, Members Only, or Private).</li>
               <li><strong className="text-gray-900 dark:text-white">Stripe:</strong> payment processing. Stripe receives your email and payment details to process subscriptions. See{' '}
-                <a href="https://stripe.com/privacy" target="_blank" rel="noopener noreferrer" className="text-primary-blue dark:text-accent-red hover:underline">Stripe&apos;s Privacy Policy</a>.
+                <a href="https://stripe.com/privacy" target="_blank" rel="noopener noreferrer" className="rounded-sm text-primary-blue dark:text-accent-red hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/30 dark:focus-visible:ring-accent-red/35">Stripe&apos;s Privacy Policy</a>.
               </li>
               <li><strong className="text-gray-900 dark:text-white">ImageKit:</strong> media hosting and delivery. Uploaded images, videos, and audio are processed and served through ImageKit&apos;s CDN. See{' '}
-                <a href="https://imagekit.io/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-primary-blue dark:text-accent-red hover:underline">ImageKit&apos;s Privacy Policy</a>.
+                <a href="https://imagekit.io/privacy-policy" target="_blank" rel="noopener noreferrer" className="rounded-sm text-primary-blue dark:text-accent-red hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/30 dark:focus-visible:ring-accent-red/35">ImageKit&apos;s Privacy Policy</a>.
               </li>
               <li><strong className="text-gray-900 dark:text-white">Email service provider:</strong> transactional emails (notifications, password resets, billing alerts) are sent via our email service provider, which processes your email address and name.</li>
               <li><strong className="text-gray-900 dark:text-white">Law enforcement:</strong> we may disclose data if required by law, regulation, legal process, or governmental request.</li>
@@ -255,7 +257,7 @@ export default function PrivacyPolicyPage() {
             </ul>
             <p>
               To exercise any of these rights, submit a request through our{' '}
-              <Link href="/support/submit-ticket" className="text-primary-blue dark:text-accent-red hover:underline font-medium">
+              <Link href="/support/submit-ticket" className="rounded-sm text-primary-blue dark:text-accent-red hover:underline font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/30 dark:focus-visible:ring-accent-red/35">
                 Support Centre
               </Link>{' '}
               or use the self-service options in Dashboard → Settings → Account. We will respond within 30 days.
@@ -263,7 +265,7 @@ export default function PrivacyPolicyPage() {
             <p>
               If you are unsatisfied with our response, you have the right to lodge a complaint with the Information
               Commissioner&apos;s Office (ICO) at{' '}
-              <a href="https://ico.org.uk" target="_blank" rel="noopener noreferrer" className="text-primary-blue dark:text-accent-red hover:underline">ico.org.uk</a>,
+              <a href="https://ico.org.uk" target="_blank" rel="noopener noreferrer" className="rounded-sm text-primary-blue dark:text-accent-red hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/30 dark:focus-visible:ring-accent-red/35">ico.org.uk</a>,
               or your local supervisory authority if you are based in the EU.
             </p>
           </Section>
@@ -337,7 +339,7 @@ export default function PrivacyPolicyPage() {
           <Section id="contact" number="13" title="Contact Us">
             <p>
               If you have questions about this Privacy Policy or how we handle your data, please contact us through our{' '}
-              <Link href="/support/submit-ticket" className="text-primary-blue dark:text-accent-red hover:underline font-medium">
+              <Link href="/support/submit-ticket" className="rounded-sm text-primary-blue dark:text-accent-red hover:underline font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/30 dark:focus-visible:ring-accent-red/35">
                 Support Centre
               </Link>.
             </p>

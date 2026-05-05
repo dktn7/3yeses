@@ -87,8 +87,8 @@ export function FeaturedItemsManager() {
       </div>
 
       {editingItem && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg max-w-lg w-full space-y-4 max-h-[90vh] overflow-y-auto">
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+          <div className="bg-light-surface dark:bg-dark-surface p-6 rounded-lg max-w-lg w-full space-y-4 max-h-[90vh] overflow-y-auto">
             <h3 className="text-xl font-bold">
               {editingItem.id ? "Edit Featured Item" : "New Featured Item"}
             </h3>
@@ -194,7 +194,7 @@ export function FeaturedItemsManager() {
                 <td className="p-3">
                   {item.talentProfile ? (
                     <div>
-                      <span className="bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded mr-2">Profile</span>
+                      <span className="bg-[var(--marketing-pill-bg)] dark:bg-[var(--marketing-pill-bg)] text-[var(--marketing-pill-icon)] dark:text-[var(--marketing-pill-icon)] text-xs px-2 py-0.5 rounded mr-2 border border-[var(--marketing-pill-border)]">Profile</span>
                       {item.title || item.talentProfile.user.name}
                     </div>
                   ) : item.portfolioItem ? (

@@ -1,4 +1,5 @@
 import React from "react";
+import Image from 'next/image';
 import SwoopingTick from "@/components/SwoopingTick";
 
 const logos = [
@@ -20,7 +21,7 @@ export default function LogosStrip() {
 
         {logos.map((src, i) => (
           <div key={i} className="h-12 w-40 flex items-center justify-center p-2 bg-white/90 dark:bg-gray-800/70 rounded">
-            <img src={src} alt={`Logo ${i + 2}`} className="max-h-8 object-contain" />
+            <Image src={src} alt={`Logo ${i + 2}`} width={128} height={32} className="max-h-8 w-auto object-contain" />
           </div>
         ))}
       </div>
