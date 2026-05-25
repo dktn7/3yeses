@@ -1135,7 +1135,74 @@
     "catOther": "Other",
     "catAnalytics": "Analytics",
     "catCommunity": "Community",
-    "catSupport": "Support & Tickets"
+    "catSupport": "Support & Tickets",
+    "faqItems": [
+      {
+        "category": "Account & Profile",
+        "q": "How do I create an account on 3YESES?",
+        "a": "Click \"Sign Up\" and follow the 3-step process: enter your email and password, confirm your age (users under 13 need a parent-managed account; 13–17 need parental consent), then choose your subscription plan (6 or 12 months) and complete Stripe checkout. Your account activates instantly."
+      },
+      {
+        "category": "Account & Profile",
+        "q": "What can I add to my profile?",
+        "a": "Your profile includes a bio, headshot, primary talent category, physical characteristics (height, body type, eye colour, hair colour), work history, languages spoken, skills (up to 4 featured), social media links, location, and optional fields like disabilities for inclusive casting."
+      },
+      {
+        "category": "Account & Profile",
+        "q": "I forgot my password — how do I reset it?",
+        "a": "Go to the login page and click \"Forgot password\". Enter your registered email and we'll send a one-time reset link valid for 1 hour."
+      },
+      {
+        "category": "Billing & Subscriptions",
+        "q": "How much does 3YESES cost?",
+        "a": "An active subscription is required. Choose between £10 for 6 months or £20 for 12 months. Both plans include identical features. No hidden fees."
+      },
+      {
+        "category": "Billing & Subscriptions",
+        "q": "Can I cancel my subscription?",
+        "a": "Yes — cancel any time from Dashboard → Subscription. You keep full access until the end of your billing period."
+      },
+      {
+        "category": "Portfolio & Media",
+        "q": "How do I upload portfolio items?",
+        "a": "Go to Dashboard → Portfolio and click \"Add Item\". The upload wizard walks you through 4 steps. Files can be up to 50 MB. For videos, you can pick a custom thumbnail."
+      },
+      {
+        "category": "Portfolio & Media",
+        "q": "How do people view my portfolio?",
+        "a": "Visitors see your portfolio in a gallery grid on your profile. Clicking an item opens the media overlay with keyboard navigation."
+      },
+      {
+        "category": "Categories & Discovery",
+        "q": "How does talent discovery work?",
+        "a": "Visitors browse the talent directory or Media Hub with advanced filters: gender, body type, ethnicity, age range, height range, skills, languages, disabilities, and location."
+      },
+      {
+        "category": "Categories & Discovery",
+        "q": "What is the Media Hub?",
+        "a": "The Hub is a browsable feed of all portfolio content across the platform. You can filter by talent category, media type, and sort by trending, newest, or most viewed."
+      },
+      {
+        "category": "Analytics",
+        "q": "What analytics are available?",
+        "a": "Your Dashboard shows profile views, unique viewers, portfolio views, likes received, search impressions, search clicks, CTR, and engagement rate."
+      },
+      {
+        "category": "Community",
+        "q": "Can I interact with other users?",
+        "a": "Yes — you can comment on portfolio items, reply to comments, @mention other users, like portfolio items, and share profiles."
+      },
+      {
+        "category": "Support & Tickets",
+        "q": "How do I submit a support ticket?",
+        "a": "Go to the Submit a Ticket page from the Help Centre. Choose a category, provide a subject and description. You must be logged in."
+      },
+      {
+        "category": "Support & Tickets",
+        "q": "How long does it take to get a response?",
+        "a": "Support tickets are answered within 48 hours."
+      }
+    ]
   },
   "settings": {
     "emailNotifications": "Email Notifications",

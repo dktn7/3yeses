@@ -710,7 +710,7 @@ export default function GalleryPage() {
                   )}
 
                   {pendingType === 'video' && (
-                    <div className="p-4 bg-gradient-to-r from-red-50 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20 rounded-xl border border-red-200 dark:border-red-800/50">
+                    <div className="p-4 bg-gradient-to-r from-red-50 to-red-50 dark:from-red-900/20 dark:to-red-900/20 rounded-xl border border-red-200 dark:border-red-800/50">
                       <p className="text-sm text-red-700 dark:text-red-300 font-medium">💡 {t('videoBestPractices')}</p>
                       <ul className="text-xs text-red-600 dark:text-red-400 mt-2 space-y-1">
                         <li>• {t('videoFormat')}</li>
@@ -813,7 +813,7 @@ export default function GalleryPage() {
                   )}
 
                   {pendingType === 'video' && (
-                    <div className="p-4 bg-gradient-to-r from-red-50 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20 rounded-xl border border-red-200 dark:border-red-800/50">
+                    <div className="p-4 bg-gradient-to-r from-red-50 to-red-50 dark:from-red-900/20 dark:to-red-900/20 rounded-xl border border-red-200 dark:border-red-800/50">
                       <p className="text-sm text-red-700 dark:text-red-300 font-medium">💡 {t('videoTips')}</p>
                       <ul className="text-xs text-red-600 dark:text-red-400 mt-2 space-y-1">
                         <li>• {t('videoDirectUrl')}</li>

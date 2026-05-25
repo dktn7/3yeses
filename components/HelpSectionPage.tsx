@@ -29,7 +29,7 @@ function HelpBgDecoration() {
         <rect width="1440" height="900" fill="url(#helpBg)" />
         <path d="M0 350 Q360 250 720 330 T1440 290 V900 H0Z" fill="url(#helpW1)" />
         <path d="M0 550 Q400 470 800 530 T1440 490 V900 H0Z" fill="url(#helpW2)" />
-        <path d="M0 60 C360 120 720 30 1080 80 C1260 110 1380 70 1440 90 L1440 0 L0 0 Z" fill="var(--brand-from)" opacity="0.10" />
+        <path d="M0 60 C360 120 720 30 1080 80 C1260 110 1380 70 1440 90 L1440 0 L0 0 Z" fill="var(--hero-top-wave, var(--brand-from))" opacity="0.10" />
         <circle cx="200" cy="150" r="200" fill="var(--brand-to)" opacity="0.08" />
         <circle cx="1250" cy="700" r="260" fill="var(--brand-from)" opacity="0.07" />
       </svg>

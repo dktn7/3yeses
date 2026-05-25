@@ -1,0 +1,16 @@
+{
+  "url": "http://localhost:3002/",
+  "pill": {
+    "exists": true,
+    "color": "rgb(255, 215, 211)",
+    "background": "rgb(32, 34, 41)"
+  },
+  "hero": {
+    "exists": true,
+    "color": "rgb(255, 255, 255)"
+  },
+  "svg": {
+    "circleStroke": "var(--brand-blue, #2563eb)",
+    "pathStroke": "var(--brand-red, #ef4444)"
+  }
+}

@@ -4,19 +4,20 @@ interface SwoopingTickProps {
   readonly size?: number;
   readonly className?: string;
   readonly hovered?: boolean;
-  readonly spinnerOnly?: boolean; // New prop for clean spinner without checkmark
-  readonly variant?: 'brand' | 'toggle'; // toggle: grey by default, coloured when hovered=true
+  readonly spinnerOnly?: boolean; // Render spinner-only (no check)
+  readonly variant?: 'brand' | 'toggle';
 }
 
-export default function SwoopingTick({ 
-  size = 48, 
-  className = '', 
+export default function SwoopingTick({
+  size = 48,
+  className = '',
   hovered = false,
   spinnerOnly = false,
   variant = 'brand',
 }: Readonly<SwoopingTickProps>) {
-  
-  // Pure spinning circle loader
+  // Intentionally avoid inline `stroke` attributes so CSS can control colours
+  // Use class names `swoop-outer` and `swoop-check` for styling in globals.css
+
   if (spinnerOnly) {
     return (
       <svg
@@ -25,38 +26,16 @@ export default function SwoopingTick({
         viewBox="0 0 48 48"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className={`animate-spin ${className}`}
-        style={{
-          animation: 'spin 1s linear infinite'
-        }}
+        className={`swooping-tick animate-spin ${className}`.trim()}
+        style={{ animation: 'spin 1s linear infinite' }}
       >
-        {/* Outer spinning circle */}
-        <circle
-          cx="24"
-          cy="24"
-          r="20"
-          stroke="currentColor"
-          strokeWidth="3"
-          fill="none"
-          opacity="0.2"
-        />
-        
-        {/* Spinning arc */}
-        <circle
-          cx="24"
-          cy="24"
-          r="20"
-          stroke="currentColor"
-          strokeWidth="3"
-          fill="none"
-          strokeDasharray="31.4 94.2"
-          strokeLinecap="round"
-        />
+        <circle cx="24" cy="24" r="20" className="swoop-outer" strokeWidth="3" fill="none" opacity="0.2" />
+          <circle cx="24" cy="24" r="20" className="swoop-outer" strokeWidth="3" fill="none" opacity="0.2" stroke="var(--swoop-outer, #2563eb)" />
+          <circle cx="24" cy="24" r="20" className="swoop-outer" strokeWidth="3" fill="none" strokeDasharray="31.4 94.2" strokeLinecap="round" stroke="var(--swoop-outer, #2563eb)" />
       </svg>
     );
   }
 
-  // Original checkmark animation
   return (
     <svg
       width={size}
@@ -64,39 +43,18 @@ export default function SwoopingTick({
       viewBox="0 0 48 48"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={className}
+      className={`swooping-tick ${hovered ? 'is-hovered' : ''} ${variant === 'toggle' ? 'variant-toggle' : ''} ${className}`.trim()}
     >
-      {/* Outer Circle */}
-      <circle
-        cx="24"
-        cy="24"
-        r="22"
-        stroke="#3B82F6"
-        strokeWidth="4"
-        fill="transparent"
-        className={`transition-all duration-300 ${
-          variant === 'toggle'
-            ? (hovered ? 'stroke-blue-500' : 'stroke-gray-400 dark:stroke-gray-500')
-            : (hovered ? 'stroke-blue-600' : 'stroke-blue-500')
-        }`}
-      />
-      
-      {/* Swooping Check Mark */}
+      <circle cx="24" cy="24" r="22" className="swoop-outer transition-all duration-300" strokeWidth="4" fill="transparent" stroke="var(--swoop-outer, #2563eb)" />
       <path
         d="M14 24L20 30L34 16"
-        stroke="#EF4444"
-        strokeWidth="5"
+        className="swoop-check transition-all duration-300"
+        strokeWidth={5}
         strokeLinecap="round"
         strokeLinejoin="round"
         fill="none"
-        className={`transition-all duration-300 ${
-          variant === 'toggle'
-            ? (hovered ? 'stroke-red-500' : 'stroke-gray-400 dark:stroke-gray-500')
-            : (hovered ? 'stroke-red-600' : 'stroke-red-500')
-        }`}
-        style={{
-          filter: 'drop-shadow(0 1px 2px rgba(239, 68, 68, 0.3))'
-        }}
+        stroke="var(--swoop-check, var(--brand-red))"
+        style={{ filter: 'drop-shadow(0 1px 2px rgba(0, 0, 0, 0.28))' }}
       />
     </svg>
   );

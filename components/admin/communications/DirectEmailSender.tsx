@@ -249,7 +249,8 @@ export default function DirectEmailSender() {
                                 srcDoc={(() => {
                                     const body = formData.body || '<p style="color:#94a3b8;">No content yet. Switch to Edit to compose your email.</p>';
                                     const year = new Date().getFullYear();
-                                    const LOGO = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48' fill='none'%3E%3Ccircle cx='24' cy='24' r='22' stroke='%231d4ed8' stroke-width='4' fill='transparent'/%3E%3Cpath d='M14 24L20 30L34 16' stroke='%23ef4444' stroke-width='5' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E`;
+                                    const LOGO_INLINE = `<svg class="swooping-tick" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none"><circle class="swoop-outer" cx="24" cy="24" r="22" stroke="#2563eb" stroke-width="4" fill="transparent"/><path class="swoop-check" d="M14 24L20 30L34 16" stroke="#B91C1C" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`;
+                                    const LOGO = `data:image/svg+xml,${encodeURIComponent(LOGO_INLINE)}`;
                                     const ICON_X = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='%2394a3b8'%3E%3Cpath d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/%3E%3C/svg%3E`;
                                     const ICON_IG = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2' y='2' width='20' height='20' rx='5' ry='5'/%3E%3Cpath d='M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z'/%3E%3Cline x1='17.5' y1='6.5' x2='17.51' y2='6.5'/%3E%3C/svg%3E`;
                                     const ICON_TT = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='%2394a3b8'%3E%3Cpath d='M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1 0-5.78 2.84 2.84 0 0 1 .84.13V9.01a6.27 6.27 0 0 0-1 .05 6.33 6.33 0 0 0-5.27 7.08 6.34 6.34 0 0 0 12.57-1.08V9.49a8.32 8.32 0 0 0 4.84 1.56V7.64a4.85 4.85 0 0 1-1.88-.95z'/%3E%3C/svg%3E`;
@@ -265,10 +266,10 @@ export default function DirectEmailSender() {
 <div style="position:absolute;bottom:0;left:-20px;width:80px;height:80px;border-radius:50%;background:radial-gradient(circle,rgba(29,78,216,.06) 0%,transparent 70%);" class="dark-blob"></div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="padding-bottom:20px;">
 <table role="presentation" cellpadding="0" cellspacing="0"><tr>
-<td style="vertical-align:middle;padding-right:14px;"><img src="${LOGO}" alt="3YESES" width="40" height="40" style="display:block;border:0;" /></td>
+<td style="vertical-align:middle;padding-right:14px;">${LOGO_INLINE}</td>
 <td style="vertical-align:middle;"><span style="font-size:24px;font-weight:800;color:#020617;letter-spacing:-.5px;line-height:1;" class="dark-heading">3YESES</span></td>
 </tr></table></td></tr></table>
-<div style="height:3px;border-radius:2px;background:linear-gradient(90deg,#1d4ed8 0%,#ef4444 100%);"></div>
+<div style="height:3px;border-radius:2px;background:linear-gradient(90deg,#1d4ed8 0%,#B91C1C 100%);"></div>
 </td></tr>
 <tr><td style="background:#fff;padding:32px 40px 40px;color:#020617;font-size:16px;line-height:1.7;" class="dark-card dark-text">${body}</td></tr>
 <tr><td style="background:#020617;padding:32px 40px;">

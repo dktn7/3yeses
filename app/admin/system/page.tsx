@@ -365,7 +365,7 @@ export default function SystemDashboardPage() {
                   <XAxis dataKey="time" stroke="var(--admin-muted)" fontSize={11} tickLine={false} axisLine={false} minTickGap={30} />
                   <YAxis allowDecimals={false} stroke="var(--admin-muted)" fontSize={11} tickLine={false} axisLine={false} />
                   <Tooltip cursor={{ fill: 'var(--admin-bg)' }} contentStyle={{ backgroundColor: 'var(--admin-surface)', borderColor: 'var(--admin-border)', borderRadius: '8px', color: 'var(--admin-text)' }} />
-                  <Bar dataKey="value" name="Errors" fill="#ef4444" radius={[4, 4, 0, 0]} barSize={20} animationDuration={800} animationEasing="ease-out" />
+                  <Bar dataKey="value" name="Errors" fill="#B91C1C" radius={[4, 4, 0, 0]} barSize={20} animationDuration={800} animationEasing="ease-out" />
                 </BarChart>
               </ResponsiveContainer>
             </ChartCard>

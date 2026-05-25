@@ -52,7 +52,7 @@ const SYSTEM_TEMPLATES = [
     subject: 'Reset your 3YESES password — secure link inside',
     preheaderText: 'A password reset was requested for your 3YESES account.',
     body: `<div style="margin-bottom:10px;">
-  <span style="display:inline-block;background:#fef2f2;color:#ef4444;font-size:10px;font-weight:800;letter-spacing:1.1px;text-transform:uppercase;padding:5px 12px;border-radius:100px;" class="dark-card">Security Action</span>
+  <span style="display:inline-block;background:#fef2f2;color:#B91C1C;font-size:10px;font-weight:800;letter-spacing:1.1px;text-transform:uppercase;padding:5px 12px;border-radius:100px;" class="dark-card">Security Action</span>
 </div>
 
 <h2 style="color:#020617;margin:0 0 10px 0;font-size:33px;font-weight:700;line-height:1.15;font-family:Georgia,'Times New Roman',serif;" class="dark-heading">Reset your password</h2>
@@ -76,7 +76,7 @@ const SYSTEM_TEMPLATES = [
 <p style="margin:0 0 20px 0;font-size:13px;color:#64748b;text-align:center;" class="dark-subtle">If the button doesn&rsquo;t work, copy and paste this secure URL:</p>
 <p style="margin:0 0 22px 0;font-size:12px;color:#1d4ed8;text-align:center;font-family:'Courier New',monospace;word-break:break-all;" class="dark-subtle">{{resetUrl}}</p>
 
-<div style="border-left:3px solid #ef4444;background:#fef2f2;padding:14px 16px;border-radius:0 8px 8px 0;" class="dark-card dark-border">
+<div style="border-left:3px solid #B91C1C;background:#fef2f2;padding:14px 16px;border-radius:0 8px 8px 0;" class="dark-card dark-border">
   <p style="margin:0;font-size:13px;color:#991b1b;line-height:1.65;" class="dark-text"><strong>&#128721; Didn&rsquo;t request this?</strong><br>Ignore this email and your password will remain unchanged.</p>
 </div>`,
     variables: ['resetUrl', 'email'],
@@ -220,13 +220,13 @@ const SYSTEM_TEMPLATES = [
     subject: 'Your 3YESES subscription expires soon — renew to keep your features',
     preheaderText: 'Your Standard Access expires on {{expiryDate}} — update payment to stay active.',
     body: `<div style="margin-bottom:8px;">
-  <span style="display:inline-block;background:#fef2f2;color:#ef4444;font-size:11px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;padding:4px 12px;border-radius:100px;" class="dark-card">Subscription Expiring</span>
+  <span style="display:inline-block;background:#fef2f2;color:#B91C1C;font-size:11px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;padding:4px 12px;border-radius:100px;" class="dark-card">Subscription Expiring</span>
 </div>
 
 <h2 style="color:#020617;margin:0 0 8px 0;font-size:28px;font-weight:800;line-height:1.2;" class="dark-heading">Subscription Expiring Soon</h2>
 <p style="color:#475569;margin:0 0 24px 0;font-size:15px;line-height:1.7;" class="dark-text">Hi {{name}}, your 3YESES Standard Access subscription will expire on <strong>{{expiryDate}}</strong>.</p>
 
-<div style="border-left:3px solid #ef4444;background:#fef2f2;padding:14px 16px;border-radius:0 6px 6px 0;margin:24px 0;" class="dark-card dark-border">
+<div style="border-left:3px solid #B91C1C;background:#fef2f2;padding:14px 16px;border-radius:0 6px 6px 0;margin:24px 0;" class="dark-card dark-border">
   <p style="margin:0;font-size:14px;color:#991b1b;line-height:1.6;" class="dark-text"><strong>Don&rsquo;t lose access!</strong> Make sure your payment details are up to date to continue enjoying unlimited portfolio uploads, priority search ranking, and all premium features.</p>
 </div>
 
@@ -319,13 +319,13 @@ const SYSTEM_TEMPLATES = [
     subject: 'Your 3YESES account has been suspended',
     preheaderText: 'Your account has been suspended due to a community guidelines violation.',
     body: `<div style="margin-bottom:8px;">
-  <span style="display:inline-block;background:#fef2f2;color:#ef4444;font-size:11px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;padding:4px 12px;border-radius:100px;" class="dark-card">Account Suspended</span>
+  <span style="display:inline-block;background:#fef2f2;color:#B91C1C;font-size:11px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;padding:4px 12px;border-radius:100px;" class="dark-card">Account Suspended</span>
 </div>
 
 <h2 style="color:#020617;margin:0 0 8px 0;font-size:28px;font-weight:800;line-height:1.2;" class="dark-heading">Account Suspended</h2>
 <p style="color:#475569;margin:0 0 24px 0;font-size:15px;line-height:1.7;" class="dark-text">Hi {{name}}, your 3YESES account has been suspended due to a violation of our community guidelines.</p>
 
-<div style="border-left:3px solid #ef4444;background:#fef2f2;padding:14px 16px;border-radius:0 6px 6px 0;margin:24px 0;" class="dark-card dark-border">
+<div style="border-left:3px solid #B91C1C;background:#fef2f2;padding:14px 16px;border-radius:0 6px 6px 0;margin:24px 0;" class="dark-card dark-border">
   <p style="margin:0 0 4px 0;font-size:11px;font-weight:700;color:#991b1b;text-transform:uppercase;letter-spacing:0.8px;" class="dark-subtle">Reason</p>
   <p style="margin:0;font-size:15px;color:#991b1b;" class="dark-text">{{reason}}</p>
 </div>
@@ -418,7 +418,7 @@ const SYSTEM_TEMPLATES = [
         <p style="margin:0;font-size:12px;color:#64748b;font-weight:600;text-transform:uppercase;" class="dark-subtle">Views</p>
       </td>
       <td style="text-align:center;padding:12px 8px;border-left:1px solid #e2e8f0;" class="dark-border">
-        <p style="margin:0 0 4px 0;font-size:28px;font-weight:800;color:#ef4444;line-height:1;">{{likeCount}}</p>
+        <p style="margin:0 0 4px 0;font-size:28px;font-weight:800;color:#B91C1C;line-height:1;">{{likeCount}}</p>
         <p style="margin:0;font-size:12px;color:#64748b;font-weight:600;text-transform:uppercase;" class="dark-subtle">Likes</p>
       </td>
     </tr>
@@ -470,13 +470,13 @@ const SYSTEM_TEMPLATES = [
     subject: 'Your 3YESES subscription has been cancelled',
     preheaderText: 'Your Standard Access will remain active until {{endDate}}.',
     body: `<div style="margin-bottom:8px;">
-  <span style="display:inline-block;background:#fef2f2;color:#ef4444;font-size:11px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;padding:4px 12px;border-radius:100px;" class="dark-card">Subscription Cancelled</span>
+  <span style="display:inline-block;background:#fef2f2;color:#B91C1C;font-size:11px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;padding:4px 12px;border-radius:100px;" class="dark-card">Subscription Cancelled</span>
 </div>
 
 <h2 style="color:#020617;margin:0 0 8px 0;font-size:28px;font-weight:800;line-height:1.2;" class="dark-heading">Subscription Cancelled</h2>
 <p style="color:#475569;margin:0 0 24px 0;font-size:15px;line-height:1.7;" class="dark-text">Hi {{name}}, your Standard Access subscription has been cancelled. Your premium features will remain active until <strong>{{endDate}}</strong>.</p>
 
-<div style="border-left:3px solid #ef4444;background:#fef2f2;padding:14px 16px;border-radius:0 6px 6px 0;margin:24px 0;" class="dark-card dark-border">
+<div style="border-left:3px solid #B91C1C;background:#fef2f2;padding:14px 16px;border-radius:0 6px 6px 0;margin:24px 0;" class="dark-card dark-border">
   <p style="margin:0 0 8px 0;font-size:14px;font-weight:700;color:#991b1b;" class="dark-heading">After {{endDate}} you will lose:</p>
   <ul style="margin:0;padding-left:20px;font-size:14px;color:#991b1b;line-height:1.8;" class="dark-text">
     <li>Priority search ranking</li>

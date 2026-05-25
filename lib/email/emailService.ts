@@ -222,7 +222,7 @@ export async function sendPasswordResetEmail(email: string, token: string, local
   const innerHtml = `
     <!-- Context label -->
     <div style="margin-bottom:8px;">
-      <span style="display:inline-block;background:#fef2f2;color:#ef4444;font-size:11px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;padding:4px 12px;border-radius:100px;" class="dark-card dark-text">Password Reset</span>
+      <span style="display:inline-block;background:#fef2f2;color:#B91C1C;font-size:11px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;padding:4px 12px;border-radius:100px;" class="dark-card dark-text">Password Reset</span>
     </div>
 
     <h1 style="margin:0 0 12px 0;font-size:28px;font-weight:800;color:#020617;line-height:1.2;letter-spacing:-0.5px;" class="dark-heading mobile-h1">
@@ -259,7 +259,7 @@ export async function sendPasswordResetEmail(email: string, token: string, local
     </p>
 
     <!-- Security note -->
-    <div style="border-left:3px solid #ef4444;background:#fef2f2;padding:14px 16px;border-radius:0 6px 6px 0;">
+    <div style="border-left:3px solid #B91C1C;background:#fef2f2;padding:14px 16px;border-radius:0 6px 6px 0;">
       <p style="margin:0;font-size:14px;color:#991b1b;line-height:1.6;">
         <strong>&#128274; Security Notice</strong><br>
         This link expires in 1 hour. If you didn&rsquo;t request this, please ignore this email &mdash; your password will remain unchanged.

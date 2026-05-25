@@ -403,7 +403,7 @@ export default function DashboardOverview() {
                   <span className="text-xs text-gray-500 dark:text-gray-400">{t('overview.lastSevenDays')}</span>
                   <MiniSparkline 
                     data={viewsHistory} 
-                    color={stats.viewTrend >= 0 ? '#10b981' : '#ef4444'}
+                    color={stats.viewTrend >= 0 ? '#10b981' : '#B91C1C'}
                     height={32}
                     width={100}
                   />
@@ -450,7 +450,7 @@ export default function DashboardOverview() {
                   <span className="text-xs text-gray-500 dark:text-gray-400">{t('overview.lastSevenDays')}</span>
                   <MiniSparkline 
                     data={likesHistory} 
-                    color={stats.likeTrend >= 0 ? '#10b981' : '#ef4444'}
+                    color={stats.likeTrend >= 0 ? '#10b981' : '#B91C1C'}
                     height={32}
                     width={100}
                   />
@@ -617,7 +617,7 @@ export default function DashboardOverview() {
                     </div>
                   )}
                   {item.type === 'AUDIO' && (
-                    <div className="w-full h-full bg-gradient-to-br from-purple-500 to-pink-500 dark:from-purple-700 dark:to-pink-700 flex items-center justify-center">
+                    <div className="w-full h-full bg-gradient-to-br from-purple-500 to-red-500 dark:from-purple-700 dark:to-red-700 flex items-center justify-center">
                       <MessageSquare className="h-12 w-12 text-white" />
                     </div>
                   )}

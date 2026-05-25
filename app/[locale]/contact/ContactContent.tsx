@@ -58,7 +58,7 @@ export default function ContactPage() {
                     {/* Hero Section */}
                     <div className="text-center mt-8 mb-12">
                         <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-                            Get in <span className="text-primary-blue dark:text-accent-red">Touch</span>
+                            Get in <span className="marketing-accent-text">Touch</span>
                         </h1>
                         <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
                             Have questions about 3YESES? We&apos;re here to help you connect with opportunities and talent.
@@ -67,35 +67,35 @@ export default function ContactPage() {
 
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
                         {/* Contact Information Cards */}
-                        <div className="bg-white/80 dark:bg-[rgba(15,23,42,0.88)] backdrop-blur-sm rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300 border border-transparent dark:border-red-400/20">
+                        <div className="marketing-panel backdrop-blur-sm rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300 border border-transparent dark:border-red-400/20">
                             <div className="flex items-center justify-center w-12 h-12 bg-primary-blue/10 dark:bg-accent-red/10 rounded-lg mb-4">
-                                <Mail className="h-6 w-6 text-primary-blue dark:text-accent-red" />
+                                <Mail className="h-6 w-6 marketing-accent-text" />
                             </div>
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Email Us</h3>
                             <p className="text-gray-600 dark:text-gray-300 mb-2">For general inquiries</p>
-                            <a href={`mailto:${tFooter('email')}`} className="text-primary-blue dark:text-accent-red hover:underline font-medium">
+                            <a href={`mailto:${tFooter('email')}`} className="marketing-accent-text hover:underline font-medium">
                                 {tFooter('email')}
                             </a>
                         </div>
 
-                        <div className="bg-white/80 dark:bg-[rgba(15,23,42,0.88)] backdrop-blur-sm rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300 border border-transparent dark:border-red-400/20">
+                        <div className="marketing-panel backdrop-blur-sm rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300 border border-transparent dark:border-red-400/20">
                             <div className="flex items-center justify-center w-12 h-12 bg-primary-blue/10 dark:bg-accent-red/10 rounded-lg mb-4">
-                                <Phone className="h-6 w-6 text-primary-blue dark:text-accent-red" />
+                                <Phone className="h-6 w-6 marketing-accent-text" />
                             </div>
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Call Us</h3>
                             <p className="text-gray-600 dark:text-gray-300 mb-2">Mon-Fri 9am-6pm GMT</p>
-                            <a href={`tel:${tFooter('phone')}`} className="text-primary-blue dark:text-accent-red hover:underline font-medium">
+                            <a href={`tel:${tFooter('phone')}`} className="marketing-accent-text hover:underline font-medium">
                                 {tFooter('phone')}
                             </a>
                         </div>
 
-                        <div className="bg-white/80 dark:bg-[rgba(15,23,42,0.88)] backdrop-blur-sm rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300 border border-transparent dark:border-red-400/20">
+                        <div className="marketing-panel backdrop-blur-sm rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300 border border-transparent dark:border-red-400/20">
                             <div className="flex items-center justify-center w-12 h-12 bg-primary-blue/10 dark:bg-accent-red/10 rounded-lg mb-4">
-                                <MapPin className="h-6 w-6 text-primary-blue dark:text-accent-red" />
+                                <MapPin className="h-6 w-6 marketing-accent-text" />
                             </div>
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Visit Us</h3>
                             <p className="text-gray-600 dark:text-gray-300 mb-2">Our Office Location</p>
-                            <p className="text-primary-blue dark:text-accent-red font-medium">
+                            <p className="marketing-accent-text font-medium">
                                 {tFooter('location')}
                             </p>
                         </div>
@@ -104,7 +104,7 @@ export default function ContactPage() {
                     {/* Main Contact Form Section */}
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         {/* Contact Form */}
-                        <div className="bg-white/80 dark:bg-[rgba(15,23,42,0.88)] backdrop-blur-sm rounded-xl shadow-lg p-8 lg:p-10 border border-transparent dark:border-red-400/20">
+                        <div className="marketing-panel backdrop-blur-sm rounded-xl shadow-lg p-8 lg:p-10 border border-transparent dark:border-red-400/20">
                             {submitted ? (
                                 <div className="text-center py-12 animate-fade-in">
                                     <div className="flex items-center justify-center w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full mx-auto mb-4">
@@ -121,7 +121,7 @@ export default function ContactPage() {
                                             setSubmitted(false);
                                             setFormData({ name: '', email: '', subject: '', message: '' });
                                         }}
-                                        className="text-primary-blue dark:text-accent-red hover:underline font-medium"
+                                        className="marketing-accent-text hover:underline font-medium"
                                     >
                                         Send another message
                                     </button>
@@ -145,7 +145,7 @@ export default function ContactPage() {
                                                     name="name"
                                                     value={formData.name}
                                                     onChange={handleChange}
-                                                    className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red focus:border-transparent transition-all"
+                                                    className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-white focus:ring-2 focus:ring-[var(--marketing-ring)] focus:border-transparent transition-all"
                                                     placeholder="John Doe"
                                                     required
                                                 />
@@ -164,7 +164,7 @@ export default function ContactPage() {
                                                     name="email"
                                                     value={formData.email}
                                                     onChange={handleChange}
-                                                    className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red focus:border-transparent transition-all"
+                                                    className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-white focus:ring-2 focus:ring-[var(--marketing-ring)] focus:border-transparent transition-all"
                                                     placeholder="john@example.com"
                                                     required
                                                 />
@@ -181,7 +181,7 @@ export default function ContactPage() {
                                                 name="subject"
                                                 value={formData.subject}
                                                 onChange={handleChange}
-                                                className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red focus:border-transparent transition-all"
+                                                className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-white focus:ring-2 focus:ring-[var(--marketing-ring)] focus:border-transparent transition-all"
                                                 placeholder="How can we help you?"
                                                 required
                                             />
@@ -199,7 +199,7 @@ export default function ContactPage() {
                                                     rows={6}
                                                     value={formData.message}
                                                     onChange={handleChange}
-                                                    className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red focus:border-transparent transition-all resize-none"
+                                                    className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-white focus:ring-2 focus:ring-[var(--marketing-ring)] focus:border-transparent transition-all resize-none"
                                                     placeholder="Tell us more about your inquiry..."
                                                     required
                                                 ></textarea>
@@ -231,7 +231,7 @@ export default function ContactPage() {
                         {/* Additional Information */}
                         <div className="space-y-6">
                             {/* FAQ Section */}
-                            <div className="bg-white/80 dark:bg-[rgba(15,23,42,0.88)] backdrop-blur-sm rounded-xl shadow-lg p-8 border border-transparent dark:border-red-400/20">
+                            <div className="marketing-panel backdrop-blur-sm rounded-xl shadow-lg p-8 border border-transparent dark:border-red-400/20">
                                 <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Frequently Asked</h3>
                                 <div className="space-y-4">
                                     <div>
@@ -281,8 +281,8 @@ export default function ContactPage() {
                             </div>
 
                             {/* Support Notice */}
-                            <div className="bg-blue-50 dark:bg-[rgba(15,23,42,0.94)] border border-blue-200 dark:border-red-400/30 rounded-xl p-6">
-                                <p className="text-sm text-blue-900 dark:text-slate-50">
+                            <div className="marketing-panel border border-[var(--marketing-border)] rounded-xl p-6">
+                                <p className="text-sm text-gray-900 dark:text-slate-50">
                                     <strong>Need urgent help?</strong> If you&apos;re experiencing technical issues, please include your account email and a detailed description of the problem.
                                 </p>
                             </div>

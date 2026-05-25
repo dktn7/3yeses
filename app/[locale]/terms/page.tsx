@@ -27,9 +27,9 @@ function TermsBgDecoration() {
           </linearGradient>
         </defs>
         <rect width="1440" height="900" fill="url(#tBg)" />
-        <path d="M0 350 Q360 250 720 330 T1440 290 V900 H0Z" fill="url(#tWave1)" />
-        <path d="M0 550 Q400 470 800 530 T1440 490 V900 H0Z" fill="url(#tWave2)" />
-        <path d="M0 60 C360 120 720 30 1080 80 C1260 110 1380 70 1440 90 L1440 0 L0 0 Z" fill="var(--brand-from)" opacity="0.10" />
+        <path d="M0 430 Q360 330 720 400 T1440 370 V900 H0Z" fill="url(#tWave1)" />
+        <path d="M0 620 Q400 550 800 600 T1440 560 V900 H0Z" fill="url(#tWave2)" />
+        <path d="M0 52 C360 104 720 26 1080 72 C1260 96 1380 68 1440 80 L1440 0 L0 0 Z" fill="var(--hero-top-wave, var(--brand-from))" opacity="0.08" />
         <circle cx="200" cy="100" r="200" fill="var(--brand-to)" opacity="0.08" />
         <circle cx="1250" cy="800" r="260" fill="var(--brand-from)" opacity="0.07" />
       </svg>
@@ -42,7 +42,7 @@ function Section({ id, number, title, children }: { id: string; number: string; 
   return (
     <section id={id} className="scroll-mt-24">
       <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-3 flex items-baseline gap-2">
-        <span className="text-primary-blue dark:text-accent-red font-mono text-sm">{number}.</span>
+        <span className="marketing-accent-text font-mono text-sm">{number}.</span>
         {title}
       </h2>
       <div className="space-y-3 text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
@@ -66,21 +66,18 @@ export default function TermsPage() {
         {/* Header */}
         <div className="text-center mb-14">
           <div className="flex justify-center mb-5">
-            <span className="marketing-pill inline-flex items-center gap-3 rounded-full px-5 py-2.5 backdrop-blur-md bg-light-surface dark:bg-dark-surface border border-gray-200/60 dark:border-[var(--marketing-pill-border)] shadow-sm">
-              <SwoopingTick className="w-9 h-9 shrink-0 text-primary-blue dark:text-accent-red" />
-              <span className="text-xs font-bold uppercase tracking-[0.25em] text-primary-blue dark:text-accent-red">
+            <span className="marketing-pill inline-flex items-center gap-3 rounded-full px-5 py-2.5 marketing-pill border border-gray-200/60 dark:border-[var(--marketing-pill-border)] shadow-sm">
+              <SwoopingTick className="w-9 h-9 shrink-0 marketing-accent-text" />
+              <span className="text-xs font-bold uppercase tracking-[0.25em] marketing-accent-text">
                 {t('badge')}
               </span>
             </span>
           </div>
 
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight mb-4">
-            <span className="text-gray-900 dark:text-white">{t('heroTitle')}</span>
-            {heroAccent ? (
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--brand-primary)] to-[var(--brand-accent)]">
-                {' '}{heroAccent}
-              </span>
-            ) : null}
+            <span className="text-gray-900 dark:text-white">
+              {t('heroTitle')}{heroAccent ? ` ${heroAccent}` : null}
+            </span>
           </h1>
 
           <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -89,7 +86,7 @@ export default function TermsPage() {
         </div>
 
         {/* Table of Contents */}
-        <nav className="rounded-[1.5rem] backdrop-blur-xl bg-white/60 dark:bg-dark-surface/72 border border-gray-200/50 dark:border-red-400/20 shadow-sm p-6 mb-10">
+        <nav className="rounded-[1.5rem] marketing-panel border border-gray-200/50 dark:border-red-400/20 shadow-sm p-6 mb-10">
           <h2 className="text-sm font-bold text-gray-900 dark:text-white mb-3 uppercase tracking-wider">{t('contents')}</h2>
           <ol className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-sm">
             {[
@@ -109,9 +106,9 @@ export default function TermsPage() {
               <li key={id}>
                 <a
                   href={`#${id}`}
-                  className="rounded-sm text-gray-600 dark:text-slate-200 hover:text-primary-blue dark:hover:text-accent-red focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/30 dark:focus-visible:ring-accent-red/35 transition-colors"
+                  className="rounded-sm text-gray-600 dark:text-slate-200 hover:text-[var(--marketing-accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-ring)] transition-colors"
                 >
-                  <span className="text-primary-blue dark:text-accent-red font-mono mr-1.5">{i + 1}.</span>
+                  <span className="marketing-accent-text font-mono mr-1.5">{i + 1}.</span>
                   {label}
                 </a>
               </li>
@@ -120,7 +117,7 @@ export default function TermsPage() {
         </nav>
 
         {/* Terms Content */}
-        <div className="rounded-[2rem] backdrop-blur-xl bg-white/60 dark:bg-dark-surface/72 border border-gray-200/50 dark:border-red-400/20 shadow-lg p-8 md:p-12 space-y-10">
+        <div className="rounded-[2rem] marketing-panel border border-gray-200/50 dark:border-red-400/20 shadow-lg p-8 md:p-12 space-y-10">
 
           <Section id="overview" number="1" title={t('sections.overview.title') || 'Overview'}>
             <p>{t('sections.overview.p1')}</p>
@@ -267,7 +264,7 @@ export default function TermsPage() {
           <Section id="privacy" number="8" title="Privacy & Cookies">
             <p>
               Your privacy matters to us. Our collection, use, and protection of personal data is governed by our{' '}
-              <Link href="/privacy" className="rounded-sm text-primary-blue dark:text-accent-red hover:underline font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/30 dark:focus-visible:ring-accent-red/35">
+              <Link href="/privacy" className="rounded-sm marketing-accent-text hover:underline font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-ring)]">
                 Privacy Policy
               </Link>, which forms part of these Terms.
             </p>
@@ -328,7 +325,7 @@ export default function TermsPage() {
           <Section id="contact" number="12" title="Contact">
             <p>
               If you have questions about these Terms, please contact us through our{' '}
-              <Link href="/support/submit-ticket" className="rounded-sm text-primary-blue dark:text-accent-red hover:underline font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/30 dark:focus-visible:ring-accent-red/35">
+              <Link href="/support/submit-ticket" className="rounded-sm marketing-accent-text hover:underline font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-ring)]">
                 Support Centre
               </Link>.
             </p>

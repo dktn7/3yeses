@@ -35,9 +35,12 @@ const TERMS_URL = `${APP_URL}/terms`;
 
 // ── Logo ──
 // Hosted PNG takes priority (works in Outlook, Yahoo, Gmail).
-// Falls back to inline SVG data URI for dev / when no hosted URL is set.
+// Falls back to an encoded inline SVG data URI for dev / when no hosted URL is set.
+// The inline SVG uses classes so it can be targeted by global CSS when rendered inline
+// (admin previews / dev), rather than embedding hard-coded stroke colours.
 const LOGO_PNG_URL = process.env.EMAIL_LOGO_URL || '';
-const LOGO_SVG_DATA = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48' fill='none'%3E%3Ccircle cx='24' cy='24' r='22' stroke='%231d4ed8' stroke-width='4' fill='transparent'/%3E%3Cpath d='M14 24L20 30L34 16' stroke='%23ef4444' stroke-width='5' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E`;
+const LOGO_INLINE_SVG = `<svg class="swooping-tick" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none"><circle class="swoop-outer" cx="24" cy="24" r="22" stroke="#2563eb" stroke-width="4" fill="transparent"/><path class="swoop-check" d="M14 24L20 30L34 16" stroke="#B91C1C" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`;
+const LOGO_SVG_DATA = `data:image/svg+xml,${encodeURIComponent(LOGO_INLINE_SVG)}`;
 export const LOGO_SVG = LOGO_SVG_DATA; // kept for preview components
 const LOGO_SRC = LOGO_PNG_URL || LOGO_SVG_DATA;
 
@@ -154,7 +157,7 @@ export function wrapEmailContent(innerHtml: string, options?: {
                 </tr>
               </table>
               <!-- Accent line -->
-              <div style="height:3px;border-radius:2px;background:linear-gradient(90deg,#1d4ed8 0%,#ef4444 100%);"></div>
+              <div style="height:3px;border-radius:2px;background:linear-gradient(90deg,#1d4ed8 0%,#B91C1C 100%);"></div>
             </td>
           </tr>
 

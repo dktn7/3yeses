@@ -1187,7 +1187,7 @@ export default function TalentProfilePage() {
                             )
                           )}
                           {item.type === 'audio' && (
-                            <div className="absolute inset-0 bg-gradient-to-br from-pink-500/20 to-red-500/20 dark:from-pink-600/30 dark:to-red-600/30" />
+                            <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 to-red-500/20 dark:from-red-600/30 dark:to-red-600/30" />
                           )}
                           
                           {/* Overlay with Icon and Title */}

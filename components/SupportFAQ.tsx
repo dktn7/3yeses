@@ -112,10 +112,10 @@ export default function SupportFAQ() {
               type="button"
               aria-expanded={isOpen}
               onClick={() => setOpenIndex(isOpen ? null : idx)}
-              className="w-full text-left px-5 py-4 flex items-center justify-between gap-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/30 dark:focus-visible:ring-accent-red/30"
+              className="w-full text-left px-5 py-4 flex items-center justify-between gap-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-ring)]"
             >
               <div className="flex-1 min-w-0">
-                <span className="block text-[0.65rem] font-bold uppercase tracking-widest text-primary-blue/60 dark:text-accent-red/60 mb-0.5">
+                <span className="block text-[0.65rem] font-bold uppercase tracking-widest marketing-accent-text opacity-70 mb-0.5">
                   {CATEGORY_KEYS[item.category] ? t(CATEGORY_KEYS[item.category]) : item.category}
                 </span>
                 <span className="font-semibold text-gray-900 dark:text-white text-sm">

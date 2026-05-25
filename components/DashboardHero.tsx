@@ -57,7 +57,7 @@ export default function DashboardHero({ displayName, formattedDay, profileComple
     '#FDB642', // Avatar (golden yellow)
     '#2563EB', // Bio (brand blue)
     '#60A5FA', // Skills (light blue)
-    '#EF4444', // Media (brand red)
+    '#B91C1C', // Media (brand red)
   ];
   
   // Calculate pie chart slices - each section represents 25% of the total profile

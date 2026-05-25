@@ -13,18 +13,18 @@ type BreadcrumbsProps = {
 
 export default function Breadcrumbs({ items }: BreadcrumbsProps) {
   return (
-    <nav className="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-4">
+    <nav className="marketing-breadcrumb flex items-center text-sm mb-4">
       {items.map((item, index) => (
         <div key={item.label} className="flex items-center">
           {item.href ? (
-            <Link href={item.href} className="text-primary-blue dark:text-accent-red hover:underline hover:opacity-85">
+            <Link href={item.href} className="marketing-breadcrumb-link rounded-sm transition-colors">
               {item.label}
             </Link>
           ) : (
-            <span className="font-semibold text-gray-700 dark:text-gray-200">{item.label}</span>
+            <span className="marketing-breadcrumb-current font-semibold">{item.label}</span>
           )}
           {index < items.length - 1 && (
-            <ChevronRight size={16} className="mx-1 text-primary-blue dark:text-accent-red" />
+            <ChevronRight size={16} className="marketing-breadcrumb-sep mx-1" />
           )}
         </div>
       ))}

@@ -1,0 +1,399 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Space+Grotesk:wght@300;400;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+  THEME CONVENTION — single-mode utilities
+
+  Purpose:
+  - Make it explicit which styles target light mode vs dark mode.
+  - Avoid ambiguous classes like `bg-white` for generic surfaces; prefer `bg-light-surface` for neutral light surfaces.
+
+  Rules:
+  - Use `bg-light-surface` for light-mode surfaces (explicitly light).
+  - Use `dark:bg-dark-surface` for dark-mode surfaces (explicitly dark).
+  - Avoid raw `bg-white` / `bg-black` for generic surfaces; prefer `bg-light-surface` / `bg-dark-surface` role classes. Reserve opacity forms
+    (e.g. `bg-white/90` or `bg-light-surface/90`) only when a translucent glass effect is intended.
+  - Keep color-specific dark overrides (e.g. `dark:bg-red-950/50`) where they
+    intentionally apply a colour palette change in dark mode.
+
+  Examples:
+  - Good: `className="p-4 rounded bg-light-surface dark:bg-dark-surface"`
+  - Keep opacity: `className="p-4 bg-light-surface/90"` (preserves translucency)
+  - Avoid: `className="p-4 bg-white dark:bg-gray-800"` (ambiguous intent — prefer neutral role classes like `bg-light-surface dark:bg-dark-surface`)
+
+  Migration guidance:
+  - Replace plain `bg-white` (non-opacity) with `bg-light-surface`.
+  - Replace generic paired dark fallbacks like `dark:bg-gray-800` with
+    `dark:bg-dark-surface` only when the dark fallback is intended as a
+    neutral surface (not a colour accent).
+  - Preserve `bg-white/*` opacity tokens and colour-specific dark overrides.
+
+  This comment documents the naming convention used across the codebase.
+*/
+
+/* Per-mode colour focus
+ - Light mode: Blue-focused primary palette (use `--brand-blue` / `primary-blue` classes)
+ - Dark mode: Red-focused primary palette (use `--brand-red` / `accent-red` classes)
+
+  Component rules:
+  - Primary CTA: `bg-primary-blue` (light) / `dark:bg-accent-red` (dark), text-white for contrast.
+  - Neutral surfaces: `bg-light-surface` / `dark:bg-dark-surface`.
+  - Inputs, cards, and panels should prefer neutral surfaces; use explicit colour overrides only for status or emphasis.
+*/
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --foreground-muted: #475569;
+  --foreground-rgb: 23, 23, 23;
+  --progress-color: #2563eb;
+  /* Brand/theme variables (light mode: deeper blue primary, red accent) */
+  --brand-blue-50: #eff6ff;
+  --brand-blue-100: #dbeafe;
+  --brand-blue-200: #bfdbfe;
+  --brand-blue-300: #93c5fd;
+  --brand-blue-400: #60a5fa;
+  --brand-blue-500: #2563eb;
+  --brand-blue-600: #1d4ed8;
+  --brand-blue-700: #1e40af;
+  --brand-blue-800: #1e3a8a;
+  --brand-blue-900: #172554;
+  --brand-blue-950: #0c1629;
+
+  --brand-from: var(--brand-blue-500);
+  --brand-to: var(--brand-blue-600);
+  --brand-primary-rgb: 37,99,235;
+  --brand-ring: #60a5fa;
+  --brand-ring-bg: rgba(37,99,235,0.10);
+  --brand-border: rgba(37,99,235,0.10);
+  --brand-700: var(--brand-blue-700);
+  --brand-accent: var(--brand-blue-400);
+  --brand-glow: rgba(37,99,235,0.22);
+  --brand-contrast: #ffffff;
+  --brand-contrast-inv: #0f172a;
+  --brand-blue: var(--brand-blue-500);
+  --brand-blue-glow: rgba(37,99,235,0.18);
+  --brand-red: #B91C1C;
+  /* SwoopingTick defaults (used by .swooping-tick CSS rules) */
+  --swoop-outer: #2563eb; /* outer ring (blue) */
+  --swoop-check: var(--brand-red); /* check mark (use canonical brand red) */
+  --brand-red-glow: rgba(185,28,28,0.12);
+  --sparkline-positive: #a7f3d0;
+  --sparkline-negative: #fecaca;
+  /* Landing page base bg — light mode keeps the page body soft and lets the top band carry the stronger blue */
+  --landing-bg: linear-gradient(180deg, #e9f0ff 0%, #edf3ff 44%, #d9e5fb 100%);
+  --landing-top-band: #2f63da;
+  --landing-wave-one: rgba(125, 154, 224, 0.34);
+  --landing-wave-two: rgba(78, 119, 214, 0.18);
+  --landing-wave-three: rgba(255, 255, 255, 0.34);
+  --landing-header-glow: rgba(59, 130, 246, 0.14);
+  --hero-top-wave: var(--landing-wave-three);
+  --chrome-bg: rgba(255, 255, 255, 0.94);
+  --chrome-panel: rgba(255, 255, 255, 0.96);
+  --chrome-border: rgba(148, 163, 184, 0.24);
+  --chrome-hover: rgba(37, 99, 235, 0.08);
+  /* Hero video overlay — light mode (blue-tinted) */
+  --hero-overlay-from: rgba(37,99,235,0.16);
+  --hero-overlay-to: rgba(37,99,235,0.08);
+
+  /* Theme role aliases - light mode: blue primary, accent */
+  --brand-primary: var(--brand-from);
+  --brand-accent: #3b82f6;
+
+  /* Dropdown tokens */
+  --dropdown-bg: #ffffff;
+  --dropdown-ring: rgba(15,23,42,0.08);
+  --dropdown-shadow: 0 18px 48px rgba(15,23,42,0.14);
+  --dropdown-radius: 1.5rem;
+  --dropdown-z: 60;
+
+  /* Marketing tokens (light mode) */
+  --marketing-pill-bg: #ffffff; /* pill background in light mode */
+  --marketing-pill-border: rgba(15,23,42,0.06); /* subtle border for pills */
+  --marketing-pill-icon: var(--brand-blue-600); /* icon / accent inside pill (light) */
+  --marketing-surface: rgba(255,255,255,0.96); /* marketing surface (cards, badges) */
+  --marketing-heading-blue: var(--brand-blue-700); /* prominent marketing heading color (light) */
+  --marketing-accent-dark: #b91c1c; /* semantic dark accent (used in dark-mode mirroring) */
+  --sidebar-text: #1d4ed8;
+  --sidebar-text-hover: #153f9f;
+  --sidebar-muted: #64748b;
+  --sidebar-muted-strong: #334155;
+
+  /* Admin Theme Defaults (Light Mode: Blue Accents) */
+  --admin-bg: #f8fafc;        /* Slate 50 */
+  --admin-surface: #ffffff;   /* White */
+  --admin-border: #e2e8f0;    /* Slate 200 */
+  --admin-primary: #2563eb;   /* Deep blue - aligned with brand */
+  --admin-text: #0f172a;      /* Slate 900 */
+  --admin-muted: #64748b;     /* Slate 500 */
+  --admin-accent: #3b82f6;    /* Accent aligned with brand-accent */
+  --admin-glass: rgba(255, 255, 255, 0.8);
+  --admin-glass-border: rgba(226, 232, 240, 0.7);
+}
+
+/* Class-based dark mode (for next-themes) */
+.dark {
+  --background: #111827;
+  /* Dark-mode text stays neutral for full visibility; red is reserved for accents. */
+  --foreground: #f8fafc;
+  --foreground-muted: #cbd5e1;
+  --foreground-rgb: 248,250,252;
+  --progress-color: var(--brand-red);
+  /* Dark mode: red theme */
+  --brand-from: var(--brand-red); /* use bright brand red */
+  --brand-to: var(--brand-red);
+  --brand-primary-rgb: 255,77,77;
+  --brand-ring: #dc2626;
+  --brand-ring-bg: rgba(220,38,38,0.12);
+  --brand-border: rgba(148,163,184,0.12);
+  --brand-700: var(--brand-red);
+  --brand-accent: #dc2626;
+  --brand-glow: var(--brand-red-glow);
+  --brand-contrast: #ffffff;
+  --brand-contrast-inv: #1e293b;
+  --brand-blue: #66a3ff;
+  --brand-red: #b91c1c;
+  /* SwoopingTick overrides for dark mode (keep outer ring blue + red check) */
+  --swoop-outer: #2563eb;
+  --swoop-check: var(--brand-red);
+  --brand-blue-glow: rgba(102,163,255,0.18);
+  --brand-red-glow: rgba(185,28,28,0.22);
+  --sparkline-positive: #fecaca;
+  --sparkline-negative: #a7f3d0;
+  /* Landing page base bg — dark mode keeps a dark-grey base with red signal layers */
+  --landing-bg: linear-gradient(180deg, #1f2937 0%, #111827 42%, #0d0d14 100%);
+  --landing-top-band: #111827;
+  --landing-wave-one: rgba(127, 29, 29, 0.22);
+  --landing-wave-two: rgba(220, 38, 38, 0.12);
+  --landing-wave-three: rgba(248, 113, 113, 0.10);
+  --landing-header-glow: rgba(248, 113, 113, 0.14);
+  --hero-top-wave: var(--landing-wave-three);
+  --chrome-bg: rgba(23, 23, 28, 0.95);
+  --chrome-panel: rgba(29, 29, 35, 0.97);
+  --chrome-border: rgba(255, 255, 255, 0.10);
+  --chrome-hover: rgba(255, 255, 255, 0.08);
+  /* Hero video overlay — dark mode (neutral dark) */
+  --hero-overlay-from: rgba(10,10,14,0.84);
+  --hero-overlay-to: rgba(10,10,14,0.62);
+
+  /* Theme role aliases - dark mode: red primary, blue accent */
+  --brand-primary: var(--brand-red);
+  --brand-accent: var(--brand-primary);
+
+  /* Admin Dark Theme (Professional Red) */
+    --admin-bg: #020617;        /* Slate 950 */
+    --admin-surface: #1e293b;   /* Slate 800 */
+    --admin-border: #1e293b;    /* Slate 800 */
+    --admin-primary: var(--brand-red);   /* match brand-red */
+    --admin-text: #f8fafc;      /* Slate 50 */
+    --admin-muted: #94a3b8;     /* Slate 400 */
+    --admin-accent: #dc2626;
+    --admin-glass: rgba(15, 23, 42, 0.7);
+    --admin-glass-border: rgba(30, 41, 59, 0.6);
+    /* Marketing tokens (dark mode) */
+    --marketing-pill-bg: #111827; /* dark grey pill background in dark mode */
+    --marketing-pill-border: rgba(255,255,255,0.06); /* subtle light border to separate from bg */
+    --marketing-pill-icon: var(--brand-red); /* icon / accent inside pill (dark) */
+    --marketing-surface: rgba(31,41,55,0.95); /* marketing surface for dark mode */
+    --marketing-heading-blue: var(--brand-red); /* use canonical About-page red in dark mode */
+    --marketing-accent-dark: var(--brand-red); /* use canonical About red for dark accents */
+    --sidebar-text: #dc2626;
+    --sidebar-text-hover: var(--brand-red);
+    --sidebar-muted: #94a3b8;
+    --sidebar-muted-strong: #e2e8f0;
+  }
+
+  /* Ensure prominent CTAs remain legible on busy marketing hero backgrounds in light mode.
+     Targets: landing pages (.brand-true-red), hero areas and common CTA classes.
+     - Applies only when the site is not in dark-mode (html:not(.dark)) to avoid altering intentional dark-mode styling.
+     - Avoids overriding gradient CTA elements (keeps their gradients intact).
+  */
+  html:not(.dark) .brand-true-red :is(.marketing-hero, .home-hero, .home-bg-decoration, .landing-hero) :is(a, button, .btn, .cta, .marketing-pill, .cta-animate) {
+    background-color: transparent;
+  }
+
+  /* Harden non-gradient CTAs inside the landing hero (light mode) */
+  html:not(.dark) .brand-true-red :is(.marketing-hero, .home-hero, .home-bg-decoration, .landing-hero) :is(a, button, .btn, .cta, .marketing-pill, .cta-animate):where(:not([class*="from-"]):not([style*="linear-gradient"])) {
+    background-color: rgba(var(--brand-primary-rgb), 0.96);
+    color: var(--brand-contrast);
+    border-color: transparent;
+    box-shadow: 0 10px 30px rgba(var(--brand-primary-rgb), 0.12);
+  }
+
+  /* Admin Utility Classes */
+  .admin-glass {
+  background: var(--admin-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--admin-glass-border);
+}
+
+.admin-gradient-text {
+  background: linear-gradient(to right, var(--admin-primary), var(--admin-accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Admin accessibility state classes are scoped to the admin shell only. */
+.admin-root.admin-high-contrast {
+  filter: contrast(1.15);
+}
+
+.admin-root.admin-inverted {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+.admin-root.admin-inverted.admin-high-contrast {
+  filter: invert(1) hue-rotate(180deg) contrast(1.15);
+}
+
+/* Opt out a specific admin region from inversion (double-invert to restore). */
+.admin-root.admin-inverted .admin-invert-optout {
+  filter: invert(1) hue-rotate(180deg);
+  background-color: inherit;
+  color: inherit;
+}
+
+/* Avoid triple inversion in opt-out regions for media/canvas-based widgets. */
+.admin-root.admin-inverted .admin-invert-optout img,
+.admin-root.admin-inverted .admin-invert-optout picture,
+.admin-root.admin-inverted .admin-invert-optout video,
+.admin-root.admin-inverted .admin-invert-optout canvas,
+.admin-root.admin-inverted .admin-invert-optout svg,
+.admin-root.admin-inverted .admin-invert-optout iframe {
+  filter: none;
+}
+
+/* Re-invert rich media so photos/videos/charts remain naturally readable. */
+.admin-root.admin-inverted img,
+.admin-root.admin-inverted picture,
+.admin-root.admin-inverted video,
+.admin-root.admin-inverted canvas,
+.admin-root.admin-inverted svg,
+.admin-root.admin-inverted iframe {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+/* Fallback for prefers-color-scheme when no theme is set */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light):not(.dark) {
+    --background: #111827;
+    --foreground: #ededed;
+  }
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  color: var(--foreground);
+  background: var(--background);
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+}
+
+/* Headings, prominent titles, category headers and talent names use Space Grotesk */
+h1, h2, h3, h4, h5, h6,
+.category-header,
+.category-title,
+.talent-name,
+.profile-name,
+.talent-card__name {
+  font-family: 'Space Grotesk', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+}
+
+/* UI and body text (filters, descriptions, labels) use Inter for high legibility */
+body, p, span, label, input, button, select, textarea,
+.ui-text,
+.filter-label,
+.filter-description,
+.description,
+.lead,
+.muted {
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+}
+
+/* Custom animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* Dark-mode typographic overrides — SCOPED TO <main> ONLY.
+   Applies the red-tinted --foreground to marketing/page content but does NOT
+   affect the global header (<header>), sidebar (<aside>), or footer (<footer>)
+   so those chrome elements keep their own explicit dark-mode colours.           */
+.dark main h1,
+.dark main h2,
+.dark main h3,
+.dark main h4,
+.dark main h5,
+.dark main h6,
+.dark main p,
+.dark main li,
+.dark main span,
+.dark main label,
+.dark main small,
+.dark main strong,
+.dark main em,
+.dark main .ui-text,
+.dark main .lead,
+.dark main .muted,
+.dark main .category-title,
+.dark main .talent-name,
+.dark main .profile-name,
+.dark main .talent-card__name,
+.dark main blockquote,
+.dark main dd,
+.dark main dt {
+  color: var(--foreground);
+}
+
+/* Unstyled links inside main content adopt the foreground tone in dark mode */
+.dark main a:not([class]) {
+  color: var(--foreground);
+}
+
+/* Marketing safeguard: convert hardcoded white text utilities to the dark red-tinted foreground */
+.dark main h1.text-white,
+.dark main h2.text-white,
+.dark main h3.text-white,
+.dark main h4.text-white,
+.dark main h5.text-white,
+.dark main h6.text-white,
+.dark main p.text-white,
+.dark main li.text-white,
+.dark main span.text-white,
+.dark main label.text-white,
+.dark main small.text-white,
+.dark main strong.text-white,
+.dark main em.text-white,
+.dark main a.text-white,
+.dark main h1[class*="dark:text-white"],
+.dark main h2[class*="dark:text-white"],
+.dark main h3[class*="dark:text-white"],
+.dark main h4[class*="dark:text-white"],
+.dark main h5[class*="dark:text-white"],
+.dark main h6[class*="dark:text-white"],
+.dark main p[class*="dark:text-white"],
+.dark main li[class*="dark:text-white"],
+.dark main span[class*="dark:text-white"],
+.dark main label[class*="dark:text-white"],
+.dark main small[class*="dark:text-white"],
+.dark main strong[class*="dark:text-white"],
+.dark main em[class*="dark:text-white"],
+.dark main a[class*="dark:text-white"] {
+  color: var(--foreground) !important;
+}

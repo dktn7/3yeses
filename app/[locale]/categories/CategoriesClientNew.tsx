@@ -13,7 +13,34 @@ import TalentFilterPanel, { defaultFilters as sharedDefaultFilters, TalentFilter
 import { getCategoryI18nKey } from '@/lib/categories';
 import { getCategoryIconByName, getSubcategoryIconByName } from '@/lib/categoryIcons';
 
-const CATEGORY_ICON_CLASSES = 'w-14 h-14 text-white transition-colors';
+const CATEGORY_ICON_CLASSES = 'w-14 h-14 transition-colors';
+const CATEGORY_TILE_BASE_CLASSES =
+  'group p-8 border rounded-xl transition-all duration-200 cursor-pointer min-h-[260px] focus-visible:outline-none focus-visible:ring-2 active:scale-[0.98] active:translate-y-0 hover:-translate-y-0.5';
+const CATEGORY_TILE_LIGHT_CLASSES =
+  'border-blue-100/90 bg-[linear-gradient(180deg,rgba(255,255,255,0.99)_0%,rgba(248,251,255,0.97)_100%)] text-slate-900 shadow-[0_10px_24px_rgba(59,130,246,0.14)] hover:border-blue-200 hover:bg-[linear-gradient(180deg,rgba(255,255,255,1)_0%,rgba(238,245,255,0.98)_100%)] hover:shadow-[0_16px_32px_rgba(59,130,246,0.18)] focus-visible:ring-blue-500 focus-visible:ring-offset-2';
+const CATEGORY_TILE_DARK_CLASSES =
+  'dark:border-white/10 dark:bg-none dark:[background-image:none] dark:bg-[rgba(31,32,36,0.96)] dark:text-white dark:shadow-[0_8px_22px_rgba(0,0,0,0.42)] dark:hover:border-red-500/45 dark:hover:bg-[rgba(31,32,36,0.98)] dark:hover:shadow-[0_12px_28px_rgba(127,29,29,0.18)] dark:focus-visible:ring-red-400 dark:focus-visible:ring-offset-[#140809]';
+const CATEGORY_TILE_CLASSES = `${CATEGORY_TILE_BASE_CLASSES} ${CATEGORY_TILE_LIGHT_CLASSES} ${CATEGORY_TILE_DARK_CLASSES}`;
+const CATEGORY_ICON_BOX_BASE_CLASSES = 'p-4 rounded-2xl transition-all duration-200';
+const CATEGORY_ICON_BOX_LIGHT_CLASSES =
+  'border border-blue-200/90 bg-white text-[#1d4ed8] shadow-[0_10px_24px_rgba(37,99,235,0.16)] group-hover:border-primary-blue group-hover:bg-primary-blue group-hover:text-white group-hover:shadow-[0_14px_28px_rgba(37,99,235,0.24)] group-hover:scale-[1.03]';
+const CATEGORY_ICON_BOX_DARK_CLASSES =
+  'dark:border dark:border-red-500/20 dark:bg-[#232937] dark:text-accent-red dark:shadow-[0_10px_22px_rgba(0,0,0,0.24)] dark:group-hover:border-accent-red dark:group-hover:bg-accent-red dark:group-hover:text-white dark:group-hover:shadow-[0_14px_28px_rgba(127,29,29,0.20)]';
+const CATEGORY_ICON_BOX_CLASSES = `${CATEGORY_ICON_BOX_BASE_CLASSES} ${CATEGORY_ICON_BOX_LIGHT_CLASSES} ${CATEGORY_ICON_BOX_DARK_CLASSES}`;
+const CATEGORY_TITLE_BASE_CLASSES = 'text-base font-semibold tracking-tight transition-colors leading-snug';
+const CATEGORY_TITLE_LIGHT_CLASSES = 'text-slate-900';
+const CATEGORY_TITLE_DARK_CLASSES = 'dark:text-white';
+const CATEGORY_TITLE_CLASSES = `${CATEGORY_TITLE_BASE_CLASSES} ${CATEGORY_TITLE_LIGHT_CLASSES} ${CATEGORY_TITLE_DARK_CLASSES}`;
+const CATEGORY_VIEW_ALL_TITLE_LIGHT_CLASSES = 'text-primary-blue';
+const CATEGORY_VIEW_ALL_TITLE_CLASSES = `${CATEGORY_TITLE_BASE_CLASSES} ${CATEGORY_VIEW_ALL_TITLE_LIGHT_CLASSES} ${CATEGORY_TITLE_DARK_CLASSES}`;
+const CATEGORY_META_BASE_CLASSES = 'text-xs font-medium transition-colors mt-0.5';
+const CATEGORY_META_LIGHT_CLASSES = 'text-slate-500';
+const CATEGORY_META_DARK_CLASSES = 'dark:text-gray-400';
+const CATEGORY_META_CLASSES = `${CATEGORY_META_BASE_CLASSES} ${CATEGORY_META_LIGHT_CLASSES} ${CATEGORY_META_DARK_CLASSES}`;
+const CATEGORY_DESCRIPTION_BASE_CLASSES = 'text-sm transition-colors mt-1 line-clamp-2';
+const CATEGORY_DESCRIPTION_LIGHT_CLASSES = 'text-slate-600';
+const CATEGORY_DESCRIPTION_DARK_CLASSES = 'dark:text-gray-300';
+const CATEGORY_DESCRIPTION_CLASSES = `${CATEGORY_DESCRIPTION_BASE_CLASSES} ${CATEGORY_DESCRIPTION_LIGHT_CLASSES} ${CATEGORY_DESCRIPTION_DARK_CLASSES}`;
 const SMALL_ICON_CLASSES = 'w-4 h-4 shrink-0';
 
 function getChipIconClasses(isSelected: boolean) {
@@ -83,16 +110,22 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
   const locale = useLocale();
   const router = useRouter();
 
+  const stripSeededSuffix = (value: string): string =>
+    value.replace(/\s*\(seeded\)\s*$/i, '').replace(/\s+seeded\s*$/i, '').trim();
+
   // Translate a category name from DB to the current locale, with English fallback
   const translateCategoryName = (dbName: string): string => {
-    const key = getCategoryI18nKey(dbName);
+    const cleanName = stripSeededSuffix(dbName);
+    const key = getCategoryI18nKey(cleanName);
     if (!key) return dbName;
     try {
       return t(`names.${key}`);
     } catch {
-      return dbName;
+      return cleanName;
     }
   };
+  const displayCategoryName = (name: string) => stripSeededSuffix(translateCategoryName(name));
+  const displayRawName = (name: string) => stripSeededSuffix(name);
   const searchParams = useSearchParams();
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [selectedSubcategory, setSelectedSubcategory] = useState<Subcategory | null>(null);
@@ -513,8 +546,8 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
           // "View All" mode — synthetic subcategory to show all talents in category
           setSelectedSubcategory({
             id: VIEW_ALL_ID,
-            name: `All ${category.name}`,
-            description: `All talents in ${category.name}`,
+            name: `All ${displayCategoryName(category.name)}`,
+            description: `All talents in ${displayCategoryName(category.name)}`,
             _count: { talentProfiles: category._count.talentProfiles },
           });
         } else if (subcategoryName) {
@@ -522,14 +555,14 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
           if (subcategory) {
             setSelectedSubcategory(subcategory);
           } else {
-             setSelectedSubcategory(null);
+            setSelectedSubcategory(null);
           }
         } else {
           setSelectedSubcategory(null);
         }
       } else {
-         setSelectedCategory(null);
-         setSelectedSubcategory(null);
+        setSelectedCategory(null);
+        setSelectedSubcategory(null);
       }
     } else {
       setSelectedCategory(null);
@@ -709,7 +742,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                 const Icon = categoryIconMap.get(category.id);
                 return <Icon className={getChipIconClasses(selectedCategories.includes(category.id))} />;
               })()}
-              <span>{translateCategoryName(category.name)}</span>
+              <span>{displayCategoryName(category.name)}</span>
             </button>
           ))}
         </div>
@@ -856,7 +889,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                           const Icon = categoryIconMap.get(category.id);
                           return <Icon className="w-3.5 h-3.5" />;
                         })()}
-                      {translateCategoryName(category.name)}
+                      {displayCategoryName(category.name)}
                     </button>
                     <div className="flex flex-wrap gap-1.5 mt-1.5 ml-5">
                       {category.subcategories.map((sub) => (
@@ -879,7 +912,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                             const Icon = subcategoryIconMap.get(sub.id);
                             return <Icon className={`${selectedSubcategories.includes(sub.id) ? 'text-white' : 'text-primary-blue dark:text-accent-red'} w-3 h-3 inline-block mr-1`} />;
                           })()}
-                          {sub.name}
+                          {displayRawName(sub.name)}
                         </button>
                       ))}
                     </div>
@@ -1455,7 +1488,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                         key={result.id}
                         role="button"
                         tabIndex={0}
-                        className="group p-8 border border-blue-100/80 dark:border-red-400/20 rounded-xl bg-white/95 dark:bg-slate-900 hover:bg-primary-blue shadow-[0_2px_10px_rgba(37,99,235,0.10)] dark:shadow-[0_6px_18px_rgba(0,0,0,0.45)] hover:shadow-[0_10px_26px_rgba(37,99,235,0.18)] dark:hover:shadow-[0_10px_28px_rgba(127,29,29,0.26)] hover:border-blue-300 dark:hover:border-red-300/45 hover:-translate-y-0.5 active:scale-[0.98] active:translate-y-0 transition-all duration-200 cursor-pointer min-h-[260px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue dark:focus-visible:ring-red-400 focus-visible:ring-offset-2"
+                        className={CATEGORY_TILE_CLASSES}
                         onClick={() => {
                           const params = new URLSearchParams();
                           params.set('category', result.parentName);
@@ -1477,23 +1510,23 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                         }}
                       >
                         <div className="flex flex-col h-full items-center justify-center text-center gap-2">
-                          <div className="p-4 rounded-2xl bg-primary-blue dark:bg-accent-red group-hover:bg-white/20 dark:group-hover:bg-accent-red/90 transition-colors">
+                          <div className={CATEGORY_ICON_BOX_CLASSES}>
                             {(() => {
                               const Icon = result.isViewAll
                                 ? getCategoryIconByName(result.parentName, result.parentIcon)
                                 : getSubcategoryIconByName(result.name, result.parentName, result.parentIcon);
                               return <Icon className={CATEGORY_ICON_CLASSES} />;
-                            })()}
-                          </div>
-                          <div>
-                            <h2 className="text-base font-semibold tracking-tight text-gray-900 dark:text-white group-hover:text-white transition-colors leading-snug">
-                              {result.isViewAll ? `All ${translateCategoryName(result.parentName)}` : result.name}
+                          })()}
+                        </div>
+                        <div>
+                            <h2 className={result.isViewAll ? CATEGORY_VIEW_ALL_TITLE_CLASSES : CATEGORY_TITLE_CLASSES}>
+                              {result.isViewAll ? `All ${displayCategoryName(result.parentName)}` : displayRawName(result.name)}
                             </h2>
-                            <p className="text-xs font-medium text-primary-blue dark:text-red-300 group-hover:text-white/80 transition-colors mt-0.5">
-                              {translateCategoryName(result.parentName)}
+                            <p className={CATEGORY_META_CLASSES}>
+                              {displayCategoryName(result.parentName)}
                             </p>
                             {result.description && (
-                              <p className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-white/90 transition-colors mt-1 line-clamp-1">
+                              <p className={`${CATEGORY_DESCRIPTION_CLASSES} line-clamp-1`}>
                                 {result.description}
                               </p>
                             )}
@@ -1518,22 +1551,22 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                     key={category.id}
                     role="button"
                     tabIndex={0}
-                    className="group p-8 border border-blue-100/80 dark:border-red-400/20 rounded-xl bg-white/95 dark:bg-slate-900 hover:bg-primary-blue shadow-[0_2px_10px_rgba(37,99,235,0.10)] dark:shadow-[0_6px_18px_rgba(0,0,0,0.45)] hover:shadow-[0_10px_26px_rgba(37,99,235,0.18)] dark:hover:shadow-[0_10px_28px_rgba(127,29,29,0.26)] hover:border-blue-300 dark:hover:border-red-300/45 hover:-translate-y-0.5 active:scale-[0.98] active:translate-y-0 transition-all duration-200 cursor-pointer min-h-[260px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue dark:focus-visible:ring-red-400 focus-visible:ring-offset-2"
+                    className={CATEGORY_TILE_CLASSES}
                     onClick={() => handleCategorySelect(category)}
                     onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleCategorySelect(category); } }}
                   >
                     <div className="flex flex-col h-full items-center justify-center text-center gap-2">
-                      <div className="p-4 rounded-2xl bg-primary-blue dark:bg-[rgba(17,24,39,0.90)] group-hover:bg-white/20 dark:group-hover:bg-[rgba(17,24,39,0.98)] transition-colors">
+                      <div className={CATEGORY_ICON_BOX_CLASSES}>
                         {(() => {
                           const Icon = getCategoryIconByName(category.name, category.icon);
                           return <Icon className={CATEGORY_ICON_CLASSES} />;
                         })()}
                       </div>
                       <div>
-                        <h2 className="text-base font-semibold tracking-tight text-gray-900 dark:text-white group-hover:text-white transition-colors leading-snug">
-                          {translateCategoryName(category.name)}
+                        <h2 className={CATEGORY_TITLE_CLASSES}>
+                          {displayCategoryName(category.name)}
                         </h2>
-                        <p className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-white/90 transition-colors mt-1 line-clamp-2">
+                        <p className={CATEGORY_DESCRIPTION_CLASSES}>
                           {category.description}
                         </p>
                       </div>
@@ -1590,7 +1623,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
         {/* Sticky Header with Search */}
         <section className="bg-gradient-to-r from-blue-100/95 via-blue-50/95 to-blue-100/95 dark:from-red-950/95 dark:via-red-900/95 dark:to-red-950/95 border-b border-gray-200/80 dark:border-red-400/20 sticky top-0 z-40 shadow-lg backdrop-blur-sm">
           <div className="max-w-screen-2xl mx-auto px-6 pt-3 pb-4">
-            <Breadcrumbs items={[{ label: 'Home', href: `/${locale}` }, { label: 'Categories', href: `/${locale}/categories` }, { label: translateCategoryName(selectedCategory.name) }]} />
+            <Breadcrumbs items={[{ label: 'Home', href: `/${locale}` }, { label: 'Categories', href: `/${locale}/categories` }, { label: displayCategoryName(selectedCategory.name) }]} />
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
               <div className="flex items-center gap-4">
                 {/* Back Button */}
@@ -1607,7 +1640,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                 </button>
                 <div>
                   <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
-                    {translateCategoryName(selectedCategory.name)}
+                    {displayCategoryName(selectedCategory.name)}
                   </h1>
                   <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
                     {selectedCategory.description}
@@ -1679,7 +1712,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                 <div
                   role="button"
                   tabIndex={0}
-                  className="group p-8 border border-blue-100/80 dark:border-red-900/50 rounded-xl bg-white/95 dark:bg-slate-900 hover:bg-primary-blue shadow-[0_2px_10px_rgba(37,99,235,0.10)] dark:shadow-[0_6px_18px_rgba(0,0,0,0.45)] hover:shadow-[0_10px_26px_rgba(37,99,235,0.18)] dark:hover:shadow-[0_10px_28px_rgba(220,38,38,0.20)] hover:border-blue-300 dark:hover:border-red-600 hover:-translate-y-0.5 active:scale-[0.98] active:translate-y-0 transition-all duration-200 cursor-pointer min-h-[260px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue dark:focus-visible:ring-accent-red focus-visible:ring-offset-2"
+                  className={CATEGORY_TILE_CLASSES}
                   onClick={() => {
                     const params = new URLSearchParams(searchParams.toString());
                     params.set('subcategory', '__all__');
@@ -1695,17 +1728,17 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                   }}
                 >
                   <div className="flex flex-col h-full items-center justify-center text-center gap-2">
-                    <div className="p-4 rounded-2xl bg-primary-blue dark:bg-accent-red group-hover:bg-white/20 dark:group-hover:bg-accent-red/90 transition-colors">
+                    <div className={CATEGORY_ICON_BOX_CLASSES}>
                       {(() => {
                         const Icon = getCategoryIconByName(selectedCategory.name, selectedCategory.icon);
                         return <Icon className={CATEGORY_ICON_CLASSES} />;
                       })()}
                     </div>
-                    <h2 className="text-base font-semibold tracking-tight text-primary-blue dark:text-red-300 group-hover:text-white transition-colors mt-1 leading-snug">
+                    <h2 className={`${CATEGORY_VIEW_ALL_TITLE_CLASSES} mt-1`}>
                       View All
                     </h2>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-white/90 transition-colors mt-1 line-clamp-2">
-                      Browse all talents in {translateCategoryName(selectedCategory.name)}
+                    <p className={CATEGORY_DESCRIPTION_CLASSES}>
+                      Browse all talents in {displayCategoryName(selectedCategory.name)}
                     </p>
                   </div>
                 </div>
@@ -1715,7 +1748,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                     key={subcategory.id}
                     role="button"
                     tabIndex={0}
-                    className="group p-8 border border-blue-100/80 dark:border-red-400/20 rounded-xl bg-white/95 dark:bg-slate-900 hover:bg-primary-blue shadow-[0_2px_10px_rgba(37,99,235,0.10)] dark:shadow-[0_6px_18px_rgba(0,0,0,0.45)] hover:shadow-[0_10px_26px_rgba(37,99,235,0.18)] dark:hover:shadow-[0_10px_28px_rgba(127,29,29,0.26)] hover:border-blue-300 dark:hover:border-red-300/45 hover:-translate-y-0.5 active:scale-[0.98] active:translate-y-0 transition-all duration-200 cursor-pointer min-h-[260px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue dark:focus-visible:ring-red-400 focus-visible:ring-offset-2"
+                    className={CATEGORY_TILE_CLASSES}
                     onClick={() => {
                       const params = new URLSearchParams(searchParams.toString());
                       params.set('subcategory', subcategory.name);
@@ -1731,16 +1764,16 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                     }}
                   >
                     <div className="flex flex-col h-full items-center justify-center text-center gap-2">
-                      <div className="p-4 rounded-2xl bg-primary-blue dark:bg-accent-red group-hover:bg-white/20 dark:group-hover:bg-accent-red/90 transition-colors">
+                      <div className={CATEGORY_ICON_BOX_CLASSES}>
                         {(() => {
                           const Icon = getSubcategoryIconByName(subcategory.name, selectedCategory.name, selectedCategory.icon);
                           return <Icon className={CATEGORY_ICON_CLASSES} />;
                         })()}
                       </div>
-                      <h2 className="text-base font-semibold tracking-tight text-gray-900 dark:text-white group-hover:text-white transition-colors mt-1 leading-snug">
-                        {subcategory.name}
+                      <h2 className={`${CATEGORY_TITLE_CLASSES} mt-1`}>
+                        {displayRawName(subcategory.name)}
                       </h2>
-                      <p className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-white/90 transition-colors mt-1 line-clamp-2">
+                      <p className={CATEGORY_DESCRIPTION_CLASSES}>
                         {subcategory.description}
                       </p>
                     </div>

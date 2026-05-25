@@ -100,7 +100,7 @@ export default function Sidebar({ isCollapsed = false, setIsCollapsed }: { isCol
 
 
     return (
-        <aside className={`fixed top-16 left-0 z-50 flex h-[calc(100vh-4rem)] flex-col overflow-y-auto border-r border-[var(--chrome-border)] bg-[var(--chrome-bg)] px-3 py-6 text-blue-600 backdrop-blur-md transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] dark:text-red-500 ${isCollapsed ? 'w-20' : 'w-60'}`}>
+        <aside className={`fixed top-16 left-0 z-50 flex h-[calc(100vh-4rem)] flex-col overflow-y-auto border-r border-[var(--chrome-border)] bg-[var(--chrome-bg)] px-3 py-6 text-[var(--sidebar-text)] backdrop-blur-md transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${isCollapsed ? 'w-20' : 'w-60'}`}>
             <div className="flex items-center justify-end mb-4">
            </div>
             <nav className="space-y-5 flex-1">
@@ -113,7 +113,7 @@ export default function Sidebar({ isCollapsed = false, setIsCollapsed }: { isCol
                             href={item.href}
                             className={`group flex items-center gap-3 py-2.5 px-4 rounded-xl transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${isActive
                                 ? 'bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] font-semibold shadow-sm ring-1 ring-[var(--brand-primary)]/15'
-                                : 'text-blue-600 dark:text-red-500 hover:bg-[var(--chrome-hover)] hover:text-blue-700 dark:hover:text-red-400'
+                                : 'text-[var(--sidebar-text)] hover:bg-[var(--chrome-hover)] hover:text-[var(--sidebar-text-hover)]'
                             }`}
                             style={{ animationDelay: `${index * 40}ms` }}
                         >
@@ -132,7 +132,7 @@ export default function Sidebar({ isCollapsed = false, setIsCollapsed }: { isCol
                     })}
                 </div>
 
-                <div className="h-px bg-gray-200/60 dark:bg-red-200/10 mx-2" />
+                <div className="h-px bg-[var(--chrome-border)] mx-2" />
 
                 <div className="space-y-1">
                     {getDropdownItems().map((dropdown) => (
@@ -147,7 +147,7 @@ export default function Sidebar({ isCollapsed = false, setIsCollapsed }: { isCol
                                 onClick={() => handleDropdownClick(dropdown.label)}
                                 className={`group flex items-center justify-between w-full py-2.5 px-4 rounded-xl transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${openDropdown === dropdown.label
                                     ? 'bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] font-semibold ring-1 ring-[var(--brand-primary)]/15'
-                                    : 'text-blue-600 dark:text-red-500 hover:bg-[var(--chrome-hover)] hover:text-blue-700 dark:hover:text-red-400'
+                                    : 'text-[var(--sidebar-text)] hover:bg-[var(--chrome-hover)] hover:text-[var(--sidebar-text-hover)]'
                                 }`}
                             >
                                 <div className="flex items-center gap-3">
@@ -164,14 +164,14 @@ export default function Sidebar({ isCollapsed = false, setIsCollapsed }: { isCol
             onMouseEnter={() => handleMouseEnter(dropdown.label)}
             onMouseLeave={handleMouseLeave}
         >
-            <div className="mb-2 px-3 pt-1 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-red-200/70">{dropdown.label}</div>
+            <div className="mb-2 px-3 pt-1 text-xs font-semibold uppercase tracking-wider text-[var(--sidebar-muted)]">{dropdown.label}</div>
             {dropdown.items.map((item) => (
                 <Link
                     key={item.label}
                     href={item.href}
                         className={`flex items-center gap-2 py-2 px-3 rounded-lg text-sm transition-all duration-200 ${pathname === item.href
                         ? 'bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] font-semibold'
-                        : 'text-blue-600 dark:text-red-500 hover:bg-[var(--chrome-hover)]'
+                        : 'text-[var(--sidebar-text)] hover:bg-[var(--chrome-hover)] hover:text-[var(--sidebar-text-hover)]'
                     }`}
                 >
                     <span>{item.label}</span>
@@ -188,7 +188,7 @@ export default function Sidebar({ isCollapsed = false, setIsCollapsed }: { isCol
                                             href={item.href}
                                             className={`block py-2 px-3 rounded-lg text-sm transition-all duration-200 ${pathname === item.href
                                                 ? 'bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] font-semibold'
-                                                : 'text-blue-600 dark:text-red-500 hover:bg-[var(--chrome-hover)]'
+                                                : 'text-[var(--sidebar-text)] hover:bg-[var(--chrome-hover)] hover:text-[var(--sidebar-text-hover)]'
                                             }`}
                                         >
                                             {item.label}
@@ -202,18 +202,18 @@ export default function Sidebar({ isCollapsed = false, setIsCollapsed }: { isCol
             </nav>
 
             <div className="mt-auto pt-3">
-                <div className="h-px bg-gray-200/60 dark:bg-red-200/10 mx-2 mb-4" />
+                <div className="h-px bg-[var(--chrome-border)] mx-2 mb-4" />
                 <div className={`flex items-center justify-center ${isCollapsed ? 'flex-col space-y-3' : 'space-x-3'}`}>
-                    <a href="#" className="text-gray-400 dark:text-red-200/70 hover:text-[var(--brand-primary)] transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:scale-110" aria-label="Twitter">
+                    <a href="#" className="text-[var(--sidebar-muted)] hover:text-[var(--sidebar-text-hover)] transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:scale-110" aria-label="Twitter">
                         <Twitter className="h-4.5 w-4.5" />
                     </a>
-                    <a href="#" className="text-gray-400 dark:text-red-200/70 hover:text-[var(--brand-primary)] transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:scale-110" aria-label="Facebook">
+                    <a href="#" className="text-[var(--sidebar-muted)] hover:text-[var(--sidebar-text-hover)] transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:scale-110" aria-label="Facebook">
                         <Facebook className="h-4.5 w-4.5" />
                     </a>
-                    <a href="#" className="text-gray-400 dark:text-red-200/70 hover:text-[var(--brand-primary)] transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:scale-110" aria-label="Instagram">
+                    <a href="#" className="text-[var(--sidebar-muted)] hover:text-[var(--sidebar-text-hover)] transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:scale-110" aria-label="Instagram">
                         <Instagram className="h-4.5 w-4.5" />
                     </a>
-                    <a href="#" className="text-gray-400 dark:text-red-200/70 hover:text-[var(--brand-primary)] transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:scale-110" aria-label="TikTok">
+                    <a href="#" className="text-[var(--sidebar-muted)] hover:text-[var(--sidebar-text-hover)] transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:scale-110" aria-label="TikTok">
                         <TikTokIcon className="h-4.5 w-4.5" />
                     </a>
                 </div>
@@ -221,7 +221,7 @@ export default function Sidebar({ isCollapsed = false, setIsCollapsed }: { isCol
             <div className="pt-4">
                     <button
                     onClick={() => { if (typeof setIsCollapsed === 'function') setIsCollapsed(!isCollapsed); }}
-                    className="group flex w-full items-center justify-center rounded-xl px-4 py-2.5 text-gray-400 dark:text-red-200/70 transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-[var(--chrome-hover)] hover:text-gray-600 dark:hover:text-red-100"
+                    className="group flex w-full items-center justify-center rounded-xl px-4 py-2.5 text-[var(--sidebar-muted)] transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-[var(--chrome-hover)] hover:text-[var(--sidebar-muted-strong)]"
                     aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
                 >
                     {isCollapsed ? <ChevronsRight size={18} className="transition-transform duration-300 group-hover:translate-x-0.5" /> : <ChevronsLeft size={18} className="transition-transform duration-300 group-hover:-translate-x-0.5" />}

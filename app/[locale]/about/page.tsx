@@ -36,9 +36,9 @@ function AboutBgDecoration() {
         </defs>
         <rect width="1440" height="900" fill="url(#abBg)" />
         <rect width="1440" height="900" fill="url(#abGlow)" />
-        <path d="M0 520 C240 420 480 580 720 500 C960 420 1200 540 1440 480 L1440 900 L0 900 Z" fill="url(#abW1)" opacity="0.36" />
-        <path d="M0 640 C320 570 560 690 800 620 C1040 550 1280 660 1440 600 L1440 900 L0 900 Z" fill="url(#abW2)" opacity="0.28" />
-        <path d="M0 80 C360 140 720 40 1080 100 C1260 130 1380 90 1440 110 L1440 0 L0 0 Z" fill="var(--brand-from)" opacity="0.22" />
+        <path d="M0 600 C240 520 480 660 720 590 C960 520 1200 620 1440 560 L1440 900 L0 900 Z" fill="url(#abW1)" opacity="0.34" />
+        <path d="M0 700 C320 640 560 740 800 680 C1040 620 1280 710 1440 670 L1440 900 L0 900 Z" fill="url(#abW2)" opacity="0.26" />
+        <path d="M0 56 C360 108 720 28 1080 74 C1260 98 1380 70 1440 82 L1440 0 L0 0 Z" fill="var(--hero-top-wave, var(--brand-from))" opacity="0.16" />
         <circle cx="200" cy="150" r="200" fill="var(--brand-to)" opacity="0.14" />
         <circle cx="1250" cy="700" r="260" fill="var(--brand-from)" opacity="0.12" />
         <circle cx="720" cy="400" r="280" fill="var(--brand-glow)" opacity="0.06" />
@@ -90,9 +90,9 @@ export default function AboutPage() {
         <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: t('badge') || 'About' }]} />
         <div className="text-center mb-20">
             <div className="flex justify-center mb-6">
-            <span className="marketing-pill inline-flex items-center gap-3 rounded-full px-5 py-2.5 backdrop-blur-md bg-light-surface dark:bg-dark-surface border border-gray-200/60 dark:border-[var(--marketing-pill-border)] shadow-sm">
-              <SwoopingTick className="w-9 h-9 shrink-0 text-primary-blue dark:text-accent-red" />
-              <span className="text-xs font-bold uppercase tracking-[0.25em] text-primary-blue dark:text-accent-red">
+            <span className="marketing-pill inline-flex items-center gap-3 rounded-full px-5 py-2.5 marketing-pill border border-gray-200/60 dark:border-[var(--marketing-pill-border)] shadow-sm">
+              <SwoopingTick className="w-9 h-9 shrink-0 marketing-accent-text" />
+              <span className="text-xs font-bold uppercase tracking-[0.25em] marketing-accent-text">
                 {t('badge')}
               </span>
             </span>
@@ -114,7 +114,7 @@ export default function AboutPage() {
 
         {/* ── Origin Story ── */}
         <section className="mb-20">
-          <div className="rounded-[2rem] backdrop-blur-xl bg-white/60 dark:bg-dark-surface/72 border border-gray-200/50 dark:border-red-400/20 shadow-lg p-8 md:p-12">
+          <div className="rounded-[2rem] marketing-panel border border-gray-200/50 dark:border-red-400/20 shadow-lg p-8 md:p-12">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-6">
               {t('origin.title')}
             </h2>
@@ -148,7 +148,7 @@ export default function AboutPage() {
               return (
                 <div
                   key={v.titleKey}
-                  className="rounded-[1.5rem] backdrop-blur-xl bg-white/60 dark:bg-dark-surface/72 border border-gray-200/50 dark:border-red-400/20 p-7 shadow-sm hover:shadow-lg hover:-translate-y-0.5 hover:border-primary-blue/30 dark:hover:border-red-300/40 transition-all duration-300"
+                  className="rounded-[1.5rem] marketing-panel border border-gray-200/50 dark:border-red-400/20 p-7 shadow-sm hover:shadow-lg hover:-translate-y-0.5 hover:border-primary-blue/30 dark:hover:border-red-300/40 transition-all duration-300"
                 >
                   <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style={{ background: 'linear-gradient(135deg, color-mix(in srgb, var(--brand-primary) 12%, transparent), color-mix(in srgb, var(--brand-accent) 12%, transparent))' }}>
                     <Icon className="w-6 h-6" style={{ color: 'var(--brand-primary)' }} strokeWidth={1.5} />
@@ -174,7 +174,7 @@ export default function AboutPage() {
               {TALENT_CATEGORIES.map((cat) => (
                 <span
                   key={cat}
-                  className="marketing-pill px-4 py-2 rounded-full text-sm font-medium backdrop-blur-md bg-light-surface dark:bg-dark-surface border border-gray-200/50 dark:border-[var(--marketing-pill-border)] text-gray-700 dark:text-slate-50 shadow-sm"
+                  className="marketing-pill px-4 py-2 rounded-full text-sm font-medium marketing-pill border border-gray-200/50 dark:border-[var(--marketing-pill-border)] text-gray-700 dark:text-slate-50 shadow-sm"
                 >
                   {cat}
                 </span>
@@ -200,10 +200,10 @@ export default function AboutPage() {
               return (
                 <div
                   key={f.titleKey}
-                  className="rounded-[1.5rem] backdrop-blur-xl bg-white/60 dark:bg-dark-surface/72 border border-gray-200/50 dark:border-red-400/20 p-6 shadow-sm hover:shadow-lg hover:-translate-y-0.5 hover:border-primary-blue/30 dark:hover:border-red-300/40 transition-all duration-300"
+                  className="rounded-[1.5rem] marketing-panel border border-gray-200/50 dark:border-red-400/20 p-6 shadow-sm hover:shadow-lg hover:-translate-y-0.5 hover:border-primary-blue/30 dark:hover:border-red-300/40 transition-all duration-300"
                 >
                   <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary-blue/10 to-accent-blue/10 dark:from-accent-red/10 dark:to-primary-red/10 flex items-center justify-center mb-3">
-                    <Icon className="w-5 h-5 text-primary-blue dark:text-accent-red" strokeWidth={1.5} />
+                    <Icon className="w-5 h-5 marketing-accent-text" strokeWidth={1.5} />
                   </div>
                   <h3 className="font-bold text-gray-900 dark:text-white text-sm mb-1">{t(f.titleKey)}</h3>
                   <p className="text-xs text-gray-600 dark:text-gray-300 leading-relaxed">{t(f.descKey)}</p>
@@ -215,7 +215,7 @@ export default function AboutPage() {
 
         {/* ── How it works ── */}
         <section className="mb-20">
-          <div className="rounded-[2rem] backdrop-blur-xl bg-white/60 dark:bg-dark-surface/72 border border-gray-200/50 dark:border-red-400/20 shadow-lg p-8 md:p-12">
+          <div className="rounded-[2rem] marketing-panel border border-gray-200/50 dark:border-red-400/20 shadow-lg p-8 md:p-12">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-8 text-center">
               {t('howItWorks.title')}
             </h2>
@@ -240,7 +240,7 @@ export default function AboutPage() {
         {/* ── CTA ── */}
         <section className="text-center">
           <div className="rounded-[2rem] backdrop-blur-xl bg-gradient-to-r from-primary-blue/5 to-accent-blue/5 dark:from-accent-red/5 dark:to-primary-red/5 border border-primary-blue/20 dark:border-accent-red/20 p-10 md:p-14">
-            <Sparkles className="w-8 h-8 text-primary-blue dark:text-accent-red mx-auto mb-4" />
+            <Sparkles className="w-8 h-8 marketing-accent-text mx-auto mb-4" />
             <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-4">
               {t('cta.title')}
             </h2>
@@ -256,7 +256,7 @@ export default function AboutPage() {
               </Link>
               <Link
                 href="/pricing"
-                className="inline-flex items-center gap-2 rounded-xl backdrop-blur-xl bg-white/70 dark:bg-dark-surface/72 border border-gray-200/60 dark:border-red-400/20 text-gray-900 dark:text-white font-semibold px-8 py-3.5 text-sm shadow-sm hover:shadow-lg hover:-translate-y-0.5 hover:text-primary-blue dark:hover:text-accent-red focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/35 dark:focus-visible:ring-accent-red/35 transition-all duration-200"
+                className="inline-flex items-center gap-2 rounded-xl marketing-panel border border-gray-200/60 dark:border-red-400/20 text-gray-900 dark:text-white font-semibold px-8 py-3.5 text-sm shadow-sm hover:shadow-lg hover:-translate-y-0.5 hover:text-[var(--marketing-accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/35 dark:focus-visible:ring-accent-red/35 transition-all duration-200"
               >
                 {t('cta.viewPricing')}
               </Link>

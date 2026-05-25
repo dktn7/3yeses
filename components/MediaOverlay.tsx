@@ -572,7 +572,7 @@ export default function MediaOverlay({ media, allMedia, talents = [], onClose, o
                 onClick={handleLike}
                 className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all font-medium text-sm ${
                   isLiked 
-                    ? 'bg-pink-100 text-pink-600 dark:bg-pink-900/30 dark:text-pink-400' 
+                    ? 'bg-primary-blue/10 text-primary-blue dark:bg-accent-red/20 dark:text-accent-red' 
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
                 }`}
               >

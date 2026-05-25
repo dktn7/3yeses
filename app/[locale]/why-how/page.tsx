@@ -65,16 +65,16 @@ function WhyHowBg() {
         </defs>
         <rect width="100%" height="100%" fill="url(#whBg)" />
         <path
-          d="M0 520 C240 440 480 580 720 510 C960 440 1200 560 1440 490 L1440 900 L0 900 Z"
+          d="M0 600 C240 530 480 660 720 600 C960 535 1200 640 1440 580 L1440 900 L0 900 Z"
           fill="url(#whWave1)"
         />
         <path
-          d="M0 660 C300 590 580 700 840 630 C1080 560 1280 660 1440 610 L1440 900 L0 900 Z"
+          d="M0 710 C300 650 580 740 840 690 C1080 635 1280 710 1440 670 L1440 900 L0 900 Z"
           fill="url(#whWave2)"
         />
         <path
           d="M0 80 C360 130 720 40 1080 90 C1260 120 1380 84 1440 98 L1440 0 L0 0 Z"
-          fill="var(--brand-from)"
+          fill="var(--hero-top-wave, var(--brand-from))"
           opacity="0.10"
         />
         <circle
@@ -321,7 +321,6 @@ export default async function WhyHowPage({
       {/* ── Hero ── */}
       <section className="relative isolate overflow-hidden pt-20 pb-28 md:pb-36">
         <WhyHowBg />
-
         <div className="relative z-10 max-w-6xl mx-auto px-6">
           <Breadcrumbs
             items={[
@@ -331,9 +330,9 @@ export default async function WhyHowPage({
           />
 
           <div className="max-w-5xl mt-4">
-            <span className="marketing-pill inline-flex items-center gap-2.5 rounded-full px-5 py-2.5 text-[10px] uppercase tracking-[0.22em] font-semibold text-[var(--marketing-heading-blue)] dark:text-[var(--marketing-heading-blue-strong)] mb-8 shadow-sm backdrop-blur-md transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]">
-              <Sparkles className="w-4 h-4 shrink-0" />
-              {t("eyebrow")}
+            <span className="marketing-pill inline-flex items-center gap-2.5 rounded-full px-5 py-2.5 text-[10px] uppercase tracking-[0.22em] font-semibold mb-8 shadow-sm backdrop-blur-md transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]">
+              <Sparkles className="marketing-accent-text w-4 h-4 shrink-0" />
+              <span className="marketing-accent-text">{t("eyebrow")}</span>
             </span>
 
             <h1 className="text-[clamp(2.4rem,7vw,5.5rem)] font-extrabold leading-[1.1] tracking-tighter mb-6 pb-1 text-gray-900 dark:text-white">
@@ -426,8 +425,8 @@ export default async function WhyHowPage({
       <section className="py-20 md:py-28">
         <div className="max-w-6xl mx-auto px-6">
           <div className="max-w-2xl mb-14">
-            <span className="marketing-pill inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[10px] uppercase tracking-[0.22em] font-semibold text-[var(--marketing-heading-blue)] dark:text-[var(--marketing-heading-blue-strong)] mb-6 shadow-sm backdrop-blur-md">
-              {t("whySection.eyebrow")}
+            <span className="marketing-pill inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[10px] uppercase tracking-[0.22em] font-semibold mb-6 shadow-sm backdrop-blur-md">
+              <span className="marketing-accent-text">{t("whySection.eyebrow")}</span>
             </span>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tighter text-gray-900 dark:text-white mb-4">
               {t("whySection.title")}
@@ -452,13 +451,13 @@ export default async function WhyHowPage({
       </section>
 
       {/* ── How it works ── */}
-      <section className="py-20 md:py-28 bg-gray-50/80 dark:bg-dark-surface/72">
+      <section className="py-20 md:py-28 bg-[var(--marketing-panel-soft)]">
         <div className="max-w-6xl mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
             {/* Left: heading */}
             <div className="lg:sticky lg:top-32 lg:self-start">
-              <span className="marketing-pill inline-flex items-center gap-2.5 rounded-full px-4 py-2 text-[10px] uppercase tracking-[0.22em] font-semibold text-[var(--marketing-heading-blue)] dark:text-[var(--marketing-heading-blue-strong)] mb-6 shadow-sm backdrop-blur-md">
-                {t("howSection.eyebrow")}
+              <span className="marketing-pill inline-flex items-center gap-2.5 rounded-full px-4 py-2 text-[10px] uppercase tracking-[0.22em] font-semibold mb-6 shadow-sm backdrop-blur-md">
+                <span className="marketing-accent-text">{t("howSection.eyebrow")}</span>
               </span>
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tighter text-gray-900 dark:text-white mb-4">
                 {t("howSection.title")}
@@ -593,7 +592,7 @@ export default async function WhyHowPage({
 
             <Link
               href={`/${locale}/pricing`}
-              className="marketing-pill inline-flex items-center px-7 py-3.5 rounded-full font-semibold text-base transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] text-[var(--marketing-heading-blue)] dark:text-[var(--marketing-heading-blue-strong)] border-2 border-[var(--marketing-pill-border)] bg-light-surface dark:bg-dark-surface hover:bg-light-surface"
+              className="marketing-pill marketing-accent-text inline-flex items-center px-7 py-3.5 rounded-full font-semibold text-base transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] border-2 border-[var(--marketing-pill-border)] bg-light-surface dark:bg-dark-surface hover:bg-light-surface"
             >
               {t("finalCta.viewPricing")}
             </Link>

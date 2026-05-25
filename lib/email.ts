@@ -104,7 +104,7 @@ export async function sendParentalConsentEmail(
       </tr>
       <tr>
         <td align="center">
-          <a href="${declineUrl}" style="display:inline-block;background:#ef4444;color:#ffffff;text-decoration:none;padding:14px 40px;border-radius:8px;font-size:16px;font-weight:600;min-width:220px;text-align:center;">Decline Account</a>
+          <a href="${declineUrl}" style="display:inline-block;background:#B91C1C;color:#ffffff;text-decoration:none;padding:14px 40px;border-radius:8px;font-size:16px;font-weight:600;min-width:220px;text-align:center;">Decline Account</a>
         </td>
       </tr>
     </table>

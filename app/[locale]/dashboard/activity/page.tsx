@@ -78,7 +78,7 @@ export default function ActivityPage() {
     switch (type) {
       case 'view': return 'text-blue-600 dark:text-red-300';
       case 'comment': return 'text-green-600 dark:text-green-400';
-      case 'like': return 'text-pink-600 dark:text-pink-400';
+      case 'like': return 'text-primary-blue dark:text-accent-red';
       default: return 'text-gray-600 dark:text-gray-400';
     }
   };
@@ -87,7 +87,7 @@ export default function ActivityPage() {
     switch (type) {
       case 'view': return 'bg-blue-500/10 dark:bg-red-500/20';
       case 'comment': return 'bg-green-500/10 dark:bg-green-500/20';
-      case 'like': return 'bg-pink-500/10 dark:bg-pink-500/20';
+      case 'like': return 'bg-primary-blue/10 dark:bg-accent-red/20';
       default: return 'bg-gray-500/10 dark:bg-gray-500/20';
     }
   };
@@ -107,7 +107,7 @@ export default function ActivityPage() {
                   <ActivityIcon className="w-8 h-8" />
                   {t('title')}
                 </h1>
-                <p className="text-blue-100 dark:text-pink-100 text-lg">
+                <p className="text-blue-100 dark:text-accent-red text-lg">
                   {t('subtitle')}
                 </p>
               </div>

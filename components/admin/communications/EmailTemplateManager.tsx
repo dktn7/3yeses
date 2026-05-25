@@ -172,8 +172,9 @@ export default function EmailTemplateManager() {
         return content;
     };
 
-    // 3YESES logo as SVG data URI (blue circle #1d4ed8 + red swooping check #ef4444)
-    const LOGO_SVG = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48' fill='none'%3E%3Ccircle cx='24' cy='24' r='22' stroke='%231d4ed8' stroke-width='4' fill='transparent'/%3E%3Cpath d='M14 24L20 30L34 16' stroke='%23ef4444' stroke-width='5' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E`;
+    // 3YESES logo: prefer classed inline SVG so preview picks up global CSS; keep data-URI fallback
+    const LOGO_INLINE = `<svg class="swooping-tick" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 48 48" fill="none"><circle class="swoop-outer" cx="24" cy="24" r="22" stroke="#2563eb" stroke-width="4" fill="transparent"/><path class="swoop-check" d="M14 24L20 30L34 16" stroke="#B91C1C" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`;
+    const LOGO_SVG = `data:image/svg+xml,${encodeURIComponent(LOGO_INLINE)}`;
 
     // Social icon SVG data URIs
     const ICON_X = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='%2394a3b8'%3E%3Cpath d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/%3E%3C/svg%3E`;
@@ -224,9 +225,9 @@ export default function EmailTemplateManager() {
                   <td style="padding-bottom:20px;">
                     <table role="presentation" cellpadding="0" cellspacing="0">
                       <tr>
-                        <td style="vertical-align:middle;padding-right:14px;">
-                          <img src="${LOGO_SVG}" alt="3YESES" width="40" height="40" style="display:block;border:0;" />
-                        </td>
+                                                <td style="vertical-align:middle;padding-right:14px;">
+                                                    ${LOGO_INLINE}
+                                                </td>
                         <td style="vertical-align:middle;">
                           <span style="font-size:24px;font-weight:800;color:#020617;letter-spacing:-0.5px;line-height:1;" class="dark-heading">3YESES</span>
                         </td>
@@ -238,7 +239,7 @@ export default function EmailTemplateManager() {
                                     </td>
                 </tr>
               </table>
-              <div style="height:3px;border-radius:2px;background:linear-gradient(90deg,#1d4ed8 0%,#ef4444 100%);"></div>
+              <div style="height:3px;border-radius:2px;background:linear-gradient(90deg,#1d4ed8 0%,#B91C1C 100%);"></div>
             </td>
           </tr>
           <!-- Content -->

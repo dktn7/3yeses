@@ -9,7 +9,7 @@ const SuccessStoriesPage = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {/* Story 1 */}
-          <div className="bg-light-surface dark:bg-dark-surface rounded-lg border border-gray-200/50 dark:border-red-400/20 shadow-md p-4">
+          <div className="marketing-surface rounded-lg border shadow-md p-4">
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Emma Thompson - Musician</h3>
             <p className="text-gray-600 dark:text-gray-400">
               As a rising guitarist, Emma struggled to get noticed in a crowded market. Using our platform's advanced search features, she connected with producers who loved her unique sound. This led to collaborations on two hit singles and a sold-out tour.
@@ -17,7 +17,7 @@ const SuccessStoriesPage = () => {
           </div>
 
           {/* Story 2 */}
-          <div className="bg-light-surface dark:bg-dark-surface rounded-lg border border-gray-200/50 dark:border-red-400/20 shadow-md p-4">
+          <div className="marketing-surface rounded-lg border shadow-md p-4">
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Liam Garcia - Actor</h3>
             <p className="text-gray-600 dark:text-gray-400">
               Liam, a versatile actor with a passion for indie films, found his big break through our platform. Directors discovered his talent via targeted profiles, resulting in roles in three critically acclaimed movies and a nomination for Best Supporting Actor.
@@ -25,7 +25,7 @@ const SuccessStoriesPage = () => {
           </div>
 
           {/* Story 3 */}
-          <div className="bg-light-surface dark:bg-dark-surface rounded-lg border border-gray-200/50 dark:border-red-400/20 shadow-md p-4">
+          <div className="marketing-surface rounded-lg border shadow-md p-4">
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Sophia Patel - Dancer</h3>
             <p className="text-gray-600 dark:text-gray-400">
               Sophia&apos;s contemporary dance style caught the eye of choreographers on our platform. She has since performed in Broadway productions, international festivals, and even choreographed for a major pop artist&apos;s world tour.

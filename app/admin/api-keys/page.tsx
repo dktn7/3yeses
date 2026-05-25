@@ -69,7 +69,7 @@ const CATEGORY_CONFIG: Record<string, { icon: typeof Key; label: string; color: 
   payments: { icon: CreditCard, label: 'Payments', color: '#6366f1' },
   media: { icon: Cloud, label: 'Media Storage', color: '#f59e0b' },
   email: { icon: Mail, label: 'Email', color: '#10b981' },
-  security: { icon: Shield, label: 'Security', color: '#ef4444' },
+  security: { icon: Shield, label: 'Security', color: '#B91C1C' },
   database: { icon: Database, label: 'Database', color: '#8b5cf6' },
 };
 
@@ -255,7 +255,7 @@ export default function ApiKeysPage() {
                       ? '#10b981'
                       : data.summary.healthPercentage >= 50
                         ? '#f59e0b'
-                        : '#ef4444',
+                        : '#B91C1C',
                 }}
               />
             </div>

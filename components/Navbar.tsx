@@ -25,7 +25,7 @@ export default function Navbar() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 flex h-16 items-center justify-between border-b border-[var(--chrome-border)] bg-[var(--chrome-bg)] px-4 py-3 backdrop-blur-md shadow-[0_1px_0_rgba(255,255,255,0.35)] dark:shadow-[0_1px_0_rgba(255,255,255,0.02)]">
       <div className="flex items-center gap-4">
-        <Link href={`/${locale}`} className="flex cursor-pointer items-center gap-2 text-2xl font-bold text-primary-blue transition-opacity hover:opacity-80 dark:text-accent-red">
+        <Link href={`/${locale}`} className="flex cursor-pointer items-center gap-2 text-2xl font-bold marketing-accent-text transition-opacity hover:opacity-80">
           3YESES
           <SwoopingTick size={32} />
         </Link>

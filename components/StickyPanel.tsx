@@ -78,7 +78,7 @@ export default function StickyPanel() {
               </button>
               <button 
                 type="button"
-                className="p-3 rounded-xl bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-400 hover:bg-pink-100 dark:hover:bg-pink-900/40 transition-all duration-200 flex items-center justify-center group"
+                className="p-3 rounded-xl bg-[var(--marketing-pill-bg)] dark:bg-[var(--marketing-pill-bg)] text-[var(--marketing-pill-icon)] dark:text-[var(--marketing-pill-icon)] hover:brightness-105 transition-all duration-200 flex items-center justify-center group"
                 aria-label="Follow us on Instagram"
               >
                 <FaInstagram className="w-4 h-4 group-hover:scale-110 transition-transform" />
@@ -115,7 +115,7 @@ export default function StickyPanel() {
               </button>
               <button 
                 type="button"
-                className="p-1.5 rounded-lg bg-pink-50 dark:bg-red-500/20 text-pink-600 dark:text-red-400 hover:bg-pink-100 dark:hover:bg-red-500/40 transition-all duration-200"
+                className="p-1.5 rounded-lg bg-[var(--marketing-pill-bg)] dark:bg-[var(--marketing-pill-bg)] text-[var(--marketing-pill-icon)] dark:text-[var(--marketing-pill-icon)] hover:brightness-105 transition-all duration-200"
                 aria-label="Follow us on Instagram"
               >
                 <FaInstagram className="w-3 h-3" />

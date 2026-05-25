@@ -28,8 +28,8 @@ function SupportBgDecoration() {
           </linearGradient>
         </defs>
         <rect width="1440" height="900" fill="url(#stBg)" />
-        <path d="M0 320 Q360 220 720 300 T1440 260 V900 H0Z" fill="url(#stWave1)" />
-        <path d="M0 500 Q400 420 800 480 T1440 440 V900 H0Z" fill="url(#stWave2)" />
+        <path d="M0 420 Q360 320 720 380 T1440 350 V900 H0Z" fill="url(#stWave1)" />
+        <path d="M0 600 Q400 520 800 580 T1440 550 V900 H0Z" fill="url(#stWave2)" />
         <circle cx="200" cy="150" r="200" fill="var(--brand-to)" opacity="0.06" />
         <circle cx="1250" cy="700" r="260" fill="var(--brand-from)" opacity="0.05" />
       </svg>
@@ -48,7 +48,7 @@ export default function SubmitTicketPage() {
         {/* Back link */}
         <Link
           href="/support"
-          className="inline-flex items-center gap-2 text-sm font-medium text-gray-500 dark:text-gray-300 hover:text-primary-blue dark:hover:text-accent-red focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/30 dark:focus-visible:ring-accent-red/35 rounded-sm transition-colors mb-8"
+          className="inline-flex items-center gap-2 text-sm font-medium text-gray-500 dark:text-gray-300 hover:text-[var(--marketing-accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-ring)] rounded-sm transition-colors mb-8"
         >
           <ArrowLeft className="w-4 h-4" />
           {t('backToHelp')}
@@ -57,9 +57,9 @@ export default function SubmitTicketPage() {
         {/* ── Hero ── */}
         <div className="text-center mb-10">
           <div className="flex justify-center mb-5">
-            <span className="marketing-pill inline-flex items-center gap-3 rounded-full px-5 py-2.5 backdrop-blur-md bg-light-surface dark:bg-dark-surface border border-gray-200/60 dark:border-[var(--marketing-pill-border)] shadow-sm">
-              <SwoopingTick className="w-9 h-9 shrink-0 text-primary-blue dark:text-accent-red" />
-              <span className="text-xs font-bold uppercase tracking-[0.25em] text-primary-blue dark:text-accent-red">
+            <span className="marketing-pill inline-flex items-center gap-3 rounded-full px-5 py-2.5 marketing-pill border border-gray-200/60 dark:border-[var(--marketing-pill-border)] shadow-sm">
+              <SwoopingTick className="w-9 h-9 shrink-0 marketing-accent-text" />
+              <span className="text-xs font-bold uppercase tracking-[0.25em] marketing-accent-text">
                 {t('ticketLabel')}
               </span>
             </span>
@@ -83,9 +83,9 @@ export default function SubmitTicketPage() {
         </div>
 
         {/* ── Ticket Form Card ── */}
-        <div className="rounded-[2rem] backdrop-blur-xl bg-white/60 dark:bg-dark-surface border border-gray-200/50 dark:border-red-400/20 shadow-lg p-8 md:p-10">
+        <div className="rounded-[2rem] marketing-panel border border-gray-200/50 dark:border-red-400/20 shadow-lg p-8 md:p-10">
           <div className="flex items-center gap-3 mb-6">
-            <LifeBuoy className="w-6 h-6 text-primary-blue dark:text-accent-red" />
+            <LifeBuoy className="w-6 h-6 marketing-accent-text" />
             <h2 className="text-xl font-bold text-gray-900 dark:text-white">{t('newSupportTicket')}</h2>
           </div>
 
@@ -101,9 +101,9 @@ export default function SubmitTicketPage() {
           ].map(({ icon, label }) => (
             <div
               key={label}
-              className="marketing-pill flex items-center gap-2.5 text-sm text-gray-700 dark:text-gray-200 backdrop-blur-md bg-light-surface dark:bg-dark-surface px-4 py-2.5 rounded-full border border-gray-200/50 dark:border-[var(--marketing-pill-border)] shadow-sm"
+              className="marketing-pill flex items-center gap-2.5 text-sm text-gray-700 dark:text-gray-200 marketing-pill px-4 py-2.5 rounded-full border border-gray-200/50 dark:border-[var(--marketing-pill-border)] shadow-sm"
             >
-              <span className="text-primary-blue dark:text-accent-red">{icon}</span>
+              <span className="marketing-accent-text">{icon}</span>
               <span className="font-medium">{label}</span>
             </div>
           ))}

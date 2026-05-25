@@ -1,0 +1,877 @@
+{
+  "baseUrl": "http://localhost:3002",
+  "generatedAt": "2026-05-17T10:46:25.732Z",
+  "pages": [
+    {
+      "path": "/",
+      "url": "http://localhost:3002/",
+      "slug": "home",
+      "ok": true,
+      "metricsLight": {
+        "heroMetrics": {
+          "color": "rgb(13, 23, 42)",
+          "bg": "rgb(255, 255, 255)",
+          "fontSize": "128px",
+          "ratio": 17.90121048673387,
+          "pass": true
+        },
+        "pillMetrics": {
+          "textColor": "rgb(15, 23, 42)",
+          "pillBg": "rgba(255, 255, 255, 0.98)",
+          "ratio": 17.85253496299567,
+          "pass": true,
+          "svg": {
+            "circleStroke": "var(--brand-blue, #2563eb)",
+            "checkStroke": "var(--brand-red, #ef4444)"
+          }
+        },
+        "ctaMetrics": {
+          "color": "rgb(23, 23, 23)",
+          "bg": "rgba(0, 0, 0, 0)",
+          "ratio": 1.1713625123613862,
+          "pass": false
+        },
+        "swoopsCount": 5,
+        "swoops": [
+          {
+            "circleStroke": "var(--brand-blue, #2563eb)",
+            "checkStroke": "var(--brand-red, #ef4444)"
+          },
+          {
+            "circleStroke": "rgb(55, 65, 81)",
+            "checkStroke": "rgb(55, 65, 81)"
+          },
+          {
+            "circleStroke": "rgb(55, 65, 81)",
+            "checkStroke": "rgb(55, 65, 81)"
+          },
+          {
+            "circleStroke": null,
+            "checkStroke": null
+          },
+          {
+            "circleStroke": "rgb(29, 78, 216)",
+            "checkStroke": "rgb(29, 78, 216)"
+          }
+        ]
+      },
+      "metricsDark": {
+        "heroMetrics": {
+          "color": "rgb(255, 255, 255)",
+          "bg": "rgb(17, 24, 39)",
+          "fontSize": "128px",
+          "ratio": 17.73971700407407,
+          "pass": true
+        },
+        "pillMetrics": {
+          "textColor": "rgb(249, 210, 207)",
+          "pillBg": "rgba(37, 39, 46, 1)",
+          "ratio": 10.755767888551716,
+          "pass": true,
+          "svg": {
+            "circleStroke": "var(--brand-blue, #2563eb)",
+            "checkStroke": "var(--brand-red, #ef4444)"
+          }
+        },
+        "ctaMetrics": {
+          "color": "rgb(248, 250, 252)",
+          "bg": "rgba(0, 0, 0, 0)",
+          "ratio": 20.071189561616038,
+          "pass": true
+        },
+        "swoopsCount": 5,
+        "swoops": [
+          {
+            "circleStroke": "var(--brand-blue, #2563eb)",
+            "checkStroke": "var(--brand-red, #ef4444)"
+          },
+          {
+            "circleStroke": "rgb(255, 255, 255)",
+            "checkStroke": "rgb(255, 255, 255)"
+          },
+          {
+            "circleStroke": "rgb(255, 255, 255)",
+            "checkStroke": "rgb(255, 255, 255)"
+          },
+          {
+            "circleStroke": null,
+            "checkStroke": null
+          },
+          {
+            "circleStroke": "rgb(220, 38, 38)",
+            "checkStroke": "rgb(220, 38, 38)"
+          }
+        ]
+      },
+      "screenshots": {
+        "light": "home-light.png",
+        "dark": "home-dark.png"
+      },
+      "grade": "A",
+      "gradeReason": "all checks passed",
+      "failures": []
+    },
+    {
+      "path": "/support",
+      "url": "http://localhost:3002/support",
+      "slug": "support",
+      "ok": true,
+      "metricsLight": {
+        "heroMetrics": {
+          "color": "rgb(23, 23, 23)",
+          "bg": "rgb(255, 255, 255)",
+          "fontSize": "60px",
+          "ratio": 17.9278402530276,
+          "pass": true
+        },
+        "pillMetrics": {
+          "textColor": "rgb(15, 23, 42)",
+          "pillBg": "rgba(255, 255, 255, 0.98)",
+          "ratio": 17.85253496299567,
+          "pass": true,
+          "svg": {
+            "circleStroke": "var(--brand-blue, #2563eb)",
+            "checkStroke": "var(--brand-red, #ef4444)"
+          }
+        },
+        "ctaMetrics": {
+          "color": "rgb(23, 23, 23)",
+          "bg": "rgba(0, 0, 0, 0)",
+          "ratio": 1.1713625123613862,
+          "pass": false
+        },
+        "swoopsCount": 5,
+        "swoops": [
+          {
+            "circleStroke": "var(--brand-blue, #2563eb)",
+            "checkStroke": "var(--brand-red, #ef4444)"
+          },
+          {
+            "circleStroke": "rgb(55, 65, 81)",
+            "checkStroke": "rgb(55, 65, 81)"
+          },
+          {
+            "circleStroke": "rgb(55, 65, 81)",
+            "checkStroke": "rgb(55, 65, 81)"
+          },
+          {
+            "circleStroke": null,
+            "checkStroke": null
+          },
+          {
+            "circleStroke": "rgb(29, 78, 216)",
+            "checkStroke": "rgb(29, 78, 216)"
+          }
+        ]
+      },
+      "metricsDark": {
+        "heroMetrics": {
+          "color": "rgb(255, 255, 255)",
+          "bg": "rgb(17, 24, 39)",
+          "fontSize": "60px",
+          "ratio": 17.73971700407407,
+          "pass": true
+        },
+        "pillMetrics": {
+          "textColor": "rgb(255, 215, 211)",
+          "pillBg": "rgb(32, 34, 41)",
+          "ratio": 12.034684722541265,
+          "pass": true,
+          "svg": {
+            "circleStroke": "var(--brand-blue, #2563eb)",
+            "checkStroke": "var(--brand-red, #ef4444)"
+          }
+        },
+        "ctaMetrics": {
+          "color": "rgb(248, 250, 252)",
+          "bg": "rgba(0, 0, 0, 0)",
+          "ratio": 20.071189561616038,
+          "pass": true
+        },
+        "swoopsCount": 5,
+        "swoops": [
+          {
+            "circleStroke": "var(--brand-blue, #2563eb)",
+            "checkStroke": "var(--brand-red, #ef4444)"
+          },
+          {
+            "circleStroke": "rgb(255, 255, 255)",
+            "checkStroke": "rgb(255, 255, 255)"
+          },
+          {
+            "circleStroke": "rgb(255, 255, 255)",
+            "checkStroke": "rgb(255, 255, 255)"
+          },
+          {
+            "circleStroke": null,
+            "checkStroke": null
+          },
+          {
+            "circleStroke": "rgb(220, 38, 38)",
+            "checkStroke": "rgb(220, 38, 38)"
+          }
+        ]
+      },
+      "screenshots": {
+        "light": "support-light.png",
+        "dark": "support-dark.png"
+      },
+      "grade": "A",
+      "gradeReason": "all checks passed",
+      "failures": []
+    },
+    {
+      "path": "/pricing",
+      "url": "http://localhost:3002/pricing",
+      "slug": "pricing",
+      "ok": true,
+      "metricsLight": {
+        "heroMetrics": {
+          "color": "rgb(17, 24, 39)",
+          "bg": "rgb(255, 255, 255)",
+          "fontSize": "72px",
+          "ratio": 17.73971700407407,
+          "pass": true
+        },
+        "pillMetrics": {
+          "textColor": "rgb(15, 23, 42)",
+          "pillBg": "rgba(255, 255, 255, 0.98)",
+          "ratio": 17.85253496299567,
+          "pass": true
+        },
+        "ctaMetrics": {
+          "color": "rgb(23, 23, 23)",
+          "bg": "rgba(0, 0, 0, 0)",
+          "ratio": 1.1713625123613862,
+          "pass": false
+        },
+        "swoopsCount": 5,
+        "swoops": [
+          {
+            "circleStroke": "var(--brand-blue, #2563eb)",
+            "checkStroke": "var(--brand-red, #ef4444)"
+          },
+          {
+            "circleStroke": "rgb(55, 65, 81)",
+            "checkStroke": "rgb(55, 65, 81)"
+          },
+          {
+            "circleStroke": "rgb(55, 65, 81)",
+            "checkStroke": "rgb(55, 65, 81)"
+          },
+          {
+            "circleStroke": null,
+            "checkStroke": null
+          },
+          {
+            "circleStroke": "rgb(29, 78, 216)",
+            "checkStroke": "rgb(29, 78, 216)"
+          }
+        ]
+      },
+      "metricsDark": {
+        "heroMetrics": {
+          "color": "rgb(248, 250, 252)",
+          "bg": "rgb(17, 24, 39)",
+          "fontSize": "72px",
+          "ratio": 16.955105845628285,
+          "pass": true
+        },
+        "pillMetrics": {
+          "textColor": "rgb(255, 215, 211)",
+          "pillBg": "rgb(32, 34, 41)",
+          "ratio": 12.034684722541265,
+          "pass": true
+        },
+        "ctaMetrics": {
+          "color": "rgb(248, 250, 252)",
+          "bg": "rgba(0, 0, 0, 0)",
+          "ratio": 20.071189561616038,
+          "pass": true
+        },
+        "swoopsCount": 5,
+        "swoops": [
+          {
+            "circleStroke": "var(--brand-blue, #2563eb)",
+            "checkStroke": "var(--brand-red, #ef4444)"
+          },
+          {
+            "circleStroke": "rgb(255, 255, 255)",
+            "checkStroke": "rgb(255, 255, 255)"
+          },
+          {
+            "circleStroke": "rgb(255, 255, 255)",
+            "checkStroke": "rgb(255, 255, 255)"
+          },
+          {
+            "circleStroke": null,
+            "checkStroke": null
+          },
+          {
+            "circleStroke": "rgb(220, 38, 38)",
+            "checkStroke": "rgb(220, 38, 38)"
+          }
+        ]
+      },
+      "screenshots": {
+        "light": "pricing-light.png",
+        "dark": "pricing-dark.png"
+      },
+      "grade": "A",
+      "gradeReason": "all checks passed",
+      "failures": []
+    },
+    {
+      "path": "/terms",
+      "url": "http://localhost:3002/terms",
+      "slug": "terms",
+      "ok": true,
+      "metricsLight": {
+        "heroMetrics": {
+          "color": "rgb(23, 23, 23)",
+          "bg": "rgb(255, 255, 255)",
+          "fontSize": "48px",
+          "ratio": 17.9278402530276,
+          "pass": true
+        },
+        "pillMetrics": {
+          "textColor": "rgb(15, 23, 42)",
+          "pillBg": "rgba(255, 255, 255, 0.98)",
+          "ratio": 17.85253496299567,
+          "pass": true,
+          "svg": {
+            "circleStroke": "var(--brand-blue, #2563eb)",
+            "checkStroke": "var(--brand-red, #ef4444)"
+          }
+        },
+        "ctaMetrics": {
+          "color": "rgb(23, 23, 23)",
+          "bg": "rgba(0, 0, 0, 0)",
+          "ratio": 1.1713625123613862,
+          "pass": false
+        },
+        "swoopsCount": 5,
+        "swoops": [
+          {
+            "circleStroke": "var(--brand-blue, #2563eb)",
+            "checkStroke": "var(--brand-red, #ef4444)"
+          },
+          {
+            "circleStroke": "rgb(55, 65, 81)",
+            "checkStroke": "rgb(55, 65, 81)"
+          },
+          {
+            "circleStroke": "rgb(55, 65, 81)",
+            "checkStroke": "rgb(55, 65, 81)"
+          },
+          {
+            "circleStroke": null,
+            "checkStroke": null
+          },
+          {
+            "circleStroke": "rgb(29, 78, 216)",
+            "checkStroke": "rgb(29, 78, 216)"
+          }
+        ]
+      },
+      "metricsDark": {
+        "heroMetrics": {
+          "color": "rgb(255, 255, 255)",
+          "bg": "rgb(17, 24, 39)",
+          "fontSize": "48px",
+          "ratio": 17.73971700407407,
+          "pass": true
+        },
+        "pillMetrics": {
+          "textColor": "rgb(255, 215, 211)",
+          "pillBg": "rgb(32, 34, 41)",
+          "ratio": 12.034684722541265,
+          "pass": true,
+          "svg": {
+            "circleStroke": "var(--brand-blue, #2563eb)",
+            "checkStroke": "var(--brand-red, #ef4444)"
+          }
+        },
+        "ctaMetrics": {
+          "color": "rgb(248, 250, 252)",
+          "bg": "rgba(0, 0, 0, 0)",
+          "ratio": 20.071189561616038,
+          "pass": true
+        },
+        "swoopsCount": 5,
+        "swoops": [
+          {
+            "circleStroke": "var(--brand-blue, #2563eb)",
+            "checkStroke": "var(--brand-red, #ef4444)"
+          },
+          {
+            "circleStroke": "rgb(255, 255, 255)",
+            "checkStroke": "rgb(255, 255, 255)"
+          },
+          {
+            "circleStroke": "rgb(255, 255, 255)",
+            "checkStroke": "rgb(255, 255, 255)"
+          },
+          {
+            "circleStroke": null,
+            "checkStroke": null
+          },
+          {
+            "circleStroke": "rgb(220, 38, 38)",
+            "checkStroke": "rgb(220, 38, 38)"
+          }
+        ]
+      },
+      "screenshots": {
+        "light": "terms-light.png",
+        "dark": "terms-dark.png"
+      },
+      "grade": "A",
+      "gradeReason": "all checks passed",
+      "failures": []
+    },
+    {
+      "path": "/contact",
+      "url": "http://localhost:3002/contact",
+      "slug": "contact",
+      "ok": true,
+      "metricsLight": {
+        "heroMetrics": {
+          "color": "rgb(17, 24, 39)",
+          "bg": "rgb(255, 255, 255)",
+          "fontSize": "24px",
+          "ratio": 17.73971700407407,
+          "pass": true
+        },
+        "pillMetrics": null,
+        "ctaMetrics": {
+          "color": "rgb(23, 23, 23)",
+          "bg": "rgba(0, 0, 0, 0)",
+          "ratio": 1.1713625123613862,
+          "pass": false
+        },
+        "swoopsCount": 5,
+        "swoops": [
+          {
+            "circleStroke": "var(--brand-blue, #2563eb)",
+            "checkStroke": "var(--brand-red, #ef4444)"
+          },
+          {
+            "circleStroke": "rgb(55, 65, 81)",
+            "checkStroke": "rgb(55, 65, 81)"
+          },
+          {
+            "circleStroke": "rgb(55, 65, 81)",
+            "checkStroke": "rgb(55, 65, 81)"
+          },
+          {
+            "circleStroke": null,
+            "checkStroke": null
+          },
+          {
+            "circleStroke": "rgb(29, 78, 216)",
+            "checkStroke": "rgb(29, 78, 216)"
+          }
+        ]
+      },
+      "metricsDark": {
+        "heroMetrics": {
+          "color": "rgb(248, 250, 252)",
+          "bg": "rgb(17, 24, 39)",
+          "fontSize": "24px",
+          "ratio": 16.955105845628285,
+          "pass": true
+        },
+        "pillMetrics": null,
+        "ctaMetrics": {
+          "color": "rgb(248, 250, 252)",
+          "bg": "rgba(0, 0, 0, 0)",
+          "ratio": 20.071189561616038,
+          "pass": true
+        },
+        "swoopsCount": 5,
+        "swoops": [
+          {
+            "circleStroke": "var(--brand-blue, #2563eb)",
+            "checkStroke": "var(--brand-red, #ef4444)"
+          },
+          {
+            "circleStroke": "rgb(255, 255, 255)",
+            "checkStroke": "rgb(255, 255, 255)"
+          },
+          {
+            "circleStroke": "rgb(255, 255, 255)",
+            "checkStroke": "rgb(255, 255, 255)"
+          },
+          {
+            "circleStroke": null,
+            "checkStroke": null
+          },
+          {
+            "circleStroke": "rgb(220, 38, 38)",
+            "checkStroke": "rgb(220, 38, 38)"
+          }
+        ]
+      },
+      "screenshots": {
+        "light": "contact-light.png",
+        "dark": "contact-dark.png"
+      },
+      "grade": "A",
+      "gradeReason": "all checks passed",
+      "failures": []
+    },
+    {
+      "path": "/auth/login",
+      "url": "http://localhost:3002/auth/login",
+      "slug": "auth-login",
+      "ok": true,
+      "metricsLight": {
+        "heroMetrics": {
+          "color": "rgba(0, 0, 0, 0)",
+          "bg": "rgba(255, 255, 255, 0.9)",
+          "fontSize": "24px",
+          "ratio": 21,
+          "pass": true
+        },
+        "pillMetrics": null,
+        "ctaMetrics": {
+          "color": "rgb(23, 23, 23)",
+          "bg": "rgba(0, 0, 0, 0)",
+          "ratio": 1.1713625123613862,
+          "pass": false
+        },
+        "swoopsCount": 5,
+        "swoops": [
+          {
+            "circleStroke": "var(--brand-blue, #2563eb)",
+            "checkStroke": "var(--brand-red, #ef4444)"
+          },
+          {
+            "circleStroke": "rgb(55, 65, 81)",
+            "checkStroke": "rgb(55, 65, 81)"
+          },
+          {
+            "circleStroke": "rgb(55, 65, 81)",
+            "checkStroke": "rgb(55, 65, 81)"
+          },
+          {
+            "circleStroke": null,
+            "checkStroke": null
+          },
+          {
+            "circleStroke": "rgb(29, 78, 216)",
+            "checkStroke": "rgb(29, 78, 216)"
+          }
+        ]
+      },
+      "metricsDark": {
+        "heroMetrics": {
+          "color": "rgb(248, 250, 252)",
+          "bg": "rgba(17, 24, 39, 0.9)",
+          "fontSize": "24px",
+          "ratio": 16.955105845628285,
+          "pass": true
+        },
+        "pillMetrics": null,
+        "ctaMetrics": {
+          "color": "rgb(248, 250, 252)",
+          "bg": "rgba(0, 0, 0, 0)",
+          "ratio": 20.071189561616038,
+          "pass": true
+        },
+        "swoopsCount": 5,
+        "swoops": [
+          {
+            "circleStroke": "var(--brand-blue, #2563eb)",
+            "checkStroke": "var(--brand-red, #ef4444)"
+          },
+          {
+            "circleStroke": "rgb(255, 255, 255)",
+            "checkStroke": "rgb(255, 255, 255)"
+          },
+          {
+            "circleStroke": "rgb(255, 255, 255)",
+            "checkStroke": "rgb(255, 255, 255)"
+          },
+          {
+            "circleStroke": null,
+            "checkStroke": null
+          },
+          {
+            "circleStroke": "rgb(220, 38, 38)",
+            "checkStroke": "rgb(220, 38, 38)"
+          }
+        ]
+      },
+      "screenshots": {
+        "light": "auth-login-light.png",
+        "dark": "auth-login-dark.png"
+      },
+      "grade": "A",
+      "gradeReason": "all checks passed",
+      "failures": []
+    },
+    {
+      "path": "/auth/signup",
+      "url": "http://localhost:3002/auth/signup",
+      "slug": "auth-signup",
+      "ok": true,
+      "metricsLight": {
+        "heroMetrics": {
+          "color": "rgba(0, 0, 0, 0)",
+          "bg": "rgba(255, 255, 255, 0.9)",
+          "fontSize": "30px",
+          "ratio": 21,
+          "pass": true
+        },
+        "pillMetrics": null,
+        "ctaMetrics": {
+          "color": "rgb(23, 23, 23)",
+          "bg": "rgba(0, 0, 0, 0)",
+          "ratio": 1.1713625123613862,
+          "pass": false
+        },
+        "swoopsCount": 5,
+        "swoops": [
+          {
+            "circleStroke": "var(--brand-blue, #2563eb)",
+            "checkStroke": "var(--brand-red, #ef4444)"
+          },
+          {
+            "circleStroke": "rgb(55, 65, 81)",
+            "checkStroke": "rgb(55, 65, 81)"
+          },
+          {
+            "circleStroke": "rgb(55, 65, 81)",
+            "checkStroke": "rgb(55, 65, 81)"
+          },
+          {
+            "circleStroke": null,
+            "checkStroke": null
+          },
+          {
+            "circleStroke": "rgb(29, 78, 216)",
+            "checkStroke": "rgb(29, 78, 216)"
+          }
+        ]
+      },
+      "metricsDark": {
+        "heroMetrics": {
+          "color": "rgb(248, 250, 252)",
+          "bg": "rgba(17, 24, 39, 0.9)",
+          "fontSize": "30px",
+          "ratio": 16.955105845628285,
+          "pass": true
+        },
+        "pillMetrics": null,
+        "ctaMetrics": {
+          "color": "rgb(248, 250, 252)",
+          "bg": "rgba(0, 0, 0, 0)",
+          "ratio": 20.071189561616038,
+          "pass": true
+        },
+        "swoopsCount": 5,
+        "swoops": [
+          {
+            "circleStroke": "var(--brand-blue, #2563eb)",
+            "checkStroke": "var(--brand-red, #ef4444)"
+          },
+          {
+            "circleStroke": "rgb(255, 255, 255)",
+            "checkStroke": "rgb(255, 255, 255)"
+          },
+          {
+            "circleStroke": "rgb(255, 255, 255)",
+            "checkStroke": "rgb(255, 255, 255)"
+          },
+          {
+            "circleStroke": null,
+            "checkStroke": null
+          },
+          {
+            "circleStroke": "rgb(220, 38, 38)",
+            "checkStroke": "rgb(220, 38, 38)"
+          }
+        ]
+      },
+      "screenshots": {
+        "light": "auth-signup-light.png",
+        "dark": "auth-signup-dark.png"
+      },
+      "grade": "A",
+      "gradeReason": "all checks passed",
+      "failures": []
+    },
+    {
+      "path": "/categories",
+      "url": "http://localhost:3002/categories",
+      "slug": "categories",
+      "ok": true,
+      "metricsLight": {
+        "heroMetrics": {
+          "color": "rgb(17, 24, 39)",
+          "bg": "rgb(255, 255, 255)",
+          "fontSize": "30px",
+          "ratio": 17.73971700407407,
+          "pass": true
+        },
+        "pillMetrics": null,
+        "ctaMetrics": {
+          "color": "rgb(23, 23, 23)",
+          "bg": "rgba(0, 0, 0, 0)",
+          "ratio": 1.1713625123613862,
+          "pass": false
+        },
+        "swoopsCount": 5,
+        "swoops": [
+          {
+            "circleStroke": "var(--brand-blue, #2563eb)",
+            "checkStroke": "var(--brand-red, #ef4444)"
+          },
+          {
+            "circleStroke": "rgb(55, 65, 81)",
+            "checkStroke": "rgb(55, 65, 81)"
+          },
+          {
+            "circleStroke": "rgb(55, 65, 81)",
+            "checkStroke": "rgb(55, 65, 81)"
+          },
+          {
+            "circleStroke": null,
+            "checkStroke": null
+          },
+          {
+            "circleStroke": "rgb(29, 78, 216)",
+            "checkStroke": "rgb(29, 78, 216)"
+          }
+        ]
+      },
+      "metricsDark": {
+        "heroMetrics": {
+          "color": "rgb(248, 250, 252)",
+          "bg": "rgb(17, 24, 39)",
+          "fontSize": "30px",
+          "ratio": 16.955105845628285,
+          "pass": true
+        },
+        "pillMetrics": null,
+        "ctaMetrics": {
+          "color": "rgb(248, 250, 252)",
+          "bg": "rgba(0, 0, 0, 0)",
+          "ratio": 20.071189561616038,
+          "pass": true
+        },
+        "swoopsCount": 5,
+        "swoops": [
+          {
+            "circleStroke": "var(--brand-blue, #2563eb)",
+            "checkStroke": "var(--brand-red, #ef4444)"
+          },
+          {
+            "circleStroke": "rgb(255, 255, 255)",
+            "checkStroke": "rgb(255, 255, 255)"
+          },
+          {
+            "circleStroke": "rgb(255, 255, 255)",
+            "checkStroke": "rgb(255, 255, 255)"
+          },
+          {
+            "circleStroke": null,
+            "checkStroke": null
+          },
+          {
+            "circleStroke": "rgb(220, 38, 38)",
+            "checkStroke": "rgb(220, 38, 38)"
+          }
+        ]
+      },
+      "screenshots": {
+        "light": "categories-light.png",
+        "dark": "categories-dark.png"
+      },
+      "grade": "A",
+      "gradeReason": "all checks passed",
+      "failures": []
+    },
+    {
+      "path": "/talent/1",
+      "url": "http://localhost:3002/talent/1",
+      "slug": "talent-1",
+      "ok": true,
+      "metricsLight": {
+        "heroMetrics": null,
+        "pillMetrics": null,
+        "ctaMetrics": {
+          "color": "rgb(23, 23, 23)",
+          "bg": "rgba(0, 0, 0, 0)",
+          "ratio": 1.1713625123613862,
+          "pass": false
+        },
+        "swoopsCount": 5,
+        "swoops": [
+          {
+            "circleStroke": "var(--brand-blue, #2563eb)",
+            "checkStroke": "var(--brand-red, #ef4444)"
+          },
+          {
+            "circleStroke": "rgb(55, 65, 81)",
+            "checkStroke": "rgb(55, 65, 81)"
+          },
+          {
+            "circleStroke": "rgb(55, 65, 81)",
+            "checkStroke": "rgb(55, 65, 81)"
+          },
+          {
+            "circleStroke": null,
+            "checkStroke": null
+          },
+          {
+            "circleStroke": "rgb(29, 78, 216)",
+            "checkStroke": "rgb(29, 78, 216)"
+          }
+        ]
+      },
+      "metricsDark": {
+        "heroMetrics": null,
+        "pillMetrics": null,
+        "ctaMetrics": {
+          "color": "rgb(248, 250, 252)",
+          "bg": "rgba(0, 0, 0, 0)",
+          "ratio": 20.071189561616038,
+          "pass": true
+        },
+        "swoopsCount": 5,
+        "swoops": [
+          {
+            "circleStroke": "var(--brand-blue, #2563eb)",
+            "checkStroke": "var(--brand-red, #ef4444)"
+          },
+          {
+            "circleStroke": "rgb(255, 255, 255)",
+            "checkStroke": "rgb(255, 255, 255)"
+          },
+          {
+            "circleStroke": "rgb(255, 255, 255)",
+            "checkStroke": "rgb(255, 255, 255)"
+          },
+          {
+            "circleStroke": null,
+            "checkStroke": null
+          },
+          {
+            "circleStroke": "rgb(220, 38, 38)",
+            "checkStroke": "rgb(220, 38, 38)"
+          }
+        ]
+      },
+      "screenshots": {
+        "light": "talent-1-light.png",
+        "dark": "talent-1-dark.png"
+      },
+      "grade": "A",
+      "gradeReason": "all checks passed",
+      "failures": []
+    }
+  ]
+}

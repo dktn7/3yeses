@@ -1135,7 +1135,8 @@
     "catOther": "Other",
     "catAnalytics": "Analytics",
     "catCommunity": "Community",
-    "catSupport": "Support & Tickets"
+    "catSupport": "Support & Tickets",
+    "faqItems": []
   },
   "settings": {
     "emailNotifications": "Email Notifications",
