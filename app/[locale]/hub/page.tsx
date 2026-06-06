@@ -293,7 +293,7 @@ export default function HubPage() {
     const output: HubSuggestion[] = [];
 
     try {
-      fuse.search(input, { limit: 4 }).forEach((res) => {
+      fuse.search(input, { limit: 4 }).forEach((res: { item: HubSuggestion }) => {
         output.push({
           type: res.item.type,
           id: res.item.id,
@@ -543,7 +543,7 @@ export default function HubPage() {
 
   if (selectedMediaItem) {
     return (
-      <div className="hub-root min-h-screen bg-gradient-to-b from-blue-50 via-white to-blue-50/40 text-light-surface dark:from-zinc-950 dark:via-[#070a0f] dark:to-zinc-950 dark:text-dark-surface">
+      <div className="hub-root min-h-screen bg-gradient-to-b from-blue-50 via-white to-blue-50/40 text-light-surface dark:from-zinc-950 dark:via-[#111111] dark:to-zinc-950 dark:text-dark-surface">
         <MediaOverlay
           mode="embedded"
           media={selectedMediaItem}
@@ -617,7 +617,7 @@ export default function HubPage() {
   };
 
   return (
-    <div className="hub-root min-h-screen bg-gradient-to-b from-blue-50 via-white to-blue-50/40 text-light-surface dark:from-zinc-950 dark:via-[#070a0f] dark:to-zinc-950 dark:text-dark-surface">
+    <div className="hub-root min-h-screen bg-gradient-to-b from-blue-50 via-white to-blue-50/40 text-light-surface dark:from-zinc-950 dark:via-[#111111] dark:to-zinc-950 dark:text-dark-surface">
       <div className="sticky top-0 z-40 border-b border-blue-100/80 bg-white/90 backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-950/85">
         <div className="mx-auto flex max-w-[1600px] items-center gap-3 px-4 py-3 md:gap-4 md:px-6">
           <div className="shrink-0 flex items-center gap-2">

@@ -48,19 +48,15 @@ async function waitForServer(url, timeout = 20000) {
 
     for (const p of pages) {
       const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
-      // apply theme quickly before navigation
-      await page.goto('about:blank');
-      if (theme === 'dark') {
-        await page.evaluate(() => {
-          try { localStorage.setItem('theme', 'dark'); } catch (e) {}
-          document.documentElement.classList.add('dark');
-        });
-      } else {
-        await page.evaluate(() => {
-          try { localStorage.setItem('theme', 'light'); } catch (e) {}
-          document.documentElement.classList.remove('dark');
-        });
-      }
+      await page.emulateMedia({ colorScheme: theme });
+      await page.addInitScript((seedTheme) => {
+        try {
+          localStorage.setItem('theme', seedTheme);
+        } catch (e) {
+          // ignore storage failures in constrained environments
+        }
+        document.documentElement.classList.toggle('dark', seedTheme === 'dark');
+      }, theme);
 
       const fullUrl = baseUrl + p;
       console.log('Loading', fullUrl, 'with theme', theme);

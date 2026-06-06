@@ -11,6 +11,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useLocale } from 'next-intl';
 import { useAuthRequired } from '@/hooks/useAuthRequired';
 import AuthRequiredModal from '@/components/AuthRequiredModal';
+import { buildLocalizedPath } from '@/lib/locale-path';
 
 interface MentionUser {
   id: string;
@@ -829,7 +830,7 @@ export default function CommentsSection({ mediaId, mediaOwnerId }: CommentsSecti
             <Lock className="w-4 h-4 text-gray-400" />
             <span className="text-sm text-gray-500 dark:text-gray-400">Please sign in to comment</span>
             <Link
-              href={`/${locale}/auth/login`}
+              href={buildLocalizedPath(locale, '/auth/login')}
               className="text-sm font-medium text-primary-blue dark:text-accent-red hover:underline"
             >
               Sign In

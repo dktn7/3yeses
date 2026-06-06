@@ -59,7 +59,7 @@ export default function MultiSelect({ options, value, onChange, placeholder, all
     <div className="relative" ref={containerRef}>
       {label && <div className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">{label}</div>}
       <div
-        className="flex flex-wrap items-center gap-1 px-3 py-2 rounded-full ring-1 ring-slate-900/8 dark:ring-white/[0.08] bg-slate-50 dark:bg-gray-900/90 text-gray-900 dark:text-white cursor-text min-h-[2.5rem] transition-all duration-200 focus-within:ring-2 focus-within:ring-[var(--brand-primary)]/30"
+        className="flex flex-wrap items-center gap-1 px-3 py-2 rounded-full ring-1 ring-[var(--chrome-border)] bg-[var(--chrome-panel)] text-gray-900 dark:text-white cursor-text min-h-[2.5rem] transition-all duration-200 focus-within:ring-2 focus-within:ring-[var(--brand-glow)]"
         onClick={() => { setShowOptions(true); inputRef.current?.focus(); }}
       >
         {value.map((val) => {
@@ -69,7 +69,7 @@ export default function MultiSelect({ options, value, onChange, placeholder, all
           return (
           <span
             key={val}
-            className="flex items-center bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] rounded-full px-2 py-0.5 text-xs mr-1 mb-1"
+            className="flex items-center bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] dark:text-slate-100 rounded-full px-2 py-0.5 text-xs mr-1 mb-1"
           >
             {displayLabel}
             <button
@@ -83,11 +83,11 @@ export default function MultiSelect({ options, value, onChange, placeholder, all
           </span>
           );
         })}
-        <input
-          ref={inputRef}
-          type="text"
+          <input
+            ref={inputRef}
+            type="text"
           className="flex-1 bg-transparent outline-none text-sm min-w-[4rem]"
-          value={input}
+            value={input}
           onChange={e => { setInput(e.target.value); setShowOptions(true); setHighlighted(-1); }}
           onFocus={() => setShowOptions(true)}
           placeholder={placeholder}

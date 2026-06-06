@@ -1216,11 +1216,11 @@
       "secondary": "查看价格"
     },
     "stats": {
-      "categories": "20+",
+      "categories": "9",
       "categoriesLabel": "人才类别",
-      "subcategories": "145+",
+      "subcategories": "50",
       "subcategoriesLabel": "子类别",
-      "locales": "11",
+      "locales": "10",
       "localesLabel": "支持语言",
       "price": "£10",
       "priceLabel": "6个月"
@@ -1244,7 +1244,7 @@
         "desc": "跟踪资料浏览量、作品集参与度、搜索展示次数和点击率。"
       },
       "categories": {
-        "title": "20+人才类别",
+        "title": "9人才类别",
         "desc": "演员、音乐家、模特、舞者、配音艺术家、喜剧演员、DJ、摄影师等。"
       },
       "simple": {

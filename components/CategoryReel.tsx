@@ -5,8 +5,16 @@ import Link from 'next/link';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import * as Ph from 'phosphor-react';
 import { useTranslations } from 'next-intl';
+import {
+  CATEGORY_ICON_BOX_CLASSES,
+  CATEGORY_ICON_CLASSES,
+  CATEGORY_META_CLASSES,
+  CATEGORY_TITLE_CLASSES,
+  CATEGORY_TILE_CLASSES,
+} from '@/lib/categoryCardStyles';
 import { getCategoryTranslationKey } from '@/lib/categoryTranslations';
 import { getCategoryIconByName } from '@/lib/categoryIcons';
+import { buildLocalizedPath } from '@/lib/locale-path';
 
 interface Category {
   id: string;
@@ -99,7 +107,7 @@ export default function CategoryReel({
           </span>
           <h2 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-white tracking-tighter leading-[1.05]">
             {tHome('reelTitlePrefix')}{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--brand-primary)] to-[var(--brand-accent)]">
+            <span className="marketing-yes-accent">
               {tHome('reelTitleAccent')}
             </span>
           </h2>
@@ -147,27 +155,31 @@ export default function CategoryReel({
               const translatedCategoryName = getTranslatedCategoryName(cat);
               const Icon = getCategoryIconByName(cat.name, cat.icon);
               const talentCount = cat._count?.talents ?? 0;
-              const categoryHref = `/${locale}/categories?category=${encodeURIComponent(cat.name)}`;
+              const categoryHref = buildLocalizedPath(locale, `/categories?category=${encodeURIComponent(cat.name)}`);
 
               return (
                 <Link
                   key={cat.id}
                   href={categoryHref}
-                  className="group/card flex-none w-44 md:w-52"
+                  className="group group/card flex-none w-56 md:w-60"
                   style={{ animationDelay: `${index * 60}ms` }}
                 >
-                  <div className="marketing-surface rounded-2xl ring-1 ring-[var(--marketing-border)] p-5 md:p-6 text-center transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.08)] dark:hover:shadow-[0_12px_32px_rgba(0,0,0,0.3)] hover:ring-[var(--marketing-ring)] hover:-translate-y-1 hover-smart-bg">
-                      <div className="mx-auto mb-4 w-12 h-12 rounded-xl bg-[var(--brand-primary)]/10 flex items-center justify-center transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover/card:scale-110 group-hover/card:rotate-3">
-                      <Icon className="w-6 h-6 text-[var(--brand-primary)]" />
+                  <div className={`${CATEGORY_TILE_CLASSES} p-6 md:p-7 text-center h-full`}>
+                    <div className="flex h-full flex-col items-center justify-center">
+                      <div className={CATEGORY_ICON_BOX_CLASSES}>
+                        <Icon className={CATEGORY_ICON_CLASSES} />
+                      </div>
+                      <div className="mt-4">
+                        <h3 className={`${CATEGORY_TITLE_CLASSES} text-sm md:text-base`}>
+                          {translatedCategoryName}
+                        </h3>
+                        {talentCount > 0 && (
+                          <p className={CATEGORY_META_CLASSES}>
+                            {tHome('reelTalentCount', { count: talentCount })}
+                          </p>
+                        )}
+                      </div>
                     </div>
-                    <h3 className="text-sm font-semibold text-gray-900 dark:text-white tracking-tight mb-1 truncate">
-                       {translatedCategoryName}
-                    </h3>
-                    {talentCount > 0 && (
-                      <p className="text-xs text-gray-400 dark:text-gray-500">
-                        {tHome('reelTalentCount', { count: talentCount })}
-                      </p>
-                    )}
                   </div>
                 </Link>
               );

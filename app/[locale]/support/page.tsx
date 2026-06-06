@@ -119,13 +119,10 @@ export default function SupportPage() {
             </span>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight mb-5 support-hero-strong">
-            <span className="text-gray-900 dark:text-white">{t('heroTitle')} </span>
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight mb-5 text-gray-900 dark:text-white">
+            <span>{t('heroTitle')} </span>
             {t('heroAccent') && (t('heroAccent') as string).trim() !== '' && (
-              <span
-                className="text-transparent bg-clip-text"
-                style={{ backgroundImage: 'linear-gradient(90deg, var(--brand-primary), var(--brand-accent))' }}
-              >
+              <span className="marketing-yes-accent">
                 {t('heroAccent')}
               </span>
             )}

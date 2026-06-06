@@ -82,7 +82,7 @@ export default function SkillMultiSelect({ value, onChange, placeholder }: Props
     <div className="relative" ref={containerRef}>
       <div className="flex flex-wrap gap-1.5 mb-2">
         {value.map(s => (
-          <span key={s} className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] rounded-full text-xs font-medium">
+          <span key={s} className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] dark:text-slate-100 rounded-full text-xs font-medium">
             {s}
             <button 
               type="button"
@@ -106,18 +106,18 @@ export default function SkillMultiSelect({ value, onChange, placeholder }: Props
           onFocus={() => setShowSuggestions(true)}
           onKeyDown={handleKeyDown}
           placeholder={loading ? 'Loading skills...' : (placeholder || 'Type to search skills...')}
-          className="w-full px-3 py-2 ring-1 ring-slate-900/8 dark:ring-white/[0.08] rounded-full bg-slate-50 dark:bg-gray-900/90 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)]/30 transition-all"
+          className="w-full px-3 py-2 ring-1 ring-[var(--chrome-border)] rounded-full bg-[var(--chrome-panel)] text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[var(--brand-glow)] transition-all"
         />
         {showSuggestions && (filteredSuggestions.length > 0 || input.trim()) && (
           <DropdownPanel portal anchorRef={inputRef} className="p-2 w-64 max-w-[90vw]">
             {filteredSuggestions.length > 0 ? (
               filteredSuggestions.map(skill => (
-                <button
-                  key={skill}
-                  type="button"
-                  onClick={() => addSkill(skill)}
-                  className="w-full text-left px-3 py-2 hover:bg-[var(--brand-primary)]/10 hover:text-[var(--brand-primary)] text-gray-900 dark:text-gray-100 text-sm transition-colors border-b border-gray-100 dark:border-white/[0.06] last:border-b-0"
-                >
+                  <button
+                    key={skill}
+                    type="button"
+                    onClick={() => addSkill(skill)}
+                    className="w-full text-left px-3 py-2 hover:bg-[var(--brand-primary)]/10 hover:text-[var(--brand-primary)] text-gray-900 dark:text-gray-100 text-sm transition-colors border-b border-gray-100/80 dark:border-white/[0.06] last:border-b-0"
+                  >
                   {skill}
                 </button>
               ))

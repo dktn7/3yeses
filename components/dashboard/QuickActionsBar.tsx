@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Plus, Upload, MessageSquare, Search, BarChart3, X } from 'lucide-react';
 import { useLocale } from 'next-intl';
+import { buildLocalizedPath, normalizeLocale } from '@/lib/locale-path';
 
 interface QuickAction {
   id: string;
@@ -15,35 +16,35 @@ interface QuickAction {
 
 export default function QuickActionsBar() {
   const [isOpen, setIsOpen] = useState(false);
-  const locale = useLocale();
+  const locale = normalizeLocale(useLocale());
 
   const actions: QuickAction[] = [
     {
       id: 'upload',
       label: 'Upload Media',
       icon: <Upload className="h-5 w-5" />,
-      href: `/${locale}/dashboard/gallery`,
+      href: buildLocalizedPath(locale, '/dashboard/gallery'),
       color: 'bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700',
     },
     {
       id: 'search',
       label: 'Search Talents',
       icon: <Search className="h-5 w-5" />,
-      href: `/${locale}/search`,
+      href: buildLocalizedPath(locale, '/search'),
       color: 'bg-blue-500 hover:bg-blue-600 dark:bg-red-600 dark:hover:bg-red-700',
     },
     {
       id: 'messages',
       label: 'Messages',
       icon: <MessageSquare className="h-5 w-5" />,
-      href: `/${locale}/dashboard/messages`,
+      href: buildLocalizedPath(locale, '/dashboard/messages'),
       color: 'bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700',
     },
     {
       id: 'analytics',
       label: 'Analytics',
       icon: <BarChart3 className="h-5 w-5" />,
-      href: `/${locale}/dashboard/insights`,
+      href: buildLocalizedPath(locale, '/dashboard/insights'),
       color: 'bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700',
     },
   ];

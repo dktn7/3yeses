@@ -105,7 +105,7 @@ const VERSION_HISTORY = [
       'User registration and profile creation',
       'Portfolio uploads (images, video, audio)',
       'Stripe subscription billing (Standard plan)',
-      'Multi-language support (11 locales)',
+      'Multi-language support (10 locales)',
       'Search and discovery features',
     ],
   },
@@ -135,7 +135,7 @@ const DOCUMENTATION_SECTIONS = [
     content: [
       {
         heading: 'Technology Stack',
-        text: 'Built with Next.js 14 (App Router), React 18, TypeScript (strict mode), PostgreSQL with Prisma ORM, Stripe for subscription billing, Tailwind CSS for styling, and next-intl for internationalisation across 11 locales.',
+        text: 'Built with Next.js 14 (App Router), React 18, TypeScript (strict mode), PostgreSQL with Prisma ORM, Stripe for subscription billing, Tailwind CSS for styling, and next-intl for internationalisation across 10 locales.',
       },
       {
         heading: 'Database',
@@ -241,7 +241,7 @@ const DOCUMENTATION_SECTIONS = [
     content: [
       {
         heading: 'Language Support',
-        text: '3YESES supports 11 locales using next-intl. Translations are stored in JSON message files under the messages/ directory. Server components use getTranslations, client components use useTranslations.',
+        text: '3YESES supports 10 locales using next-intl. Translations are stored in JSON message files under the messages/ directory. Server components use getTranslations, client components use useTranslations.',
       },
       {
         heading: 'Adding Languages',

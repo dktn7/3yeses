@@ -18,6 +18,7 @@ import CategoryReel from './CategoryReel'
 import DropdownPanel from './DropdownPanel'
 import { useTranslations } from 'next-intl'
 import { getCategoryTranslationKey } from '@/lib/categoryTranslations'
+import { buildLocalizedPath } from '@/lib/locale-path'
 
 const CITY_SUGGESTIONS = [
   'London, UK', 'Paris, France', 'Berlin, Germany', 'New York, USA',
@@ -320,7 +321,7 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
   const handleSearch = useCallback((e: React.FormEvent) => {
     e.preventDefault()
     const params = buildSearchParams()
-    router.push(`/${locale}/search-results?${params.toString()}`)
+    router.push(buildLocalizedPath(locale, `/search-results?${params.toString()}`))
   }, [buildSearchParams, router, locale])
 
   const hasAnyFilter = useMemo(() => Boolean(
@@ -383,19 +384,19 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
         <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 md:py-40">
           <div className="text-center mb-16">
             {/* Eyebrow tag */}
-            <span className="marketing-pill inline-flex items-center gap-2.5 rounded-full px-5 py-2.5 text-[10px] uppercase tracking-[0.22em] font-semibold text-[var(--marketing-heading-blue)] dark:text-[var(--marketing-heading-blue-strong)] mb-10 shadow-sm backdrop-blur-md transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]">
+            <span className="marketing-pill inline-flex items-center gap-2.5 rounded-full px-5 py-2.5 text-[10px] uppercase tracking-[0.22em] font-semibold marketing-accent-text mb-10 shadow-sm backdrop-blur-md transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]">
               <SwoopingTick className="w-[1.125rem] h-[1.125rem] shrink-0" />
               {t('forTalent.title')}
             </span>
 
-              <h1 className="mb-8 text-6xl font-bold leading-[1.02] tracking-tighter text-gray-900 dark:text-white dark:[text-shadow:0_6px_22px_rgba(0,0,0,0.36)] md:text-8xl lg:text-9xl">
-                3<span className="bg-gradient-to-r from-[#1e3a8a] via-[#1d4ed8] to-[#2563eb] bg-clip-text text-transparent dark:from-red-500 dark:via-red-500 dark:to-red-300">YES</span>ES
+              <h1 className="marketing-hero-title mb-8 text-6xl font-bold leading-[1.02] tracking-tighter dark:[text-shadow:0_6px_22px_rgba(0,0,0,0.36)] md:text-8xl lg:text-9xl">
+                3<span className="marketing-yes-accent">YES</span>ES
             </h1>
 
             {/* Dynamic Headline */}
             <DynamicHeadline />
 
-            <p className="mx-auto mb-14 max-w-2xl text-lg leading-relaxed text-gray-600 dark:text-red-200 dark:[text-shadow:0_2px_14px_rgba(0,0,0,0.18)] md:text-xl">
+            <p className="marketing-hero-muted mx-auto mb-14 max-w-2xl text-lg leading-relaxed dark:[text-shadow:0_2px_14px_rgba(0,0,0,0.18)] md:text-xl">
               {t('tagline')}
             </p>
 
@@ -418,10 +419,10 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
                   {hoveredTick === index && (
                     <div className="marketing-surface absolute bottom-20 left-1/2 -translate-x-1/2 rounded-2xl p-5 z-[70] w-64 animate-fadeIn ring-1 ring-black/5 shadow-[0_16px_48px_rgba(0,0,0,0.12)] dark:shadow-[0_16px_48px_rgba(0,0,0,0.60)]">
                       <div className="flex items-center gap-3 mb-2">
-                        <div className="text-[var(--brand-primary)] dark:text-accent-red">{feature.icon}</div>
+                        <div className="marketing-accent-text">{feature.icon}</div>
                         <h4 className="font-semibold text-gray-900 dark:text-slate-50 text-sm tracking-tight">{feature.title}</h4>
                       </div>
-                      <p className="text-xs text-gray-500 dark:text-red-200 leading-relaxed">{feature.description}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-300 leading-relaxed">{feature.description}</p>
                     </div>
                   )}
                 </button>
@@ -434,9 +435,9 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
             {/* Outer shell */}
             <div className="marketing-surface rounded-[2.5rem] p-2 ring-1 ring-[var(--marketing-surface-strong)] shadow-[0_20px_50px_rgba(0,0,0,0.12)] transition-shadow duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[0_24px_64px_rgba(0,0,0,0.18)] dark:hover:shadow-[0_24px_64px_rgba(0,0,0,0.45)] md:p-2.5">
               {/* Inner core */}
-              <div className="rounded-[calc(2.5rem-0.5rem)] bg-light-surface dark:bg-dark-surface p-6 shadow-[inset_0_1px_1px_rgba(148,163,184,0.16)] dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.06)] sm:p-8">
+              <div className="rounded-[calc(2.5rem-0.5rem)] bg-[var(--chrome-panel)] p-6 shadow-[inset_0_1px_1px_rgba(148,163,184,0.16)] dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.06)] sm:p-8">
                 {/* Main search bar */}
-                <div className="flex items-center gap-2 bg-light-surface dark:bg-dark-surface rounded-full ring-1 ring-slate-300/60 dark:ring-red-400/30 p-1.5 mb-5 transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] focus-within:ring-2 focus-within:ring-[var(--brand-primary)]/40 focus-within:shadow-[0_0_0_4px_rgba(37,99,235,0.12)] dark:focus-within:shadow-[0_0_0_4px_rgba(249,115,22,0.16)]">
+                <div className="flex items-center gap-2 rounded-full border border-[var(--chrome-border)] bg-[var(--chrome-panel)] p-1.5 mb-5 shadow-[0_8px_24px_rgba(15,23,42,0.05)] transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] focus-within:border-[var(--brand-primary)]/35 focus-within:ring-2 focus-within:ring-[var(--brand-primary)]/15 dark:focus-within:ring-[var(--brand-primary)]/20">
                   <div className="flex-1 flex items-center gap-3 pl-4">
                     <Search className="text-gray-500 dark:text-gray-400 h-5 w-5 shrink-0" />
                     <input
@@ -467,11 +468,11 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
                       ref={categoryAnchorRef}
                       type="button"
                       onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                      className="w-full flex items-center justify-between px-4 py-2.5 rounded-full ring-1 ring-slate-900/8 dark:ring-red-300/20 bg-slate-50 dark:bg-dark-surface/72 text-gray-900 dark:text-white text-sm shadow-sm focus:ring-2 focus:ring-[var(--brand-primary)] focus:outline-none transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]"
+                      className="w-full flex items-center justify-between px-4 py-2.5 rounded-full border border-[var(--chrome-border)] bg-[var(--chrome-panel)] text-gray-900 dark:text-white text-sm shadow-[0_6px_18px_rgba(15,23,42,0.04)] focus:ring-2 focus:ring-[var(--brand-glow)] focus:border-[var(--brand-primary)] focus:outline-none transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]"
                       aria-expanded={isDropdownOpen}
                       aria-haspopup="listbox"
                     >
-                      <span className={selectedCategory ? 'text-gray-900 dark:text-white font-medium' : 'text-gray-500 dark:text-gray-300'}>
+                      <span className={selectedCategory ? 'text-gray-900 dark:text-[var(--marketing-accent)] font-medium' : 'text-gray-500 dark:text-gray-300'}>
                         {selectedCategory
                           ? getTranslatedCategoryName(realCategories.find(cat => cat.id === selectedCategory)) || selectedCategory
                           : t('allCategories')}
@@ -484,7 +485,7 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
                           <button
                             type="button"
                             onClick={() => { setSelectedCategory(''); setSelectedSubcategory(''); setIsDropdownOpen(false) }}
-                            className={`w-full flex items-center justify-between gap-3 text-left px-4 py-3 rounded-xl text-sm transition-colors duration-200 ${selectedCategory === '' ? 'bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] dark:bg-[var(--brand-primary)]/16 dark:text-white font-semibold' : 'text-gray-700 dark:text-gray-100 hover-smart-bg'}`}
+                            className={`w-full flex items-center justify-between gap-3 text-left px-4 py-3 rounded-xl text-sm transition-colors duration-200 ${selectedCategory === '' ? 'bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] dark:bg-[var(--brand-primary)]/16 dark:text-[var(--marketing-accent)] font-semibold' : 'text-gray-700 dark:text-gray-100 hover-smart-bg'}`}
                           >
                             <span>{t('allCategories')}</span>
                             {selectedCategory === '' && <Check className="h-4 w-4" />}
@@ -494,7 +495,7 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
                               key={cat.id}
                               type="button"
                               onClick={() => { setSelectedCategory(cat.id); setSelectedSubcategory(''); setIsDropdownOpen(false) }}
-                              className={`w-full flex items-center justify-between gap-3 text-left px-4 py-3 rounded-xl text-sm transition-colors duration-200 ${selectedCategory === cat.id ? 'bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] dark:bg-[var(--brand-primary)]/16 dark:text-white font-semibold' : 'text-gray-700 dark:text-gray-100 hover-smart-bg'}`}
+                              className={`w-full flex items-center justify-between gap-3 text-left px-4 py-3 rounded-xl text-sm transition-colors duration-200 ${selectedCategory === cat.id ? 'bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] dark:bg-[var(--brand-primary)]/16 dark:text-[var(--marketing-accent)] font-semibold' : 'text-gray-700 dark:text-gray-100 hover-smart-bg'}`}
                             >
                               <span>{getTranslatedCategoryName(cat) || cat.name}</span>
                               {selectedCategory === cat.id && <Check className="h-4 w-4" />}
@@ -509,11 +510,11 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
                           ref={subcategoryAnchorRef}
                           type="button"
                           onClick={() => setIsSubcategoryOpen((current) => !current)}
-                          className="w-full flex items-center justify-between px-4 py-2.5 rounded-full ring-1 ring-slate-900/8 dark:ring-red-300/20 bg-slate-50 dark:bg-dark-surface/72 text-gray-900 dark:text-white text-sm shadow-sm focus:ring-2 focus:ring-[var(--brand-primary)] focus:outline-none transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] mt-1"
+                      className="w-full flex items-center justify-between px-4 py-2.5 rounded-full border border-[var(--chrome-border)] bg-[var(--chrome-panel)] text-gray-900 dark:text-white text-sm shadow-[0_6px_18px_rgba(15,23,42,0.04)] focus:ring-2 focus:ring-[var(--brand-glow)] focus:border-[var(--brand-primary)] focus:outline-none transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] mt-1"
                           aria-expanded={isSubcategoryOpen}
                           aria-haspopup="listbox"
                         >
-                          <span className={selectedSubcategory ? 'text-gray-900 dark:text-white font-medium' : 'text-gray-500 dark:text-gray-300'}>
+                          <span className={selectedSubcategory ? 'text-gray-900 dark:text-[var(--marketing-accent)] font-medium' : 'text-gray-500 dark:text-gray-300'}>
                             {selectedSubcategory
                               ? selectedCatObj.subcategories.find((sub: any) => sub.id === selectedSubcategory)?.name || selectedSubcategory
                               : t('allCategory', { name: getTranslatedCategoryName(selectedCatObj) || selectedCatObj.name })}
@@ -525,7 +526,7 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
                             <div className="p-0">
                               <button
                                 type="button"
-                                className={`w-full flex items-center justify-between text-left px-4 py-3 rounded-xl text-sm transition-colors ${selectedSubcategory === '' ? 'bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] dark:bg-[var(--brand-primary)]/16 dark:text-white font-semibold' : 'text-gray-700 dark:text-gray-100 hover-smart-bg'}`}
+                                className={`w-full flex items-center justify-between text-left px-4 py-3 rounded-xl text-sm transition-colors ${selectedSubcategory === '' ? 'bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] dark:bg-[var(--brand-primary)]/16 dark:text-[var(--marketing-accent)] font-semibold' : 'text-gray-700 dark:text-gray-100 hover-smart-bg'}`}
                                 onClick={() => { setSelectedSubcategory(''); setIsSubcategoryOpen(false) }}
                               >
                                 <span>{t('allCategory', { name: getTranslatedCategoryName(selectedCatObj) || selectedCatObj.name })}</span>
@@ -534,7 +535,7 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
                                 <button
                                   key={sub.id}
                                   type="button"
-                                  className={`w-full flex items-center justify-between text-left px-4 py-3 rounded-xl text-sm transition-colors ${selectedSubcategory === sub.id ? 'bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] dark:bg-[var(--brand-primary)]/16 dark:text-white font-semibold' : 'text-gray-700 dark:text-gray-100 hover-smart-bg'}`}
+                                  className={`w-full flex items-center justify-between text-left px-4 py-3 rounded-xl text-sm transition-colors ${selectedSubcategory === sub.id ? 'bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] dark:bg-[var(--brand-primary)]/16 dark:text-[var(--marketing-accent)] font-semibold' : 'text-gray-700 dark:text-gray-100 hover-smart-bg'}`}
                                   onClick={() => { setSelectedSubcategory(sub.id); setIsSubcategoryOpen(false) }}
                                 >
                                   <span>{sub.name}</span>
@@ -558,7 +559,7 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
                       value={location}
                       onChange={(e) => { setLocation(e.target.value); setShowLocSuggestions(true); }}
                       onFocus={() => setShowLocSuggestions(true)}
-                      className="w-full pl-10 pr-10 py-2.5 rounded-full ring-1 ring-slate-900/8 dark:ring-red-300/20 bg-slate-50 dark:bg-dark-surface/72 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-300 text-sm shadow-sm focus:ring-2 focus:ring-[var(--brand-primary)]/30 focus:outline-none transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]"
+                      className="w-full pl-10 pr-10 py-2.5 rounded-full border border-[var(--chrome-border)] bg-[var(--chrome-panel)] text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-300 text-sm shadow-[0_6px_18px_rgba(15,23,42,0.04)] focus:ring-2 focus:ring-[var(--brand-glow)] focus:border-[var(--brand-primary)] focus:outline-none transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]"
                       autoComplete="off"
                     />
                     {showLocSuggestions && (() => {
@@ -613,7 +614,7 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
                     <button
                       type="button"
                       onClick={() => setIsFiltersOpen((v) => !v)}
-                      className="group flex w-full items-center justify-center gap-2 rounded-full bg-[var(--brand-primary)]/[0.05] px-5 py-2.5 text-sm font-semibold text-[var(--brand-primary)] ring-1 ring-[var(--brand-primary)]/20 transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-[var(--brand-primary)]/[0.10] active:scale-[0.97] md:w-auto dark:bg-[var(--marketing-pill-bg)] dark:text-[var(--marketing-heading-blue)] dark:border dark:border-[var(--marketing-pill-border)] dark:hover:bg-red-500/10"
+                      className="group flex w-full items-center justify-center gap-2 rounded-full border border-[var(--chrome-border)] bg-[var(--chrome-panel)] px-5 py-2.5 text-sm font-semibold text-[var(--marketing-accent)] shadow-[0_6px_18px_rgba(15,23,42,0.04)] transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:border-[var(--brand-primary)] hover:bg-[var(--brand-primary)]/[0.06] active:scale-[0.97] md:w-auto"
                       aria-expanded={isFiltersOpen}
                     >
                       <span>{t('filters')}</span>
@@ -626,7 +627,7 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
 
                 {/* Expanded filter panel */}
                 {isFiltersOpen && (
-                  <div className="w-full mt-4 rounded-[1.25rem] overflow-hidden ring-1 ring-black/[0.06] dark:ring-red-300/20">
+                  <div className="w-full mt-4 rounded-[1.25rem] overflow-hidden ring-1 ring-[var(--marketing-border)] bg-[var(--marketing-panel-soft)]">
                     <TalentFilterPanel
                       filters={advancedFilters}
                       onFiltersChange={setAdvancedFilters}
@@ -643,17 +644,17 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
                     {chips.map((chip) => (
                       <span
                         key={chip.k}
-                        className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-50 dark:bg-dark-surface/72 ring-1 ring-slate-900/8 dark:ring-red-300/20 text-xs text-gray-700 dark:text-gray-100"
+                        className="marketing-pill inline-flex items-center gap-1.5 px-3 py-1 rounded-full ring-1 ring-[var(--marketing-pill-border)] text-xs text-gray-700 dark:text-slate-50"
                       >
                         {chip.label}
                         <button type="button" onClick={chip.onRemove} className="text-gray-400 hover:text-gray-700 dark:text-gray-500 dark:hover:text-gray-100 transition-colors">×</button>
                       </span>
                     ))}
                     {hasAnyFilter && (
-                      <button
-                        type="button"
-                        onClick={clearAllFilters}
-                        className="text-xs font-medium text-[var(--brand-primary)] hover:underline"
+                    <button
+                      type="button"
+                      onClick={clearAllFilters}
+                      className="text-xs font-medium text-[var(--brand-primary)] dark:text-[var(--marketing-accent)] hover:underline"
                       >
                         {t('clearAll')}
                       </button>
@@ -674,13 +675,13 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section heading */}
           <div className="text-center mb-14">
-            <span className="marketing-pill inline-flex items-center gap-2.5 rounded-full px-5 py-2.5 text-[10px] uppercase tracking-[0.22em] font-semibold text-[var(--marketing-heading-blue)] dark:text-[var(--marketing-heading-blue-strong)] mb-6 shadow-sm backdrop-blur-md">
+            <span className="marketing-pill inline-flex items-center gap-2.5 rounded-full px-5 py-2.5 text-[10px] uppercase tracking-[0.22em] font-semibold marketing-accent-text mb-6 shadow-sm backdrop-blur-md">
               <SwoopingTick className="w-[1.125rem] h-[1.125rem] shrink-0" />
               {t('watchEyebrow')}
             </span>
-            <h2 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-5 leading-[1.05] tracking-tighter">
+            <h2 className="marketing-hero-title text-4xl md:text-6xl font-bold mb-5 leading-[1.05] tracking-tighter">
               {t('videoSectionSeeThe')}{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--brand-primary)] to-[var(--brand-accent)]">
+              <span className="marketing-yes-accent">
                 {t('videoSectionExperience')}
               </span>
             </h2>
@@ -708,7 +709,7 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <a
-                href={`/${locale}/search-results`}
+                href={buildLocalizedPath(locale, '/search-results')}
                 className="group relative flex items-center gap-2 text-white rounded-full pl-6 pr-2 py-3 font-semibold text-base shadow-lg transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-xl active:scale-[0.97]"
                 style={{ background: 'linear-gradient(90deg, var(--brand-primary), var(--brand-accent))' }}
               >
@@ -719,8 +720,8 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
               </a>
 
               <a
-                href={`/${locale}/search-results`}
-                className="group flex items-center gap-2 px-6 py-3 rounded-full ring-1 ring-slate-300/60 dark:ring-[var(--marketing-pill-border)] font-semibold text-base bg-light-surface dark:bg-dark-surface transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-[0.97]"
+                href={buildLocalizedPath(locale, '/search-results')}
+                className="marketing-pill group flex items-center gap-2 px-6 py-3 rounded-full ring-1 ring-[var(--marketing-pill-border)] font-semibold text-base text-gray-700 dark:text-slate-50 transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-[0.97]"
                 style={{ color: 'var(--brand-primary)', boxShadow: 'none' }}
               >
                 <Users className="w-4 h-4" />
@@ -737,20 +738,20 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
           <div className="rounded-[2.5rem] bg-light-surface dark:bg-dark-surface border border-slate-300/60 dark:border-[var(--marketing-surface-strong)] shadow-[0_16px_48px_rgba(0,0,0,0.14)] px-6 md:px-10 lg:px-14 py-12 md:py-16">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
               <div className="flex flex-col justify-start h-full min-h-[320px]">
-                <h2 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-7 leading-[1.05] tracking-tighter">
+                <h2 className="marketing-hero-title text-4xl md:text-6xl font-bold mb-7 leading-[1.05] tracking-tighter">
                   {t('findYourNextJob')}{' '}
-                  <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#1e3a8a] via-[#1d4ed8] to-[#2563eb] dark:from-red-500 dark:via-red-500 dark:to-red-300">
+                  <span className="block marketing-yes-accent">
                     {t('elevateYourCareer')}
                   </span>
                 </h2>
-                <p className="text-lg text-gray-600 dark:text-red-200 mb-10 leading-relaxed max-w-md">
+                <p className="text-lg text-gray-600 dark:text-gray-300 mb-10 leading-relaxed max-w-md">
                   {t('joinThousands')}{' '}
                   {t('supportCreativeJourney')}
                 </p>
                 <div className="flex flex-wrap gap-3">
                   {/* Primary CTA — filled gradient pill */}
                   <a
-                    href={`/${locale}/signup`}
+                    href={buildLocalizedPath(locale, '/signup')}
                     className="group relative inline-flex items-center gap-2 text-white rounded-full pl-7 pr-2 py-3.5 font-semibold text-base shadow-lg transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-xl active:scale-[0.98]"
                     style={{ background: 'linear-gradient(90deg, var(--brand-primary), var(--brand-accent))' }}
                   >
@@ -761,8 +762,8 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
                   </a>
                   {/* Secondary CTA — visible ghost */}
                   <a
-                    href={`/${locale}/search-results`}
-                    className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full ring-2 ring-[var(--brand-primary)] font-semibold text-base text-[var(--brand-primary)] dark:text-[var(--marketing-heading-blue)] dark:ring-[var(--marketing-pill-border)] bg-transparent hover:bg-[var(--brand-primary)]/[0.06] dark:hover:bg-red-500/10 transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-[0.98]"
+                    href={buildLocalizedPath(locale, '/search-results')}
+                    className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full ring-2 ring-[var(--brand-primary)] font-semibold text-base text-[var(--brand-primary)] dark:text-[var(--marketing-accent)] dark:ring-[var(--marketing-pill-border)] bg-transparent hover:bg-[var(--brand-primary)]/[0.06] dark:hover:bg-red-950/30 transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-[0.98]"
                   >
                     <Users className="w-4 h-4" />
                     <span>{t('learnMore')}</span>

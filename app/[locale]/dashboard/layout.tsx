@@ -122,7 +122,7 @@ export default function DashboardLayout({
                     href={item.href}
                     className={`relative px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
                       isActive
-                        ? 'text-primary-blue dark:text-accent-red bg-blue-50 dark:bg-red-900/20'
+                        ? 'text-primary-blue dark:text-red-100 bg-blue-50 dark:bg-[rgba(185,28,28,0.18)] ring-1 ring-blue-300/90 ring-offset-1 ring-offset-white dark:ring-red-500/20 dark:ring-offset-transparent'
                         : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
                     }`}
                   >
@@ -186,7 +186,7 @@ export default function DashboardLayout({
                       onClick={() => setSidebarOpen(false)}
                       className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all ${
                         isActive
-                          ? 'bg-primary-blue dark:bg-accent-red text-white shadow-lg'
+                          ? 'bg-primary-blue dark:bg-accent-red text-white shadow-lg ring-1 ring-blue-300/90 ring-offset-1 ring-offset-white dark:ring-red-500/20 dark:ring-offset-transparent'
                           : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
                       }`}
                     >

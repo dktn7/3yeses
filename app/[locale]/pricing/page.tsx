@@ -17,24 +17,45 @@ function BgDecorations() {
     <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none dark:opacity-90" aria-hidden="true">
       <svg className="w-full h-full" preserveAspectRatio="none" viewBox="0 0 1440 900" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <linearGradient id="v2bg" x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0%" stopColor="var(--brand-from, #FFFFFF)" stopOpacity="0.16" />
-            <stop offset="100%" stopColor="transparent" />
-          </linearGradient>
-          <linearGradient id="pricingWaveOne" x1="0" x2="1" y1="0" y2="1">
+          <radialGradient id="pricingGlowOne" cx="18%" cy="12%" r="58%">
             <stop offset="0%" stopColor="var(--brand-from)" stopOpacity="0.18" />
-            <stop offset="100%" stopColor="var(--brand-to)" stopOpacity="0.08" />
+            <stop offset="70%" stopColor="var(--brand-from)" stopOpacity="0.05" />
+            <stop offset="100%" stopColor="transparent" />
+          </radialGradient>
+          <radialGradient id="pricingGlowTwo" cx="82%" cy="78%" r="54%">
+            <stop offset="0%" stopColor="var(--brand-to)" stopOpacity="0.16" />
+            <stop offset="72%" stopColor="var(--brand-to)" stopOpacity="0.04" />
+            <stop offset="100%" stopColor="transparent" />
+          </radialGradient>
+          <linearGradient id="pricingWaveBase" x1="0" x2="1" y1="0" y2="0">
+            <stop offset="0%" stopColor="var(--brand-from)" stopOpacity="0.06" />
+            <stop offset="48%" stopColor="var(--brand-to)" stopOpacity="0.14" />
+            <stop offset="100%" stopColor="var(--brand-from)" stopOpacity="0.08" />
           </linearGradient>
-          <linearGradient id="pricingWaveTwo" x1="1" x2="0" y1="0" y2="1">
-            <stop offset="0%" stopColor="var(--brand-to)" stopOpacity="0.12" />
-            <stop offset="100%" stopColor="var(--brand-from)" stopOpacity="0.06" />
+          <linearGradient id="pricingWaveMid" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0%" stopColor="var(--brand-to)" stopOpacity="0.18" />
+            <stop offset="100%" stopColor="var(--brand-from)" stopOpacity="0.04" />
+          </linearGradient>
+          <linearGradient id="pricingWaveLine" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0%" stopColor="var(--brand-from)" stopOpacity="0.34" />
+            <stop offset="100%" stopColor="var(--brand-to)" stopOpacity="0.06" />
           </linearGradient>
         </defs>
-        <rect width="100%" height="100%" fill="url(#v2bg)" />
-        <path d="M0 620 C240 540 480 680 720 620 C960 550 1200 650 1440 590 L1440 900 L0 900 Z" fill="url(#pricingWaveOne)" />
-        <path d="M0 710 C320 650 560 740 800 700 C1040 640 1280 720 1440 690 L1440 900 L0 900 Z" fill="url(#pricingWaveTwo)" />
-        <path d="M0 790 C200 760 440 820 720 780 C1000 740 1200 800 1440 770 L1440 900 L0 900 Z" fill="var(--brand-from)" opacity="0.06" />
-        <path d="M0 60 C360 118 720 30 1080 84 C1260 108 1380 72 1440 86 L1440 0 L0 0 Z" fill="var(--hero-top-wave, var(--brand-from))" opacity="0.08" />
+        <rect width="100%" height="100%" fill="url(#pricingGlowOne)" />
+        <rect width="100%" height="100%" fill="url(#pricingGlowTwo)" />
+        <path d="M-80 670 C120 590 300 700 510 644 C700 595 850 650 1040 616 C1200 590 1320 612 1520 560 L1520 920 L-80 920 Z" fill="url(#pricingWaveBase)" />
+        <path d="M-120 748 C110 680 320 790 540 732 C760 676 930 770 1140 712 C1285 672 1400 692 1560 650 L1560 920 L-120 920 Z" fill="url(#pricingWaveMid)" />
+        <path d="M-40 788 C220 744 430 822 660 792 C890 760 1080 820 1320 782 C1410 768 1480 760 1560 748 L1560 920 L-40 920 Z" fill="var(--brand-from)" opacity="0.05" />
+        <path d="M0 92 C200 48 420 106 640 72 C880 34 1090 88 1280 66 C1350 58 1406 50 1440 48 L1440 0 L0 0 Z" fill="url(#pricingWaveLine)" opacity="0.7" />
+        <path d="M0 120 C280 160 560 84 840 128 C1060 162 1240 124 1440 138 L1440 0 L0 0 Z" fill="var(--hero-top-wave, var(--brand-from))" opacity="0.06" />
+        <g opacity="0.22">
+          <circle cx="120" cy="200" r="2.5" fill="var(--brand-from)" />
+          <circle cx="200" cy="150" r="1.8" fill="var(--brand-to)" />
+          <circle cx="310" cy="230" r="2.2" fill="var(--brand-from)" />
+          <circle cx="1180" cy="190" r="2.6" fill="var(--brand-to)" />
+          <circle cx="1290" cy="250" r="1.7" fill="var(--brand-from)" />
+          <circle cx="1360" cy="175" r="2.1" fill="var(--brand-to)" />
+        </g>
       </svg>
     </div>
   );
@@ -141,19 +162,19 @@ export default function PricingPage() {
 
         {/* ── Hero heading ── */}
         <div className="text-center mb-20">
-          <div className="marketing-pill inline-flex items-center gap-2 marketing-pill text-gray-900 dark:text-white text-sm font-semibold px-5 py-2.5 rounded-full mb-8 border border-gray-300/70 dark:border-[var(--marketing-pill-border)] shadow-sm">
+          <div className="marketing-pill inline-flex items-center gap-2 marketing-pill text-[var(--foreground)] text-sm font-semibold px-5 py-2.5 rounded-full mb-8 border border-gray-300/70 dark:border-[var(--marketing-pill-border)] shadow-sm">
             <span className="w-2 h-2 rounded-full bg-primary-blue dark:bg-accent-red animate-pulse" />
             Your spotlight starts here
           </div>
 
-          <h1 className="text-5xl sm:text-6xl md:text-7xl font-extrabold text-gray-900 dark:text-white mb-6 leading-[1.08] tracking-tight">
+          <h1 className="marketing-hero-title text-5xl sm:text-6xl md:text-7xl font-extrabold mb-6 leading-[1.08] tracking-tight">
             Ready for your{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-blue via-accent-blue to-indigo-500 dark:from-accent-red dark:via-primary-red dark:to-red-900">
+            <span className="marketing-yes-accent">
               three yeses?
             </span>
           </h1>
 
-          <p className="text-lg sm:text-xl text-gray-700 dark:text-gray-200 max-w-2xl mx-auto mb-8 leading-relaxed">
+          <p className="text-lg sm:text-xl text-[color-mix(in_srgb,var(--foreground)_68%,transparent)] max-w-2xl mx-auto mb-8 leading-relaxed">
             Put your work out there. Your photos, videos, and reels — all in one place,
             seen by the people who matter.
           </p>
@@ -198,7 +219,8 @@ export default function PricingPage() {
               return Number.isFinite(n) ? n : NaN;
             };
 
-            const originalAmount = parseAmount((plan as any).originalPrice as string | undefined);
+            const originalPrice = (plan as any).originalPrice as string | undefined;
+            const originalAmount = parseAmount(originalPrice);
             const currentAmount = parseAmount(plan.price as string);
             const percent = !Number.isNaN(originalAmount) && originalAmount > 0 && !Number.isNaN(currentAmount)
               ? Math.round((1 - currentAmount / originalAmount) * 100)
@@ -213,22 +235,22 @@ export default function PricingPage() {
                 key={plan.id}
                 className={`group relative ${isFeatured ? 'md:flex-[1.12] z-20' : 'flex-1'} flex flex-col rounded-[2rem] overflow-hidden transition-all duration-500 ease-out hover:-translate-y-3 hover:shadow-2xl ${
                     isFeatured
-                      ? 'shadow-2xl shadow-primary-blue/16 dark:shadow-accent-red/16 ring-2 ring-primary-blue/20 dark:ring-accent-red/20 featured-elevated'
-                      : 'shadow-lg shadow-gray-900/10 dark:shadow-black/30 ring-1 ring-gray-200/60 dark:ring-white/12'
-                } backdrop-blur-xl card-surface`}
+                      ? 'bg-white dark:bg-[#171219] shadow-[0_28px_80px_rgba(37,99,235,0.18)] dark:shadow-[0_30px_90px_rgba(185,28,28,0.42)] ring-2 ring-primary-blue/25 dark:ring-accent-red/24 featured-elevated'
+                      : 'bg-white dark:bg-[#121418] shadow-[0_22px_70px_rgba(15,23,42,0.14)] dark:shadow-[0_24px_80px_rgba(185,28,28,0.28)] ring-1 ring-slate-200/95 dark:ring-white/12'
+                } border border-slate-100 dark:border-white/8 card-surface`}
               >
                 {/* Gradient top edge */}
-                <div className="h-1 w-full brand-mix-gradient" />
+                <div className="h-1 w-full bg-gradient-to-r from-primary-blue via-accent-blue to-indigo-500 dark:from-accent-red dark:via-primary-red dark:to-red-900" />
 
                 {/* Decorative sale ribbon (visual only) */}
-                {plan.originalPrice && (
+                {originalPrice && (
                   <div className="absolute -top-3 left-6 z-30 pointer-events-none" aria-hidden="true">
                     <span className="ribbon">{percent ? `${percent}% OFF` : `Save ${computedSavings}`}</span>
                   </div>
                 )}
 
                 {/* Inner glow on hover */}
-                <div className="absolute inset-0 rounded-[2rem] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none bg-gradient-to-b from-primary-blue/[0.03] to-transparent dark:from-accent-red/[0.05]" />
+                <div className="absolute inset-0 rounded-[2rem] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none bg-gradient-to-b from-primary-blue/[0.04] via-transparent to-transparent dark:from-accent-red/[0.06]" />
 
                 {/* Best value badge */}
                 {isFeatured && (
@@ -246,7 +268,7 @@ export default function PricingPage() {
                     {(() => {
                       const Icon = PLAN_ICONS[plan.id];
                       return (
-                        <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary-blue/10 to-accent-blue/10 dark:from-accent-red/10 dark:to-primary-red/10 flex items-center justify-center">
+                        <div className="w-20 h-20 rounded-2xl bg-primary-blue/10 dark:bg-accent-red/10 flex items-center justify-center ring-1 ring-primary-blue/15 dark:ring-accent-red/15">
                           <Icon className="w-10 h-10 marketing-accent-text" strokeWidth={1.5} />
                         </div>
                       );
@@ -256,19 +278,19 @@ export default function PricingPage() {
                   <div className="mb-1.5 text-[0.65rem] font-bold uppercase tracking-[0.2em] marketing-accent-text">
                     Standard Access
                   </div>
-                  <h2 className="text-2xl font-extrabold text-gray-900 dark:text-white mb-1.5 tracking-tight">
+                  <h2 className="marketing-hero-title text-2xl font-extrabold mb-1.5 tracking-tight">
                     {plan.label}
                   </h2>
-                  <p className="text-sm text-gray-600 dark:text-gray-200 mb-8 leading-relaxed">{plan.description}</p>
+                  <p className="text-sm text-[color-mix(in_srgb,var(--foreground)_66%,transparent)] mb-8 leading-relaxed">{plan.description}</p>
 
                   {/* Price (visual discount only) */}
                   <div className="mb-2">
                     <span className="sr-only">Price: {plan.price} {plan.period}</span>
 
                     {/* Visual original price (fake discount) */}
-                    {plan.originalPrice && (
+                    {originalPrice && (
                       <div className="flex items-center justify-center gap-3 mb-2" aria-hidden="true">
-                        <span className="text-sm text-gray-400 dark:text-gray-500 line-through">{plan.originalPrice}</span>
+                        <span className="text-sm text-[color-mix(in_srgb,var(--foreground)_46%,transparent)] line-through">{originalPrice}</span>
                         {percent ? (
                           <span className="percent-badge">{percent}% Off</span>
                         ) : (
@@ -283,17 +305,17 @@ export default function PricingPage() {
                       <span className="text-6xl sm:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-primary-blue via-accent-blue to-indigo-500 dark:from-accent-red dark:via-primary-red dark:to-red-900 tracking-tight">
                         {plan.price}
                       </span>
-                      <span className="text-gray-500 dark:text-gray-300 ml-2 text-sm font-medium">
+                      <span className="text-[color-mix(in_srgb,var(--foreground)_56%,transparent)] ml-2 text-sm font-medium">
                         / {plan.period}
                       </span>
                     </div>
                   </div>
-                  <p className="text-xs text-gray-500 dark:text-gray-300 mb-10 font-medium">{plan.subtext}</p>
+                  <p className="text-xs text-[color-mix(in_srgb,var(--foreground)_56%,transparent)] mb-10 font-medium">{plan.subtext}</p>
 
                   {/* Features */}
                   <ul className="space-y-4 mb-10 flex-1">
                     {FEATURES.map(({ icon, text }) => (
-                      <li key={text} className="flex items-center gap-3 text-gray-800 dark:text-gray-50 text-sm">
+                      <li key={text} className="flex items-center gap-3 text-[var(--foreground)] text-sm">
                         <span className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-xl bg-primary-blue/10 dark:bg-accent-red/10 marketing-accent-text">{icon}</span>
                         <span className="font-medium">{text}</span>
                       </li>
@@ -305,10 +327,10 @@ export default function PricingPage() {
                     onClick={() => handleSubscribe(plan.id)}
                     disabled={!!subscribing || hasActiveSub || !authChecked}
                     aria-label={`Subscribe to Standard Access — ${plan.label}`}
-                    className={`w-full flex items-center justify-center gap-2 py-4 px-6 rounded-2xl font-bold text-white text-base transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[var(--marketing-ring)] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed ${
+                    className={`w-full flex items-center justify-center gap-2 py-4 px-6 rounded-2xl font-bold text-black dark:text-white text-base transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[var(--marketing-ring)] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed ${
                       hasActiveSub
                         ? 'bg-gray-400 cursor-default'
-                        : 'brand-mix-gradient shadow-lg shadow-primary-blue/25 dark:shadow-accent-red/25 hover:shadow-xl hover:shadow-primary-blue/30 dark:hover:shadow-accent-red/30 hover:scale-[1.02] active:scale-[0.98] cta-animate'
+                        : 'bg-gradient-to-r from-primary-blue via-accent-blue to-indigo-500 dark:from-accent-red dark:via-primary-red dark:to-red-900 shadow-[0_18px_36px_rgba(37,99,235,0.24)] dark:shadow-[0_18px_36px_rgba(185,28,28,0.40)] hover:shadow-[0_24px_48px_rgba(37,99,235,0.30)] dark:hover:shadow-[0_24px_48px_rgba(185,28,28,0.52)] hover:scale-[1.02] active:scale-[0.98] cta-animate'
                     }`}
                   >
                     {isLoading ? (
@@ -336,7 +358,7 @@ export default function PricingPage() {
         {/* ── Trust indicators ── */}
         <div className="flex flex-wrap justify-center gap-4 mb-20">
           {TRUST.map(({ icon, label }) => (
-            <div key={label} className="flex items-center gap-2.5 text-sm text-gray-800 dark:text-slate-50 backdrop-blur-md marketing-panel px-5 py-2.5 rounded-full border border-gray-300/50 dark:border-red-400/25 shadow-sm">
+            <div key={label} className="flex items-center gap-2.5 text-sm text-[var(--foreground)] bg-white dark:bg-[#14151b] px-5 py-2.5 rounded-full border border-slate-200 dark:border-red-400/25 shadow-sm">
               <span className="marketing-accent-text">{icon}</span>
               <span className="font-medium">{label}</span>
             </div>
@@ -345,24 +367,24 @@ export default function PricingPage() {
 
         {/* ── What you unlock section ── */}
         <div className="rounded-[2rem] marketing-panel border border-white/50 dark:border-white/10 shadow-xl shadow-gray-900/5 dark:shadow-black/20 p-8 md:p-14 text-center">
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white mb-4 tracking-tight">
+          <h2 className="marketing-hero-title text-3xl sm:text-4xl font-extrabold mb-4 tracking-tight">
             <span className="sr-only">What&apos;s waiting for you</span>
             <div className="flex items-center justify-center gap-8">
-              <div className="flex flex-col items-center text-gray-800 dark:text-gray-100">
+              <div className="flex flex-col items-center text-[var(--foreground)]">
                 <UserCheck className="w-10 h-10 marketing-accent-text" />
                 <span className="mt-2 text-sm font-semibold">Your Stage</span>
               </div>
-              <div className="flex flex-col items-center text-gray-800 dark:text-gray-100">
+              <div className="flex flex-col items-center text-[var(--foreground)]">
                 <ImageIcon className="w-10 h-10 marketing-accent-text" />
                 <span className="mt-2 text-sm font-semibold">Show Everything</span>
               </div>
-              <div className="flex flex-col items-center text-gray-800 dark:text-gray-100">
+              <div className="flex flex-col items-center text-[var(--foreground)]">
                 <TrendingUp className="w-10 h-10 marketing-accent-text" />
                 <span className="mt-2 text-sm font-semibold">Cut the Queue</span>
               </div>
             </div>
           </h2>
-          <p className="text-gray-600 dark:text-gray-200 mb-12 max-w-lg mx-auto leading-relaxed">
+          <p className="text-[color-mix(in_srgb,var(--foreground)_68%,transparent)] mb-12 max-w-lg mx-auto leading-relaxed">
             No fluff. No fake features. Just the tools to get you seen.
           </p>
 
@@ -371,7 +393,7 @@ export default function PricingPage() {
 
         {/* ── Footer note ── */}
         <div className="mt-14 pt-8 border-t border-gray-200/40 dark:border-white/5">
-          <p className="text-center text-sm text-gray-600 dark:text-gray-300 font-medium">
+          <p className="text-center text-sm text-[color-mix(in_srgb,var(--foreground)_64%,transparent)] font-medium">
             Secured via Stripe. Ditch it any time from your dashboard.
             {!isLoggedIn && authChecked && (
               <span>

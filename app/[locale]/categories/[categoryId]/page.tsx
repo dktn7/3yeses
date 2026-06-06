@@ -2,6 +2,7 @@
 // This route is deprecated. Redirect to the new categories page with query params.
 import { redirect } from 'next/navigation';
 import prisma from '@/lib/prisma';
+import { buildLocalizedPath } from '@/lib/locale-path';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,11 +21,11 @@ export default async function CategoryPage({ params }: Props) {
     });
 
     if (category) {
-      redirect(`/${locale}/categories?category=${encodeURIComponent(category.name)}`);
+      redirect(buildLocalizedPath(locale, `/categories?category=${encodeURIComponent(category.name)}`));
     }
   } catch {
     // If lookup fails, just redirect to categories index
   }
 
-  redirect(`/${locale}/categories`);
+  redirect(buildLocalizedPath(locale, '/categories'));
 }

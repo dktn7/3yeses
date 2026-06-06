@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createPortal } from 'react-dom';
 import SwoopingTick from './SwoopingTick';
+import { buildLocalizedPath, getLocaleFromPathname } from '@/lib/locale-path';
 
 interface AuthRequiredModalProps {
   isOpen: boolean;
@@ -13,18 +14,11 @@ interface AuthRequiredModalProps {
   action?: string;
 }
 
-const SUPPORTED_LOCALES = ['en-gb', 'fr-FR', 'de-DE', 'es-ES', 'it-IT', 'pt-PT', 'ru-RU', 'ja-JP', 'zh-CN', 'ar', 'en'];
-
-const getLocaleFromPath = (path: string): string => {
-  const firstSegment = path.split('/').filter(Boolean)[0] || '';
-  return SUPPORTED_LOCALES.includes(firstSegment) ? firstSegment : 'en-gb';
-};
-
 const buildAuthPath = (mode: 'signin' | 'signup', currentPath: string, locale: string): string => {
   if (mode === 'signup') {
-    return `/${locale}/auth/signup/steps/step-1?redirect=${encodeURIComponent(currentPath)}`;
+    return `${buildLocalizedPath(locale, '/auth/signup/steps/step-1')}?redirect=${encodeURIComponent(currentPath)}`;
   }
-  return `/${locale}/auth/signin?redirect=${encodeURIComponent(currentPath)}`;
+  return `${buildLocalizedPath(locale, '/auth/signin')}?redirect=${encodeURIComponent(currentPath)}`;
 };
 
 export default function AuthRequiredModal({
@@ -44,7 +38,7 @@ export default function AuthRequiredModal({
   const handleSignIn = () => {
     if (typeof window === 'undefined') return;
     const currentPath = `${window.location.pathname}${window.location.search}`;
-    const locale = getLocaleFromPath(window.location.pathname);
+    const locale = getLocaleFromPathname(window.location.pathname);
     onClose();
     router.push(buildAuthPath('signin', currentPath, locale));
   };
@@ -52,7 +46,7 @@ export default function AuthRequiredModal({
   const handleSignUp = () => {
     if (typeof window === 'undefined') return;
     const currentPath = `${window.location.pathname}${window.location.search}`;
-    const locale = getLocaleFromPath(window.location.pathname);
+    const locale = getLocaleFromPathname(window.location.pathname);
     onClose();
     router.push(buildAuthPath('signup', currentPath, locale));
   };

@@ -79,7 +79,7 @@ export default function LocationAutocomplete({ value, onChange, placeholder }: P
           onFocus={() => setShowSuggestions(true)}
           onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
           placeholder={placeholder || 'Search city or region...'}
-          className="w-full pl-9 pr-3 py-2 rounded-full ring-1 ring-slate-900/8 dark:ring-white/[0.08] bg-slate-50 dark:bg-gray-900/90 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-[var(--brand-primary)]/30 focus:outline-none transition-all"
+          className="w-full pl-9 pr-3 py-2 rounded-full ring-1 ring-[var(--chrome-border)] bg-[var(--chrome-panel)] text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-[var(--brand-glow)] focus:outline-none transition-all"
         />
       </div>
 
@@ -92,7 +92,7 @@ export default function LocationAutocomplete({ value, onChange, placeholder }: P
                   key={`${city.name}-${city.country}`}
                   type="button"
                   onClick={() => handleSelect(city)}
-                  className="w-full text-left px-4 py-3 rounded-xl text-sm transition-colors duration-200 text-gray-700 dark:text-gray-100 hover-smart-bg flex items-center gap-2"
+                  className="w-full text-left px-4 py-3 rounded-xl text-sm transition-colors duration-200 text-gray-700 dark:text-gray-100 hover:bg-[var(--brand-primary)]/8 dark:hover:bg-white/5 flex items-center gap-2"
                 >
                   <MapPin className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
                   <div>

@@ -2,8 +2,9 @@ import { RefObject, useEffect } from 'react';
 
 export default function useFocusTrap(containerRef: RefObject<HTMLElement | null>) {
   useEffect(() => {
-    const container = containerRef?.current;
-    if (!container) return;
+    const containerEl = containerRef.current;
+    if (!containerEl) return;
+    const container = containerEl;
 
     const prevActive = document.activeElement as HTMLElement | null;
 

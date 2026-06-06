@@ -9,6 +9,7 @@ import { Facebook, Instagram, Twitter } from 'lucide-react';
 import TikTokIcon from './icons/TikTokIcon';
 import Tooltip from './Tooltip';
 import { useTranslations } from 'next-intl';
+import { buildLocalizedPath, getLocaleFromPathname } from '@/lib/locale-path';
 
 export default function Sidebar({ isCollapsed = false, setIsCollapsed }: { isCollapsed?: boolean, setIsCollapsed?: (isCollapsed: boolean) => void }) {
     const pathname = usePathname();
@@ -20,21 +21,25 @@ export default function Sidebar({ isCollapsed = false, setIsCollapsed }: { isCol
     const t = useTranslations('Navigation');
 
     // Get current locale from pathname, handling both locale-based and auth routes
-    const pathSegments = pathname?.split('/').filter(Boolean) || [];
-    const validLocales = ['en-gb', 'fr-FR', 'de-DE', 'es-ES', 'it-IT', 'pt-PT', 'ru-RU', 'ja-JP', 'zh-CN', 'ar'];
-    const firstSegment = pathSegments[0] || 'en-gb';
-    // If first segment is not a valid locale (e.g., 'auth'), default to 'en-gb'
-    const locale = validLocales.includes(firstSegment) ? firstSegment : 'en-gb';
+    const locale = getLocaleFromPathname(pathname);
+
+    const isNavItemActive = (href: string) => {
+        if (href === buildLocalizedPath(locale, '/')) {
+            return pathname === href || pathname === `${href}/`;
+        }
+
+        return pathname === href || pathname?.startsWith(`${href}/`);
+    };
 
     // Create nav items using translations with locale-aware links
     const navItems = [
-        { href: `/${locale}`, icon: Home, label: t('home') },
-        { href: `/${locale}/about`, icon: BookOpen, label: t('about') },
-        { href: `/${locale}/why-how`, icon: Compass, label: t('whyAndHow') },
-        { href: `/${locale}/categories`, icon: List, label: t('categories') },
-        { href: `/${locale}/pricing`, icon: CreditCard, label: t('pricing') },
-        { href: `/${locale}/hub`, icon: Grid, label: t('talentHub') },
-        { href: `/${locale}/support`, icon: Mail, label: t('support') }
+        { href: buildLocalizedPath(locale, '/'), icon: Home, label: t('home') },
+        { href: buildLocalizedPath(locale, '/about'), icon: BookOpen, label: t('about') },
+        { href: buildLocalizedPath(locale, '/why-how'), icon: Compass, label: t('whyAndHow') },
+        { href: buildLocalizedPath(locale, '/categories'), icon: List, label: t('categories') },
+        { href: buildLocalizedPath(locale, '/pricing'), icon: CreditCard, label: t('pricing') },
+        { href: buildLocalizedPath(locale, '/hub'), icon: Grid, label: t('talentHub') },
+        { href: buildLocalizedPath(locale, '/support'), icon: Mail, label: t('support') }
     ];
 
     // Create dynamic dropdown items based on auth status with locale-aware links
@@ -43,8 +48,8 @@ export default function Sidebar({ isCollapsed = false, setIsCollapsed }: { isCol
             icon: Shield,
             label: t('legal'),
             items: [
-                { href: `/${locale}/privacy`, label: t('privacyPolicy') },
-                { href: `/${locale}/terms`, label: t('termsOfService') },
+                { href: buildLocalizedPath(locale, '/privacy'), label: t('privacyPolicy') },
+                { href: buildLocalizedPath(locale, '/terms'), label: t('termsOfService') },
             ]
         }
     ];
@@ -106,13 +111,13 @@ export default function Sidebar({ isCollapsed = false, setIsCollapsed }: { isCol
             <nav className="space-y-5 flex-1">
                 <div className="space-y-1">
                     {navItems.map((item, index) => {
-                        const isActive = pathname === item.href;
+        const isActive = isNavItemActive(item.href);
                         return (
                         <Link
                             key={item.href}
                             href={item.href}
                             className={`group flex items-center gap-3 py-2.5 px-4 rounded-xl transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${isActive
-                                ? 'bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] font-semibold shadow-sm ring-1 ring-[var(--brand-primary)]/15'
+                                ? 'bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] font-semibold shadow-sm ring-1 ring-blue-200/80 ring-offset-1 ring-offset-[var(--chrome-bg)] dark:bg-[rgba(185,28,28,0.22)] dark:text-red-100 dark:ring-1 dark:ring-red-500/60 dark:ring-offset-2 dark:ring-offset-[rgba(17,24,39,0.95)]'
                                 : 'text-[var(--sidebar-text)] hover:bg-[var(--chrome-hover)] hover:text-[var(--sidebar-text-hover)]'
                             }`}
                             style={{ animationDelay: `${index * 40}ms` }}
@@ -135,8 +140,8 @@ export default function Sidebar({ isCollapsed = false, setIsCollapsed }: { isCol
                 <div className="h-px bg-[var(--chrome-border)] mx-2" />
 
                 <div className="space-y-1">
-                    {getDropdownItems().map((dropdown) => (
-                        <div
+                {getDropdownItems().map((dropdown) => (
+                    <div
                             key={dropdown.label}
                             ref={el => { dropdownRefs.current[dropdown.label] = el; }}
                             className="relative dropdown-item"
@@ -146,7 +151,7 @@ export default function Sidebar({ isCollapsed = false, setIsCollapsed }: { isCol
                             <button
                                 onClick={() => handleDropdownClick(dropdown.label)}
                                 className={`group flex items-center justify-between w-full py-2.5 px-4 rounded-xl transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${openDropdown === dropdown.label
-                                    ? 'bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] font-semibold ring-1 ring-[var(--brand-primary)]/15'
+                                    ? 'bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] font-semibold ring-1 ring-blue-200/80 ring-offset-1 ring-offset-[var(--chrome-bg)] dark:bg-[rgba(185,28,28,0.22)] dark:text-red-100 dark:ring-1 dark:ring-red-500/60 dark:ring-offset-2 dark:ring-offset-[rgba(17,24,39,0.95)]'
                                     : 'text-[var(--sidebar-text)] hover:bg-[var(--chrome-hover)] hover:text-[var(--sidebar-text-hover)]'
                                 }`}
                             >
@@ -169,8 +174,8 @@ export default function Sidebar({ isCollapsed = false, setIsCollapsed }: { isCol
                 <Link
                     key={item.label}
                     href={item.href}
-                        className={`flex items-center gap-2 py-2 px-3 rounded-lg text-sm transition-all duration-200 ${pathname === item.href
-                        ? 'bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] font-semibold'
+                    className={`flex items-center gap-2 py-2 px-3 rounded-lg text-sm transition-all duration-200 ${isNavItemActive(item.href)
+                        ? 'bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] font-semibold ring-1 ring-blue-200/80 ring-offset-1 ring-offset-[var(--chrome-bg)] dark:bg-[rgba(185,28,28,0.22)] dark:text-red-100 dark:ring-1 dark:ring-red-500/60 dark:ring-offset-2 dark:ring-offset-[rgba(17,24,39,0.95)]'
                         : 'text-[var(--sidebar-text)] hover:bg-[var(--chrome-hover)] hover:text-[var(--sidebar-text-hover)]'
                     }`}
                 >
@@ -186,8 +191,8 @@ export default function Sidebar({ isCollapsed = false, setIsCollapsed }: { isCol
                                         <Link
                                             key={item.label}
                                             href={item.href}
-                                            className={`block py-2 px-3 rounded-lg text-sm transition-all duration-200 ${pathname === item.href
-                                                ? 'bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] font-semibold'
+                                            className={`block py-2 px-3 rounded-lg text-sm transition-all duration-200 ${isNavItemActive(item.href)
+                                                ? 'bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] font-semibold ring-1 ring-blue-200/80 ring-offset-1 ring-offset-[var(--chrome-bg)] dark:bg-[rgba(185,28,28,0.18)] dark:text-red-100 dark:ring-red-500/20 dark:ring-offset-transparent'
                                                 : 'text-[var(--sidebar-text)] hover:bg-[var(--chrome-hover)] hover:text-[var(--sidebar-text-hover)]'
                                             }`}
                                         >

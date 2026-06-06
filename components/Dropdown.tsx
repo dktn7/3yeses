@@ -86,7 +86,7 @@ export default function Dropdown<T extends string>({ options, value, onChange, a
         aria-expanded={open}
         aria-label={ariaLabel}
         onClick={() => setOpen((s) => !s)}
-        className="w-full flex items-center justify-between gap-2 bg-light-surface/70 dark:bg-dark-surface/70 border border-gray-200/60 dark:border-white/10 text-sm text-light-surface dark:text-dark-surface px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-blue/30 dark:focus:ring-accent-red/30"
+        className="w-full flex items-center justify-between gap-2 bg-[var(--chrome-panel)] border border-[var(--chrome-border)] text-sm text-gray-900 dark:text-white px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--brand-glow)]"
       >
         <span className="truncate">{selected}</span>
         <svg className={`w-4 h-4 transition-transform ${open ? 'rotate-180' : ''}`} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -101,7 +101,7 @@ export default function Dropdown<T extends string>({ options, value, onChange, a
             role="listbox"
             tabIndex={-1}
             style={portalStyle}
-            className="z-50 bg-light-surface dark:bg-dark-surface border border-gray-200/60 dark:border-gray-800 rounded-lg shadow-lg overflow-auto py-1 focus:outline-none"
+            className="z-50 bg-[var(--chrome-panel)] border border-[var(--chrome-border)] rounded-lg shadow-lg overflow-auto py-1 focus:outline-none"
           >
             {sortedOptions.map((opt) => (
               <li
@@ -109,7 +109,7 @@ export default function Dropdown<T extends string>({ options, value, onChange, a
                 role="option"
                 aria-selected={opt.value === value}
                 onClick={() => { onChange(opt.value); setOpen(false); }}
-                className={`px-3 py-2 text-sm cursor-pointer hover:bg-light-surface/90 dark:hover:bg-dark-surface/90 ${opt.value === value ? 'bg-light-surface/90 dark:bg-dark-surface/90 font-semibold' : ''}`}
+                className={`px-3 py-2 text-sm cursor-pointer hover:bg-[var(--brand-primary)]/8 hover:text-[var(--brand-primary)] ${opt.value === value ? 'bg-[var(--brand-primary)]/8 text-[var(--brand-primary)] font-semibold' : 'text-gray-900 dark:text-gray-100'}`}
               >
                 {opt.label}
               </li>

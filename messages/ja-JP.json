@@ -1216,11 +1216,11 @@
       "secondary": "料金を見る"
     },
     "stats": {
-      "categories": "20+",
+      "categories": "9",
       "categoriesLabel": "タレントカテゴリ",
-      "subcategories": "145+",
+      "subcategories": "50",
       "subcategoriesLabel": "サブカテゴリ",
-      "locales": "11",
+      "locales": "10",
       "localesLabel": "対応言語",
       "price": "£10",
       "priceLabel": "6ヶ月"
@@ -1244,7 +1244,7 @@
         "desc": "プロフィール閲覧数、ポートフォリオエンゲージメント、検索インプレッションを追跡。"
       },
       "categories": {
-        "title": "20以上のタレントカテゴリ",
+        "title": "9のタレントカテゴリ",
         "desc": "俳優、ミュージシャン、モデル、ダンサー、声優、コメディアン、DJ、カメラマンなど。"
       },
       "simple": {

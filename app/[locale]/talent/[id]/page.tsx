@@ -19,6 +19,7 @@ import SkillMultiSelect from '@/components/SkillMultiSelect';
 import LanguageMultiSelect from '@/components/LanguageMultiSelect';
 import CharacteristicSelect from '@/components/CharacteristicSelect';
 import ProfileOnboardingGuide from '@/components/ProfileOnboardingGuide';
+import { buildLocalizedPath } from '@/lib/locale-path';
 import {
   genderOptions,
   ethnicityOptions,
@@ -589,10 +590,10 @@ export default function TalentProfilePage() {
   const breadcrumbPath = path ? path.split(',') : [talent.category];
 
   const breadcrumbItems = [
-    { label: 'Home', href: `/${locale}` },
+    { label: 'Home', href: buildLocalizedPath(locale, '/') },
     ...breadcrumbPath.map(item => {
       const catId = editData.categoryId || (data as any)?.talent?.categoryId;
-      return { label: item.charAt(0).toUpperCase() + item.slice(1), href: catId ? `/${locale}/categories/${catId}` : `/${locale}/categories` };
+      return { label: item.charAt(0).toUpperCase() + item.slice(1), href: catId ? buildLocalizedPath(locale, `/categories/${catId}`) : buildLocalizedPath(locale, '/categories') };
     }),
     { label: talent.name },
   ];
@@ -608,7 +609,7 @@ export default function TalentProfilePage() {
     const params = new URLSearchParams();
     params.set('skills', skill);
     params.set('filter', 'talent');
-    router.push(`/${locale}/search-results?${params.toString()}`);
+    router.push(buildLocalizedPath(locale, `/search-results?${params.toString()}`));
   };
 
   const handleLanguageClick = (language: string) => {
@@ -616,7 +617,7 @@ export default function TalentProfilePage() {
     const params = new URLSearchParams();
     params.set('languages', language);
     params.set('filter', 'talent');
-    router.push(`/${locale}/search-results?${params.toString()}`);
+    router.push(buildLocalizedPath(locale, `/search-results?${params.toString()}`));
   };
 
   const handleCharacteristicClick = (value?: string | null, filterKey?: string) => {
@@ -641,7 +642,7 @@ export default function TalentProfilePage() {
       params.set('q', value);
     }
     params.set('filter', 'talent');
-    router.push(`/${locale}/search-results?${params.toString()}`);
+    router.push(buildLocalizedPath(locale, `/search-results?${params.toString()}`));
   };
 
   const handleLocationClick = () => {
@@ -649,16 +650,16 @@ export default function TalentProfilePage() {
     const params = new URLSearchParams();
     params.set('location', talent.location);
     params.set('filter', 'talent');
-    router.push(`/${locale}/search-results?${params.toString()}`);
+    router.push(buildLocalizedPath(locale, `/search-results?${params.toString()}`));
   };
 
   const handleCategoryClick = () => {
     if (editMode) return;
     const categoryName = talent.category;
     if (categoryName) {
-      router.push(`/${locale}/categories?category=${encodeURIComponent(categoryName)}`);
+      router.push(buildLocalizedPath(locale, `/categories?category=${encodeURIComponent(categoryName)}`));
     } else {
-      router.push(`/${locale}/categories`);
+      router.push(buildLocalizedPath(locale, '/categories'));
     }
   };
 
@@ -1640,7 +1641,7 @@ export default function TalentProfilePage() {
                     mediaItems={mediaItems}
                     onMediaClick={(item) => window.open(item.mediaUrl, '_blank')}
                     onProfileClick={() => router.push(`/talent/${suggestion.id}`)}
-                    onSkillClick={(s) => router.push(`/${locale}/hub?q=${encodeURIComponent(s)}`)}
+                    onSkillClick={(s) => router.push(buildLocalizedPath(locale, `/hub?q=${encodeURIComponent(s)}`))}
                   />
                 );
               })}

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import ProfileSection from './ProfileSection.tsx';
 import LanguageDropdown from './LanguageDropdown';
 import { usePathname } from 'next/navigation';
+import { buildLocalizedPath, getLocaleFromPathname } from '@/lib/locale-path';
 
 // Static translations for root layout (no NextIntlClientProvider available)
 const translations: Record<string, { login: string; signup: string }> = {
@@ -25,10 +26,7 @@ export default function AuthTopRight() {
   const pathname = usePathname();
   
   // Extract locale from pathname, validate it's a real locale
-  const validLocales = ['en', 'en-gb', 'de-DE', 'es-ES', 'fr-FR', 'it-IT', 'ja-JP', 'pt-PT', 'ru-RU', 'zh-CN', 'ar'];
-  const pathSegments = pathname?.split('/').filter(Boolean) || [];
-  const potentialLocale = pathSegments[0];
-  const locale = validLocales.includes(potentialLocale) ? potentialLocale : 'en-gb';
+  const locale = getLocaleFromPathname(pathname);
   
   // Get translations for current locale
   const t = translations[locale] || translations['en-gb'];
@@ -46,13 +44,13 @@ export default function AuthTopRight() {
   return (
     <div className="flex gap-2 items-center">
       <Link
-        href={`/${locale}/auth/signin`}
+        href={buildLocalizedPath(locale, '/auth/signin')}
         className="text-sm font-medium px-4 py-2 rounded-md border border-gray-300 bg-light-surface text-light-surface hover:bg-blue-100 hover:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-colors dark:bg-dark-surface dark:text-dark-surface dark:border-gray-500 dark:hover:bg-red-500"
       >
         {t.login}
       </Link>
        <Link
-         href={`/${locale}/auth/signup/steps/step-1`}
+         href={buildLocalizedPath(locale, '/auth/signup/steps/step-1')}
          className="text-sm font-medium px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors dark:bg-red-600 dark:hover:bg-red-700"
        >
          {t.signup}

@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { CheckCircle2, X, Search } from 'lucide-react';
+import DropdownPanel from './DropdownPanel';
 
 interface Props {
   value: string[];
@@ -43,11 +44,17 @@ export default function LanguageMultiSelect({ value, onChange, placeholder }: Pr
   const [input, setInput] = React.useState('');
   const [showSuggestions, setShowSuggestions] = React.useState(false);
   const wrapperRef = React.useRef<HTMLDivElement>(null);
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
   // Close suggestions on click outside
   React.useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
+      const target = e.target as Element;
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(e.target as Node) &&
+        !target.closest('.dropdown-panel')
+      ) {
         setShowSuggestions(false);
       }
     };
@@ -98,10 +105,13 @@ export default function LanguageMultiSelect({ value, onChange, placeholder }: Pr
     <div ref={wrapperRef}>
       <div className="flex flex-wrap gap-2 mb-3">
         {value.map(v => (
-          <span key={v} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--marketing-pill-bg)] dark:bg-[var(--marketing-pill-bg)] text-[var(--marketing-pill-icon)] dark:text-[var(--marketing-pill-icon)] border border-[var(--marketing-pill-border)] text-sm font-medium">
-            <CheckCircle2 size={14} className="text-green-500" />
+          <span
+            key={v}
+            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/95 dark:bg-[rgba(127,29,29,0.18)] text-[var(--brand-primary)] dark:text-red-100 border border-[var(--marketing-pill-border)] dark:border-red-500/25 text-sm font-medium shadow-sm"
+          >
+            <CheckCircle2 size={14} className="text-[var(--brand-primary)] dark:text-red-300" />
             {v}
-            <button type="button" onClick={() => remove(v)} className="ml-0.5 hover:text-red-500 transition-colors">
+            <button type="button" onClick={() => remove(v)} className="ml-0.5 hover:text-red-500 dark:hover:text-red-200 transition-colors">
               <X size={14} />
             </button>
           </span>
@@ -112,24 +122,31 @@ export default function LanguageMultiSelect({ value, onChange, placeholder }: Pr
         <div className="relative">
           <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
           <input
+            ref={inputRef}
             type="text"
             value={input}
             onChange={e => { setInput(e.target.value); setShowSuggestions(true); }}
             onFocus={() => setShowSuggestions(true)}
             onKeyDown={handleKeyDown}
             placeholder={placeholder || 'Search languages...'}
-            className="w-full pl-9 pr-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-red-500"
+            className="w-full pl-9 pr-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-[var(--marketing-surface)] dark:bg-[var(--marketing-surface)] text-gray-900 dark:text-white text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--marketing-ring)] focus:border-transparent transition-all"
           />
         </div>
 
         {showSuggestions && (filtered.length > 0 || isCustom) && (
-          <div className="absolute z-50 mt-1 left-0 right-0 bg-light-surface dark:bg-dark-surface border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl max-h-56 overflow-auto">
+          <DropdownPanel
+            portal
+            anchorRef={inputRef}
+            matchWidth
+            maxHeight="14rem"
+            className="mt-1 overflow-hidden p-1 bg-[var(--marketing-surface)] dark:bg-[rgba(17,24,39,0.98)] backdrop-blur-xl"
+          >
             {filtered.slice(0, 20).map(l => (
               <button
                 key={l}
                 type="button"
                 onClick={() => add(l)}
-                className="w-full text-left px-3 py-2 hover-smart-bg text-sm text-gray-900 dark:text-white transition-colors"
+                className="w-full text-left px-3 py-2 rounded-xl text-sm text-gray-900 dark:text-gray-100 hover:bg-slate-100/80 dark:hover:bg-[rgba(185,28,28,0.16)] hover:text-gray-950 dark:hover:text-red-100 active:bg-slate-200/90 dark:active:bg-[rgba(185,28,28,0.24)] transition-colors"
               >
                 {l}
               </button>
@@ -138,12 +155,12 @@ export default function LanguageMultiSelect({ value, onChange, placeholder }: Pr
               <button
                 type="button"
                 onClick={addCustom}
-                className="w-full text-left px-3 py-2 hover-smart-bg text-sm text-blue-600 dark:text-red-400 font-medium border-t border-gray-100 dark:border-gray-800"
+                className="w-full text-left px-3 py-2 rounded-xl text-sm text-[var(--brand-primary)] dark:text-red-200 font-medium border-t border-[var(--marketing-pill-border)] hover:bg-slate-100/80 dark:hover:bg-[rgba(185,28,28,0.16)] active:bg-slate-200/90 dark:active:bg-[rgba(185,28,28,0.24)] transition-colors"
               >
                 + Add &ldquo;{inputTrimmed}&rdquo; as custom language
               </button>
             )}
-          </div>
+          </DropdownPanel>
         )}
       </div>
     </div>

@@ -5,6 +5,7 @@ import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Mail, Check, X, RefreshCw, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+import { buildLocalizedPath, getLocaleFromPathname } from '@/lib/locale-path';
 
 function VerifyEmailContent() {
   const router = useRouter();
@@ -14,10 +15,7 @@ function VerifyEmailContent() {
   const email = searchParams?.get ? searchParams.get('email') : null;
   
   // Extract locale for dashboard redirect
-  const pathSegments = pathname?.split('/').filter(Boolean) || [];
-  const validLocales = ['en-gb', 'fr-FR', 'de-DE', 'es-ES', 'it-IT', 'pt-PT', 'ru-RU', 'ja-JP', 'zh-CN', 'ar'];
-  const firstSegment = pathSegments[0] || 'en-gb';
-  const locale = validLocales.includes(firstSegment) ? firstSegment : 'en-gb';
+  const locale = getLocaleFromPathname(pathname);
   const [verificationStatus, setVerificationStatus] = useState<'pending' | 'success' | 'error' | 'expired'>('pending');
   const [loading, setLoading] = useState(false);
   const [resendCount, setResendCount] = useState(0);
@@ -66,7 +64,7 @@ function VerifyEmailContent() {
 
   const handleContinue = () => {
     if (verificationStatus === 'success') {
-      router.push(`/${locale}/dashboard`);
+      router.push(buildLocalizedPath(locale, '/dashboard'));
     }
   };
 
@@ -206,7 +204,7 @@ function VerifyEmailContent() {
           {/* Support Link */}
           <div className="mt-6 text-center">
             <Link
-              href={`/${locale}/contact`}
+              href={buildLocalizedPath(locale, '/contact')}
               className="text-sm text-primary-blue hover:text-accent-blue dark:text-accent-red dark:hover:text-red-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/30 dark:focus-visible:ring-accent-red/35 rounded-sm"
             >
               {t('needHelp')}

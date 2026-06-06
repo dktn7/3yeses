@@ -79,7 +79,7 @@ export function AnalyticsDashboard() {
                 />
                 <YAxis stroke="#9ca3af" />
                 <Tooltip 
-                  contentStyle={{ backgroundColor: '#1f2937', border: 'none', borderRadius: '0.5rem', color: '#fff' }}
+                  contentStyle={{ backgroundColor: '#171717', border: 'none', borderRadius: '0.5rem', color: '#fff' }}
                 />
                 <Line type="monotone" dataKey="count" stroke="#3b82f6" strokeWidth={2} />
               </LineChart>

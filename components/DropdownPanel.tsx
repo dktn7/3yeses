@@ -135,7 +135,7 @@ export default function DropdownPanel({
     <div
       ref={panelRef}
       role={role}
-      className={`dropdown-panel marketing-dropdown-panel marketing-surface ring-1 ring-[var(--marketing-border)] rounded-[1.5rem] shadow-[0_18px_48px_rgba(15,23,42,0.14)] dark:shadow-[0_18px_56px_rgba(0,0,0,0.58)] z-[70] overflow-y-auto ${className}`}
+      className={`dropdown-panel marketing-dropdown-panel marketing-surface ring-1 ring-[var(--chrome-border)] rounded-[1.5rem] shadow-[0_18px_48px_rgba(15,23,42,0.14)] dark:shadow-[0_18px_56px_rgba(0,0,0,0.58)] z-[70] overflow-y-auto ${className}`}
       style={style}
     >
       {children}

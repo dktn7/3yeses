@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation';
+import { buildLocalizedPath } from '@/lib/locale-path';
 
 type Props = {
   params: Promise<{
@@ -9,5 +10,5 @@ type Props = {
 export default async function SignupPage({ params }: Props) {
   const { locale } = await params;
   // Redirect directly to the multi-step signup flow
-  redirect(`/${locale}/auth/signup/steps/step-1`);
+  redirect(buildLocalizedPath(locale, '/auth/signup/steps/step-1'));
 }

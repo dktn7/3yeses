@@ -12,7 +12,7 @@ interface PageContentProps {
 
 const PageContent: React.FC<PageContentProps> = ({ children, title }) => {
   const { user } = useAuth();
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
 
   return (
     <div className="flex h-screen bg-gray-100 dark:bg-gray-900">

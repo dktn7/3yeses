@@ -1164,11 +1164,11 @@
       "secondary": "View pricing"
     },
     "stats": {
-      "categories": "20+",
+      "categories": "9",
       "categoriesLabel": "Talent categories",
-      "subcategories": "145+",
+      "subcategories": "50",
       "subcategoriesLabel": "Subcategories",
-      "locales": "11",
+      "locales": "10",
       "localesLabel": "Languages supported",
       "price": "£10",
       "priceLabel": "For 6 months"
@@ -1192,7 +1192,7 @@
         "desc": "Track profile views, portfolio engagement, search impressions, and click-through rates. See exactly how your profile is performing over time."
       },
       "categories": {
-        "title": "20+ talent categories",
+        "title": "9 talent categories",
         "desc": "Actors, musicians, models, dancers, voice artists, comedians, DJs, photographers, and more. Find your category and subcategory to reach the right audience."
       },
       "simple": {
@@ -1263,7 +1263,7 @@
         "messaging": "Comments and direct messages from the community",
         "views": "Real-time view counter on your profile",
         "likes": "Likes, ratings, and comments on your portfolio",
-        "languages": "Multi-language profile support (11 locales)",
+        "languages": "Multi-language profile support (10 locales)",
         "secure": "Secure payments via Stripe with invoice history"
       }
     },

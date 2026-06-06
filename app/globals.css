@@ -72,16 +72,32 @@
   --brand-accent: var(--brand-blue-400);
   --brand-glow: rgba(37,99,235,0.22);
   --brand-contrast: #ffffff;
-  --brand-contrast-inv: #0f172a;
+  --brand-contrast-inv: #111827;
   --brand-blue: var(--brand-blue-500);
   --brand-blue-glow: rgba(37,99,235,0.18);
   --brand-red: #B91C1C;
+  --brand-red-strong: #ef4444;
   /* SwoopingTick defaults (used by .swooping-tick CSS rules) */
   --swoop-outer: #2563eb; /* outer ring (blue) */
   --swoop-check: var(--brand-red); /* check mark (use canonical brand red) */
   --brand-red-glow: rgba(185,28,28,0.12);
   --sparkline-positive: #a7f3d0;
   --sparkline-negative: #fecaca;
+  /* Shared marketing tokens (light mode stays blue) */
+  --marketing-accent: var(--brand-blue-600);
+  --marketing-accent-strong: var(--brand-blue-700);
+  --marketing-heading: var(--brand-blue-700);
+  --marketing-heading-strong: var(--brand-blue-500);
+  --marketing-heading-blue: var(--marketing-heading);
+  --marketing-heading-blue-strong: var(--marketing-heading-strong);
+  --marketing-border: rgba(37,99,235,0.12);
+  --marketing-ring: rgba(37,99,235,0.22);
+  --marketing-surface-strong: rgba(37,99,235,0.14);
+  --marketing-panel-soft: rgba(255,255,255,0.82);
+  --marketing-bg-canvas: #f8fbff;
+  --marketing-bg-glow-top: rgba(59,130,246,0.08);
+  --marketing-hero-title: var(--marketing-heading);
+  --marketing-hero-muted: #475569;
   /* Landing page base bg — light mode keeps the page body soft and lets the top band carry the stronger blue */
   --landing-bg: linear-gradient(180deg, #e9f0ff 0%, #edf3ff 44%, #d9e5fb 100%);
   --landing-top-band: #2f63da;
@@ -114,7 +130,6 @@
   --marketing-pill-border: rgba(15,23,42,0.06); /* subtle border for pills */
   --marketing-pill-icon: var(--brand-blue-600); /* icon / accent inside pill (light) */
   --marketing-surface: rgba(255,255,255,0.96); /* marketing surface (cards, badges) */
-  --marketing-heading-blue: var(--brand-blue-700); /* prominent marketing heading color (light) */
   --marketing-accent-dark: #b91c1c; /* semantic dark accent (used in dark-mode mirroring) */
   --sidebar-text: #1d4ed8;
   --sidebar-text-hover: #153f9f;
@@ -135,7 +150,7 @@
 
 /* Class-based dark mode (for next-themes) */
 .dark {
-  --background: #111827;
+  --background: #0f0f0f;
   /* Dark-mode text stays neutral for full visibility; red is reserved for accents. */
   --foreground: #f8fafc;
   --foreground-muted: #cbd5e1;
@@ -152,9 +167,10 @@
   --brand-accent: #dc2626;
   --brand-glow: var(--brand-red-glow);
   --brand-contrast: #ffffff;
-  --brand-contrast-inv: #1e293b;
+  --brand-contrast-inv: #111827;
   --brand-blue: #66a3ff;
   --brand-red: #b91c1c;
+  --brand-red-strong: #ff6b6b;
   /* SwoopingTick overrides for dark mode (keep outer ring blue + red check) */
   --swoop-outer: #2563eb;
   --swoop-check: var(--brand-red);
@@ -162,18 +178,33 @@
   --brand-red-glow: rgba(185,28,28,0.22);
   --sparkline-positive: #fecaca;
   --sparkline-negative: #a7f3d0;
+  /* Shared marketing tokens (dark mode mirrors the light-mode accent structure in red) */
+  --marketing-accent: var(--brand-red);
+  --marketing-accent-strong: #dc2626;
+  --marketing-heading: var(--brand-red);
+  --marketing-heading-strong: #dc2626;
+  --marketing-heading-blue: var(--marketing-heading);
+  --marketing-heading-blue-strong: var(--marketing-heading-strong);
+  --marketing-border: rgba(220,38,38,0.16);
+  --marketing-ring: rgba(220,38,38,0.24);
+  --marketing-surface-strong: rgba(220,38,38,0.18);
+  --marketing-panel-soft: rgba(24,24,27,0.92);
+  --marketing-bg-canvas: #09090b;
+  --marketing-bg-glow-top: rgba(220,38,38,0.10);
+  --marketing-hero-title: var(--marketing-heading);
+  --marketing-hero-muted: #cbd5e1;
   /* Landing page base bg — dark mode keeps a dark-grey base with red signal layers */
-  --landing-bg: linear-gradient(180deg, #1f2937 0%, #111827 42%, #0d0d14 100%);
-  --landing-top-band: #111827;
-  --landing-wave-one: rgba(127, 29, 29, 0.22);
-  --landing-wave-two: rgba(220, 38, 38, 0.12);
-  --landing-wave-three: rgba(248, 113, 113, 0.10);
-  --landing-header-glow: rgba(248, 113, 113, 0.14);
+  --landing-bg: linear-gradient(180deg, #18181b 0%, #111111 42%, #09090b 100%);
+  --landing-top-band: #111111;
+  --landing-wave-one: rgba(39, 39, 42, 0.22);
+  --landing-wave-two: rgba(63, 63, 70, 0.12);
+  --landing-wave-three: rgba(212, 212, 216, 0.10);
+  --landing-header-glow: rgba(212, 212, 216, 0.12);
   --hero-top-wave: var(--landing-wave-three);
-  --chrome-bg: rgba(23, 23, 28, 0.95);
-  --chrome-panel: rgba(29, 29, 35, 0.97);
-  --chrome-border: rgba(255, 255, 255, 0.10);
-  --chrome-hover: rgba(255, 255, 255, 0.08);
+  --chrome-bg: rgba(24, 24, 27, 0.95);
+  --chrome-panel: rgba(32, 32, 36, 0.97);
+  --chrome-border: rgba(255, 255, 255, 0.08);
+  --chrome-hover: rgba(255, 255, 255, 0.06);
   /* Hero video overlay — dark mode (neutral dark) */
   --hero-overlay-from: rgba(10,10,14,0.84);
   --hero-overlay-to: rgba(10,10,14,0.62);
@@ -193,11 +224,10 @@
     --admin-glass: rgba(15, 23, 42, 0.7);
     --admin-glass-border: rgba(30, 41, 59, 0.6);
     /* Marketing tokens (dark mode) */
-    --marketing-pill-bg: #111827; /* dark grey pill background in dark mode */
-    --marketing-pill-border: rgba(255,255,255,0.06); /* subtle light border to separate from bg */
+    --marketing-pill-bg: var(--chrome-bg); /* match sidebar chrome in dark mode */
+    --marketing-pill-border: var(--chrome-border); /* same neutral border family as the sidebar */
     --marketing-pill-icon: var(--brand-red); /* icon / accent inside pill (dark) */
-    --marketing-surface: rgba(31,41,55,0.95); /* marketing surface for dark mode */
-    --marketing-heading-blue: var(--brand-red); /* use canonical About-page red in dark mode */
+    --marketing-surface: rgba(24,24,27,0.95); /* marketing surface for dark mode */
     --marketing-accent-dark: var(--brand-red); /* use canonical About red for dark accents */
     --sidebar-text: #dc2626;
     --sidebar-text-hover: var(--brand-red);
@@ -280,7 +310,7 @@
 /* Fallback for prefers-color-scheme when no theme is set */
 @media (prefers-color-scheme: dark) {
   :root:not(.light):not(.dark) {
-    --background: #111827;
+    --background: #111111;
     --foreground: #ededed;
   }
 }
@@ -329,6 +359,55 @@ body, p, span, label, input, button, select, textarea,
 
 .animate-fadeIn {
   animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* Shared marketing utilities */
+.marketing-panel,
+.marketing-surface {
+  background-color: var(--marketing-surface);
+  border-color: var(--marketing-surface-strong);
+}
+
+.marketing-panel {
+  background-color: var(--marketing-surface);
+}
+
+.marketing-surface {
+  background-color: var(--marketing-surface);
+}
+
+.marketing-pill {
+  background-color: var(--marketing-pill-bg);
+  border-color: var(--marketing-pill-border);
+}
+
+.marketing-accent-text {
+  color: var(--marketing-accent) !important;
+}
+
+.marketing-hero-title {
+  color: var(--foreground) !important;
+}
+
+.marketing-hero-muted {
+  color: var(--marketing-hero-muted);
+}
+
+.marketing-yes-accent {
+  color: var(--marketing-heading) !important;
+}
+
+.marketing-dynamic-headline {
+  color: var(--marketing-heading) !important;
+}
+
+.marketing-yes-accent {
+  display: inline-block;
+}
+
+.marketing-hero-title .marketing-yes-accent,
+.marketing-hero-title .marketing-dynamic-headline {
+  filter: saturate(1.02);
 }
 
 /* Dark-mode typographic overrides — SCOPED TO <main> ONLY.

@@ -38,7 +38,7 @@ function TimelineItem({ year, title, description }: TimelineItemProps) {
         <div className="w-4 h-4 bg-primary-blue dark:bg-accent-red rounded-full mt-2"></div>
       </div>
       <div className="flex-1 pb-8">
-        <div className="flex items-center space-x-2 mb-2">
+          <div className="flex items-center space-x-2 mb-2">
           <span className="text-lg font-bold text-primary-blue dark:text-accent-red">{year}</span>
         </div>
         <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{title}</h3>

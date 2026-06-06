@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';
+import { buildLocalizedPath, getLocaleFromPathname } from '@/lib/locale-path';
 import { 
   Settings, 
   HelpCircle, 
@@ -45,24 +46,7 @@ export default function ProfileDropdown({ user, onLogout }: Readonly<ProfileDrop
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const pathname = usePathname();
-  // Supported locale files in `messages/` (map lowercase -> canonical)
-  const supportedLocalesMap: Record<string, string> = {
-    'ar': 'ar',
-    'de-de': 'de-DE',
-    'en-gb': 'en-gb',
-    'en': 'en',
-    'es-es': 'es-ES',
-    'fr-fr': 'fr-FR',
-    'it-it': 'it-IT',
-    'ja-jp': 'ja-JP',
-    'pt-pt': 'pt-PT',
-    'ru-ru': 'ru-RU',
-    'zh-cn': 'zh-CN'
-  };
-
-  const first = pathname?.split('/')[1];
-  const firstKey = first ? first.toLowerCase() : undefined;
-  const locale = firstKey && supportedLocalesMap[firstKey] ? supportedLocalesMap[firstKey] : 'en-gb';
+  const locale = getLocaleFromPathname(pathname);
 
   // Fetch profile completion
   useEffect(() => {
@@ -95,7 +79,8 @@ export default function ProfileDropdown({ user, onLogout }: Readonly<ProfileDrop
 
   const handleNavigation = (path: string) => {
     setIsOpen(false);
-    router.push(path);
+    const target = path.startsWith('/admin') ? path : buildLocalizedPath(locale, path);
+    router.push(target);
   };
 
   const handleLogout = async () => {
@@ -106,7 +91,7 @@ export default function ProfileDropdown({ user, onLogout }: Readonly<ProfileDrop
         credentials: 'include',
       });
       onLogout();
-      router.push(`/${locale}`);
+      router.push(buildLocalizedPath(locale, '/'));
     } catch (error) {
       console.error('Logout failed:', error);
     }
@@ -159,7 +144,7 @@ export default function ProfileDropdown({ user, onLogout }: Readonly<ProfileDrop
     {
       icon: HelpCircle,
       label: 'Help & Support',
-      href: `/${locale}/support`,
+      href: buildLocalizedPath(locale, '/support'),
       separator: true,
     },
     {

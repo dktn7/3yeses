@@ -4,8 +4,8 @@ import AuthService from './lib/auth/auth-service';
 
 const intlMiddleware = createMiddleware({
   defaultLocale: 'en-gb',
-  locales: ['en', 'en-gb', 'de-DE', 'es-ES', 'fr-FR', 'it-IT', 'ja-JP', 'pt-PT', 'ru-RU', 'zh-CN', 'ar'],
-  localePrefix: 'as-needed',
+  locales: ['en-gb', 'de-DE', 'es-ES', 'fr-FR', 'it-IT', 'ja-JP', 'pt-PT', 'ru-RU', 'zh-CN', 'ar'],
+  localePrefix: 'always',
   pathnames: {
     '/': '/',
   },
@@ -58,6 +58,18 @@ export default async function middleware(request: NextRequest) {
   }
 
   // 3. Normal Site Localization
+  if (pathname === '/') {
+    const url = request.nextUrl.clone();
+    url.pathname = '/en-gb';
+    return NextResponse.redirect(url);
+  }
+
+  if (pathname === '/en' || pathname.startsWith('/en/')) {
+    const url = request.nextUrl.clone();
+    url.pathname = pathname.replace(/^\/en(?=\/|$)/, '/en-gb');
+    return NextResponse.redirect(url);
+  }
+
   return intlMiddleware(request as any);
 }
 
@@ -67,7 +79,7 @@ export const config = {
     '/',
 
     // Locale prefixes
-    '/(en|de-DE|en-gb|es-ES|fr-FR|it-IT|ja-JP|pt-PT|ru-RU|zh-CN|ar)/:path*',
+    '/(en-gb|de-DE|es-ES|fr-FR|it-IT|ja-JP|pt-PT|ru-RU|zh-CN|ar)/:path*',
 
     // Protect admin pages and admin APIs
     '/admin/:path*',

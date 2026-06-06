@@ -7,10 +7,10 @@ import Footer from './Footer';
 import AdSidebar from './AdSidebar';
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
   const pathname = usePathname();
   // Check for homepage - handle root and locale routes
-  const isHomePage = !pathname || pathname === '/' || pathname === '/en' || pathname === '/en-gb' || pathname.match(/^\/[a-z]{2}(-[A-Z]{2})?$/);
+  const isHomePage = !pathname || pathname === '/' || pathname === '/en-gb' || pathname === '/en-gb/';
 
   return (
     <div className="flex min-w-0">

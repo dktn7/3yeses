@@ -127,7 +127,7 @@ export default function HelpSectionPage({
 
         {/* Hero */}
         <div className="text-center mb-12">
-          <div className="marketing-pill mb-5 inline-flex items-center justify-center gap-3 rounded-full border border-primary-blue/20 bg-light-surface px-5 py-2.5 shadow-sm backdrop-blur-md dark:border-[var(--marketing-pill-border)] dark:bg-dark-surface">
+            <div className="marketing-pill mb-5 inline-flex items-center justify-center gap-3 rounded-full border border-primary-blue/20 bg-light-surface px-5 py-2.5 shadow-sm backdrop-blur-md dark:border-[var(--marketing-pill-border)] dark:bg-dark-surface">
             <SwoopingTick className="h-8 w-8 shrink-0 text-primary-blue dark:text-accent-red" />
             <span className="text-xs font-bold uppercase tracking-[0.25em] text-primary-blue dark:text-accent-red">
               {label}
@@ -182,7 +182,7 @@ export default function HelpSectionPage({
               href={`/support/submit-ticket`}
               className="group flex items-center gap-3 rounded-[1.5rem] backdrop-blur-xl bg-light-surface dark:bg-dark-surface border border-gray-200/50 dark:border-red-400/20 shadow-sm hover:shadow-lg hover:-translate-y-0.5 hover:border-primary-blue/30 dark:hover:border-red-300/35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/30 dark:focus-visible:ring-accent-red/35 transition-all duration-300 p-6"
             >
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-blue/10 to-accent-blue/10 dark:from-accent-red/10 dark:to-primary-red/10 flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-blue/10 to-accent-blue/10 dark:from-accent-red/10 dark:to-primary-red/10 flex items-center justify-center flex-shrink-0">
                 <LifeBuoy className="w-5 h-5 text-primary-blue dark:text-accent-red" />
               </div>
               <div>

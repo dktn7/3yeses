@@ -7,6 +7,7 @@ import { Send, User, Mail, MessageSquare, Phone, MapPin, Clock } from 'lucide-re
 import Breadcrumbs from '@/components/Breadcrumbs';
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { buildLocalizedPath, getLocaleFromPathname } from '@/lib/locale-path';
 
 export default function ContactPage() {
     const [formData, setFormData] = useState({
@@ -22,13 +23,10 @@ export default function ContactPage() {
     const tFooter = useTranslations('Footer');
 
     // Get current locale from pathname, validating against allowed locales
-    const pathSegments = pathname?.split('/').filter(Boolean) || [];
-    const validLocales = ['en-gb', 'fr-FR', 'de-DE', 'es-ES', 'it-IT', 'pt-PT', 'ru-RU', 'ja-JP', 'zh-CN', 'ar'];
-    const firstSegment = pathSegments[0] || 'en-gb';
-    const locale = validLocales.includes(firstSegment) ? firstSegment : 'en-gb';
+    const locale = getLocaleFromPathname(pathname);
 
     const breadcrumbItems = [
-        { label: t('home'), href: `/${locale}` },
+        { label: t('home'), href: buildLocalizedPath(locale, '/') },
         { label: t('contact') }
     ];
 

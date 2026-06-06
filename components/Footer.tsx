@@ -5,18 +5,14 @@ import TikTokIcon from "@/components/icons/TikTokIcon";
 import { useAuth } from '@/contexts/AuthContext';
 import { useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
+import { buildLocalizedPath, getLocaleFromPathname } from '@/lib/locale-path';
 
 export default function Footer() {
   const { user, loading } = useAuth();
   const t = useTranslations('Footer');
   const pathname = usePathname();
 
-  // Get current locale from pathname, handling both locale-based and auth routes
-  const pathSegments = pathname?.split('/').filter(Boolean) || [];
-  const validLocales = ['en-gb', 'fr-FR', 'de-DE', 'es-ES', 'it-IT', 'pt-PT', 'ru-RU', 'ja-JP', 'zh-CN', 'ar'];
-  const firstSegment = pathSegments[0] || 'en-gb';
-  // If first segment is not a valid locale (e.g., 'auth'), default to 'en-gb'
-  const locale = validLocales.includes(firstSegment) ? firstSegment : 'en-gb';
+  const locale = getLocaleFromPathname(pathname);
 
   return (
     <footer className="bg-[var(--chrome-bg)] py-12 border-t border-transparent dark:border-[var(--chrome-border)]">
@@ -41,25 +37,25 @@ export default function Footer() {
             <ul className="space-y-2">
               {!user && !loading && (
                 <li>
-                  <Link href="/auth/signup" className="text-gray-700 dark:text-slate-200 hover:text-[var(--brand-primary)] dark:hover:text-accent-red transition-colors font-medium">
+                  <Link href={buildLocalizedPath(locale, '/auth/signup')} className="text-gray-700 dark:text-slate-200 hover:text-[var(--brand-primary)] dark:hover:text-accent-red transition-colors font-medium">
                     {t('joinAsTalent')}
                   </Link>
                 </li>
               )}
               {user && !loading && (
                 <li>
-                  <Link href="/dashboard/talent" className="text-gray-700 dark:text-slate-200 hover:text-[var(--brand-primary)] dark:hover:text-accent-red transition-colors font-medium">
+                  <Link href={buildLocalizedPath(locale, '/dashboard/talent')} className="text-gray-700 dark:text-slate-200 hover:text-[var(--brand-primary)] dark:hover:text-accent-red transition-colors font-medium">
                     {t('talentDashboard')}
                   </Link>
                 </li>
               )}
               <li>
-                <Link href={`/${locale}/categories`} className="text-gray-700 dark:text-slate-200 hover:text-[var(--brand-primary)] dark:hover:text-accent-red transition-colors">
+                <Link href={buildLocalizedPath(locale, '/categories')} className="text-gray-700 dark:text-slate-200 hover:text-[var(--brand-primary)] dark:hover:text-accent-red transition-colors">
                   {t('browseCategories')}
                 </Link>
               </li>
               <li>
-                <Link href={`/${locale}/pricing`} className="text-gray-700 dark:text-slate-200 hover:text-[var(--brand-primary)] dark:hover:text-accent-red transition-colors">
+                <Link href={buildLocalizedPath(locale, '/pricing')} className="text-gray-700 dark:text-slate-200 hover:text-[var(--brand-primary)] dark:hover:text-accent-red transition-colors">
                   {t('pricingPlans')}
                 </Link>
               </li>
@@ -98,8 +94,8 @@ export default function Footer() {
             </div>
 
             <div className="flex items-center gap-6 text-sm">
-              <Link href={`/${locale}/privacy`} className="text-gray-600 dark:text-slate-300 hover:text-[var(--brand-primary)] dark:hover:text-accent-red transition-colors">{t('privacyPolicy')}</Link>
-              <Link href={`/${locale}/terms`} className="text-gray-600 dark:text-slate-300 hover:text-[var(--brand-primary)] dark:hover:text-accent-red transition-colors">{t('termsOfService')}</Link>
+              <Link href={buildLocalizedPath(locale, '/privacy')} className="text-gray-600 dark:text-slate-300 hover:text-[var(--brand-primary)] dark:hover:text-accent-red transition-colors">{t('privacyPolicy')}</Link>
+              <Link href={buildLocalizedPath(locale, '/terms')} className="text-gray-600 dark:text-slate-300 hover:text-[var(--brand-primary)] dark:hover:text-accent-red transition-colors">{t('termsOfService')}</Link>
               <button onClick={() => window.dispatchEvent(new Event('open-cookie-settings'))} className="text-gray-600 dark:text-slate-300 hover:text-[var(--brand-primary)] dark:hover:text-accent-red transition-colors">Cookie Settings</button>
             </div>
           </div>

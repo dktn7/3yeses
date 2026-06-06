@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import Image from 'next/image';
+import { localizeCurrentPath, normalizeLocale } from '@/lib/locale-path';
 
 const languages = [
     { code: 'en-gb', name: 'English', flag: '/flags/gb.svg' },
@@ -27,7 +28,7 @@ export default function LanguageSwitcherModal() {
 
     const handleLanguageChange = (newLocale: string) => {
         if (pathname) {
-            const newPath = pathname.replace(`/${locale}`, `/${newLocale}`);
+            const newPath = localizeCurrentPath(normalizeLocale(newLocale), pathname);
             router.replace(newPath);
         }
         setIsOpen(false);
@@ -51,7 +52,7 @@ export default function LanguageSwitcherModal() {
         };
     }, [isOpen]);
 
-    const currentLanguage = languages.find((lang) => lang.code === locale);
+    const currentLanguage = languages.find((lang) => normalizeLocale(lang.code) === normalizeLocale(locale));
 
     return (
         <div className="relative">
@@ -109,8 +110,8 @@ export default function LanguageSwitcherModal() {
                                     key={lang.code}
                                     onClick={() => handleLanguageChange(lang.code)}
                                     className={`relative group/lang flex items-center justify-center w-12 h-12 rounded-xl transition-all ${
-                                        locale === lang.code
-                                            ? 'bg-blue-100 dark:bg-blue-900 ring-2 ring-blue-500 dark:ring-blue-400 scale-110'
+                                        normalizeLocale(locale) === normalizeLocale(lang.code)
+                                            ? 'bg-[var(--brand-primary)]/10 dark:bg-[rgba(185,28,28,0.20)] ring-2 ring-blue-500 dark:ring-red-400 scale-110'
                                             : 'hover:bg-gray-100 dark:hover:bg-gray-800 hover:scale-105'
                                     }`}
                                     title={lang.name}

@@ -335,20 +335,16 @@ export default async function WhyHowPage({
               <span className="marketing-accent-text">{t("eyebrow")}</span>
             </span>
 
-            <h1 className="text-[clamp(2.4rem,7vw,5.5rem)] font-extrabold leading-[1.1] tracking-tighter mb-6 pb-1 text-gray-900 dark:text-white">
+            <h1 className="marketing-hero-title text-[clamp(2.4rem,7vw,5.5rem)] font-extrabold leading-[1.1] tracking-tighter mb-6 pb-1">
               {t("hero.title")}{" "}
               <span
-                className="inline-block text-transparent bg-clip-text"
-                style={{
-                  backgroundImage:
-                    "linear-gradient(90deg, var(--brand-primary), var(--brand-accent))",
-                }}
+                className="marketing-yes-accent inline-block"
               >
                 {t("hero.titleAccent")}
               </span>
             </h1>
 
-            <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-200 mb-10 max-w-2xl leading-relaxed">
+            <p className="text-lg sm:text-xl text-[color-mix(in_srgb,var(--foreground)_68%,transparent)] mb-10 max-w-2xl leading-relaxed">
               {t("hero.subtitle")}
             </p>
 
@@ -428,10 +424,10 @@ export default async function WhyHowPage({
             <span className="marketing-pill inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[10px] uppercase tracking-[0.22em] font-semibold mb-6 shadow-sm backdrop-blur-md">
               <span className="marketing-accent-text">{t("whySection.eyebrow")}</span>
             </span>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tighter text-gray-900 dark:text-white mb-4">
+            <h2 className="marketing-hero-title text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tighter mb-4">
               {t("whySection.title")}
             </h2>
-            <p className="text-lg text-gray-600 dark:text-gray-200 leading-relaxed">
+            <p className="text-lg text-[color-mix(in_srgb,var(--foreground)_68%,transparent)] leading-relaxed">
               {t("whySection.subtitle")}
             </p>
           </div>
@@ -459,23 +455,23 @@ export default async function WhyHowPage({
               <span className="marketing-pill inline-flex items-center gap-2.5 rounded-full px-4 py-2 text-[10px] uppercase tracking-[0.22em] font-semibold mb-6 shadow-sm backdrop-blur-md">
                 <span className="marketing-accent-text">{t("howSection.eyebrow")}</span>
               </span>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tighter text-gray-900 dark:text-white mb-4">
+              <h2 className="marketing-hero-title text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tighter mb-4">
                 {t("howSection.title")}
               </h2>
-              <p className="text-lg text-gray-600 dark:text-gray-200 max-w-xl leading-relaxed mb-6">
+              <p className="text-lg text-[color-mix(in_srgb,var(--foreground)_68%,transparent)] max-w-xl leading-relaxed mb-6">
                 {t("howSection.subtitle")}
               </p>
 
               <div className="hidden lg:flex items-center gap-8 pt-6 border-t border-gray-200 dark:border-gray-800">
-                <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                <div className="flex items-center gap-2 text-sm text-[color-mix(in_srgb,var(--foreground)_56%,transparent)]">
                   <Upload className="w-4 h-4" />
                   <span>{t("howSection.tags.uploads")}</span>
                 </div>
-                <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                <div className="flex items-center gap-2 text-sm text-[color-mix(in_srgb,var(--foreground)_56%,transparent)]">
                   <Eye className="w-4 h-4" />
                   <span>{t("howSection.tags.views")}</span>
                 </div>
-                <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                <div className="flex items-center gap-2 text-sm text-[color-mix(in_srgb,var(--foreground)_56%,transparent)]">
                   <Heart className="w-4 h-4" />
                   <span>{t("howSection.tags.likes")}</span>
                 </div>
@@ -573,10 +569,10 @@ export default async function WhyHowPage({
       <section className="relative isolate overflow-hidden py-24 md:py-32">
         <WhyHowBg />
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tighter mb-5 text-gray-900 dark:text-slate-50 dark:[text-shadow:0_4px_18px_rgba(0,0,0,0.55)]">
+          <h2 className="marketing-hero-title text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tighter mb-5 dark:[text-shadow:0_4px_18px_rgba(0,0,0,0.55)]">
             {t("finalCta.title")}
           </h2>
-          <p className="text-lg text-gray-600 dark:text-slate-200 mb-10 max-w-xl mx-auto leading-relaxed">
+          <p className="text-lg text-[color-mix(in_srgb,var(--foreground)_68%,transparent)] mb-10 max-w-xl mx-auto leading-relaxed">
             {t("finalCta.subtitle")}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">

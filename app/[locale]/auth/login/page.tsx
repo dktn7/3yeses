@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import SwoopingTick from '@/components/SwoopingTick';
+import { buildLocalizedPath } from '@/lib/locale-path';
 
 export default function LoginPage() {
   const t = useTranslations('LoginPage');
@@ -27,7 +28,7 @@ export default function LoginPage() {
   const locale = validLocales.includes(firstSegment) ? firstSegment : 'en-gb';
 
   const breadcrumbItems = [
-    { label: tNav('home'), href: `/${locale}` },
+    { label: tNav('home'), href: buildLocalizedPath(locale, '/') },
     { label: t('title') }
   ];
 
@@ -69,7 +70,7 @@ export default function LoginPage() {
 
       // Success - redirect to intended page or dashboard
       console.log('Login successful:', data.user);
-      router.push(redirectTo || `/${locale}/dashboard`);
+      router.push(redirectTo || buildLocalizedPath(locale, '/dashboard'));
       
     } catch (err) {
       console.error('Login error:', err);
@@ -85,7 +86,7 @@ export default function LoginPage() {
         <nav className="mb-6 text-sm">
           <ol className="flex items-center space-x-2 text-gray-600 dark:text-gray-400">
             <li>
-              <Link href={`/${locale}`} className="hover:text-primary-blue dark:hover:text-accent-red transition-colors">
+              <Link href={buildLocalizedPath(locale, '/')} className="hover:text-primary-blue dark:hover:text-accent-red transition-colors">
                 {tNav('home')}
               </Link>
             </li>
@@ -161,7 +162,7 @@ export default function LoginPage() {
               </div>
 
               <div className="text-sm">
-                <Link href="/auth/forgot-password" className="font-medium text-primary-blue dark:text-accent-red hover:opacity-80 transition-opacity">
+                <Link href={buildLocalizedPath(locale, '/auth/forgot-password')} className="font-medium text-primary-blue dark:text-accent-red hover:opacity-80 transition-opacity">
                   {t('forgotPassword')}
                 </Link>
               </div>
@@ -181,7 +182,7 @@ export default function LoginPage() {
           <div className="text-center pt-2">
             <p className="text-sm text-gray-600 dark:text-gray-400">
               {t('noAccount')}{' '}
-              <Link href={`/${locale}/auth/signup`} className="font-medium text-primary-blue dark:text-accent-red hover:opacity-80 transition-opacity">
+              <Link href={buildLocalizedPath(locale, '/auth/signup')} className="font-medium text-primary-blue dark:text-accent-red hover:opacity-80 transition-opacity">
                 {t('signUpLink')}
               </Link>
             </p>

@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Eye, TrendingUp, Award, Sparkles, Image as ImageIcon, Zap } from 'lucide-react';
 import SafeAvatarImage from './SafeAvatarImage';
 import SwoopingTick from './SwoopingTick';
+import { buildLocalizedPath } from '@/lib/locale-path';
 
 interface TalentProfile {
   avatarUrl?: string;
@@ -100,15 +101,15 @@ export default function DashboardHero({ displayName, formattedDay, profileComple
   const getActionLink = (action: string): string => {
     switch (action) {
       case 'media':
-        return `/${locale}/dashboard/gallery`; // Gallery page
+        return buildLocalizedPath(locale, '/dashboard/gallery'); // Gallery page
       case 'skills':
-        return `/${locale}/dashboard/profile#skills`; // Skills editor
+        return buildLocalizedPath(locale, '/dashboard/profile#skills'); // Skills editor
       case 'avatar':
-        return `/${locale}/dashboard/profile#avatar`; // Avatar upload
+        return buildLocalizedPath(locale, '/dashboard/profile#avatar'); // Avatar upload
       case 'bio':
-        return `/${locale}/dashboard/profile#bio`; // Bio editor
+        return buildLocalizedPath(locale, '/dashboard/profile#bio'); // Bio editor
       default:
-        return `/${locale}/dashboard/profile`;
+        return buildLocalizedPath(locale, '/dashboard/profile');
     }
   };
 
@@ -168,7 +169,7 @@ export default function DashboardHero({ displayName, formattedDay, profileComple
         
         <div className="flex items-center gap-3 flex-shrink-0">
           <Link
-            href={`/talent/${userId}`}
+            href={buildLocalizedPath(locale, `/talent/${userId}`)}
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold shadow-sm hover:shadow-md hover:scale-[1.02] transition-all bg-light-surface/90 dark:bg-dark-surface text-light-surface dark:text-dark-surface whitespace-nowrap"
             aria-label="View public profile"
           >

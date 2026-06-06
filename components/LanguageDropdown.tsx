@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import { usePathname, useSearchParams, useRouter } from 'next/navigation'
-import { Globe, ChevronDown } from 'lucide-react'
-
 import Image from 'next/image';
+import DropdownPanel from './DropdownPanel';
+import { getLocaleFromPathname, localizeCurrentPath, normalizeLocale } from '@/lib/locale-path';
 
 const locales = [
   { code: 'en-gb', nameKey: 'english', flag: '/flags/gb.svg', name: 'English' },
@@ -19,30 +19,7 @@ const locales = [
   { code: 'ar', nameKey: 'arabic', flag: '/flags/sa.svg', name: 'العربية' }
 ]
 
-// Check if we're in a locale-specific route
-const isLocaleRoute = (pathname: string) => {
-  return locales.some(locale => pathname.startsWith(`/${locale.code}`))
-}
-
 // Get current locale from pathname
-const getCurrentLocale = (pathname: string) => {
-  const segments = pathname.split('/').filter(Boolean);
-  let lastValidLocale = null;
-
-  const localeCodes = locales.map(l => l.code);
-
-  for (const segment of segments) {
-    if (localeCodes.includes(segment)) {
-      lastValidLocale = segment;
-    } else {
-      // Stop at the first non-locale segment
-      break;
-    }
-  }
-
-  return lastValidLocale || 'en-gb'; // Default
-}
-
 export default function LanguageDropdown() {
   const [isOpen, setIsOpen] = useState(false)
   const [currentLocale, setCurrentLocale] = useState('en-gb')
@@ -53,32 +30,21 @@ export default function LanguageDropdown() {
 
   useEffect(() => {
     setIsClient(true)
-    const locale = pathname ? getCurrentLocale(pathname) : 'en-gb'
-    setCurrentLocale(locale)
+    setCurrentLocale(getLocaleFromPathname(pathname))
   }, [pathname])
 
   const handleLanguageChange = (locale: string) => {
     setIsOpen(false);
     const currentPath = pathname || '/';
     const currentSearch = searchParams?.toString();
-
-    const localeCodes = locales.map(l => l.code);
-    const segments = currentPath.split('/').filter(Boolean);
-
-    let firstNonLocaleIndex = 0;
-    while (firstNonLocaleIndex < segments.length && localeCodes.includes(segments[firstNonLocaleIndex])) {
-      firstNonLocaleIndex++;
-    }
-
-    const pathWithoutLocales = '/' + segments.slice(firstNonLocaleIndex).join('/');
-
-    const newPath = `/${locale}${pathWithoutLocales === '/' ? '' : pathWithoutLocales}`;
+    const newPath = localizeCurrentPath(normalizeLocale(locale), currentPath);
     const url = currentSearch ? `${newPath}?${currentSearch}` : newPath;
 
     router.push(url);
   };
 
-  const currentLanguage = locales.find(locale => locale.code === currentLocale)
+  const currentLanguage = locales.find(locale => normalizeLocale(currentLocale) === locale.code)
+  const isCurrentLanguage = (localeCode: string) => normalizeLocale(currentLocale) === normalizeLocale(localeCode)
 
   if (!isClient) {
     return null
@@ -88,35 +54,36 @@ export default function LanguageDropdown() {
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-transparent hover:bg-blue-100 dark:hover:bg-red-500 h-10 w-10"
+        className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200/80 dark:border-red-500/20 bg-[var(--marketing-surface)] dark:bg-[rgba(17,24,39,0.95)] text-gray-700 dark:text-red-100 shadow-sm transition-all hover:bg-slate-100/90 dark:hover:bg-[rgba(185,28,28,0.16)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
       >
         {currentLanguage && <Image src={currentLanguage.flag} alt={currentLanguage.name} width={24} height={24} unoptimized />}
       </button>
 
       {isOpen && (
-        <div className="absolute top-full right-0 mt-2 w-48 bg-light-surface dark:bg-dark-surface border border-gray-200 dark:border-gray-700 rounded-md shadow-lg p-2">
-          <div className="grid grid-cols-1 gap-2">
+        <DropdownPanel
+          className="absolute top-full right-0 mt-2 w-52 p-2 bg-[var(--marketing-surface)] dark:bg-[rgba(17,24,39,0.98)] backdrop-blur-xl"
+        >
+          <div className="grid grid-cols-1 gap-1">
             {locales.map((locale) => (
               <button
                 key={locale.code}
                 onClick={() => {
-                  if (currentLocale !== locale.code) handleLanguageChange(locale.code);
+                  if (!isCurrentLanguage(locale.code)) handleLanguageChange(locale.code);
                   else setIsOpen(false);
                 }}
                 className={`flex items-center justify-start p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 ${
-                  currentLocale === locale.code
-                    ? 'bg-blue-100 dark:bg-blue-900 cursor-default'
+                  isCurrentLanguage(locale.code)
+                    ? 'bg-[var(--brand-primary)]/15 dark:bg-[rgba(185,28,28,0.22)] text-[var(--brand-primary)] dark:text-red-100 cursor-default ring-1 ring-blue-300/80 ring-offset-1 ring-offset-white dark:ring-red-500/20 dark:ring-offset-transparent'
                     : ''
                 }`}
-                disabled={currentLocale === locale.code}
-                aria-current={currentLocale === locale.code ? 'true' : undefined}
+                aria-current={isCurrentLanguage(locale.code) ? 'true' : undefined}
               >
                 <Image src={locale.flag} alt={locale.name} width={24} height={24} unoptimized />
-                <span className="ml-2 text-sm text-gray-800 dark:text-white">{locale.name}</span>
+                <span className="ml-2 text-sm text-gray-800 dark:text-gray-100">{locale.name}</span>
               </button>
             ))}
           </div>
-        </div>
+        </DropdownPanel>
       )}
     </div>
   )

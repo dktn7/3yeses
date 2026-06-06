@@ -13,6 +13,8 @@ import DashboardHero from '@/components/DashboardHero';
 import SwoopingTick from '@/components/SwoopingTick';
 import GalleryViewer from '@/components/GalleryViewer';
 import MediaOverlay from '@/components/MediaOverlay';
+import { normalizeLocale } from '@/lib/locale-path';
+import { buildLocalizedPath } from '@/lib/locale-path';
 import { Eye, TrendingUp, TrendingDown, Users, User as UserIcon, Image, BarChart3, CreditCard, Calendar, Settings, Star, Briefcase, Bell, MessageSquare, Clock, Trophy, Target } from 'lucide-react';
 import Link from 'next/link';
 import { useLocale } from 'next-intl';
@@ -60,7 +62,7 @@ export default function DashboardOverview() {
   const router = useRouter();
   const pathname = usePathname();
   const routeLocale = useLocale();
-  const locale = routeLocale || (typeof pathname === 'string' ? pathname.split('/')[1] || 'en' : 'en');
+  const locale = normalizeLocale(routeLocale || (typeof pathname === 'string' ? pathname.split('/')[1] || 'en-gb' : 'en-gb'));
   const t = useTranslations('dashboard');
   const today = new Date();
   const formattedDay = today.toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'short' });
@@ -327,7 +329,7 @@ export default function DashboardOverview() {
               <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">Complete one smart suggestion per week and we’ll promote you in the talent feed.</p>
             </div>
             <Link
-              href={`/${locale}/dashboard/profile#growth-hints`}
+              href={buildLocalizedPath(locale, '/dashboard/profile#growth-hints')}
               className="inline-flex items-center gap-2 rounded-lg bg-primary-blue dark:bg-accent-red text-white px-4 py-2 text-sm font-semibold hover:bg-primary-blueHover dark:hover:bg-accent-red/80 transition-all"
             >
               Explore hints
@@ -343,7 +345,7 @@ export default function DashboardOverview() {
                 <p className="text-sm text-amber-600 dark:text-amber-200">You have active account warnings from your admin team.</p>
               </div>
               <Link
-                href={`/${locale}/dashboard/notifications`}
+                href={buildLocalizedPath(locale, '/dashboard/notifications')}
                 className="text-xs font-semibold text-amber-700 dark:text-amber-200 hover:underline"
               >
                 View all
@@ -490,7 +492,7 @@ export default function DashboardOverview() {
                 <Target className="h-6 w-6 mr-2 text-red-500" />
                 {t('overview.topPerformingMedia')}
               </h2>
-              <Link href={`/${locale}/dashboard/insights`} className="text-sm text-blue-600 dark:text-red-400 hover:underline font-medium">
+              <Link href={buildLocalizedPath(locale, '/dashboard/insights')} className="text-sm text-blue-600 dark:text-red-400 hover:underline font-medium">
                 {t('overview.viewFullAnalytics')}
               </Link>
             </div>
@@ -573,7 +575,7 @@ export default function DashboardOverview() {
                 <BarChart3 className="h-6 w-6 mr-2 text-blue-600 dark:text-red-400" />
                 {t('overview.media')}
               </h2>
-              <Link href={`/${locale}/dashboard/gallery`} className="text-sm text-blue-600 dark:text-red-400 hover:underline font-medium">
+              <Link href={buildLocalizedPath(locale, '/dashboard/gallery')} className="text-sm text-blue-600 dark:text-red-400 hover:underline font-medium">
                 {t('viewAll')} →
               </Link>
             </div>
@@ -638,7 +640,7 @@ export default function DashboardOverview() {
                 <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
                   {t('noPortfolioItemsDesc')}
                 </p>
-                <Link href={`/${locale}/dashboard/gallery`} className="inline-flex items-center px-4 py-2 bg-blue-600 dark:bg-red-600 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-red-700 transition-colors">
+                <Link href={buildLocalizedPath(locale, '/dashboard/gallery')} className="inline-flex items-center px-4 py-2 bg-blue-600 dark:bg-red-600 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-red-700 transition-colors">
                   {t('uploadNow')}
                 </Link>
               </div>
@@ -660,7 +662,7 @@ export default function DashboardOverview() {
                   <Clock className="h-5 w-5 mr-2 text-blue-600 dark:text-red-300" />
                   {t('recentActivity')}
                 </h2>
-                <Link href={`/${locale}/dashboard/activity`} className="text-sm text-blue-600 dark:text-red-300 hover:underline">
+                <Link href={buildLocalizedPath(locale, '/dashboard/activity')} className="text-sm text-blue-600 dark:text-red-300 hover:underline">
                   {t('viewAll')}
                 </Link>
               </div>
@@ -705,7 +707,7 @@ export default function DashboardOverview() {
                   <Bell className="h-5 w-5 mr-2 text-purple-600 dark:text-purple-400" />
                   {t('recentNotifications')}
                 </h2>
-                <Link href={`/${locale}/dashboard/notifications`} className="text-sm text-blue-600 dark:text-red-300 hover:underline">
+                <Link href={buildLocalizedPath(locale, '/dashboard/notifications')} className="text-sm text-blue-600 dark:text-red-300 hover:underline">
                   {t('viewAll')}
                 </Link>
               </div>
@@ -750,7 +752,7 @@ export default function DashboardOverview() {
                   <SwoopingTick size={20} />
                   <span className="ml-2">{t('savedTalents')}</span>
                 </h2>
-                <Link href={`/${locale}/dashboard/saved`} className="text-sm text-blue-600 dark:text-red-300 hover:underline">
+                <Link href={buildLocalizedPath(locale, '/dashboard/saved')} className="text-sm text-blue-600 dark:text-red-300 hover:underline">
                   {t('viewAll')}
                 </Link>
               </div>
@@ -787,7 +789,7 @@ export default function DashboardOverview() {
                               setShowTalentOverlay(true);
                             }}
                             onProfileClick={() => router.push(`/talent/${(talent as any).userId ?? talent.id}`)}
-                            onSkillClick={(s) => router.push(`/${locale}/hub?q=${encodeURIComponent(s)}`)}
+                            onSkillClick={(s) => router.push(buildLocalizedPath(locale, `/hub?q=${encodeURIComponent(s)}`))}
                           />
                         </div>
                       );
@@ -820,7 +822,7 @@ export default function DashboardOverview() {
                   <Eye className="h-5 w-5 mr-2 text-blue-600 dark:text-red-300" />
                   {t('viewedHistory')}
                 </h2>
-                <Link href={`/${locale}/dashboard/history`} className="text-sm text-blue-600 dark:text-red-300 hover:underline">
+                <Link href={buildLocalizedPath(locale, '/dashboard/history')} className="text-sm text-blue-600 dark:text-red-300 hover:underline">
                   {t('viewAll')}
                 </Link>
               </div>
@@ -857,7 +859,7 @@ export default function DashboardOverview() {
                               setShowTalentOverlay(true);
                             }}
                             onProfileClick={() => router.push(`/talent/${(talent as any).userId ?? talent.id}`)}
-                            onSkillClick={(s) => router.push(`/${locale}/hub?q=${encodeURIComponent(s)}`)}
+                            onSkillClick={(s) => router.push(buildLocalizedPath(locale, `/hub?q=${encodeURIComponent(s)}`))}
                             priority={idx < 2}
                           />
                         </div>

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { FileText, Loader2 } from 'lucide-react';
+import { buildLocalizedPath } from '@/lib/locale-path';
 
 interface CMSContentProps {
   slug: string;
@@ -84,7 +85,7 @@ export default function CMSContent({ slug, fallback }: CMSContentProps) {
           This page is being prepared. Please check back soon.
         </p>
         <Link
-          href={`/${locale}`}
+          href={buildLocalizedPath(locale, '/')}
           className="px-6 py-2.5 rounded-lg font-medium text-white bg-gradient-to-r from-primary-blue to-accent-blue dark:from-accent-red dark:to-primary-red hover:opacity-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/35 dark:focus-visible:ring-accent-red/35 transition-colors"
         >
           Back to Home
@@ -105,7 +106,7 @@ export default function CMSContent({ slug, fallback }: CMSContentProps) {
         <nav className="mb-6">
           <ol className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
             <li>
-              <Link href={`/${locale}`} className="hover:text-primary-blue dark:hover:text-accent-red focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/30 dark:focus-visible:ring-accent-red/35 rounded-sm transition-colors">
+              <Link href={buildLocalizedPath(locale, '/')} className="hover:text-primary-blue dark:hover:text-accent-red focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/30 dark:focus-visible:ring-accent-red/35 rounded-sm transition-colors">
                 Home
               </Link>
             </li>

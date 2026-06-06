@@ -214,7 +214,7 @@ export default function PrivacyPolicyPage() {
               <li>Authentication token (JWT stored in an HTTP-only cookie) — keeps you logged in.</li>
               <li>Session ID — maintains your session across page loads.</li>
               <li>Cookie consent preference — remembers your cookie choices.</li>
-              <li>Language and locale preference — serves content in your selected language (11 locales supported).</li>
+              <li>Language and locale preference — serves content in your selected language (10 locales supported).</li>
               <li>Theme preference — remembers your light/dark mode choice.</li>
             </ul>
 
@@ -309,7 +309,7 @@ export default function PrivacyPolicyPage() {
           {/* ── 11. International Transfers ── */}
           <Section id="international" number="11" title="International Transfers">
             <p>
-              3yeses serves users globally across 11 supported locales. Your data may be processed in countries outside
+              3yeses serves users globally across 10 supported locales. Your data may be processed in countries outside
               the UK or European Economic Area (EEA) through our third-party service providers (Stripe, ImageKit).
             </p>
             <p>

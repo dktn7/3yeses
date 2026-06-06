@@ -1,11 +1,12 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Bell, BellOff, Eye, Settings, Volume2, VolumeX, X, MessageSquare, ChevronLeft, AlertTriangle, Info } from 'lucide-react';
 import SwoopingTick from './SwoopingTick';
 import { apiClient } from '@/lib/api-client';
+import { buildLocalizedPath, getLocaleFromPathname } from '@/lib/locale-path';
 
 interface Notification {
   id: string;
@@ -54,7 +55,8 @@ export default function NotificationDropdown() {
   const [unreadCount, setUnreadCount] = useState(0);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
-  const locale = (router && (router as any).locale) || 'en';
+  const pathname = usePathname();
+  const locale = getLocaleFromPathname(pathname);
 
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -157,14 +159,14 @@ export default function NotificationDropdown() {
         if (meta.path) {
           // ensure locale is present in the path
           const path: string = meta.path;
-          const target = path.startsWith(`/${locale}`) ? path : `/${locale}${path}`;
+          const target = buildLocalizedPath(locale, path);
           router.push(target);
           setIsOpen(false);
           return;
         }
         if (meta.kind === 'achievement') {
           // Achievements feature removed — route to notifications list instead
-          router.push(`/${locale}/dashboard/notifications`);
+          router.push(buildLocalizedPath(locale, '/dashboard/notifications'));
           setIsOpen(false);
           return;
         }

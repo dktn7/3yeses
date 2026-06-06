@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import MediaThumbnailFallback from '@/components/MediaThumbnailFallback';
+import { buildLocalizedPath } from '@/lib/locale-path';
 
 interface MediaItem {
   id: string;
@@ -69,11 +70,11 @@ export default function MediaViewerPage() {
           setCurrentMedia(fetched[idx]);
         } else {
           // Media not found
-          router.push(`/${locale}/hub`);
+          router.push(buildLocalizedPath(locale, '/hub'));
         }
       } catch (e) {
         console.error('Failed to fetch media', e);
-        router.push(`/${locale}/hub`);
+        router.push(buildLocalizedPath(locale, '/hub'));
       } finally {
         setLoading(false);
       }
@@ -106,11 +107,11 @@ export default function MediaViewerPage() {
       <div className="w-80 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-r border-gray-300 dark:border-gray-800 flex flex-col overflow-hidden">
         {/* Header with Logo & Close */}
         <div className="p-4 border-b border-gray-300 dark:border-gray-800 flex items-center justify-between">
-          <Link href={`/${locale}/hub`} className="font-bold text-2xl text-blue-600 dark:text-red-500 hover:opacity-80 transition-opacity">
+          <Link href={buildLocalizedPath(locale, '/hub')} className="font-bold text-2xl text-blue-600 dark:text-red-500 hover:opacity-80 transition-opacity">
             3YESES
           </Link>
           <button
-            onClick={() => router.push(`/${locale}/hub`)}
+            onClick={() => router.push(buildLocalizedPath(locale, '/hub'))}
             className="w-10 h-10 bg-gray-200 hover:bg-gray-300 dark:bg-white/10 dark:hover:bg-white/20 backdrop-blur-sm text-gray-900 dark:text-white rounded-full flex items-center justify-center transition-colors"
           >
             <X className="w-6 h-6" />
@@ -203,10 +204,10 @@ export default function MediaViewerPage() {
                     key={media.id}
                     onClick={() => {
                       if (media.type === 'IMAGE') {
-                        router.push(`/${locale}/hub/media/${media.id}`);
+                        router.push(buildLocalizedPath(locale, `/hub/media/${media.id}`));
                       } else {
                         // For video/audio, go back to hub with player open
-                        router.push(`/${locale}/hub`);
+                        router.push(buildLocalizedPath(locale, '/hub'));
                       }
                     }}
                     className={`w-full flex items-center gap-3 p-2 rounded-lg transition-all ${
@@ -281,7 +282,7 @@ export default function MediaViewerPage() {
                     const imageMedia = allMedia.filter(m => ((m.talentProfile as any).userId ?? m.talentProfile.id) === ((talent as any).userId ?? talent.id) && m.type === 'IMAGE');
                     const currentIdx = imageMedia.findIndex(m => m.id === currentMedia.id);
                     const prevIdx = (currentIdx - 1 + imageMedia.length) % imageMedia.length;
-                    router.push(`/${locale}/hub/media/${imageMedia[prevIdx].id}`);
+                    router.push(buildLocalizedPath(locale, `/hub/media/${imageMedia[prevIdx].id}`));
                   }}
                   className="absolute left-4 w-12 h-12 bg-white/90 hover:bg-light-surface dark:bg-black/50 dark:hover:bg-black/70 backdrop-blur-sm text-gray-900 dark:text-white rounded-full flex items-center justify-center transition-colors shadow-lg"
                 >
@@ -292,7 +293,7 @@ export default function MediaViewerPage() {
                     const imageMedia = allMedia.filter(m => ((m.talentProfile as any).userId ?? m.talentProfile.id) === ((talent as any).userId ?? talent.id) && m.type === 'IMAGE');
                     const currentIdx = imageMedia.findIndex(m => m.id === currentMedia.id);
                     const nextIdx = (currentIdx + 1) % imageMedia.length;
-                    router.push(`/${locale}/hub/media/${imageMedia[nextIdx].id}`);
+                    router.push(buildLocalizedPath(locale, `/hub/media/${imageMedia[nextIdx].id}`));
                   }}
                   className="absolute right-4 w-12 h-12 bg-white/90 hover:bg-light-surface dark:bg-black/50 dark:hover:bg-black/70 backdrop-blur-sm text-gray-900 dark:text-white rounded-full flex items-center justify-center transition-colors shadow-lg"
                 >
@@ -336,9 +337,9 @@ export default function MediaViewerPage() {
                   key={media.id}
                   onClick={() => {
                     if (media.type === 'IMAGE') {
-                      router.push(`/${locale}/hub/media/${media.id}`);
+                      router.push(buildLocalizedPath(locale, `/hub/media/${media.id}`));
                     } else {
-                      router.push(`/${locale}/hub`);
+                      router.push(buildLocalizedPath(locale, '/hub'));
                     }
                   }}
                   className="w-full group flex gap-3 hover:bg-gray-200 dark:hover:bg-white/10 rounded-lg p-2 transition-all"

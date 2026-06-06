@@ -1455,11 +1455,11 @@
       "secondary": "Voir les tarifs"
     },
     "stats": {
-      "categories": "20+",
+      "categories": "9",
       "categoriesLabel": "Catégories de talents",
-      "subcategories": "145+",
+      "subcategories": "50",
       "subcategoriesLabel": "Sous-catégories",
-      "locales": "11",
+      "locales": "10",
       "localesLabel": "Langues supportées",
       "price": "10 £",
       "priceLabel": "Pour 6 mois"
@@ -1483,7 +1483,7 @@
         "desc": "Suivez les vues de profil, l'engagement du portfolio, les impressions de recherche et les taux de clics."
       },
       "categories": {
-        "title": "20+ catégories de talents",
+        "title": "9 catégories de talents",
         "desc": "Acteurs, musiciens, mannequins, danseurs, artistes vocaux, comédiens, DJs, photographes et plus encore."
       },
       "simple": {

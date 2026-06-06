@@ -7,6 +7,8 @@ import LoadingSpinner from '@/components/LoadingSpinner';
 import TalentCard from '@/components/TalentCard';
 import { Eye, ArrowLeft, Calendar, Clock } from 'lucide-react';
 import Link from 'next/link';
+import { normalizeLocale } from '@/lib/locale-path';
+import { buildLocalizedPath } from '@/lib/locale-path';
 
 interface ViewedTalent {
   id: string;
@@ -24,7 +26,7 @@ export default function ViewHistoryPage() {
   const router = useRouter();
   const t = useTranslations();
   const pathname = usePathname();
-  const locale = typeof pathname === 'string' ? pathname.split('/')[1] || 'en' : 'en';
+  const locale = normalizeLocale(typeof pathname === 'string' ? pathname.split('/')[1] || 'en-gb' : 'en-gb');
 
   useEffect(() => {
     const loadViewHistory = async () => {
@@ -86,7 +88,7 @@ export default function ViewHistoryPage() {
         {/* Header */}
         <div className="mb-8">
           <Link
-            href={`/${locale}/dashboard/overview`}
+            href={buildLocalizedPath(locale, '/dashboard/overview')}
             className="inline-flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 mb-4"
           >
             <ArrowLeft className="h-5 w-5" />
@@ -136,7 +138,7 @@ export default function ViewHistoryPage() {
               {t('dashboard.startBrowsingTalents')}
             </p>
             <Link
-              href={`/${locale}/talents`}
+              href={buildLocalizedPath(locale, '/talents')}
               className="inline-block bg-gradient-to-r from-primary-blue to-accent-blue dark:from-accent-red dark:to-primary-red hover:opacity-95 text-white px-6 py-2 rounded-lg font-medium transition-colors"
             >
               {t('dashboard.browseTalents')}

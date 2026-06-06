@@ -78,8 +78,8 @@ const CookieConsentBanner = () => {
   return (
     <>
       {!showModal && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 sm:left-auto sm:right-6 sm:translate-x-0 z-50 w-[90%] sm:w-auto max-w-md">
-          <div className="bg-light-surface dark:bg-dark-surface rounded-xl shadow-2xl p-6 border border-gray-200 dark:border-gray-700">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-xl shadow-2xl p-6 border border-gray-200 dark:border-gray-700">
             {/* Logo and Title */}
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 bg-primary-blue dark:bg-accent-red rounded-lg flex items-center justify-center flex-shrink-0 p-1.5">
@@ -122,7 +122,7 @@ const CookieConsentBanner = () => {
       )}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <div className="bg-light-surface dark:bg-dark-surface rounded-xl shadow-2xl w-full max-w-2xl p-8">
+          <div className="w-full max-w-2xl rounded-xl shadow-2xl p-8 bg-white dark:bg-gray-800">
             {/* Modal Header with Logo */}
             <div className="flex items-center gap-3 mb-6">
               <div className="w-12 h-12 bg-primary-blue dark:bg-accent-red rounded-lg flex items-center justify-center flex-shrink-0 p-2">
@@ -175,7 +175,7 @@ const CookieConsentBanner = () => {
                       id="necessary"
                       checked={preferences.necessary}
                       disabled
-                      className="h-5 w-5 rounded text-primary-blue dark:text-accent-red focus:ring-primary-blue dark:focus:ring-accent-red border-gray-300 dark:border-gray-600"
+                      className="h-5 w-5 rounded accent-primary-blue dark:accent-accent-red text-primary-blue dark:text-accent-red focus:ring-primary-blue dark:focus:ring-accent-red border-gray-300 dark:border-gray-600"
                     />
                   </div>
                   <div className="flex items-center justify-between p-4 rounded-lg bg-gray-50 dark:bg-gray-700">
@@ -188,7 +188,7 @@ const CookieConsentBanner = () => {
                       id="preferences"
                       checked={preferences.preferences}
                       onChange={() => handleToggle('preferences')}
-                      className="h-5 w-5 rounded text-primary-blue dark:text-accent-red focus:ring-primary-blue dark:focus:ring-accent-red border-gray-300 dark:border-gray-600"
+                      className="h-5 w-5 rounded accent-primary-blue dark:accent-accent-red text-primary-blue dark:text-accent-red focus:ring-primary-blue dark:focus:ring-accent-red border-gray-300 dark:border-gray-600"
                     />
                   </div>
                   <div className="flex items-center justify-between p-4 rounded-lg bg-gray-50 dark:bg-gray-700">
@@ -201,7 +201,7 @@ const CookieConsentBanner = () => {
                       id="statistics"
                       checked={preferences.statistics}
                       onChange={() => handleToggle('statistics')}
-                      className="h-5 w-5 rounded text-primary-blue dark:text-accent-red focus:ring-primary-blue dark:focus:ring-accent-red border-gray-300 dark:border-gray-600"
+                      className="h-5 w-5 rounded accent-primary-blue dark:accent-accent-red text-primary-blue dark:text-accent-red focus:ring-primary-blue dark:focus:ring-accent-red border-gray-300 dark:border-gray-600"
                     />
                   </div>
                   <div className="flex items-center justify-between p-4 rounded-lg bg-gray-50 dark:bg-gray-700">
@@ -214,7 +214,7 @@ const CookieConsentBanner = () => {
                       id="marketing"
                       checked={preferences.marketing}
                       onChange={() => handleToggle('marketing')}
-                      className="h-5 w-5 rounded text-primary-blue dark:text-accent-red focus:ring-primary-blue dark:focus:ring-accent-red border-gray-300 dark:border-gray-600"
+                      className="h-5 w-5 rounded accent-primary-blue dark:accent-accent-red text-primary-blue dark:text-accent-red focus:ring-primary-blue dark:focus:ring-accent-red border-gray-300 dark:border-gray-600"
                     />
                   </div>
                 </div>

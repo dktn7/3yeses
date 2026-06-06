@@ -1305,11 +1305,11 @@
       "secondary": "عرض الأسعار"
     },
     "stats": {
-      "categories": "+20",
+      "categories": "9",
       "categoriesLabel": "فئات المواهب",
-      "subcategories": "+145",
+      "subcategories": "50",
       "subcategoriesLabel": "فئات فرعية",
-      "locales": "11",
+      "locales": "10",
       "localesLabel": "لغة مدعومة",
       "price": "10 £",
       "priceLabel": "لمدة 6 أشهر"
@@ -1333,7 +1333,7 @@
         "desc": "تتبع مشاهدات الملف الشخصي، تفاعل المعرض، ظهورات البحث ومعدلات النقر."
       },
       "categories": {
-        "title": "+20 فئة مواهب",
+        "title": "9 فئة مواهب",
         "desc": "ممثلون، موسيقيون، عارضون، راقصون، فنانو صوت، كوميديون، DJ، مصورون وغيرهم."
       },
       "simple": {

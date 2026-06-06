@@ -98,9 +98,9 @@ export default function AboutPage() {
             </span>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight mb-6">
-            <span className="text-gray-900 dark:text-white">{t('hero.title')}</span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-blue via-accent-blue to-indigo-500 dark:from-accent-red dark:via-primary-red dark:to-red-500">
+          <h1 className="marketing-hero-title text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight mb-6">
+            <span>{t('hero.title')}</span>
+            <span className="marketing-yes-accent">
               {t('hero.accent')}
             </span>
           </h1>
@@ -114,8 +114,8 @@ export default function AboutPage() {
 
         {/* ── Origin Story ── */}
         <section className="mb-20">
-          <div className="rounded-[2rem] marketing-panel border border-gray-200/50 dark:border-red-400/20 shadow-lg p-8 md:p-12">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-6">
+          <div className="rounded-[2rem] marketing-panel border border-gray-200/50 dark:border-red-900/25 shadow-lg p-8 md:p-12">
+            <h2 className="marketing-hero-title text-2xl sm:text-3xl font-extrabold tracking-tight mb-6">
               {t('origin.title')}
             </h2>
             <div className="space-y-5 text-gray-600 dark:text-gray-300 leading-relaxed">
@@ -134,7 +134,7 @@ export default function AboutPage() {
         {/* ── Values Grid ── */}
         <section className="mb-20">
           <div className="text-center mb-10">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-3">
+            <h2 className="marketing-hero-title text-2xl sm:text-3xl font-extrabold tracking-tight mb-3">
               {t('values.title')}
             </h2>
             <p className="text-gray-600 dark:text-gray-300 max-w-xl mx-auto">
@@ -148,7 +148,7 @@ export default function AboutPage() {
               return (
                 <div
                   key={v.titleKey}
-                  className="rounded-[1.5rem] marketing-panel border border-gray-200/50 dark:border-red-400/20 p-7 shadow-sm hover:shadow-lg hover:-translate-y-0.5 hover:border-primary-blue/30 dark:hover:border-red-300/40 transition-all duration-300"
+                  className="rounded-[1.5rem] marketing-panel border border-gray-200/50 dark:border-red-900/25 p-7 shadow-sm hover:shadow-lg hover:-translate-y-0.5 hover:border-primary-blue/30 dark:hover:border-red-800/35 transition-all duration-300"
                 >
                   <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style={{ background: 'linear-gradient(135deg, color-mix(in srgb, var(--brand-primary) 12%, transparent), color-mix(in srgb, var(--brand-accent) 12%, transparent))' }}>
                     <Icon className="w-6 h-6" style={{ color: 'var(--brand-primary)' }} strokeWidth={1.5} />
@@ -164,7 +164,7 @@ export default function AboutPage() {
         {/* ── Categories Strip ── */}
         <section className="mb-20">
           <div className="rounded-[2rem] backdrop-blur-xl bg-gradient-to-r from-primary-blue/5 to-accent-blue/5 dark:from-accent-red/5 dark:to-primary-red/5 border border-primary-blue/20 dark:border-accent-red/20 p-8 md:p-10 text-center">
-            <h2 className="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-3">
+            <h2 className="marketing-hero-title text-2xl font-extrabold tracking-tight mb-3">
               {t('categories.title')}
             </h2>
             <p className="text-gray-600 dark:text-gray-300 mb-6 max-w-xl mx-auto text-sm">
@@ -186,7 +186,7 @@ export default function AboutPage() {
         {/* ── Platform Features ── */}
         <section className="mb-20">
           <div className="text-center mb-10">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-3">
+            <h2 className="marketing-hero-title text-2xl sm:text-3xl font-extrabold tracking-tight mb-3">
               {t('features.title')}
             </h2>
             <p className="text-gray-600 dark:text-gray-300 max-w-xl mx-auto">
@@ -200,7 +200,7 @@ export default function AboutPage() {
               return (
                 <div
                   key={f.titleKey}
-                  className="rounded-[1.5rem] marketing-panel border border-gray-200/50 dark:border-red-400/20 p-6 shadow-sm hover:shadow-lg hover:-translate-y-0.5 hover:border-primary-blue/30 dark:hover:border-red-300/40 transition-all duration-300"
+                  className="rounded-[1.5rem] marketing-panel border border-gray-200/50 dark:border-red-900/25 p-6 shadow-sm hover:shadow-lg hover:-translate-y-0.5 hover:border-primary-blue/30 dark:hover:border-red-800/35 transition-all duration-300"
                 >
                   <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary-blue/10 to-accent-blue/10 dark:from-accent-red/10 dark:to-primary-red/10 flex items-center justify-center mb-3">
                     <Icon className="w-5 h-5 marketing-accent-text" strokeWidth={1.5} />
@@ -215,8 +215,8 @@ export default function AboutPage() {
 
         {/* ── How it works ── */}
         <section className="mb-20">
-          <div className="rounded-[2rem] marketing-panel border border-gray-200/50 dark:border-red-400/20 shadow-lg p-8 md:p-12">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-8 text-center">
+          <div className="rounded-[2rem] marketing-panel border border-gray-200/50 dark:border-red-900/25 shadow-lg p-8 md:p-12">
+            <h2 className="marketing-hero-title text-2xl sm:text-3xl font-extrabold tracking-tight mb-8 text-center">
               {t('howItWorks.title')}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -241,7 +241,7 @@ export default function AboutPage() {
         <section className="text-center">
           <div className="rounded-[2rem] backdrop-blur-xl bg-gradient-to-r from-primary-blue/5 to-accent-blue/5 dark:from-accent-red/5 dark:to-primary-red/5 border border-primary-blue/20 dark:border-accent-red/20 p-10 md:p-14">
             <Sparkles className="w-8 h-8 marketing-accent-text mx-auto mb-4" />
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-4">
+            <h2 className="marketing-hero-title text-2xl sm:text-3xl font-extrabold tracking-tight mb-4">
               {t('cta.title')}
             </h2>
             <p className="text-gray-600 dark:text-gray-300 max-w-lg mx-auto mb-8">
@@ -254,9 +254,9 @@ export default function AboutPage() {
               >
                 {t('cta.getStarted')} <ArrowRight className="w-4 h-4" />
               </Link>
-              <Link
+            <Link
                 href="/pricing"
-                className="inline-flex items-center gap-2 rounded-xl marketing-panel border border-gray-200/60 dark:border-red-400/20 text-gray-900 dark:text-white font-semibold px-8 py-3.5 text-sm shadow-sm hover:shadow-lg hover:-translate-y-0.5 hover:text-[var(--marketing-accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/35 dark:focus-visible:ring-accent-red/35 transition-all duration-200"
+                className="inline-flex items-center gap-2 rounded-xl marketing-panel border border-gray-200/60 dark:border-red-900/25 text-gray-900 dark:text-white font-semibold px-8 py-3.5 text-sm shadow-sm hover:shadow-lg hover:-translate-y-0.5 hover:text-[var(--marketing-accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/35 dark:focus-visible:ring-accent-red/35 transition-all duration-200"
               >
                 {t('cta.viewPricing')}
               </Link>

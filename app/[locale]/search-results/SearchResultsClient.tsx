@@ -18,6 +18,7 @@ import SkillMultiSelect from '@/components/SkillMultiSelect';
 import LocationAutocomplete from '@/components/LocationAutocomplete';
 import TalentFilterPanel, { TalentFilters, defaultFilters } from '@/components/TalentFilterPanel';
 import { isAudioUrl, isValidImageUrl } from '@/lib/image-utils';
+import { buildLocalizedPath } from '@/lib/locale-path';
 
 interface Category {
   id: string;
@@ -316,7 +317,7 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
     
     // Update URL with current filters
     const params = buildSearchParams();
-    router.push(`/${locale}/search-results?${params.toString()}`, { scroll: false });
+    router.push(buildLocalizedPath(locale, `/search-results?${params.toString()}`), { scroll: false });
   };
 
   // Handle suggestion click
@@ -487,7 +488,7 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-4">
               <button
-                onClick={() => router.push(`/${locale}/categories`)}
+                onClick={() => router.push(buildLocalizedPath(locale, '/categories'))}
                 className="flex items-center justify-center w-10 h-10 rounded-xl border border-gray-200 dark:border-gray-700 bg-light-surface dark:bg-dark-surface text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
               >
                 <ArrowLeft className="w-5 h-5" />

@@ -88,8 +88,8 @@ export default function TalentFilterPanel({
   }, [filters]);
 
   return (
-    <div className={`relative overflow-hidden rounded-2xl border border-blue-200/70 dark:border-red-900/60 bg-gradient-to-br from-white via-blue-50 to-blue-100/70 dark:from-gray-900 dark:via-red-950/60 dark:to-gray-900 shadow-[0_10px_30px_rgba(15,23,42,0.12)] animate-in fade-in slide-in-from-top-2 duration-200 ${compact ? 'p-3' : 'p-4'}`}>
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(37,99,235,0.14),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(37,99,235,0.10),transparent_35%)] dark:bg-[radial-gradient(circle_at_top_left,rgba(239,68,68,0.16),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(185,28,28,0.12),transparent_35%)]" />
+    <div className={`relative overflow-hidden rounded-2xl border border-[var(--chrome-border)] bg-[var(--chrome-panel)] shadow-[0_10px_30px_rgba(15,23,42,0.12)] animate-in fade-in slide-in-from-top-2 duration-200 ${compact ? 'p-3' : 'p-4'}`}>
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(37,99,235,0.10),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(37,99,235,0.06),transparent_35%)] dark:bg-[radial-gradient(circle_at_top_left,rgba(239,68,68,0.12),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(185,28,28,0.08),transparent_35%)]" />
       <div className="relative">
       {/* Header with Close */}
       {showHeader && (
@@ -105,9 +105,9 @@ export default function TalentFilterPanel({
             <button
               type="button"
               onClick={onClose}
-              className="p-1.5 hover-smart-bg rounded-lg transition-colors"
+              className="p-1.5 rounded-lg text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-[var(--brand-primary)]/8 dark:hover:bg-white/5 transition-colors"
             >
-              <X className="w-4 h-4 text-gray-500" />
+              <X className="w-4 h-4" />
             </button>
           )}
         </div>
@@ -120,8 +120,8 @@ export default function TalentFilterPanel({
           onClick={() => setFilterTab('main')}
           className={`group text-left px-4 py-3 rounded-xl border transition-all ${
             filterTab === 'main'
-              ? 'border-[var(--brand-primary)] bg-light-surface/90 dark:bg-dark-surface/80 shadow-md'
-              : 'border-blue-200 dark:border-red-900/50 bg-light-surface/70 dark:bg-dark-surface/60 hover:bg-light-surface/90 dark:hover:bg-dark-surface/80'
+            ? 'border-[var(--brand-primary)] bg-[var(--brand-primary)]/8 dark:bg-[var(--brand-primary)]/14 shadow-[0_8px_24px_rgba(37,99,235,0.10)]'
+            : 'border-[var(--chrome-border)] bg-white/70 dark:bg-white/5 hover:bg-white/90 dark:hover:bg-white/8'
           }`}
         >
           <div className="flex items-center gap-2">
@@ -135,8 +135,8 @@ export default function TalentFilterPanel({
           onClick={() => setFilterTab('more')}
           className={`group text-left px-4 py-3 rounded-xl border transition-all ${
             filterTab === 'more'
-              ? 'border-[var(--brand-primary)] bg-light-surface/90 dark:bg-dark-surface/80 shadow-md'
-              : 'border-blue-200 dark:border-red-900/50 bg-light-surface/70 dark:bg-dark-surface/60 hover:bg-light-surface/90 dark:hover:bg-dark-surface/80'
+              ? 'border-[var(--brand-primary)] bg-[var(--brand-primary)]/8 dark:bg-[var(--brand-primary)]/14 shadow-[0_8px_24px_rgba(37,99,235,0.10)]'
+              : 'border-[var(--chrome-border)] bg-white/70 dark:bg-white/5 hover:bg-white/90 dark:hover:bg-white/8'
           }`}
         >
           <div className="flex items-center gap-2">
@@ -149,17 +149,17 @@ export default function TalentFilterPanel({
 
       {/* Active Tag Chips */}
       {activeFilterCount > 0 && (
-        <div className="mb-4 rounded-xl border border-blue-200/70 dark:border-red-900/50 bg-light-surface/80 dark:bg-dark-surface/70 p-3">
+        <div className="mb-4 rounded-xl border border-[var(--chrome-border)] bg-white/70 dark:bg-white/5 p-3">
           <div className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Active Filters</div>
           <div className="flex flex-wrap gap-1.5">
-            {!!filters.gender?.length && <span className="px-2 py-1 text-xs rounded-full bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] dark:bg-[var(--brand-primary)]/16 dark:text-red-100">Gender</span>}
-            {!!filters.bodyType?.length && <span className="px-2 py-1 text-xs rounded-full bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] dark:bg-[var(--brand-primary)]/16 dark:text-red-100">Body Type</span>}
-            {!!filters.skills?.length && <span className="px-2 py-1 text-xs rounded-full bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] dark:bg-[var(--brand-primary)]/16 dark:text-red-100">Skills</span>}
-            {!!filters.location && <span className="px-2 py-1 text-xs rounded-full bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] dark:bg-[var(--brand-primary)]/16 dark:text-red-100">Location</span>}
-            {(filters.ageRange?.min !== 5 || filters.ageRange?.max !== 80) && <span className="px-2 py-1 text-xs rounded-full bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] dark:bg-[var(--brand-primary)]/16 dark:text-red-100">Age</span>}
-            {(filters.heightRange?.min !== 150 || filters.heightRange?.max !== 200) && <span className="px-2 py-1 text-xs rounded-full bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] dark:bg-[var(--brand-primary)]/16 dark:text-red-100">Height</span>}
-            {(filters.experience?.min !== 0 || filters.experience?.max !== 20) && <span className="px-2 py-1 text-xs rounded-full bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] dark:bg-[var(--brand-primary)]/16 dark:text-red-100">Experience</span>}
-            {!!filters.disabilities?.length && <span className="px-2 py-1 text-xs rounded-full bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] dark:bg-[var(--brand-primary)]/16 dark:text-red-100">Accessibility</span>}
+            {!!filters.gender?.length && <span className="px-2 py-1 text-xs rounded-full bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] dark:bg-[var(--brand-primary)]/16 dark:text-slate-100">Gender</span>}
+            {!!filters.bodyType?.length && <span className="px-2 py-1 text-xs rounded-full bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] dark:bg-[var(--brand-primary)]/16 dark:text-slate-100">Body Type</span>}
+            {!!filters.skills?.length && <span className="px-2 py-1 text-xs rounded-full bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] dark:bg-[var(--brand-primary)]/16 dark:text-slate-100">Skills</span>}
+            {!!filters.location && <span className="px-2 py-1 text-xs rounded-full bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] dark:bg-[var(--brand-primary)]/16 dark:text-slate-100">Location</span>}
+            {(filters.ageRange?.min !== 5 || filters.ageRange?.max !== 80) && <span className="px-2 py-1 text-xs rounded-full bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] dark:bg-[var(--brand-primary)]/16 dark:text-slate-100">Age</span>}
+            {(filters.heightRange?.min !== 150 || filters.heightRange?.max !== 200) && <span className="px-2 py-1 text-xs rounded-full bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] dark:bg-[var(--brand-primary)]/16 dark:text-slate-100">Height</span>}
+            {(filters.experience?.min !== 0 || filters.experience?.max !== 20) && <span className="px-2 py-1 text-xs rounded-full bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] dark:bg-[var(--brand-primary)]/16 dark:text-slate-100">Experience</span>}
+            {!!filters.disabilities?.length && <span className="px-2 py-1 text-xs rounded-full bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] dark:bg-[var(--brand-primary)]/16 dark:text-slate-100">Accessibility</span>}
           </div>
         </div>
       )}
@@ -168,7 +168,7 @@ export default function TalentFilterPanel({
       {filterTab === 'main' && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* Left Column */}
-          <div className="space-y-4 rounded-xl border border-blue-200/60 dark:border-red-900/40 bg-light-surface/80 dark:bg-dark-surface/70 p-3">
+          <div className="space-y-4 rounded-xl border border-[var(--chrome-border)] bg-white/70 dark:bg-white/5 p-3">
             {/* Quick Filters: Gender */}
             <div>
               <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-2">Gender</label>
@@ -185,7 +185,7 @@ export default function TalentFilterPanel({
                     className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all capitalize ${
                       filters.gender?.includes(g)
                         ? 'bg-[var(--brand-primary)] text-white shadow-sm'
-                        : 'bg-gray-100 dark:bg-white/[0.06] text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-white/[0.10]'
+                        : 'bg-gray-100/90 dark:bg-white/[0.06] text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-white/[0.10]'
                     }`}
                   >
                     {g}
@@ -210,7 +210,7 @@ export default function TalentFilterPanel({
                     className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all capitalize ${
                       filters.bodyType?.includes(b)
                         ? 'bg-[var(--brand-primary)] text-white shadow-sm'
-                        : 'bg-gray-100 dark:bg-white/[0.06] text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-white/[0.10]'
+                        : 'bg-gray-100/90 dark:bg-white/[0.06] text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-white/[0.10]'
                     }`}
                   >
                     {b}
@@ -221,7 +221,7 @@ export default function TalentFilterPanel({
           </div>
 
           {/* Right Column */}
-          <div className="space-y-4 rounded-xl border border-blue-200/60 dark:border-red-900/40 bg-light-surface/80 dark:bg-dark-surface/70 p-3">
+          <div className="space-y-4 rounded-xl border border-[var(--chrome-border)] bg-white/70 dark:bg-white/5 p-3">
             {/* Skills */}
             <div>
               <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-2">Skills</label>
@@ -243,7 +243,7 @@ export default function TalentFilterPanel({
                 />
                 <button
                   type="button"
-                  className="px-2 py-1.5 rounded-lg bg-gray-100 dark:bg-white/[0.06] hover:bg-gray-200 dark:hover:bg-white/[0.10] text-sm flex-shrink-0"
+                  className="px-2 py-1.5 rounded-lg bg-gray-100/90 dark:bg-white/[0.06] hover:bg-gray-200 dark:hover:bg-white/[0.10] text-sm flex-shrink-0"
                   title="Use my location"
                   onClick={async () => {
                     if (navigator.geolocation) {
@@ -352,7 +352,7 @@ export default function TalentFilterPanel({
                 max="80"
                 value={filters.ageRange?.min || 25}
                 onChange={(e) => setFilters(prev => ({ ...prev, ageRange: { min: parseInt(e.target.value) || 25, max: parseInt(e.target.value) || 25 } }))}
-                className="w-full px-3 py-2 rounded-lg ring-1 ring-slate-900/8 dark:ring-white/[0.08] bg-light-surface dark:bg-dark-surface text-light-surface dark:text-dark-surface text-center text-base mb-2"
+                className="w-full px-3 py-2 rounded-lg ring-1 ring-[var(--chrome-border)] bg-[var(--chrome-panel)] text-gray-900 dark:text-white text-center text-base mb-2"
               />
               <div className="text-xs text-gray-400">Looking for talent aged {filters.ageRange?.min || 25}</div>
             </div>
@@ -370,7 +370,7 @@ export default function TalentFilterPanel({
                   type="button"
                   onClick={() => { setFilters(prev => ({ ...prev, ageRange: { min: preset.min, max: preset.max } })); setAgePreset(preset.key); }}
                   className={`px-2 py-1 rounded text-xs font-medium transition-all ${
-                    agePreset === preset.key ? 'bg-[var(--brand-primary)] text-white' : 'bg-gray-100 dark:bg-white/[0.06] text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-white/[0.10]'
+                    agePreset === preset.key ? 'bg-[var(--brand-primary)] text-white' : 'bg-gray-100/90 dark:bg-white/[0.06] text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-white/[0.10]'
                   }`}
                 >
                   {preset.label}
@@ -380,12 +380,12 @@ export default function TalentFilterPanel({
             <div className="flex items-center gap-2">
               <input type="number" min="5" max="80" value={filters.ageRange?.min || 5}
                 onChange={(e) => { setFilters(prev => ({ ...prev, ageRange: { min: parseInt(e.target.value) || 5, max: prev.ageRange?.max || 80 } })); setAgePreset(null); }}
-                className="w-16 px-2 py-1 rounded ring-1 ring-slate-900/8 dark:ring-white/[0.08] bg-light-surface dark:bg-dark-surface text-light-surface dark:text-dark-surface text-sm text-center"
+                className="w-16 px-2 py-1 rounded ring-1 ring-[var(--chrome-border)] bg-[var(--chrome-panel)] text-gray-900 dark:text-white text-sm text-center"
               />
               <span className="text-xs text-gray-400">to</span>
               <input type="number" min="5" max="80" value={filters.ageRange?.max || 80}
                 onChange={(e) => { setFilters(prev => ({ ...prev, ageRange: { min: prev.ageRange?.min || 5, max: parseInt(e.target.value) || 80 } })); setAgePreset(null); }}
-                className="w-16 px-2 py-1 rounded ring-1 ring-slate-900/8 dark:ring-white/[0.08] bg-light-surface dark:bg-dark-surface text-light-surface dark:text-dark-surface text-sm text-center"
+                className="w-16 px-2 py-1 rounded ring-1 ring-[var(--chrome-border)] bg-[var(--chrome-panel)] text-gray-900 dark:text-white text-sm text-center"
               />
               <span className="text-xs text-gray-400">years</span>
             </div>
@@ -406,7 +406,7 @@ export default function TalentFilterPanel({
                 max="250"
                 value={filters.heightRange?.min || 170}
                 onChange={(e) => setFilters(prev => ({ ...prev, heightRange: { min: parseInt(e.target.value) || 170, max: parseInt(e.target.value) || 170 } }))}
-                className="w-full px-3 py-2 rounded-lg ring-1 ring-slate-900/8 dark:ring-white/[0.08] bg-light-surface dark:bg-dark-surface text-light-surface dark:text-dark-surface text-center text-base mb-2"
+                className="w-full px-3 py-2 rounded-lg ring-1 ring-[var(--chrome-border)] bg-[var(--chrome-panel)] text-gray-900 dark:text-white text-center text-base mb-2"
               />
               <div className="text-xs text-gray-400">Looking for talent {filters.heightRange?.min || 170} cm tall</div>
             </div>
@@ -433,12 +433,12 @@ export default function TalentFilterPanel({
             <div className="flex items-center gap-2">
               <input type="number" min="100" max="250" value={filters.heightRange?.min || 150}
                 onChange={(e) => { setFilters(prev => ({ ...prev, heightRange: { min: parseInt(e.target.value) || 150, max: prev.heightRange?.max || 200 } })); setHeightPreset(null); }}
-                className="w-16 px-2 py-1 rounded ring-1 ring-slate-900/8 dark:ring-white/[0.08] bg-light-surface dark:bg-dark-surface text-light-surface dark:text-dark-surface text-sm text-center"
+                className="w-16 px-2 py-1 rounded ring-1 ring-[var(--chrome-border)] bg-[var(--chrome-panel)] text-gray-900 dark:text-white text-sm text-center"
               />
               <span className="text-xs text-gray-400">to</span>
               <input type="number" min="100" max="250" value={filters.heightRange?.max || 200}
                 onChange={(e) => { setFilters(prev => ({ ...prev, heightRange: { min: prev.heightRange?.min || 150, max: parseInt(e.target.value) || 200 } })); setHeightPreset(null); }}
-                className="w-16 px-2 py-1 rounded ring-1 ring-slate-900/8 dark:ring-white/[0.08] bg-light-surface dark:bg-dark-surface text-light-surface dark:text-dark-surface text-sm text-center"
+                className="w-16 px-2 py-1 rounded ring-1 ring-[var(--chrome-border)] bg-[var(--chrome-panel)] text-gray-900 dark:text-white text-sm text-center"
               />
               <span className="text-xs text-gray-400">cm</span>
             </div>
@@ -460,7 +460,7 @@ export default function TalentFilterPanel({
                   type="button"
                   onClick={() => { setFilters(prev => ({ ...prev, experience: { min: preset.min, max: preset.max } })); setExperiencePreset(preset.key); }}
                   className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-                    experiencePreset === preset.key ? 'bg-[var(--brand-primary)] text-white shadow-md' : 'bg-gray-100 dark:bg-white/[0.06] text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-white/[0.10]'
+                    experiencePreset === preset.key ? 'bg-[var(--brand-primary)] text-white shadow-md' : 'bg-gray-100/90 dark:bg-white/[0.06] text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-white/[0.10]'
                   }`}
                 >
                   {preset.label}
@@ -493,7 +493,7 @@ export default function TalentFilterPanel({
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                     filters.disabilities?.includes(option.value)
                       ? 'bg-[var(--brand-primary)] text-white shadow-sm'
-                      : 'bg-gray-100 dark:bg-white/[0.06] text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-white/[0.10]'
+                      : 'bg-gray-100/90 dark:bg-white/[0.06] text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-white/[0.10]'
                   }`}
                 >
                   {option.label}
@@ -505,11 +505,11 @@ export default function TalentFilterPanel({
       )}
 
       {/* Actions */}
-      <div className="flex items-center justify-between mt-6 pt-4 border-t border-blue-200/60 dark:border-red-900/50">
+      <div className="flex items-center justify-between mt-6 pt-4 border-t border-[var(--chrome-border)]">
           <button
             type="button"
             onClick={clearFilters}
-            className="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-light-surface/70 dark:hover:bg-slate-800/70 transition-colors"
+            className="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-[var(--brand-primary)]/6 dark:hover:bg-white/5 transition-colors"
         >
           Clear All
         </button>
