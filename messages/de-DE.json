@@ -1533,6 +1533,11 @@
     "learnMore": "Learn more",
     "submitTicket": "Submit a Support Ticket",
     "submitTicketDesc": "Can't find what you need? Our team will get back to you within 48 hours.",
+    "faqHeading": "Frequently Asked Questions",
+    "faqCountLabel": "FAQs",
+    "allCategories": "All Categories",
+    "needHelp": "Need help?",
+    "needHelpDesc": "Can't find what you need? Submit a ticket and our team will respond within 48 hours.",
     "faqTitle": "Frequently Asked Questions",
     "secureEncrypted": "Secure & encrypted",
     "replyTime": "Typical reply within 48h",
@@ -1673,5 +1678,174 @@
         "a": "Support tickets are answered within 48 hours."
       }
     ]
+  },
+  "PricingPage": {
+    "hero": {
+      "eyebrow": "Your spotlight starts here",
+      "titlePrefix": "Ready for your",
+      "titleAccent": "three yeses?",
+      "description": "Put your work out there. Your photos, videos, and reels - all in one place, seen by the people who matter."
+    },
+    "plans": {
+      "sixMonths": {
+        "label": "6 months",
+        "price": "£10",
+        "period": "6 months",
+        "subtext": "Less than a coffee a month",
+        "description": "Dip your toe in. No long-term commitment."
+      },
+      "twelveMonths": {
+        "label": "12 months",
+        "price": "£20",
+        "period": "year",
+        "subtext": "Same price. Twice the runway.",
+        "description": "Go all in. A full year to get your break.",
+        "badge": "Best Value"
+      }
+    },
+    "features": {
+      "profile": "A profile built to turn heads",
+      "uploads": "Upload everything - no limits, ever",
+      "search": "Jump the queue in every search"
+    },
+    "trust": {
+      "noLockIn": "No lock-in - quit whenever",
+      "secureCheckout": "Stripe-secure checkout",
+      "liveImmediately": "Live the second you pay"
+    },
+    "activeSubscription": {
+      "banner": "✓ You already have an active Standard Access subscription.",
+      "manage": "Manage your subscription ->"
+    },
+    "planName": "Standard Access",
+    "aria": {
+      "price": "Price: {price} {period}",
+      "subscribePlan": "Subscribe to Standard Access - {plan}"
+    },
+    "saveAmount": "Save {amount}",
+    "buttons": {
+      "redirecting": "Redirecting to Stripe...",
+      "alreadySubscribed": "Already subscribed",
+      "subscribe": "Subscribe with Stripe"
+    },
+    "unlock": {
+      "stage": "Your Stage",
+      "showEverything": "Show Everything",
+      "cutQueue": "Cut the Queue",
+      "description": "No fluff. No fake features. Just the tools to get you seen."
+    },
+    "footer": {
+      "secureNote": "Secured via Stripe. Ditch it any time from your dashboard.",
+      "accountPrompt": "Already have an account?",
+      "login": "Log in"
+    },
+    "errors": {
+      "checkoutFailed": "Failed to create checkout session",
+      "missingCheckoutUrl": "No checkout URL received",
+      "generic": "Something went wrong. Please try again."
+    }
+  },
+  "DashboardMessagesPage": {
+    "title": "Messages",
+    "searchPlaceholder": "Search conversations...",
+    "messagePlaceholder": "Type your message...",
+    "send": "Send message",
+    "labels": {
+      "you": "You"
+    },
+    "sample": {
+      "castingDirector": "Casting Director",
+      "director": "Director",
+      "producer": "Producer",
+      "message1": "Hi! I reviewed your portfolio and would love to discuss an upcoming project...",
+      "message2": "Thank you for your interest. When would you be available for a video call?",
+      "message3": "The audition went great! We'll be in touch soon with next steps.",
+      "message4": "Hi! I reviewed your portfolio and would love to discuss an upcoming project.",
+      "message5": "Thank you for reaching out! I'd love to hear more about the project.",
+      "message6": "It's a commercial for a major brand. Are you available for a call tomorrow?",
+      "time2h": "2h ago",
+      "time1d": "1d ago",
+      "time2d": "2d ago"
+    }
+  },
+  "DashboardSubscriptionPage": {
+    "title": "Choose the plan that's right for you.",
+    "activeBanner": "You're currently subscribed to Standard Access",
+    "validUntil": "Valid until",
+    "cancelSubscription": "Cancel Subscription",
+    "forTalents": "For Talents",
+    "processing": "Processing...",
+    "currentPlan": "Current Plan",
+    "subscribe": "Subscribe with Stripe",
+    "securePayment": "Secure payment processing by Stripe",
+    "questions": "Questions? Contact us at",
+    "confirmCancel": "Are you sure you want to cancel your subscription?",
+    "cancelSuccess": "Subscription canceled successfully",
+    "errors": {
+      "missingCheckoutUrl": "No checkout URL received",
+      "createSubscription": "Failed to create subscription. Please try again.",
+      "cancelSubscription": "Failed to cancel subscription. Please try again."
+    }
+  },
+  "HubMediaPage": {
+    "searchPlaceholder": "Search media...",
+    "viewFullProfile": "View Full Profile",
+    "filterMedia": "Filter Media",
+    "filters": {
+      "all": "All",
+      "video": "Video",
+      "audio": "Audio",
+      "image": "Image"
+    },
+    "portfolioTitle": "{name}'s Portfolio",
+    "views": "{count} views"
+  },
+  "TalentPage": {
+    "selectCategory": "Select category",
+    "searchCategories": "Search categories...",
+    "rolePlaceholder": "Your role / title",
+    "bioPlaceholder": "Tell us about yourself, your experience, and what makes you unique...",
+    "skillsPlaceholder": "Add or search skills...",
+    "selectGender": "Select gender",
+    "selectEthnicity": "Select ethnicity",
+    "selectEyeColor": "Select eye color",
+    "selectHairColor": "Select hair color",
+    "selectBodyType": "Select body type",
+    "selectLanguages": "Select languages"
+  },
+  "AuthRequiredModal": {
+    "title": "Sign in required",
+    "subtitle": "Your account unlocks talent likes and favorites.",
+    "message": "You need an account to perform {action}. Continue to sign in or create an account.",
+    "buttons": {
+      "notNow": "Not now",
+      "signIn": "Sign in",
+      "createAccount": "Create an account"
+    }
+  },
+  "Comments": {
+    "addCommentPlaceholder": "Add a comment...",
+    "writeReplyPlaceholder": "Write a reply...",
+    "cancel": "Cancel",
+    "posting": "Posting...",
+    "reply": "Reply",
+    "post": "Post",
+    "delete": "Delete",
+    "confirmDelete": "Are you sure you want to delete this comment?",
+    "hideReplies": "Hide replies",
+    "viewReplies": "View {count, plural, one {# reply} other {# replies}}",
+    "errors": {
+      "postFailed": "Failed to post comment",
+      "postRetry": "Failed to post comment. Please try again."
+    }
+  },
+  "SaveButton": {
+    "save": "Save talent",
+    "remove": "Remove from saved",
+    "authModal": {
+      "title": "Sign in to save",
+      "message": "You need an account to save and bookmark {talentName} profiles. Continue to sign in or create an account.",
+      "action": "save profiles"
+    }
   }
 }

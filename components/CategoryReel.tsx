@@ -155,7 +155,7 @@ export default function CategoryReel({
               const translatedCategoryName = getTranslatedCategoryName(cat);
               const Icon = getCategoryIconByName(cat.name, cat.icon);
               const talentCount = cat._count?.talents ?? 0;
-              const categoryHref = buildLocalizedPath(locale, `/categories?category=${encodeURIComponent(cat.name)}`);
+              const categoryHref = buildLocalizedPath(locale, `/categories?category=${encodeURIComponent(cat.id)}`);
 
               return (
                 <Link

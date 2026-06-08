@@ -11,7 +11,7 @@ const intlMiddleware = createMiddleware({
   },
 });
 
-export default async function middleware(request: NextRequest) {
+export default async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   // 1. Core Admin Protection (MUST be before intlMiddleware to avoid locale redirects for admin)
@@ -47,7 +47,7 @@ export default async function middleware(request: NextRequest) {
       url.pathname = '/auth/admin-login';
       return NextResponse.redirect(url);
     }
-    
+
     // Valid admin, allow access WITHOUT intl middleware (admin is not localized)
     return NextResponse.next();
   }

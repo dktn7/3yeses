@@ -69,6 +69,7 @@ export default function LanguageSwitcherModal() {
                         height={24}
                         className="rounded-full"
                         unoptimized
+                        style={{ width: 'auto', height: 'auto' }}
                     />
                 )}
             </button>
@@ -123,6 +124,7 @@ export default function LanguageSwitcherModal() {
                                         height={28}
                                         className="rounded-full"
                                         unoptimized
+                                        style={{ width: 'auto', height: 'auto' }}
                                     />
                                     <span className="absolute -bottom-7 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-[10px] font-medium rounded-md opacity-0 group-hover/lang:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10 shadow-lg">
                                         {lang.name}

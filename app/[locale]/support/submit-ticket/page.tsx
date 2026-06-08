@@ -10,28 +10,28 @@ import SwoopingTick from '@/components/SwoopingTick';
 /* ── Background decoration (matches support hub styling) ─ */
 function SupportBgDecoration() {
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none select-none z-0 dark:opacity-90" aria-hidden="true">
+    <div className="marketing-wave-tone-support absolute inset-0 overflow-hidden pointer-events-none select-none z-0 dark:opacity-90" aria-hidden="true">
       <svg className="w-full h-full" preserveAspectRatio="none" viewBox="0 0 1440 900" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <linearGradient id="stBg" x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0%" stopColor="var(--brand-from)" stopOpacity="0.12" />
-            <stop offset="70%" stopColor="var(--brand-to)" stopOpacity="0.06" />
+            <stop offset="0%" stopColor="var(--wave-veil, var(--marketing-wave-accent))" stopOpacity="var(--marketing-wave-bg-strong)" />
+            <stop offset="70%" stopColor="var(--wave-primary, var(--marketing-wave-accent))" stopOpacity="var(--marketing-wave-bg-soft)" />
             <stop offset="100%" stopColor="transparent" />
           </linearGradient>
           <linearGradient id="stWave1" x1="0" x2="1" y1="0" y2="1">
-            <stop offset="0%" stopColor="var(--brand-from)" stopOpacity="0.12" />
-            <stop offset="100%" stopColor="var(--brand-to)" stopOpacity="0.06" />
+            <stop offset="0%" stopColor="var(--wave-primary, var(--marketing-wave-accent))" stopOpacity="var(--marketing-wave-main-strong)" />
+            <stop offset="100%" stopColor="var(--wave-secondary, var(--marketing-wave-accent))" stopOpacity="var(--marketing-wave-main-soft)" />
           </linearGradient>
           <linearGradient id="stWave2" x1="1" x2="0" y1="0" y2="1">
-            <stop offset="0%" stopColor="var(--brand-to)" stopOpacity="0.12" />
-            <stop offset="100%" stopColor="var(--brand-from)" stopOpacity="0.04" />
+            <stop offset="0%" stopColor="var(--wave-secondary, var(--marketing-wave-accent))" stopOpacity="var(--marketing-wave-secondary-strong)" />
+            <stop offset="100%" stopColor="var(--wave-primary, var(--marketing-wave-accent))" stopOpacity="var(--marketing-wave-secondary-soft)" />
           </linearGradient>
         </defs>
         <rect width="1440" height="900" fill="url(#stBg)" />
         <path d="M0 420 Q360 320 720 380 T1440 350 V900 H0Z" fill="url(#stWave1)" />
         <path d="M0 600 Q400 520 800 580 T1440 550 V900 H0Z" fill="url(#stWave2)" />
-        <circle cx="200" cy="150" r="200" fill="var(--brand-to)" opacity="0.06" />
-        <circle cx="1250" cy="700" r="260" fill="var(--brand-from)" opacity="0.05" />
+        <circle cx="200" cy="150" r="200" fill="var(--wave-orb, var(--marketing-wave-accent))" opacity="var(--marketing-wave-orb-opacity)" />
+        <circle cx="1250" cy="700" r="260" fill="var(--wave-secondary, var(--marketing-wave-accent))" opacity="var(--marketing-wave-orb-soft-opacity)" />
       </svg>
     </div>
   );

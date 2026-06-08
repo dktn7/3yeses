@@ -155,6 +155,40 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
 
   const fuse = useMemo(() => new Fuse(flatCategoryIndex, { keys: ['name', 'parentName'], threshold: 0.28, ignoreLocation: true, minMatchCharLength: 1 }), [flatCategoryIndex]);
 
+  const categoryById = useMemo(() => {
+    const map = new Map<string, Category>();
+    categories.forEach((category) => map.set(category.id, category));
+    return map;
+  }, [categories]);
+
+  const subcategoryById = useMemo(() => {
+    const map = new Map<string, { subcategory: Category['subcategories'][number]; category: Category }>();
+    categories.forEach((category) => {
+      category.subcategories.forEach((subcategory) => {
+        map.set(subcategory.id, { subcategory, category });
+      });
+    });
+    return map;
+  }, [categories]);
+
+  const resolveCategoryValue = useCallback((value: string) => {
+    const lowerValue = value.toLowerCase();
+    return categories.find((category) =>
+      category.id === value || category.name.toLowerCase() === lowerValue
+    )?.id || value;
+  }, [categories]);
+
+  const resolveSubcategoryValue = useCallback((value: string) => {
+    const lowerValue = value.toLowerCase();
+    for (const category of categories) {
+      const subcategory = category.subcategories.find((sub) =>
+        sub.id === value || sub.name.toLowerCase() === lowerValue
+      );
+      if (subcategory) return subcategory.id;
+    }
+    return value;
+  }, [categories]);
+
   // Unified advanced filters state for TalentFilterPanel
   const [advancedFilters, setAdvancedFilters] = useState<TalentFilters>(() => ({
     gender: searchParams.get('gender')?.split(',').filter(Boolean) || [],
@@ -213,6 +247,20 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
     };
     fetchCategories();
   }, []);
+
+  useEffect(() => {
+    if (!categories.length) return;
+
+    setSelectedCategory((prev) => prev ? resolveCategoryValue(prev) : prev);
+    setSelectedCategories((prev) => {
+      const next = prev.map(resolveCategoryValue);
+      return next.join(',') === prev.join(',') ? prev : next;
+    });
+    setSelectedSubcategories((prev) => {
+      const next = prev.map(resolveSubcategoryValue);
+      return next.join(',') === prev.join(',') ? prev : next;
+    });
+  }, [categories, resolveCategoryValue, resolveSubcategoryValue]);
 
   // Smart search suggestions based on input
   const searchSuggestions = useMemo(() => {
@@ -321,20 +369,22 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
   };
 
   // Handle suggestion click
-  const handleSuggestionClick = (suggestion: { type: string; name: string; parentName?: string }) => {
+  const handleSuggestionClick = (suggestion: { type: string; name: string; id?: string; parentName?: string }) => {
     if (suggestion.type === 'skill') {
       if (!skills.includes(suggestion.name)) {
         setSkills([...skills, suggestion.name]);
       }
       setSearchTerm('');
     } else if (suggestion.type === 'category') {
-      if (!selectedCategories.includes(suggestion.name)) {
-        setSelectedCategories([...selectedCategories, suggestion.name]);
+      const categoryId = suggestion.id || resolveCategoryValue(suggestion.name);
+      if (!selectedCategories.includes(categoryId)) {
+        setSelectedCategories([...selectedCategories, categoryId]);
       }
       setSearchTerm('');
     } else if (suggestion.type === 'subcategory') {
-      if (!selectedSubcategories.includes(suggestion.name)) {
-        setSelectedSubcategories([...selectedSubcategories, suggestion.name]);
+      const subcategoryId = suggestion.id || resolveSubcategoryValue(suggestion.name);
+      if (!selectedSubcategories.includes(subcategoryId)) {
+        setSelectedSubcategories([...selectedSubcategories, subcategoryId]);
       }
       setSearchTerm('');
     }
@@ -407,7 +457,7 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
         id: talent.id,
         user: { name: talent.name },
         avatarUrl: talent.avatarUrl,
-        category: talent.category ? { name: talent.category } : undefined,
+        category: talent.category ? { id: talent.categoryId, name: talent.category } : undefined,
         skills: talent.skills || [],
         location: talent.location
       };
@@ -482,23 +532,23 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
     <div className="min-h-screen">
       <div>
       {/* Sticky Header */}
-      <section className="overflow-hidden bg-gradient-to-r from-blue-100/95 via-blue-50/95 to-blue-100/95 dark:from-red-950/95 dark:via-red-900/95 dark:to-red-950/95 border-b border-gray-200/80 dark:border-gray-700/80 backdrop-blur-sm sticky top-0 z-40 shadow-lg">
+      <section className="overflow-hidden bg-[#1D4ED8] dark:bg-gradient-to-r dark:from-red-950/95 dark:via-red-900/95 dark:to-red-950/95 border-b border-blue-700/50 dark:border-gray-700/80 backdrop-blur-sm sticky top-0 z-40 shadow-lg">
         <div className="max-w-screen-2xl mx-auto px-6 py-4">
           {/* Top Row: Back + Title + View Toggle */}
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-4">
               <button
                 onClick={() => router.push(buildLocalizedPath(locale, '/categories'))}
-                className="flex items-center justify-center w-10 h-10 rounded-xl border border-gray-200 dark:border-gray-700 bg-light-surface dark:bg-dark-surface text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
+                className="flex items-center justify-center w-10 h-10 rounded-xl border border-white/20 bg-white/10 text-white hover:bg-white/15 transition-all"
               >
                 <ArrowLeft className="w-5 h-5" />
               </button>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+                <h1 className="text-2xl font-bold text-white">
                   {searchTerm ? `Results for "${searchTerm}"` : 'Talent Search'}
                 </h1>
                 {!isLoading && (
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                  <p className="text-sm text-blue-100">
                     {totalCount} {totalCount === 1 ? 'talent' : 'talents'} found
                   </p>
                 )}
@@ -506,18 +556,18 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
             </div>
             
             {/* View Toggle */}
-            <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-700 rounded-xl p-1.5">
+            <div className="flex items-center gap-2 bg-white/15 rounded-xl p-1.5 backdrop-blur-sm">
               <button
                 title="Grid view: compact cards"
                 onClick={() => setViewMode('grid')}
-                className={`p-2 rounded-lg transition-all ${viewMode === 'grid' ? 'bg-primary-blue/90 dark:bg-accent-red/90 text-white shadow-lg' : 'bg-light-surface dark:bg-dark-surface text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'}`}
+                className={`p-2 rounded-lg transition-all ${viewMode === 'grid' ? 'bg-white text-[#1D4ED8] shadow-lg dark:text-red-500 dark:bg-slate-950/95' : 'bg-transparent text-white/80 dark:text-red-200 hover:bg-white/15 dark:hover:bg-red-500/10 hover:text-white dark:hover:text-red-100'}`}
               >
                 <Grid3X3 className="w-5 h-5" />
               </button>
               <button
                 title="List view: expanded lines"
                 onClick={() => setViewMode('list')}
-                className={`p-2 rounded-lg transition-all ${viewMode === 'list' ? 'bg-primary-blue/90 dark:bg-accent-red/90 text-white shadow-lg' : 'bg-light-surface dark:bg-dark-surface text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'}`}
+                className={`p-2 rounded-lg transition-all ${viewMode === 'list' ? 'bg-white text-[#1D4ED8] shadow-lg dark:text-red-500 dark:bg-slate-950/95' : 'bg-transparent text-white/80 dark:text-red-200 hover:bg-white/15 dark:hover:bg-red-500/10 hover:text-white dark:hover:text-red-100'}`}
               >
                 <List className="w-5 h-5" />
               </button>
@@ -529,7 +579,7 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
             {/* Main Search Input */}
             <div className="flex-1 relative">
               <form onSubmit={handleSearch} className="relative">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 z-10" />
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-blue-200 dark:text-red-300 z-10" />
                 <input
                   type="text"
                   placeholder="Search talents, skills, or keywords..."
@@ -540,17 +590,17 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
                   }}
                   onFocus={() => searchTerm && setShowSearchSuggestions(true)}
                   onBlur={() => setTimeout(() => setShowSearchSuggestions(false), 150)}
-                  className="w-full pl-12 pr-12 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white placeholder:text-gray-500 focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red focus:border-transparent transition-all"
+                  className="w-full pl-12 pr-12 py-3 rounded-xl border border-white/15 dark:border-red-400/25 bg-white/95 dark:bg-slate-800/90 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:ring-2 focus:ring-white/40 dark:focus:ring-red-400/50 focus:border-transparent shadow-sm transition-all"
                 />
                 {isSearching ? (
                   <div className="absolute right-4 top-1/2 -translate-y-1/2 z-10">
-                    <span className="inline-block w-4 h-4 border-2 border-transparent border-t-current rounded-full animate-spin text-gray-600 dark:text-gray-300" />
+                    <span className="inline-block w-4 h-4 border-2 border-transparent border-t-current rounded-full animate-spin text-[#1D4ED8] dark:text-red-400" />
                   </div>
                 ) : searchTerm ? (
                   <button
                     type="button"
                     onClick={() => { setSearchTerm(''); setShowSearchSuggestions(false); }}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors z-10"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 p-1 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-200 rounded-full hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors z-10"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -559,19 +609,19 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
 
               {/* Search Suggestions Dropdown */}
               {showSearchSuggestions && searchSuggestions.length > 0 && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-light-surface dark:bg-dark-surface border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg z-50 overflow-hidden">
+                <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-900 border border-blue-100 dark:border-red-400/20 rounded-xl shadow-lg z-50 overflow-hidden">
                   {searchSuggestions.map((suggestion, index) => (
                     <button
                       key={`${suggestion.type}-${suggestion.name}-${index}`}
                       onClick={() => handleSuggestionClick(suggestion)}
-                      className="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-3 transition-colors"
+                      className="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-slate-800/90 flex items-center gap-3 transition-colors"
                     >
                       {suggestion.type === 'skill' && <Tag className="w-4 h-4 text-green-500" />}
                       {suggestion.type === 'category' && <Sparkles className="w-4 h-4 text-primary-blue dark:text-accent-red" />}
                       {suggestion.type === 'subcategory' && <Grid3X3 className="w-4 h-4 text-purple-500" />}
                       <div className="flex flex-col">
                         <span className="font-medium">{suggestion.name}</span>
-                        <span className="text-xs text-gray-500">
+                        <span className="text-xs text-gray-500 dark:text-gray-400">
                           {suggestion.type === 'skill' && 'Add as skill filter'}
                           {suggestion.type === 'category' && 'Category'}
                           {suggestion.type === 'subcategory' && `in ${suggestion.parentName}`}
@@ -589,16 +639,14 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
               title="Toggle advanced filters"
               className={`flex items-center gap-2 px-5 py-3 rounded-xl border-2 transition-all font-semibold whitespace-nowrap ${
                 showFilters
-                  ? 'bg-primary-blue dark:bg-accent-red text-white border-blue-400 dark:border-red-400 shadow-lg'
-                  : 'border-gray-200 dark:border-gray-600 bg-light-surface dark:bg-dark-surface text-gray-700 dark:text-gray-200 hover:border-primary-blue hover:text-primary-blue dark:hover:border-accent-red dark:hover:text-accent-red'}
-              `}
+                  ? 'bg-white text-[#1D4ED8] border-white shadow-lg dark:bg-red-500 dark:text-white dark:border-red-500'
+                  : 'border-white/30 bg-white/10 text-white hover:bg-white/15 hover:border-white/50 dark:border-red-400/25 dark:bg-red-500/15 dark:text-gray-100 dark:hover:bg-red-500/25 dark:hover:border-red-400/45'}
+            `}
             >
-              <SlidersHorizontal className="w-4 h-4" />
+              <SlidersHorizontal className="w-4 h-4 text-current" />
               <span>Filters</span>
               {activeFilterCount > 0 && (
-                <span className={`ml-1 px-2 py-0.5 rounded-full text-xs font-bold ${
-                  showFilters ? 'bg-white/20 text-white' : 'bg-primary-blue dark:bg-accent-red text-white'
-                }`}>
+                <span className="ml-1 px-2 py-0.5 rounded-full text-xs font-bold bg-white text-[#1D4ED8] dark:bg-white dark:text-red-950">
                   {activeFilterCount}
                 </span>
               )}
@@ -608,34 +656,37 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
           {/* Active Category/Subcategory Pills */}
           {hasCategoryFilters && (
             <div className="flex flex-wrap items-center gap-2 mt-4">
-              <span className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">Browsing:</span>
+              <span className="text-xs text-blue-100 uppercase tracking-wide">Browsing:</span>
               {selectedCategories.map(cat => {
-                const catObj = categories.find(c => c.name === cat || c.name.toLowerCase() === cat.toLowerCase());
+                const catObj = categoryById.get(cat) || categories.find(c => c.name === cat || c.name.toLowerCase() === cat.toLowerCase());
                 const iconKey = catObj?.icon || null;
-                const CatIcon = getCategoryIconByName(cat, iconKey);
+                const label = catObj?.name || cat;
+                const CatIcon = getCategoryIconByName(label, iconKey);
                 return (
-                  <span key={cat} className="inline-flex items-center gap-2 px-3 py-1 bg-primary-blue/10 dark:bg-accent-red/10 text-primary-blue dark:text-accent-red rounded-full text-sm font-medium">
+                  <span key={cat} className="inline-flex items-center gap-2 px-3 py-1 bg-white text-[#1D4ED8] rounded-full text-sm font-medium">
                     <CatIcon className="w-4 h-4" />
-                    <span>{cat}</span>
-                    <button onClick={() => setSelectedCategories(prev => prev.filter(c => c !== cat))} className="ml-1 hover:bg-primary-blue/20 dark:hover:bg-accent-red/20 rounded-full p-0.5">
+                    <span>{label}</span>
+                    <button onClick={() => setSelectedCategories(prev => prev.filter(c => c !== cat))} className="ml-1 hover:bg-blue-100 rounded-full p-0.5">
                       <X className="w-3 h-3" />
                     </button>
                   </span>
                 );
               })}
               {selectedSubcategories.map(sub => {
-                const SubIcon = getSubcategoryIconByName(sub);
+                const subObj = subcategoryById.get(sub);
+                const label = subObj?.subcategory.name || sub;
+                const SubIcon = getSubcategoryIconByName(label, subObj?.category.name, subObj?.category.icon);
                 return (
-                  <span key={sub} className="inline-flex items-center gap-2 px-3 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-full text-sm font-medium">
+                  <span key={sub} className="inline-flex items-center gap-2 px-3 py-1 bg-white/90 text-[#1D4ED8] rounded-full text-sm font-medium">
                     <SubIcon className="w-4 h-4" />
-                    <span>{sub}</span>
-                    <button onClick={() => setSelectedSubcategories(prev => prev.filter(s => s !== sub))} className="ml-1 hover:bg-purple-200 dark:hover:bg-purple-800 rounded-full p-0.5">
+                    <span>{label}</span>
+                    <button onClick={() => setSelectedSubcategories(prev => prev.filter(s => s !== sub))} className="ml-1 hover:bg-blue-100 rounded-full p-0.5">
                       <X className="w-3 h-3" />
                     </button>
                   </span>
                 );
               })}
-              <button onClick={clearCategoryFilters} className="text-xs text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 underline">
+              <button onClick={clearCategoryFilters} className="text-xs text-blue-100 hover:text-white underline">
                 Clear all
               </button>
             </div>
@@ -644,11 +695,11 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
           {/* Active Skill Pills */}
           {skills.length > 0 && (
             <div className="flex flex-wrap items-center gap-2 mt-3">
-              <span className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">Skills:</span>
+              <span className="text-xs text-blue-100 uppercase tracking-wide">Skills:</span>
               {skills.map(skill => (
-                <span key={skill} className="inline-flex items-center gap-1 px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full text-sm font-medium">
+                <span key={skill} className="inline-flex items-center gap-1 px-3 py-1 bg-white text-[#1D4ED8] rounded-full text-sm font-medium">
                   {skill}
-                  <button onClick={() => setSkills(prev => prev.filter(s => s !== skill))} className="ml-1 hover:bg-green-200 dark:hover:bg-green-800 rounded-full p-0.5">
+                  <button onClick={() => setSkills(prev => prev.filter(s => s !== skill))} className="ml-1 hover:bg-blue-100 rounded-full p-0.5">
                     <X className="w-3 h-3" />
                   </button>
                 </span>
@@ -658,9 +709,9 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
 
           {disabilities.length > 0 && (
             <div className="flex flex-wrap items-center gap-2 mt-3">
-              <span className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">Accessibility:</span>
+              <span className="text-xs text-blue-100 uppercase tracking-wide">Accessibility:</span>
               {disabilities.map(disability => (
-                <span key={disability} className="inline-flex items-center gap-1 px-3 py-1 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 rounded-full text-sm font-medium">
+                <span key={disability} className="inline-flex items-center gap-1 px-3 py-1 bg-white text-[#1D4ED8] rounded-full text-sm font-medium">
                   {disability}
                   <button
                     onClick={() => {
@@ -668,7 +719,7 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
                       setDisabilities(updated);
                       setAdvancedFilters(prev => ({ ...prev, disabilities: updated }));
                     }}
-                    className="ml-1 hover:bg-amber-200 dark:hover:bg-amber-800 rounded-full p-0.5"
+                    className="ml-1 hover:bg-blue-100 rounded-full p-0.5"
                   >
                     <X className="w-3 h-3" />
                   </button>

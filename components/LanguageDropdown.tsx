@@ -56,7 +56,16 @@ export default function LanguageDropdown() {
         onClick={() => setIsOpen(!isOpen)}
         className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200/80 dark:border-red-500/20 bg-[var(--marketing-surface)] dark:bg-[rgba(17,24,39,0.95)] text-gray-700 dark:text-red-100 shadow-sm transition-all hover:bg-slate-100/90 dark:hover:bg-[rgba(185,28,28,0.16)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
       >
-        {currentLanguage && <Image src={currentLanguage.flag} alt={currentLanguage.name} width={24} height={24} unoptimized />}
+        {currentLanguage && (
+          <Image
+            src={currentLanguage.flag}
+            alt={currentLanguage.name}
+            width={24}
+            height={24}
+            unoptimized
+            style={{ width: 'auto', height: 'auto' }}
+          />
+        )}
       </button>
 
       {isOpen && (
@@ -78,7 +87,14 @@ export default function LanguageDropdown() {
                 }`}
                 aria-current={isCurrentLanguage(locale.code) ? 'true' : undefined}
               >
-                <Image src={locale.flag} alt={locale.name} width={24} height={24} unoptimized />
+                <Image
+                  src={locale.flag}
+                  alt={locale.name}
+                  width={24}
+                  height={24}
+                  unoptimized
+                  style={{ width: 'auto', height: 'auto' }}
+                />
                 <span className="ml-2 text-sm text-gray-800 dark:text-gray-100">{locale.name}</span>
               </button>
             ))}

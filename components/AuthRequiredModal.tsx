@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { createPortal } from 'react-dom';
 import SwoopingTick from './SwoopingTick';
 import { buildLocalizedPath, getLocaleFromPathname } from '@/lib/locale-path';
@@ -24,12 +25,16 @@ const buildAuthPath = (mode: 'signin' | 'signup', currentPath: string, locale: s
 export default function AuthRequiredModal({
   isOpen,
   onClose,
-  title = 'Sign in required',
-  message = 'You need an account to perform this action. Continue to sign in or create an account.',
+  title,
+  message,
   action = 'this action'
 }: AuthRequiredModalProps) {
+  const t = useTranslations('AuthRequiredModal');
   const router = useRouter();
   const [isMounted, setIsMounted] = useState(false);
+
+  const titleText = title || t('title');
+  const messageText = message || t('message', { action });
 
   useEffect(() => {
     setIsMounted(true);
@@ -62,11 +67,11 @@ export default function AuthRequiredModal({
               <SwoopingTick size={30} className="text-primary-blue dark:text-accent-red" />
             </div>
             <div className="grow">
-              <h4 className="text-lg font-bold text-light-surface dark:text-dark-surface">{title || 'Sign in required'}</h4>
-              <p className="mt-1 text-sm font-medium text-primary-blue dark:text-accent-red">Your account unlocks talent likes and favorites.</p>
+              <h4 className="text-lg font-bold text-light-surface dark:text-dark-surface">{titleText}</h4>
+              <p className="mt-1 text-sm font-medium text-primary-blue dark:text-accent-red">{t('subtitle')}</p>
             </div>
           </div>
-          <p className="mt-4 text-sm text-slate-600 dark:text-slate-300">{message}</p>
+          <p className="mt-4 text-sm text-slate-600 dark:text-slate-300">{messageText}</p>
         </div>
         <div className="px-6 py-5 grid grid-cols-12 gap-2">
           <button
@@ -74,21 +79,21 @@ export default function AuthRequiredModal({
             onClick={onClose}
             className="col-span-12 md:col-span-4 h-11 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 bg-light-surface dark:bg-dark-surface hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
           >
-            Not now
+            {t('buttons.notNow')}
           </button>
           <button
             type="button"
             onClick={handleSignIn}
             className="col-span-12 md:col-span-4 h-11 rounded-lg border border-[var(--marketing-pill-border)] text-[var(--marketing-pill-icon)] dark:text-[var(--marketing-pill-icon)] bg-[var(--marketing-pill-bg)] dark:bg-[var(--marketing-pill-bg)] hover-smart-bg transition-colors"
           >
-            Sign in
+            {t('buttons.signIn')}
           </button>
           <button
             type="button"
             onClick={handleSignUp}
             className="col-span-12 md:col-span-4 h-11 rounded-lg bg-gradient-to-r from-primary-blue to-indigo-600 dark:from-accent-red dark:to-red-800 text-white font-semibold shadow-lg hover:shadow-xl transition-all"
           >
-            Create an account
+            {t('buttons.createAccount')}
           </button>
         </div>
       </div>

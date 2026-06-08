@@ -24,7 +24,7 @@ const AdUnit: React.FC<AdUnitProps> = ({ ad }) => {
           fill
           sizes="300px"
           className="object-cover group-hover:scale-105 transition-transform duration-300"
-          loading="lazy"
+          loading={ad.id === 'ad-1' ? 'eager' : 'lazy'}
         />
       </div>
 

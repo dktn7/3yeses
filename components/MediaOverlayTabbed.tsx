@@ -363,7 +363,7 @@ export default function MediaOverlayTabbed({ media, allMedia, talents, onClose, 
                 >
                   <div className="relative w-16 h-10 rounded overflow-hidden bg-gray-200 dark:bg-gray-800 flex-shrink-0">
                     {m.thumbnail ? (
-                      <Image src={m.thumbnail} alt={m.title} fill className="object-cover" />
+                      <Image src={m.thumbnail} alt={m.title} fill sizes="64px" className="object-cover" />
                     ) : (
                       <MediaThumbnailFallback />
                     )}

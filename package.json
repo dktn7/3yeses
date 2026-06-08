@@ -10,7 +10,7 @@
     "dev:clean": "npm run kill-servers && npm run dev:3002",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint . --ext .ts,.tsx --no-error-on-unmatched-pattern",
     "test": "playwright test",
     "test:unit": "vitest run",
     "test:unit:watch": "vitest",

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
@@ -42,6 +42,7 @@ interface MediaItem {
 }
 
 export default function MediaViewerPage() {
+  const t = useTranslations('HubMediaPage');
   const params = useParams();
   const router = useRouter();
   const locale = useLocale();
@@ -126,7 +127,7 @@ export default function MediaViewerPage() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search media..."
+              placeholder={t('searchPlaceholder')}
               className="w-full pl-10 pr-3 py-2 bg-gray-100 dark:bg-gray-800/50 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-white text-sm placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red"
             />
           </div>
@@ -161,13 +162,13 @@ export default function MediaViewerPage() {
             onClick={() => router.push(`/talent/${(talent as any).userId ?? talent.id}`)}
             className="w-full px-3 py-2 bg-primary-blue dark:bg-accent-red text-white text-sm font-medium rounded-lg hover:shadow-lg transition-all"
           >
-            View Full Profile
+            {t('viewFullProfile')}
           </button>
         </div>
 
         {/* Filter Media */}
         <div className="p-4 border-b border-gray-300 dark:border-gray-800">
-          <h4 className="text-gray-500 dark:text-white/60 text-xs font-semibold uppercase tracking-wide mb-3">Filter Media</h4>
+          <h4 className="text-gray-500 dark:text-white/60 text-xs font-semibold uppercase tracking-wide mb-3">{t('filterMedia')}</h4>
           <div className="flex flex-wrap gap-2">
             {['all', 'video', 'audio', 'image'].map((filter) => (
               <button
@@ -179,7 +180,7 @@ export default function MediaViewerPage() {
                     : 'bg-gray-200 dark:bg-white/10 text-gray-700 dark:text-white/60 hover:bg-gray-300 dark:hover:bg-white/20 hover:text-gray-900 dark:hover:text-white'
                 }`}
               >
-                {filter.charAt(0).toUpperCase() + filter.slice(1)}
+                {t(`filters.${filter}`)}
               </button>
             ))}
           </div>
@@ -189,7 +190,7 @@ export default function MediaViewerPage() {
         <div className="flex-1 overflow-y-auto scrollbar-hide">
           <div className="p-4">
             <h4 className="text-gray-500 dark:text-white/60 text-xs font-semibold uppercase tracking-wide mb-3">
-              {talent.user.name}'s Portfolio
+              {t('portfolioTitle', { name: talent.user.name })}
             </h4>
             <div className="space-y-2">
               {allMedia
@@ -311,7 +312,7 @@ export default function MediaViewerPage() {
             <span className="text-gray-600 dark:text-gray-400 text-sm">{talent.user.name} • {talent.category?.name}</span>
             <span className="flex items-center gap-1 text-gray-600 dark:text-gray-400 text-sm">
               <Eye className="w-4 h-4" />
-              {formatNumber(currentMedia.views)} views
+              {t('views', { count: formatNumber(currentMedia.views) })}
             </span>
           </div>
         </div>

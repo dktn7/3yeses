@@ -9,29 +9,29 @@ import SwoopingTick from '@/components/SwoopingTick';
 /* ── Background decoration ─ */
 function HelpBgDecoration() {
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none select-none z-0 dark:opacity-90" aria-hidden="true">
+    <div className="marketing-wave-tone-support absolute inset-0 overflow-hidden pointer-events-none select-none z-0 dark:opacity-90" aria-hidden="true">
       <svg className="w-full h-full" preserveAspectRatio="none" viewBox="0 0 1440 900" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <linearGradient id="helpBg" x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0%" stopColor="var(--brand-from)" stopOpacity="0.16" />
-            <stop offset="60%" stopColor="var(--brand-to)" stopOpacity="0.06" />
+            <stop offset="0%" stopColor="var(--wave-veil, var(--marketing-wave-accent))" stopOpacity="var(--marketing-wave-bg-strong)" />
+            <stop offset="60%" stopColor="var(--wave-primary, var(--marketing-wave-accent))" stopOpacity="var(--marketing-wave-bg-soft)" />
             <stop offset="100%" stopColor="transparent" />
           </linearGradient>
           <linearGradient id="helpW1" x1="0" x2="1" y1="0" y2="1">
-            <stop offset="0%" stopColor="var(--brand-from)" stopOpacity="0.20" />
-            <stop offset="100%" stopColor="var(--brand-to)" stopOpacity="0.08" />
+            <stop offset="0%" stopColor="var(--wave-primary, var(--marketing-wave-accent))" stopOpacity="var(--marketing-wave-main-strong)" />
+            <stop offset="100%" stopColor="var(--wave-secondary, var(--marketing-wave-accent))" stopOpacity="var(--marketing-wave-main-soft)" />
           </linearGradient>
           <linearGradient id="helpW2" x1="1" x2="0" y1="0" y2="1">
-            <stop offset="0%" stopColor="var(--brand-to)" stopOpacity="0.16" />
-            <stop offset="100%" stopColor="var(--brand-from)" stopOpacity="0.04" />
+            <stop offset="0%" stopColor="var(--wave-secondary, var(--marketing-wave-accent))" stopOpacity="var(--marketing-wave-secondary-strong)" />
+            <stop offset="100%" stopColor="var(--wave-primary, var(--marketing-wave-accent))" stopOpacity="var(--marketing-wave-secondary-soft)" />
           </linearGradient>
         </defs>
         <rect width="1440" height="900" fill="url(#helpBg)" />
         <path d="M0 350 Q360 250 720 330 T1440 290 V900 H0Z" fill="url(#helpW1)" />
         <path d="M0 550 Q400 470 800 530 T1440 490 V900 H0Z" fill="url(#helpW2)" />
-        <path d="M0 60 C360 120 720 30 1080 80 C1260 110 1380 70 1440 90 L1440 0 L0 0 Z" fill="var(--hero-top-wave, var(--brand-from))" opacity="0.10" />
-        <circle cx="200" cy="150" r="200" fill="var(--brand-to)" opacity="0.08" />
-        <circle cx="1250" cy="700" r="260" fill="var(--brand-from)" opacity="0.07" />
+        <path d="M0 60 C360 120 720 30 1080 80 C1260 110 1380 70 1440 90 L1440 0 L0 0 Z" fill="var(--wave-secondary, var(--marketing-wave-accent))" opacity="var(--marketing-wave-top-opacity)" />
+        <circle cx="200" cy="150" r="200" fill="var(--wave-orb, var(--marketing-wave-accent))" opacity="var(--marketing-wave-orb-opacity)" />
+        <circle cx="1250" cy="700" r="260" fill="var(--wave-secondary, var(--marketing-wave-accent))" opacity="var(--marketing-wave-orb-soft-opacity)" />
       </svg>
     </div>
   );
@@ -48,7 +48,7 @@ function HelpFAQ({ items }: { items: { q: string; a: string }[] }) {
         return (
           <div
             key={idx}
-            className="rounded-xl border border-gray-200/60 dark:border-red-400/20 overflow-hidden backdrop-blur-sm bg-light-surface dark:bg-dark-surface transition-shadow hover:shadow-sm"
+            className="marketing-panel overflow-hidden rounded-[1.25rem] border border-[var(--marketing-border)] shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
           >
             <button
               type="button"
@@ -76,9 +76,12 @@ function HelpFAQ({ items }: { items: { q: string; a: string }[] }) {
 /* ── Help Content Block ─ */
 function HelpContent({ items }: { items: { title: string; content: string }[] }) {
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {items.map((item, idx) => (
-        <div key={idx}>
+        <div
+          key={idx}
+          className="marketing-panel rounded-[1.25rem] border border-[var(--marketing-border)] p-5 shadow-sm"
+        >
           <h3 className="font-bold text-gray-900 dark:text-white text-base mb-2">{item.title}</h3>
           <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">{item.content}</p>
         </div>
@@ -156,7 +159,7 @@ export default function HelpSectionPage({
           <div className="lg:col-span-3 space-y-8">
             {/* Guides */}
             {guides.length > 0 && (
-              <div className="rounded-[2rem] backdrop-blur-xl bg-light-surface dark:bg-dark-surface border border-gray-200/50 dark:border-red-400/20 shadow-lg p-8">
+              <div className="marketing-panel rounded-[2rem] border border-[var(--marketing-border)] shadow-lg p-8">
                 <div className="flex items-center gap-3 mb-6">
                   {icon}
                   <h2 className="text-xl font-bold text-gray-900 dark:text-white">{t('quickGuide')}</h2>
@@ -167,7 +170,7 @@ export default function HelpSectionPage({
 
             {/* FAQ */}
             {faqs.length > 0 && (
-              <div className="rounded-[2rem] backdrop-blur-xl bg-light-surface dark:bg-dark-surface border border-gray-200/50 dark:border-red-400/20 shadow-lg p-8">
+              <div className="marketing-panel rounded-[2rem] border border-[var(--marketing-border)] shadow-lg p-8">
                 <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">
                   {t('faqTitle')}
                 </h2>
@@ -180,7 +183,7 @@ export default function HelpSectionPage({
           <aside className="lg:col-span-2 space-y-5">
             <Link
               href={`/support/submit-ticket`}
-              className="group flex items-center gap-3 rounded-[1.5rem] backdrop-blur-xl bg-light-surface dark:bg-dark-surface border border-gray-200/50 dark:border-red-400/20 shadow-sm hover:shadow-lg hover:-translate-y-0.5 hover:border-primary-blue/30 dark:hover:border-red-300/35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/30 dark:focus-visible:ring-accent-red/35 transition-all duration-300 p-6"
+              className="marketing-panel group flex items-center gap-3 rounded-[1.5rem] border border-[var(--marketing-border)] p-6 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary-blue/30 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/30 dark:hover:border-red-300/35 dark:focus-visible:ring-accent-red/35"
             >
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-blue/10 to-accent-blue/10 dark:from-accent-red/10 dark:to-primary-red/10 flex items-center justify-center flex-shrink-0">
                 <LifeBuoy className="w-5 h-5 text-primary-blue dark:text-accent-red" />
@@ -195,7 +198,7 @@ export default function HelpSectionPage({
               </div>
             </Link>
 
-            <div className="rounded-[1.5rem] backdrop-blur-xl bg-light-surface dark:bg-dark-surface border border-gray-200/50 dark:border-red-400/20 shadow-sm p-6">
+            <div className="marketing-panel rounded-[1.5rem] border border-[var(--marketing-border)] p-6 shadow-sm">
               <h3 className="font-bold text-gray-900 dark:text-white text-sm mb-3">{t('relatedTopics')}</h3>
               <div className="space-y-2">
                 {[
@@ -212,7 +215,7 @@ export default function HelpSectionPage({
                     <Link
                       key={topic.href}
                       href={topic.href}
-                      className="block text-sm text-gray-600 dark:text-gray-300 hover:text-primary-blue dark:hover:text-accent-red focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/30 dark:focus-visible:ring-accent-red/35 rounded-sm transition-colors py-1"
+                      className="block rounded-xl border border-transparent px-3 py-2 text-sm text-gray-600 transition-colors hover:border-[var(--marketing-border)] hover:bg-[var(--marketing-surface-strong)] hover:text-primary-blue focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/30 dark:text-gray-300 dark:hover:text-accent-red dark:focus-visible:ring-accent-red/35"
                     >
                       {topic.label}
                     </Link>

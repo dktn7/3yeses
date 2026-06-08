@@ -38,7 +38,7 @@ export default function TalentCard({ talent }: { talent: Talent }) {
                         <p className="text-sm text-gray-600 dark:text-gray-400 group-hover:text-white/90 dark:group-hover:text-white/90">{talent.role}</p>
                         <div className="mt-2">
                                                 <Link
-                                                        href={talent.category ? `/categories?category=${encodeURIComponent(talent.category)}` : '/categories'}
+                                                        href={talent.category ? `/categories?category=${encodeURIComponent((talent as any).categoryId || talent.category)}` : '/categories'}
                                                         className="inline-flex items-center gap-2 text-xs md:text-sm font-semibold text-primary-blue dark:text-accent-red px-2 py-1 rounded-full bg-primary-blue/10 dark:bg-accent-red/15 border border-primary-blue/20 dark:border-accent-red/20 hover:bg-primary-blue/20 dark:hover:bg-accent-red/25 transition-all group-hover:bg-light-surface/10 group-hover:text-white"
                                                         aria-label={`Browse ${talent.category ?? 'all'} talents`}
                                                     >

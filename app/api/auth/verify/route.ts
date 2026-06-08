@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
     if (!accessToken) {
       return NextResponse.json(
         { success: false, error: 'Not authenticated' },
-        { status: 401 }
+        { status: 200 }
       );
     }
 
@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
     if (!decoded) {
       return NextResponse.json(
         { success: false, error: 'Invalid token' },
-        { status: 401 }
+        { status: 200 }
       );
     }
 
@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
     if (!user) {
       return NextResponse.json(
         { success: false, error: 'User not found' },
-        { status: 404 }
+        { status: 200 }
       );
     }
 

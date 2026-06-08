@@ -96,6 +96,21 @@
   --marketing-panel-soft: rgba(255,255,255,0.82);
   --marketing-bg-canvas: #f8fbff;
   --marketing-bg-glow-top: rgba(59,130,246,0.08);
+  --marketing-wave-accent: #1d4ed8;
+  --marketing-wave-accent-top: #214cd3;
+  --marketing-wave-accent-deep: #173aa7;
+  --marketing-wave-accent-bright: #3464f4;
+  --marketing-wave-accent-soft: #6f8ee8;
+  --marketing-wave-accent-veil: #9fb4f2;
+  --marketing-wave-bg-strong: 0.34;
+  --marketing-wave-bg-soft: 0.24;
+  --marketing-wave-main-strong: 0.60;
+  --marketing-wave-main-soft: 0.36;
+  --marketing-wave-secondary-strong: 0.52;
+  --marketing-wave-secondary-soft: 0.30;
+  --marketing-wave-top-opacity: 0.42;
+  --marketing-wave-orb-opacity: 0.22;
+  --marketing-wave-orb-soft-opacity: 0.18;
   --marketing-hero-title: var(--marketing-heading);
   --marketing-hero-muted: #475569;
   /* Landing page base bg — light mode keeps the page body soft and lets the top band carry the stronger blue */
@@ -105,7 +120,7 @@
   --landing-wave-two: rgba(78, 119, 214, 0.18);
   --landing-wave-three: rgba(255, 255, 255, 0.34);
   --landing-header-glow: rgba(59, 130, 246, 0.14);
-  --hero-top-wave: var(--landing-wave-three);
+  --hero-top-wave: var(--marketing-wave-accent);
   --chrome-bg: rgba(255, 255, 255, 0.94);
   --chrome-panel: rgba(255, 255, 255, 0.96);
   --chrome-border: rgba(148, 163, 184, 0.24);
@@ -191,6 +206,21 @@
   --marketing-panel-soft: rgba(24,24,27,0.92);
   --marketing-bg-canvas: #09090b;
   --marketing-bg-glow-top: rgba(220,38,38,0.10);
+  --marketing-wave-accent: #dc2626;
+  --marketing-wave-accent-top: var(--marketing-wave-accent);
+  --marketing-wave-accent-deep: color-mix(in srgb, var(--marketing-wave-accent) 76%, #450a0a);
+  --marketing-wave-accent-bright: color-mix(in srgb, var(--marketing-wave-accent) 82%, #fb7185);
+  --marketing-wave-accent-soft: color-mix(in srgb, var(--marketing-wave-accent) 70%, #f87171);
+  --marketing-wave-accent-veil: color-mix(in srgb, var(--marketing-wave-accent) 38%, #18181b);
+  --marketing-wave-bg-strong: 0.34;
+  --marketing-wave-bg-soft: 0.22;
+  --marketing-wave-main-strong: 0.58;
+  --marketing-wave-main-soft: 0.34;
+  --marketing-wave-secondary-strong: 0.48;
+  --marketing-wave-secondary-soft: 0.26;
+  --marketing-wave-top-opacity: 0.34;
+  --marketing-wave-orb-opacity: 0.24;
+  --marketing-wave-orb-soft-opacity: 0.18;
   --marketing-hero-title: var(--marketing-heading);
   --marketing-hero-muted: #cbd5e1;
   /* Landing page base bg — dark mode keeps a dark-grey base with red signal layers */
@@ -200,7 +230,7 @@
   --landing-wave-two: rgba(63, 63, 70, 0.12);
   --landing-wave-three: rgba(212, 212, 216, 0.10);
   --landing-header-glow: rgba(212, 212, 216, 0.12);
-  --hero-top-wave: var(--landing-wave-three);
+  --hero-top-wave: var(--marketing-wave-accent);
   --chrome-bg: rgba(24, 24, 27, 0.95);
   --chrome-panel: rgba(32, 32, 36, 0.97);
   --chrome-border: rgba(255, 255, 255, 0.08);
@@ -234,6 +264,34 @@
     --sidebar-muted: #94a3b8;
     --sidebar-muted-strong: #e2e8f0;
   }
+
+.marketing-wave-tone-showcase {
+  --wave-primary: var(--marketing-wave-accent-top);
+  --wave-secondary: var(--marketing-wave-accent-bright);
+  --wave-veil: var(--marketing-wave-accent-soft);
+  --wave-orb: var(--marketing-wave-accent-bright);
+}
+
+.marketing-wave-tone-structured {
+  --wave-primary: var(--marketing-wave-accent-deep);
+  --wave-secondary: var(--marketing-wave-accent-top);
+  --wave-veil: var(--marketing-wave-accent-soft);
+  --wave-orb: var(--marketing-wave-accent-bright);
+}
+
+.marketing-wave-tone-commercial {
+  --wave-primary: var(--marketing-wave-accent-top);
+  --wave-secondary: var(--marketing-wave-accent-bright);
+  --wave-veil: var(--marketing-wave-accent-soft);
+  --wave-orb: var(--marketing-wave-accent-top);
+}
+
+.marketing-wave-tone-support {
+  --wave-primary: var(--marketing-wave-accent-soft);
+  --wave-secondary: var(--marketing-wave-accent);
+  --wave-veil: var(--marketing-wave-accent-veil);
+  --wave-orb: var(--marketing-wave-accent-soft);
+}
 
   /* Ensure prominent CTAs remain legible on busy marketing hero backgrounds in light mode.
      Targets: landing pages (.brand-true-red), hero areas and common CTA classes.
@@ -408,6 +466,99 @@ body, p, span, label, input, button, select, textarea,
 .marketing-hero-title .marketing-yes-accent,
 .marketing-hero-title .marketing-dynamic-headline {
   filter: saturate(1.02);
+}
+
+/* Category page accents: light mode is brand blue, dark mode is brand red. */
+.category-card {
+  background: #ffffff;
+  border: 1px solid rgba(148, 163, 184, 0.34);
+  box-shadow:
+    0 10px 26px rgba(15, 23, 42, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.86);
+  color: #0f172a;
+}
+
+.category-card:hover {
+  background: #ffffff;
+  border-color: rgba(var(--brand-primary-rgb), 0.48);
+  box-shadow:
+    0 18px 38px rgba(37, 99, 235, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.86);
+}
+
+.category-icon-box {
+  background: #f8fafc;
+  border: 1px solid rgba(var(--brand-primary-rgb), 0.24);
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+  color: var(--brand-primary);
+}
+
+.category-card:hover .category-icon-box {
+  background: var(--brand-primary);
+  border-color: var(--brand-primary);
+  box-shadow: 0 14px 28px rgba(37, 99, 235, 0.26);
+  color: #ffffff;
+}
+
+.category-accent,
+.category-icon-accent,
+.category-accent-hover:hover {
+  color: var(--brand-primary) !important;
+}
+
+.category-card:hover .category-icon-accent {
+  color: #ffffff !important;
+}
+
+.category-filter-pill {
+  background: rgba(var(--brand-primary-rgb), 0.10);
+  color: var(--brand-primary);
+}
+
+.dark main .category-card {
+  background: #242424;
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 12px 28px rgba(0, 0, 0, 0.48),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  color: #ffffff;
+}
+
+.dark main .category-card:hover {
+  background: #242424;
+  border-color: rgba(var(--brand-primary-rgb), 0.58);
+  box-shadow:
+    0 18px 36px rgba(127, 29, 29, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.dark main .category-icon-box {
+  background: #303030;
+  border-color: rgba(var(--brand-primary-rgb), 0.28);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.30);
+  color: var(--brand-primary);
+}
+
+.dark main .category-card:hover .category-icon-box {
+  background: var(--brand-primary);
+  border-color: var(--brand-primary);
+  box-shadow: 0 14px 28px rgba(127, 29, 29, 0.24);
+  color: #ffffff;
+}
+
+.dark main .category-accent,
+.dark main .category-icon-accent,
+.dark main .category-accent-hover:hover,
+.dark main .category-filter-pill {
+  color: var(--brand-primary) !important;
+}
+
+.dark main .category-filter-pill {
+  background: rgba(var(--brand-primary-rgb), 0.13);
+}
+
+.dark main .category-card:hover .category-icon-accent {
+  color: #ffffff !important;
 }
 
 /* Dark-mode typographic overrides — SCOPED TO <main> ONLY.

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { Check, Loader2, Shield, TrendingUp, Image as ImageIcon, UserCheck, Calendar, Crown } from 'lucide-react';
 import SwoopingTick from '@/components/SwoopingTick';
 import Breadcrumbs from '@/components/Breadcrumbs';
@@ -14,87 +15,56 @@ const PLAN_ICONS = {
 
 function BgDecorations() {
   return (
-    <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none dark:opacity-90" aria-hidden="true">
+    <div className="marketing-wave-tone-commercial absolute inset-0 z-0 overflow-hidden pointer-events-none select-none dark:opacity-90" aria-hidden="true">
       <svg className="w-full h-full" preserveAspectRatio="none" viewBox="0 0 1440 900" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <radialGradient id="pricingGlowOne" cx="18%" cy="12%" r="58%">
-            <stop offset="0%" stopColor="var(--brand-from)" stopOpacity="0.18" />
-            <stop offset="70%" stopColor="var(--brand-from)" stopOpacity="0.05" />
+            <stop offset="0%" stopColor="var(--wave-veil, var(--marketing-wave-accent))" stopOpacity="var(--marketing-wave-bg-strong)" />
+            <stop offset="70%" stopColor="var(--wave-primary, var(--marketing-wave-accent))" stopOpacity="var(--marketing-wave-bg-soft)" />
             <stop offset="100%" stopColor="transparent" />
           </radialGradient>
           <radialGradient id="pricingGlowTwo" cx="82%" cy="78%" r="54%">
-            <stop offset="0%" stopColor="var(--brand-to)" stopOpacity="0.16" />
-            <stop offset="72%" stopColor="var(--brand-to)" stopOpacity="0.04" />
+            <stop offset="0%" stopColor="var(--wave-secondary, var(--marketing-wave-accent))" stopOpacity="var(--marketing-wave-bg-strong)" />
+            <stop offset="72%" stopColor="var(--wave-veil, var(--marketing-wave-accent))" stopOpacity="var(--marketing-wave-bg-soft)" />
             <stop offset="100%" stopColor="transparent" />
           </radialGradient>
           <linearGradient id="pricingWaveBase" x1="0" x2="1" y1="0" y2="0">
-            <stop offset="0%" stopColor="var(--brand-from)" stopOpacity="0.06" />
-            <stop offset="48%" stopColor="var(--brand-to)" stopOpacity="0.14" />
-            <stop offset="100%" stopColor="var(--brand-from)" stopOpacity="0.08" />
+            <stop offset="0%" stopColor="var(--wave-primary, var(--marketing-wave-accent))" stopOpacity="var(--marketing-wave-main-soft)" />
+            <stop offset="48%" stopColor="var(--wave-secondary, var(--marketing-wave-accent))" stopOpacity="var(--marketing-wave-main-strong)" />
+            <stop offset="100%" stopColor="var(--wave-primary, var(--marketing-wave-accent))" stopOpacity="var(--marketing-wave-main-soft)" />
           </linearGradient>
           <linearGradient id="pricingWaveMid" x1="0" x2="1" y1="0" y2="1">
-            <stop offset="0%" stopColor="var(--brand-to)" stopOpacity="0.18" />
-            <stop offset="100%" stopColor="var(--brand-from)" stopOpacity="0.04" />
+            <stop offset="0%" stopColor="var(--wave-secondary, var(--marketing-wave-accent))" stopOpacity="var(--marketing-wave-secondary-strong)" />
+            <stop offset="100%" stopColor="var(--wave-primary, var(--marketing-wave-accent))" stopOpacity="var(--marketing-wave-secondary-soft)" />
           </linearGradient>
           <linearGradient id="pricingWaveLine" x1="0" x2="1" y1="0" y2="1">
-            <stop offset="0%" stopColor="var(--brand-from)" stopOpacity="0.34" />
-            <stop offset="100%" stopColor="var(--brand-to)" stopOpacity="0.06" />
+            <stop offset="0%" stopColor="var(--wave-primary, var(--marketing-wave-accent))" stopOpacity="var(--marketing-wave-main-strong)" />
+            <stop offset="100%" stopColor="var(--wave-secondary, var(--marketing-wave-accent))" stopOpacity="var(--marketing-wave-main-soft)" />
           </linearGradient>
         </defs>
         <rect width="100%" height="100%" fill="url(#pricingGlowOne)" />
         <rect width="100%" height="100%" fill="url(#pricingGlowTwo)" />
         <path d="M-80 670 C120 590 300 700 510 644 C700 595 850 650 1040 616 C1200 590 1320 612 1520 560 L1520 920 L-80 920 Z" fill="url(#pricingWaveBase)" />
         <path d="M-120 748 C110 680 320 790 540 732 C760 676 930 770 1140 712 C1285 672 1400 692 1560 650 L1560 920 L-120 920 Z" fill="url(#pricingWaveMid)" />
-        <path d="M-40 788 C220 744 430 822 660 792 C890 760 1080 820 1320 782 C1410 768 1480 760 1560 748 L1560 920 L-40 920 Z" fill="var(--brand-from)" opacity="0.05" />
-        <path d="M0 92 C200 48 420 106 640 72 C880 34 1090 88 1280 66 C1350 58 1406 50 1440 48 L1440 0 L0 0 Z" fill="url(#pricingWaveLine)" opacity="0.7" />
-        <path d="M0 120 C280 160 560 84 840 128 C1060 162 1240 124 1440 138 L1440 0 L0 0 Z" fill="var(--hero-top-wave, var(--brand-from))" opacity="0.06" />
-        <g opacity="0.22">
-          <circle cx="120" cy="200" r="2.5" fill="var(--brand-from)" />
-          <circle cx="200" cy="150" r="1.8" fill="var(--brand-to)" />
-          <circle cx="310" cy="230" r="2.2" fill="var(--brand-from)" />
-          <circle cx="1180" cy="190" r="2.6" fill="var(--brand-to)" />
-          <circle cx="1290" cy="250" r="1.7" fill="var(--brand-from)" />
-          <circle cx="1360" cy="175" r="2.1" fill="var(--brand-to)" />
+        <path d="M-40 788 C220 744 430 822 660 792 C890 760 1080 820 1320 782 C1410 768 1480 760 1560 748 L1560 920 L-40 920 Z" fill="var(--wave-secondary, var(--marketing-wave-accent))" opacity="var(--marketing-wave-secondary-soft)" />
+        <path d="M0 92 C200 48 420 106 640 72 C880 34 1090 88 1280 66 C1350 58 1406 50 1440 48 L1440 0 L0 0 Z" fill="url(#pricingWaveLine)" opacity="var(--marketing-wave-main-strong)" />
+        <path d="M0 120 C280 160 560 84 840 128 C1060 162 1240 124 1440 138 L1440 0 L0 0 Z" fill="var(--wave-primary, var(--marketing-wave-accent))" opacity="var(--marketing-wave-top-opacity)" />
+        <g opacity="var(--marketing-wave-orb-opacity)">
+          <circle cx="120" cy="200" r="2.5" fill="var(--wave-orb, var(--marketing-wave-accent))" />
+          <circle cx="200" cy="150" r="1.8" fill="var(--wave-secondary, var(--marketing-wave-accent))" />
+          <circle cx="310" cy="230" r="2.2" fill="var(--wave-orb, var(--marketing-wave-accent))" />
+          <circle cx="1180" cy="190" r="2.6" fill="var(--wave-secondary, var(--marketing-wave-accent))" />
+          <circle cx="1290" cy="250" r="1.7" fill="var(--wave-orb, var(--marketing-wave-accent))" />
+          <circle cx="1360" cy="175" r="2.1" fill="var(--wave-secondary, var(--marketing-wave-accent))" />
         </g>
       </svg>
     </div>
   );
 }
 
-const PLANS = [
-  {
-    id: '6_months' as const,
-    label: '6 months',
-    price: '£10',
-    period: '6 months',
-    subtext: 'Less than a coffee a month',
-    description: 'Dip your toe in. No long-term commitment.',
-    badge: null,
-  },
-  {
-    id: '12_months' as const,
-    label: '12 months',
-    price: '£20',
-    period: 'year',
-    subtext: 'Same price. Twice the runway.',
-    description: 'Go all in. A full year to get your break.',
-    badge: 'Best Value',
-  },
-];
-
-const FEATURES = [
-  { icon: <UserCheck className="w-5 h-5" />, text: 'A profile built to turn heads' },
-  { icon: <ImageIcon className="w-5 h-5" />, text: 'Upload everything — no limits, ever' },
-  { icon: <TrendingUp className="w-5 h-5" />, text: 'Jump the queue in every search' },
-];
-
-const TRUST = [
-  { icon: <Shield className="w-5 h-5" />, label: 'No lock-in — quit whenever' },
-  { icon: <UserCheck className="w-5 h-5" />, label: 'Stripe-secure checkout' },
-  { icon: <Check className="w-5 h-5" />, label: 'Live the second you pay' },
-];
-
 export default function PricingPage() {
+  const t = useTranslations('PricingPage');
+  const tNav = useTranslations('Navigation');
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -106,6 +76,39 @@ export default function PricingPage() {
   const [hasActiveSub, setHasActiveSub] = useState(false);
   const [subscribing, setSubscribing] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  const PLANS = [
+    {
+      id: '6_months' as const,
+      label: t('plans.sixMonths.label'),
+      price: t('plans.sixMonths.price'),
+      period: t('plans.sixMonths.period'),
+      subtext: t('plans.sixMonths.subtext'),
+      description: t('plans.sixMonths.description'),
+      badge: null,
+    },
+    {
+      id: '12_months' as const,
+      label: t('plans.twelveMonths.label'),
+      price: t('plans.twelveMonths.price'),
+      period: t('plans.twelveMonths.period'),
+      subtext: t('plans.twelveMonths.subtext'),
+      description: t('plans.twelveMonths.description'),
+      badge: t('plans.twelveMonths.badge'),
+    },
+  ];
+
+  const FEATURES = [
+    { icon: <UserCheck className="w-5 h-5" />, text: t('features.profile') },
+    { icon: <ImageIcon className="w-5 h-5" />, text: t('features.uploads') },
+    { icon: <TrendingUp className="w-5 h-5" />, text: t('features.search') },
+  ];
+
+  const TRUST = [
+    { icon: <Shield className="w-5 h-5" />, label: t('trust.noLockIn') },
+    { icon: <UserCheck className="w-5 h-5" />, label: t('trust.secureCheckout') },
+    { icon: <Check className="w-5 h-5" />, label: t('trust.liveImmediately') },
+  ];
 
   useEffect(() => {
     fetch('/api/subscription/current', { credentials: 'include' })
@@ -143,11 +146,11 @@ export default function PricingPage() {
         body: JSON.stringify({ duration, locale }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to create checkout session');
+      if (!res.ok) throw new Error(data.error || t('errors.checkoutFailed'));
       if (data.url) { window.location.href = data.url; }
-      else throw new Error('No checkout URL received');
+      else throw new Error(t('errors.missingCheckoutUrl'));
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+      setError(err instanceof Error ? err.message : t('errors.generic'));
       setSubscribing(null);
     }
   };
@@ -158,25 +161,24 @@ export default function PricingPage() {
 
       <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-28">
 
-        <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Pricing' }]} />
+        <Breadcrumbs items={[{ label: tNav('home'), href: '/' }, { label: tNav('pricing') }]} />
 
         {/* ── Hero heading ── */}
         <div className="text-center mb-20">
           <div className="marketing-pill inline-flex items-center gap-2 marketing-pill text-[var(--foreground)] text-sm font-semibold px-5 py-2.5 rounded-full mb-8 border border-gray-300/70 dark:border-[var(--marketing-pill-border)] shadow-sm">
             <span className="w-2 h-2 rounded-full bg-primary-blue dark:bg-accent-red animate-pulse" />
-            Your spotlight starts here
+            {t('hero.eyebrow')}
           </div>
 
           <h1 className="marketing-hero-title text-5xl sm:text-6xl md:text-7xl font-extrabold mb-6 leading-[1.08] tracking-tight">
-            Ready for your{' '}
+            {t('hero.titlePrefix')}{' '}
             <span className="marketing-yes-accent">
-              three yeses?
+              {t('hero.titleAccent')}
             </span>
           </h1>
 
           <p className="text-lg sm:text-xl text-[color-mix(in_srgb,var(--foreground)_68%,transparent)] max-w-2xl mx-auto mb-8 leading-relaxed">
-            Put your work out there. Your photos, videos, and reels — all in one place,
-            seen by the people who matter.
+            {t('hero.description')}
           </p>
 
           {/* Swooping tick brand marks */}
@@ -191,10 +193,10 @@ export default function PricingPage() {
         {hasActiveSub && (
           <div className="mb-12 p-5 backdrop-blur-md bg-emerald-50/80 dark:bg-emerald-900/20 border border-emerald-200/60 dark:border-emerald-700/40 rounded-2xl text-center shadow-sm">
             <p className="text-emerald-700 dark:text-emerald-400 font-semibold">
-              ✓ You already have an active Standard Access subscription.
+              {t('activeSubscription.banner')}
             </p>
             <a href={`/${locale}/dashboard/subscription`} className="text-sm text-emerald-600 dark:text-emerald-500 hover:underline mt-2 inline-block font-medium transition-colors">
-              Manage your subscription →
+              {t('activeSubscription.manage')}
             </a>
           </div>
         )}
@@ -276,7 +278,7 @@ export default function PricingPage() {
                   </div>
 
                   <div className="mb-1.5 text-[0.65rem] font-bold uppercase tracking-[0.2em] marketing-accent-text">
-                    Standard Access
+                    {t('planName')}
                   </div>
                   <h2 className="marketing-hero-title text-2xl font-extrabold mb-1.5 tracking-tight">
                     {plan.label}
@@ -285,7 +287,7 @@ export default function PricingPage() {
 
                   {/* Price (visual discount only) */}
                   <div className="mb-2">
-                    <span className="sr-only">Price: {plan.price} {plan.period}</span>
+                    <span className="sr-only">{t('aria.price', {price: plan.price, period: plan.period})}</span>
 
                     {/* Visual original price (fake discount) */}
                     {originalPrice && (
@@ -295,7 +297,7 @@ export default function PricingPage() {
                           <span className="percent-badge">{percent}% Off</span>
                         ) : (
                           <span className="inline-block text-xs font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 px-2 py-0.5 rounded-full">
-                            Save {computedSavings}
+                            {t('saveAmount', { amount: computedSavings })}
                           </span>
                         )}
                       </div>
@@ -326,7 +328,7 @@ export default function PricingPage() {
                   <button
                     onClick={() => handleSubscribe(plan.id)}
                     disabled={!!subscribing || hasActiveSub || !authChecked}
-                    aria-label={`Subscribe to Standard Access — ${plan.label}`}
+                    aria-label={t('aria.subscribePlan', { plan: plan.label })}
                     className={`w-full flex items-center justify-center gap-2 py-4 px-6 rounded-2xl font-bold text-black dark:text-white text-base transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[var(--marketing-ring)] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed ${
                       hasActiveSub
                         ? 'bg-gray-400 cursor-default'
@@ -336,15 +338,15 @@ export default function PricingPage() {
                     {isLoading ? (
                       <>
                         <Loader2 className="w-4 h-4 animate-spin" />
-                        Redirecting to Stripe…
+                        {t('buttons.redirecting')}
                       </>
                     ) : hasActiveSub ? (
-                      'Already subscribed'
+                      t('buttons.alreadySubscribed')
                     ) : !authChecked ? (
                       <Loader2 className="w-4 h-4 animate-spin" />
                     ) : (
                       <>
-                        Subscribe with Stripe
+                        {t('buttons.subscribe')}
                         <span className="ml-2 transform transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true">→</span>
                       </>
                     )}
@@ -372,20 +374,20 @@ export default function PricingPage() {
             <div className="flex items-center justify-center gap-8">
               <div className="flex flex-col items-center text-[var(--foreground)]">
                 <UserCheck className="w-10 h-10 marketing-accent-text" />
-                <span className="mt-2 text-sm font-semibold">Your Stage</span>
+                <span className="mt-2 text-sm font-semibold">{t('unlock.stage')}</span>
               </div>
               <div className="flex flex-col items-center text-[var(--foreground)]">
                 <ImageIcon className="w-10 h-10 marketing-accent-text" />
-                <span className="mt-2 text-sm font-semibold">Show Everything</span>
+                <span className="mt-2 text-sm font-semibold">{t('unlock.showEverything')}</span>
               </div>
               <div className="flex flex-col items-center text-[var(--foreground)]">
                 <TrendingUp className="w-10 h-10 marketing-accent-text" />
-                <span className="mt-2 text-sm font-semibold">Cut the Queue</span>
+                <span className="mt-2 text-sm font-semibold">{t('unlock.cutQueue')}</span>
               </div>
             </div>
           </h2>
           <p className="text-[color-mix(in_srgb,var(--foreground)_68%,transparent)] mb-12 max-w-lg mx-auto leading-relaxed">
-            No fluff. No fake features. Just the tools to get you seen.
+            {t('unlock.description')}
           </p>
 
           {/* Icon-only feature summary (cards removed to avoid duplication) */}
@@ -394,12 +396,12 @@ export default function PricingPage() {
         {/* ── Footer note ── */}
         <div className="mt-14 pt-8 border-t border-gray-200/40 dark:border-white/5">
           <p className="text-center text-sm text-[color-mix(in_srgb,var(--foreground)_64%,transparent)] font-medium">
-            Secured via Stripe. Ditch it any time from your dashboard.
+            {t('footer.secureNote')}
             {!isLoggedIn && authChecked && (
               <span>
-                {' '}Already have an account?{' '}
+                {' '}{t('footer.accountPrompt')}{' '}
                 <a href={`/${locale}/auth/login`} className="marketing-accent-text hover:underline font-medium transition-colors">
-                  Log in
+                  {t('footer.login')}
                 </a>
               </span>
             )}

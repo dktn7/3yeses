@@ -26,6 +26,7 @@ interface TalentProfile {
   };
   avatarUrl?: string;
   category?: {
+    id?: string;
     name: string;
   };
   skills?: string[];
@@ -230,7 +231,8 @@ export default function FeaturedTalentCard({ talent, mediaItems, onMediaClick, o
   };
 
   const categoryName = talent.category?.name?.trim() || 'Talent';
-  const categoryUrl = `${localePrefix}/categories${talent.category?.name ? `?category=${encodeURIComponent(talent.category.name)}` : ''}`;
+  const categoryFilterValue = talent.category?.id || talent.category?.name;
+  const categoryUrl = `${localePrefix}/categories${categoryFilterValue ? `?category=${encodeURIComponent(categoryFilterValue)}` : ''}`;
 
   const handleCategoryClick = () => {
     router.push(categoryUrl);

@@ -32,35 +32,35 @@ const CITY_SUGGESTIONS = [
 
 function HomeBgDecoration() {
   return (
-    <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none" aria-hidden="true">
+    <div className="marketing-wave-tone-showcase absolute inset-0 z-0 overflow-hidden pointer-events-none select-none" aria-hidden="true">
       <svg className="w-full h-full" preserveAspectRatio="none" viewBox="0 0 1440 900" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <linearGradient id="homeAbBg" x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0%" stopColor="var(--brand-from)" stopOpacity="0.22" />
-            <stop offset="55%" stopColor="var(--brand-to)" stopOpacity="0.10" />
+            <stop offset="0%" stopColor="var(--wave-veil, var(--marketing-wave-accent))" stopOpacity="var(--marketing-wave-bg-strong)" />
+            <stop offset="55%" stopColor="var(--wave-primary, var(--marketing-wave-accent))" stopOpacity="var(--marketing-wave-bg-soft)" />
             <stop offset="100%" stopColor="transparent" />
           </linearGradient>
           <linearGradient id="homeAbW1" x1="0" x2="1" y1="0" y2="1">
-            <stop offset="0%" stopColor="var(--brand-from)" stopOpacity="0.30" />
-            <stop offset="100%" stopColor="var(--brand-to)" stopOpacity="0.14" />
+            <stop offset="0%" stopColor="var(--wave-primary, var(--marketing-wave-accent))" stopOpacity="var(--marketing-wave-main-strong)" />
+            <stop offset="100%" stopColor="var(--wave-secondary, var(--marketing-wave-accent))" stopOpacity="var(--marketing-wave-main-soft)" />
           </linearGradient>
           <linearGradient id="homeAbW2" x1="1" x2="0" y1="0" y2="1">
-            <stop offset="0%" stopColor="var(--brand-to)" stopOpacity="0.24" />
-            <stop offset="100%" stopColor="var(--brand-from)" stopOpacity="0.08" />
+            <stop offset="0%" stopColor="var(--wave-secondary, var(--marketing-wave-accent))" stopOpacity="var(--marketing-wave-secondary-strong)" />
+            <stop offset="100%" stopColor="var(--wave-primary, var(--marketing-wave-accent))" stopOpacity="var(--marketing-wave-secondary-soft)" />
           </linearGradient>
           <radialGradient id="homeAbGlow" cx="50%" cy="0%" r="70%">
-            <stop offset="0%" stopColor="var(--brand-glow)" stopOpacity="0.28" />
+            <stop offset="0%" stopColor="var(--brand-glow)" stopOpacity="var(--marketing-wave-bg-strong)" />
             <stop offset="100%" stopColor="transparent" />
           </radialGradient>
         </defs>
         <rect width="1440" height="900" fill="url(#homeAbBg)" />
         <rect width="1440" height="900" fill="url(#homeAbGlow)" />
-        <path d="M0 520 C240 420 480 580 720 500 C960 420 1200 540 1440 480 L1440 900 L0 900 Z" fill="url(#homeAbW1)" opacity="0.36" />
-        <path d="M0 640 C320 570 560 690 800 620 C1040 550 1280 660 1440 600 L1440 900 L0 900 Z" fill="url(#homeAbW2)" opacity="0.28" />
-        <path d="M0 80 C360 140 720 40 1080 100 C1260 130 1380 90 1440 110 L1440 0 L0 0 Z" fill="var(--brand-from)" opacity="0.22" />
-        <circle cx="200" cy="150" r="200" fill="var(--brand-to)" opacity="0.14" />
-        <circle cx="1250" cy="700" r="260" fill="var(--brand-from)" opacity="0.12" />
-        <circle cx="720" cy="400" r="280" fill="var(--brand-glow)" opacity="0.06" />
+        <path d="M0 520 C240 420 480 580 720 500 C960 420 1200 540 1440 480 L1440 900 L0 900 Z" fill="url(#homeAbW1)" opacity="var(--marketing-wave-main-strong)" />
+        <path d="M0 640 C320 570 560 690 800 620 C1040 550 1280 660 1440 600 L1440 900 L0 900 Z" fill="url(#homeAbW2)" opacity="var(--marketing-wave-secondary-strong)" />
+        <path d="M0 80 C360 140 720 40 1080 100 C1260 130 1380 90 1440 110 L1440 0 L0 0 Z" fill="var(--wave-primary, var(--marketing-wave-accent))" opacity="var(--marketing-wave-top-opacity)" />
+        <circle cx="200" cy="150" r="200" fill="var(--wave-orb, var(--marketing-wave-accent))" opacity="var(--marketing-wave-orb-opacity)" />
+        <circle cx="1250" cy="700" r="260" fill="var(--wave-secondary, var(--marketing-wave-accent))" opacity="var(--marketing-wave-orb-soft-opacity)" />
+        <circle cx="720" cy="400" r="280" fill="var(--brand-glow)" opacity="var(--marketing-wave-orb-soft-opacity)" />
       </svg>
     </div>
   )

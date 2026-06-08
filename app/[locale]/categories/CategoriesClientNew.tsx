@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { CheckCircle, Users, Filter, X, Search, MapPin, Calendar, Heart, Settings, BookOpen, Monitor, Trophy, Sparkles, SlidersHorizontal, ArrowLeft, Loader2, Folder } from 'lucide-react';
@@ -12,6 +12,8 @@ import MediaOverlay from '@/components/MediaOverlay';
 import TalentFilterPanel, { defaultFilters as sharedDefaultFilters, TalentFilters as SharedTalentFilters } from '@/components/TalentFilterPanel';
 import {
   CATEGORY_DESCRIPTION_CLASSES,
+  CATEGORY_ACCENT_CLASSES,
+  CATEGORY_ACCENT_HOVER_CLASSES,
   CATEGORY_ICON_BOX_CLASSES,
   CATEGORY_ICON_CLASSES,
   CATEGORY_META_CLASSES,
@@ -25,7 +27,7 @@ import { buildLocalizedPath } from '@/lib/locale-path';
 const SMALL_ICON_CLASSES = 'w-4 h-4 shrink-0';
 
 function getChipIconClasses(isSelected: boolean) {
-  return `${SMALL_ICON_CLASSES} ${isSelected ? 'text-white' : 'text-primary-blue dark:text-accent-red'}`;
+  return `${SMALL_ICON_CLASSES} ${isSelected ? 'text-white' : CATEGORY_ACCENT_CLASSES}`;
 }
 
 interface Subcategory {
@@ -64,12 +66,14 @@ interface TalentProfile {
     name: string;
     profilePicture?: string;
   };
-  category: {
-    id: string;
+  categoryId?: string;
+  subcategoryId?: string;
+  category: string | {
+    id?: string;
     name: string;
   };
-  subcategory: {
-    id: string;
+  subcategory: string | {
+    id?: string;
     name: string;
   };
   skills: string[];
@@ -91,11 +95,11 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
   const locale = useLocale();
   const router = useRouter();
 
-  const stripSeededSuffix = (value: string): string =>
-    value.replace(/\s*\(seeded\)\s*$/i, '').replace(/\s+seeded\s*$/i, '').trim();
+  const stripSeededSuffix = useCallback((value: string): string =>
+    value.replace(/\s*\(seeded\)\s*$/i, '').replace(/\s+seeded\s*$/i, '').trim(), []);
 
   // Translate a category name from DB to the current locale, with English fallback
-  const translateCategoryName = (dbName: string): string => {
+  const translateCategoryName = useCallback((dbName: string): string => {
     const cleanName = stripSeededSuffix(dbName);
     const key = getCategoryI18nKey(cleanName);
     if (!key) return dbName;
@@ -104,7 +108,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
     } catch {
       return cleanName;
     }
-  };
+  }, [stripSeededSuffix, t]);
   const displayCategoryName = (name: string) => stripSeededSuffix(translateCategoryName(name));
   const displayRawName = (name: string) => stripSeededSuffix(name);
   const searchParams = useSearchParams();
@@ -380,9 +384,35 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
     return map;
   }, [categories]);
 
+  const resolveCategoryParam = useCallback((value: string | null): Category | null => {
+    if (!value) return null;
+    const lowerValue = value.toLowerCase();
+    return categories.find((category) =>
+      category.id === value || category.name.toLowerCase() === lowerValue
+    ) || null;
+  }, [categories]);
+
+  const resolveSubcategoryParam = useCallback((
+    value: string | null,
+    category?: Category | null
+  ): { subcategory: Subcategory; category: Category } | null => {
+    if (!value || value === '__all__') return null;
+    const lowerValue = value.toLowerCase();
+    const sourceCategories = category ? [category] : categories;
+
+    for (const categoryItem of sourceCategories) {
+      const subcategory = categoryItem.subcategories.find((sub) =>
+        sub.id === value || sub.name.toLowerCase() === lowerValue
+      );
+      if (subcategory) return { subcategory, category: categoryItem };
+    }
+
+    return null;
+  }, [categories]);
+
   const selectedCategoryLabels = useMemo(
     () => selectedCategories.map((id) => translateCategoryName(categoryById.get(id)?.name ?? id)),
-    [selectedCategories, categoryById]
+    [selectedCategories, categoryById, translateCategoryName]
   );
 
   const selectedSubcategoryLabels = useMemo(
@@ -491,7 +521,11 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
           id: talent.id,
           user: { name: talent.user.name },
           avatarUrl: talent.user.profilePicture,
-          category: { name: talent.category.name },
+          category: {
+            name: typeof talent.category === 'string'
+              ? talent.category
+              : (talent.category?.name || 'Talent')
+          },
           location: talent.location
         },
         views: 0,
@@ -516,40 +550,34 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
 
   // Sync URL with selectedCategory and selectedSubcategory
   useEffect(() => {
-    const categoryName = searchParams.get('category');
-    const subcategoryName = searchParams.get('subcategory');
+    const categoryParam = searchParams.get('category');
+    const subcategoryParam = searchParams.get('subcategory');
+    let category = resolveCategoryParam(categoryParam);
+    const subcategoryMatch = resolveSubcategoryParam(subcategoryParam, category);
 
-    if (categoryName) {
-      const category = categories.find(c => c.name === categoryName);
-      if (category) {
-        setSelectedCategory(category);
-        if (subcategoryName === '__all__') {
-          // "View All" mode — synthetic subcategory to show all talents in category
-          setSelectedSubcategory({
-            id: VIEW_ALL_ID,
-            name: `All ${displayCategoryName(category.name)}`,
-            description: `All talents in ${displayCategoryName(category.name)}`,
-            _count: { talentProfiles: category._count.talentProfiles },
-          });
-        } else if (subcategoryName) {
-          const subcategory = category.subcategories.find(s => s.name === subcategoryName);
-          if (subcategory) {
-            setSelectedSubcategory(subcategory);
-          } else {
-            setSelectedSubcategory(null);
-          }
-        } else {
-          setSelectedSubcategory(null);
-        }
+    if (!category && subcategoryMatch) {
+      category = subcategoryMatch.category;
+    }
+
+    if (category) {
+      setSelectedCategory(category);
+      if (subcategoryParam === '__all__') {
+        setSelectedSubcategory({
+          id: VIEW_ALL_ID,
+          name: `All ${category.name}`,
+          description: `All talents in ${category.name}`,
+          _count: { talentProfiles: category._count.talentProfiles },
+        });
+      } else if (subcategoryMatch) {
+        setSelectedSubcategory(subcategoryMatch.subcategory);
       } else {
-        setSelectedCategory(null);
         setSelectedSubcategory(null);
       }
     } else {
       setSelectedCategory(null);
       setSelectedSubcategory(null);
     }
-  }, [searchParams, categories]);
+  }, [searchParams, categories, resolveCategoryParam, resolveSubcategoryParam]);
 
   const handleMediaSelect = (item: any) => {
     setSelectedMediaItem(item);
@@ -567,7 +595,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
 
   const handleCategorySelect = (category: Category) => {
     const params = new URLSearchParams(searchParams.toString());
-    params.set('category', category.name);
+    params.set('category', category.id);
     params.delete('subcategory');
     router.push(`?${params.toString()}`);
   };
@@ -585,8 +613,10 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
   const applyFilters = () => {
     const params = new URLSearchParams();
     if (searchQuery) params.set('q', searchQuery);
-    if (selectedCategory) params.set('category', selectedCategory.name);
-    if (selectedSubcategory) params.set('subcategory', selectedSubcategory.name);
+    if (selectedCategory) params.set('category', selectedCategory.id);
+    if (selectedSubcategory) {
+      params.set('subcategory', selectedSubcategory.id === VIEW_ALL_ID ? '__all__' : selectedSubcategory.id);
+    }
     
     if (filters.gender?.length) params.set('gender', filters.gender.join(','));
     if (filters.bodyType?.length) params.set('bodyType', filters.bodyType.join(','));
@@ -694,12 +724,12 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
 
   // Category Filter Panel (for phases 1 & 2)
   const renderCategoryFilterPanel = () => (
-    <div className="mt-5 p-5 bg-sky-50 dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 animate-in fade-in slide-in-from-top-2 duration-200 max-h-[70vh] overflow-y-auto">
+    <div className="mt-5 p-5 bg-white dark:bg-gray-900 rounded-2xl border border-[#1D4ED8]/35 dark:border-gray-700 shadow-[0_18px_44px_rgba(29,78,216,0.18)] dark:shadow-[0_18px_44px_rgba(0,0,0,0.42)] animate-in fade-in slide-in-from-top-2 duration-200 max-h-[70vh] overflow-y-auto">
       <div className="mb-5">
-        <h3 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-3 flex items-center gap-2">
-          <Filter className="w-5 h-5 flex-shrink-0 text-primary-blue dark:text-accent-red" /> Select Multiple Categories to Browse Together
+        <h3 className="text-lg font-bold text-[#1D4ED8] dark:text-gray-100 mb-3 flex items-center gap-2">
+          <Filter className={`w-5 h-5 flex-shrink-0 ${CATEGORY_ACCENT_CLASSES}`} /> Select Multiple Categories to Browse Together
         </h3>
-        <p className="text-sm text-gray-600 dark:text-gray-300 mb-4 leading-relaxed">
+        <p className="text-sm text-slate-600 dark:text-gray-300 mb-4 leading-relaxed">
           Choose categories you want to explore. For example, select both &quot;Musical Theater&quot; and &quot;Voice Actors&quot; to see talents from both.
         </p>
         <div className="flex flex-wrap gap-2">
@@ -731,7 +761,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
 
       {/* Show subcategories of selected categories */}
       {selectedCategories.length > 0 && (
-        <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700 bg-white/90 dark:bg-slate-900/80 rounded-xl p-3 shadow-sm">
+        <div className="mt-6 pt-4 border-t border-[#1D4ED8]/20 dark:border-gray-700 bg-blue-50/80 dark:bg-slate-900/80 rounded-xl p-3 shadow-sm">
           <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2">
             <Filter className="w-4 h-4 flex-shrink-0" /> Subcategories (from selected categories)
           </h3>
@@ -757,7 +787,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                 >
                   {(() => {
                     const Icon = subcategoryIconMap.get(subcategory.id);
-                    return <Icon className={`${selectedSubcategories.includes(subcategory.id) ? 'text-white' : 'text-primary-blue dark:text-accent-red'} w-3.5 h-3.5 inline-block mr-1`} />;
+                    return <Icon className={`${selectedSubcategories.includes(subcategory.id) ? 'text-white' : CATEGORY_ACCENT_CLASSES} w-3.5 h-3.5 inline-block mr-1`} />;
                   })()}
                   {subcategory.name}
                   <span className="ml-1 opacity-75">({subcategory.parentName})</span>
@@ -806,7 +836,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
     if (!selectedCategory) return null;
     
     return (
-      <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 animate-in fade-in slide-in-from-top-2 duration-200 max-h-[60vh] overflow-y-auto">
+      <div className="mt-4 p-4 bg-white dark:bg-gray-900 rounded-xl border border-[#1D4ED8]/35 dark:border-gray-700 shadow-[0_18px_44px_rgba(29,78,216,0.18)] dark:shadow-[0_18px_44px_rgba(0,0,0,0.42)] animate-in fade-in slide-in-from-top-2 duration-200 max-h-[60vh] overflow-y-auto">
         <div className="mb-4">
           <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2">
             <Filter className="w-4 h-4 flex-shrink-0" /> Select Multiple Subcategories to Browse Together
@@ -891,7 +921,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                         >
                           {(() => {
                             const Icon = subcategoryIconMap.get(sub.id);
-                            return <Icon className={`${selectedSubcategories.includes(sub.id) ? 'text-white' : 'text-primary-blue dark:text-accent-red'} w-3 h-3 inline-block mr-1`} />;
+                            return <Icon className={`${selectedSubcategories.includes(sub.id) ? 'text-white' : CATEGORY_ACCENT_CLASSES} w-3 h-3 inline-block mr-1`} />;
                           })()}
                           {displayRawName(sub.name)}
                         </button>
@@ -975,7 +1005,10 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
           id: talent.id,
           user: { name: talent.name || talent.user?.name || 'Unknown' },
           avatarUrl: talent.avatarUrl || talent.user?.profilePicture,
-          category: { name: typeof talent.category === 'string' ? talent.category : (talent.category?.name || 'Uncategorized') },
+          category: {
+            id: talent.categoryId || (typeof talent.category === 'string' ? undefined : talent.category?.id),
+            name: typeof talent.category === 'string' ? talent.category : (talent.category?.name || 'Uncategorized')
+          },
           location: talent.location || ''
         },
         views: item.views || 0,
@@ -987,7 +1020,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
     return (
       <div className="min-h-screen brand-true-red categories-page">
         {/* Sticky Header */}
-        <section className="bg-gradient-to-r from-blue-100/95 via-blue-50/95 to-blue-100/95 dark:from-red-950/95 dark:via-red-900/95 dark:to-red-950/95 border-b border-gray-200/80 dark:border-red-400/20 sticky top-0 z-40 shadow-lg backdrop-blur-sm">
+        <section className="bg-[#1D4ED8] dark:bg-gradient-to-r dark:from-red-950/95 dark:via-red-900/95 dark:to-red-950/95 border-b border-blue-700/50 dark:border-red-400/20 sticky top-0 z-40 shadow-lg backdrop-blur-sm">
           <div className="max-w-screen-2xl mx-auto px-3 sm:px-6 py-3 sm:py-4">
             {/* Top Row: Back + Title + Search + Filter */}
             <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
@@ -999,10 +1032,10 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                   <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
                 </button>
                 <div className="min-w-0">
-                  <h1 className="text-lg sm:text-2xl font-bold tracking-tight text-gray-900 dark:text-white truncate">
+                  <h1 className="text-lg sm:text-2xl font-bold tracking-tight text-white truncate">
                     {dynamicHeaderTitle}
                   </h1>
-                  <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 truncate">
+                  <p className="text-xs sm:text-sm text-blue-100 dark:text-gray-400 truncate">
                     {dynamicHeaderDescription}
                   </p>
                 </div>
@@ -1023,7 +1056,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                     }}
                     onFocus={() => searchQuery && setShowPhase3Suggestions(true)}
                     onBlur={() => setTimeout(() => setShowPhase3Suggestions(false), 200)}
-                    className="w-full pl-9 pr-8 py-2.5 rounded-xl border border-blue-200 dark:border-red-400/25 bg-white/90 dark:bg-slate-900/85 text-sm text-gray-900 dark:text-white placeholder:text-gray-500 focus:ring-2 focus:ring-primary-blue dark:focus:ring-red-400 focus:border-transparent shadow-sm transition-all"
+                    className="w-full pl-9 pr-8 py-2.5 rounded-xl border border-blue-200 dark:border-red-400/25 bg-white/90 dark:bg-slate-800/90 text-sm text-gray-900 dark:text-white placeholder:text-gray-500 focus:ring-2 focus:ring-primary-blue dark:focus:ring-red-400 focus:border-transparent shadow-sm transition-all"
                   />
                   {isSearching ? (
                     <div className="absolute right-2 top-1/2 -translate-y-1/2 z-10">
@@ -1071,9 +1104,9 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                           }}
                           className="w-full px-3 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 transition-colors"
                         >
-                          {suggestion.type === 'skill' && <Sparkles className="w-4 h-4 text-primary-blue dark:text-red-300" />}
-                          {suggestion.type === 'talent' && <Users className="w-4 h-4 text-primary-blue dark:text-red-300" />}
-                          {suggestion.type === 'category' && <Folder className="w-4 h-4 text-primary-blue dark:text-red-300" />}
+                          {suggestion.type === 'skill' && <Sparkles className={`w-4 h-4 ${CATEGORY_ACCENT_CLASSES}`} />}
+                          {suggestion.type === 'talent' && <Users className={`w-4 h-4 ${CATEGORY_ACCENT_CLASSES}`} />}
+                          {suggestion.type === 'category' && <Folder className={`w-4 h-4 ${CATEGORY_ACCENT_CLASSES}`} />}
                           {suggestion.type === 'subcategory' && <Folder className="w-4 h-4 text-gray-400 dark:text-gray-500" />}
                           <span className="text-gray-900 dark:text-white">{suggestion.name}</span>
                           <span className="text-xs text-gray-400 ml-auto capitalize">{suggestion.type}</span>
@@ -1094,14 +1127,14 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                   onClick={() => setShowFilters(!showFilters)}
                   className={`flex-shrink-0 flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl border-2 transition-all font-semibold text-sm ${
                     showFilters
-                      ? 'bg-primary-blue dark:bg-[rgba(17,24,39,0.90)] text-white border-blue-300 dark:border-red-400/35 shadow-lg'
-                      : 'border-blue-200 dark:border-red-400/25 bg-white/90 dark:bg-slate-900/85 text-gray-700 dark:text-gray-200 hover:border-primary-blue dark:hover:border-red-300/45 hover:text-primary-blue dark:hover:text-red-200'
+                      ? 'bg-red-500 text-white border-red-500 shadow-lg'
+                      : 'border-red-400/60 bg-red-950/80 text-red-100 hover:bg-red-900/90 hover:border-red-500/70'
                   }`}
                 >
                   <SlidersHorizontal className="w-4 h-4" />
                   <span className="hidden sm:inline">Filters</span>
                   {activeFilterCount > 0 && (
-                    <span className={`px-1.5 py-0.5 text-xs rounded-full font-bold ${showFilters ? 'bg-white/20 text-white' : 'bg-primary-blue dark:bg-[rgba(17,24,39,0.90)] text-white'}`}>
+                    <span className="px-1.5 py-0.5 text-xs rounded-full font-bold bg-white text-red-950">
                       {activeFilterCount}
                     </span>
                   )}
@@ -1155,7 +1188,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                 <>
                   <span className="text-gray-300 dark:text-gray-600">|</span>
                   {filters.gender?.slice(0, 2).map(g => (
-                    <span key={g} className="inline-flex items-center gap-1 px-2 py-0.5 bg-[var(--brand-primary)]/10 dark:bg-[var(--brand-primary)]/18 text-[var(--brand-primary)] dark:text-red-100 rounded-full text-xs capitalize">
+                    <span key={g} className="category-filter-pill inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs capitalize">
                       {g} <button onClick={() => setFilters(prev => ({ ...prev, gender: prev.gender?.filter(x => x !== g) }))}><X className="w-3 h-3" /></button>
                     </span>
                   ))}
@@ -1165,7 +1198,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                     </span>
                   ))}
                   {filters.skills?.slice(0, 2).map(s => (
-                    <span key={s} className="inline-flex items-center gap-1 px-2 py-0.5 bg-primary-blue/10 dark:bg-accent-red/10 text-primary-blue dark:text-accent-red rounded-full text-xs">
+                    <span key={s} className="category-filter-pill inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs">
                       {s} <button onClick={() => setFilters(prev => ({ ...prev, skills: prev.skills?.filter(x => x !== s) }))}><X className="w-3 h-3" /></button>
                     </span>
                   ))}
@@ -1226,7 +1259,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
           ) : filteredCombinedTalents.length === 0 ? (
             <div className='rounded-2xl border border-gray-200/70 dark:border-gray-700/50 bg-white/95 dark:bg-slate-900 p-8 sm:p-10 text-center shadow-[0_6px_22px_rgba(15,23,42,0.08)] dark:shadow-[0_8px_24px_rgba(0,0,0,0.45)]'>
               <div className='mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary-blue/10 dark:bg-accent-red/15'>
-                <Users className='w-8 h-8 text-primary-blue dark:text-accent-red' />
+                <Users className={`w-8 h-8 ${CATEGORY_ACCENT_CLASSES}`} />
               </div>
               <h3 className='text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white mb-2'>{searchQuery ? 'No talents match this category search' : 'No talents in this category mix yet'}</h3>
               <p className='text-gray-600 dark:text-gray-400 mb-6 max-w-xl mx-auto'>{searchQuery ? 'No talents matched your query within the selected categories and subcategories.' : 'Try broadening your category selection or relaxing filters to discover more profiles.'}</p>
@@ -1252,7 +1285,10 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                       id: talent.id,
                       user: { name: talent.name || talent.user?.name || 'Unknown' },
                       avatarUrl: talent.avatarUrl || talent.user?.profilePicture,
-                      category: { name: typeof talent.category === 'string' ? talent.category : (talent.category?.name || 'Uncategorized') },
+                      category: {
+                        id: talent.categoryId || (typeof talent.category === 'string' ? undefined : talent.category?.id),
+                        name: typeof talent.category === 'string' ? talent.category : (talent.category?.name || 'Uncategorized')
+                      },
                       skills: talent.skills || []
                     }}
                     mediaItems={(talent.portfolio || []).map((item: any, idx: number) => ({
@@ -1265,7 +1301,10 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                         id: talent.id,
                         user: { name: talent.name || talent.user?.name || 'Unknown' },
                         avatarUrl: talent.avatarUrl || talent.user?.profilePicture,
-                        category: { name: typeof talent.category === 'string' ? talent.category : (talent.category?.name || 'Uncategorized') }
+                        category: {
+                          id: talent.categoryId || (typeof talent.category === 'string' ? undefined : talent.category?.id),
+                          name: typeof talent.category === 'string' ? talent.category : (talent.category?.name || 'Uncategorized')
+                        }
                       },
                       views: item.views || 0,
                       likeCount: item.likeCount || 0,
@@ -1321,9 +1360,12 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
             allMedia={combinedMediaItems}
             talents={combinedTalents.map(t => ({
               id: t.id,
-              user: { name: t.user.name },
-              avatarUrl: t.user.profilePicture,
-              category: { name: t.category.name },
+              user: { name: t.name || t.user?.name || 'Unknown' },
+              avatarUrl: t.avatarUrl || t.user?.profilePicture,
+              category: {
+                id: t.categoryId || (typeof t.category === 'string' ? undefined : t.category?.id),
+                name: typeof t.category === 'string' ? t.category : (t.category?.name || 'Uncategorized')
+              },
               location: t.location
             }))}
             onClose={handleCloseOverlay}
@@ -1377,16 +1419,16 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
           </svg>
         </div>
         {/* Sticky Header with Search */}
-        <section className="bg-gradient-to-r from-blue-100/95 via-blue-50/95 to-blue-100/95 dark:from-red-950/95 dark:via-red-900/95 dark:to-red-950/95 border-b border-gray-200/80 dark:border-red-400/20 sticky top-0 z-40 shadow-lg backdrop-blur-sm">
+        <section className="bg-[#1D4ED8] dark:bg-gradient-to-r dark:from-red-950/95 dark:via-red-900/95 dark:to-red-950/95 border-b border-blue-700/50 dark:border-red-400/20 sticky top-0 z-40 shadow-lg backdrop-blur-sm">
           <div className="max-w-screen-2xl mx-auto px-6 pt-3 pb-4">
             <Breadcrumbs items={[{ label: 'Home', href: buildLocalizedPath(locale, '/') }, { label: 'Categories' }]} />
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
               <div className="flex items-center gap-8">
                 <div>
-                  <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
+                  <h1 className="text-3xl font-bold tracking-tight text-white">
                     {t('main.title')}
                   </h1>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+                  <p className="text-sm text-blue-100 dark:text-gray-400 mt-0.5">
                     {t('main.description')}
                   </p>
                 </div>
@@ -1410,7 +1452,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                         setSearchQuery('');
                       }
                     }}
-                    className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-gray-200 dark:border-red-400/25 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white placeholder:text-gray-500 focus:ring-2 focus:ring-primary-blue dark:focus:ring-red-400 focus:border-transparent transition-all"
+                    className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-gray-200 dark:border-red-400/25 bg-gray-50 dark:bg-slate-800/90 text-gray-900 dark:text-white placeholder:text-gray-500 focus:ring-2 focus:ring-primary-blue dark:focus:ring-red-400 focus:border-transparent transition-all"
                   />
                   {searchInputValue && (
                     <button
@@ -1429,14 +1471,14 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                 onClick={() => setShowFilters(!showFilters)}
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border transition-all font-medium ${
                   showFilters
-                    ? 'bg-primary-blue dark:bg-[rgba(17,24,39,0.90)] text-white border-transparent'
-                    : 'border-gray-200 dark:border-gray-700 bg-light-surface dark:bg-dark-surface text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                    ? 'bg-primary-blue text-white border-transparent dark:bg-red-500 dark:text-white dark:border-red-500'
+                    : 'border-gray-200 bg-light-surface text-gray-700 dark:border-red-400/25 dark:bg-red-950/80 dark:text-red-100 dark:hover:bg-red-900/90 dark:hover:border-red-500/70'
                 }`}
               >
-                <SlidersHorizontal className="w-4 h-4" />
+                <SlidersHorizontal className="w-4 h-4 text-current" />
                 <span>Multi-Select</span>
                 {(selectedCategories.length > 0 || selectedSubcategories.length > 0) && (
-                  <span className="ml-1 px-1.5 py-0.5 bg-white/20 rounded-full text-xs">
+                  <span className="ml-1 px-1.5 py-0.5 bg-white rounded-full text-xs font-semibold text-primary-blue dark:text-red-950">
                     {selectedCategories.length + selectedSubcategories.length}
                   </span>
                 )}
@@ -1472,8 +1514,8 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                         className={CATEGORY_TILE_CLASSES}
                         onClick={() => {
                           const params = new URLSearchParams();
-                          params.set('category', result.parentName);
-                          params.set('subcategory', result.isViewAll ? '__all__' : result.name);
+                          params.set('category', result.parentId);
+                          params.set('subcategory', result.isViewAll ? '__all__' : result.id);
                           setSearchInputValue('');
                           setSearchQuery('');
                           router.push(`?${params.toString()}`);
@@ -1482,8 +1524,8 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                           if (e.key === 'Enter' || e.key === ' ') {
                             e.preventDefault();
                             const params = new URLSearchParams();
-                            params.set('category', result.parentName);
-                            params.set('subcategory', result.isViewAll ? '__all__' : result.name);
+                            params.set('category', result.parentId);
+                            params.set('subcategory', result.isViewAll ? '__all__' : result.id);
                             setSearchInputValue('');
                             setSearchQuery('');
                             router.push(`?${params.toString()}`);
@@ -1602,7 +1644,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
           </svg>
         </div>
         {/* Sticky Header with Search */}
-        <section className="bg-gradient-to-r from-blue-100/95 via-blue-50/95 to-blue-100/95 dark:from-red-950/95 dark:via-red-900/95 dark:to-red-950/95 border-b border-gray-200/80 dark:border-red-400/20 sticky top-0 z-40 shadow-lg backdrop-blur-sm">
+        <section className="bg-[#1D4ED8] dark:bg-gradient-to-r dark:from-red-950/95 dark:via-red-900/95 dark:to-red-950/95 border-b border-blue-700/50 dark:border-red-400/20 sticky top-0 z-40 shadow-lg backdrop-blur-sm">
           <div className="max-w-screen-2xl mx-auto px-6 pt-3 pb-4">
             <Breadcrumbs items={[{ label: 'Home', href: buildLocalizedPath(locale, '/') }, { label: 'Categories', href: buildLocalizedPath(locale, '/categories') }, { label: displayCategoryName(selectedCategory.name) }]} />
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
@@ -1620,10 +1662,10 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                   <X className="w-5 h-5" />
                 </button>
                 <div>
-                  <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
+                  <h1 className="text-3xl font-bold tracking-tight text-white">
                     {displayCategoryName(selectedCategory.name)}
                   </h1>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+                  <p className="text-sm text-blue-100 dark:text-gray-400 mt-0.5">
                     {selectedCategory.description}
                   </p>
                 </div>
@@ -1732,14 +1774,14 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                     className={CATEGORY_TILE_CLASSES}
                     onClick={() => {
                       const params = new URLSearchParams(searchParams.toString());
-                      params.set('subcategory', subcategory.name);
+                      params.set('subcategory', subcategory.id);
                       router.push(`?${params.toString()}`);
                     }}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
                         const params = new URLSearchParams(searchParams.toString());
-                        params.set('subcategory', subcategory.name);
+                        params.set('subcategory', subcategory.id);
                         router.push(`?${params.toString()}`);
                       }
                     }}
@@ -1778,7 +1820,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
   return (
     <div className="min-h-screen brand-true-red categories-page">
       {/* Sticky Header */}
-      <section className="bg-gradient-to-r from-blue-100/95 via-blue-50/95 to-blue-100/95 dark:from-red-950/95 dark:via-red-900/95 dark:to-red-950/95 border-b border-gray-200/80 dark:border-red-400/20 sticky top-0 z-40 shadow-lg backdrop-blur-sm">
+      <section className="bg-[#1D4ED8] dark:bg-gradient-to-r dark:from-red-950/95 dark:via-red-900/95 dark:to-red-950/95 border-b border-blue-700/50 dark:border-red-400/20 sticky top-0 z-40 shadow-lg backdrop-blur-sm">
         <div className="max-w-screen-2xl mx-auto px-3 sm:px-6 py-3 sm:py-4">
           {/* Breadcrumb */}
           <nav className="mb-2 sm:mb-3 overflow-x-auto">
@@ -1791,7 +1833,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                     params.delete('subcategory');
                     router.push(`?${params.toString()}`);
                   }}
-                  className="hover:text-primary-blue dark:hover:text-red-300 transition-colors"
+                  className={`transition-colors ${CATEGORY_ACCENT_HOVER_CLASSES}`}
                 >
                   Categories
                 </button>
@@ -1800,7 +1842,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                 <span className="mx-1 sm:mx-2">/</span>
                 <button
                   onClick={handleBackToSubcategories}
-                  className="hover:text-primary-blue dark:hover:text-red-300 transition-colors truncate max-w-[100px] sm:max-w-none"
+                  className={`truncate max-w-[100px] sm:max-w-none transition-colors ${CATEGORY_ACCENT_HOVER_CLASSES}`}
                 >
                   {selectedCategory?.name}
                 </button>
@@ -1822,10 +1864,10 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                 <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
               <div className="min-w-0">
-                <h1 className="text-lg sm:text-2xl font-bold tracking-tight text-gray-900 dark:text-white truncate">
+                <h1 className="text-lg sm:text-2xl font-bold tracking-tight text-white truncate">
                   {dynamicHeaderTitle}
                 </h1>
-                <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 truncate">
+                <p className="text-xs sm:text-sm text-blue-100 dark:text-gray-400 truncate">
                   {dynamicHeaderDescription}
                 </p>
               </div>
@@ -1890,9 +1932,9 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                         }}
                         className="w-full px-3 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 transition-colors"
                       >
-                        {suggestion.type === 'skill' && <Sparkles className="w-4 h-4 text-primary-blue dark:text-red-300" />}
-                        {suggestion.type === 'talent' && <Users className="w-4 h-4 text-primary-blue dark:text-red-300" />}
-                        {suggestion.type === 'category' && <Folder className="w-4 h-4 text-primary-blue dark:text-red-300" />}
+                        {suggestion.type === 'skill' && <Sparkles className={`w-4 h-4 ${CATEGORY_ACCENT_CLASSES}`} />}
+                        {suggestion.type === 'talent' && <Users className={`w-4 h-4 ${CATEGORY_ACCENT_CLASSES}`} />}
+                        {suggestion.type === 'category' && <Folder className={`w-4 h-4 ${CATEGORY_ACCENT_CLASSES}`} />}
                         {suggestion.type === 'subcategory' && <Folder className="w-4 h-4 text-gray-400 dark:text-gray-500" />}
                         <span className="text-gray-900 dark:text-white">{suggestion.name}</span>
                         <span className="text-xs text-gray-400 ml-auto capitalize">{suggestion.type}</span>
@@ -1934,7 +1976,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
               <span className="text-xs font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">Active:</span>
               <div className="flex flex-wrap gap-1.5">
                 {filters.gender?.slice(0, 2).map(g => (
-                  <span key={g} className="inline-flex items-center gap-1 px-2 py-0.5 bg-[var(--brand-primary)]/10 dark:bg-[var(--brand-primary)]/18 text-[var(--brand-primary)] dark:text-red-100 rounded-full text-xs whitespace-nowrap">
+                  <span key={g} className="category-filter-pill inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs whitespace-nowrap">
                     {g} <button onClick={() => setFilters(prev => ({ ...prev, gender: prev.gender?.filter(x => x !== g) }))}><X className="w-3 h-3" /></button>
                   </span>
                 ))}
@@ -1944,7 +1986,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                   </span>
                 ))}
                 {filters.skills?.slice(0, 2).map(s => (
-                  <span key={s} className="inline-flex items-center gap-1 px-2 py-0.5 bg-primary-blue/10 dark:bg-red-950/35 text-primary-blue dark:text-red-300 rounded-full text-xs whitespace-nowrap">
+                  <span key={s} className="category-filter-pill inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs whitespace-nowrap">
                     {s} <button onClick={() => setFilters(prev => ({ ...prev, skills: prev.skills?.filter(x => x !== s) }))}><X className="w-3 h-3" /></button>
                   </span>
                 ))}
@@ -1954,7 +1996,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
               </div>
               <button
                 onClick={clearFilters}
-                className="ml-auto text-xs text-primary-blue dark:text-red-300 hover:underline whitespace-nowrap"
+                className="ml-auto text-xs text-[var(--brand-primary)] hover:underline whitespace-nowrap"
               >
                 Clear all
               </button>
@@ -2034,7 +2076,10 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                           id: talent.id,
                           user: { name: talent.name || talent.user?.name || 'Unknown' },
                           avatarUrl: talent.avatarUrl || talent.user?.profilePicture,
-                          category: { name: typeof talent.category === 'string' ? talent.category : (talent.category?.name || 'Uncategorized') },
+                          category: {
+                            id: talent.categoryId || (typeof talent.category === 'string' ? undefined : talent.category?.id),
+                            name: typeof talent.category === 'string' ? talent.category : (talent.category?.name || 'Uncategorized')
+                          },
                           skills: talent.skills || []
                         }}
                         mediaItems={(talent.portfolio || []).map((item: any, idx: number) => ({
@@ -2047,7 +2092,10 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                             id: talent.id,
                             user: { name: talent.name || talent.user?.name || 'Unknown' },
                             avatarUrl: talent.avatarUrl || talent.user?.profilePicture,
-                            category: { name: typeof talent.category === 'string' ? talent.category : (talent.category?.name || 'Uncategorized') }
+                            category: {
+                              id: talent.categoryId || (typeof talent.category === 'string' ? undefined : talent.category?.id),
+                              name: typeof talent.category === 'string' ? talent.category : (talent.category?.name || 'Uncategorized')
+                            }
                           },
                           views: item.views || 0,
                           likeCount: item.likeCount || 0,
@@ -2093,7 +2141,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
               ) : (
                 <div className='rounded-2xl border border-gray-200/70 dark:border-gray-700/50 bg-white/95 dark:bg-slate-900 p-8 sm:p-10 text-center shadow-[0_6px_22px_rgba(15,23,42,0.08)] dark:shadow-[0_8px_24px_rgba(0,0,0,0.45)]'>
                   <div className='mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary-blue/10 dark:bg-accent-red/15'>
-                    <Search className='w-8 h-8 text-primary-blue dark:text-accent-red' />
+                    <Search className={`w-8 h-8 ${CATEGORY_ACCENT_CLASSES}`} />
                   </div>
                   <h3 className='text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white mb-2'>{searchQuery ? 'No matching talents in this subcategory' : 'No talents listed in this subcategory yet'}</h3>
                   <p className='text-gray-600 dark:text-gray-400 mb-6 max-w-xl mx-auto'>{searchQuery ? 'No talents matched your search within this subcategory.' : 'Try widening your filters or browse another subcategory to find more talent.'}</p>
@@ -2114,7 +2162,10 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
             id: t.id,
             user: { name: t.name || t.user?.name || 'Unknown' },
             avatarUrl: t.avatarUrl || t.user?.profilePicture,
-            category: { name: typeof t.category === 'string' ? t.category : (t.category?.name || 'Uncategorized') },
+            category: {
+              id: t.categoryId || (typeof t.category === 'string' ? undefined : t.category?.id),
+              name: typeof t.category === 'string' ? t.category : (t.category?.name || 'Uncategorized')
+            },
             location: t.location
           }))}
           onClose={handleCloseOverlay}

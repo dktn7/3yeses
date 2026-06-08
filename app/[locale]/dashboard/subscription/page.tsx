@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Check, Loader2 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useLocale, useTranslations } from 'next-intl';
 
 interface PricingPlan {
   id: string;
@@ -15,11 +15,12 @@ interface PricingPlan {
 }
 
 export default function SubscriptionPage() {
+  const t = useTranslations('DashboardSubscriptionPage');
+  const locale = useLocale();
   const [plans, setPlans] = useState<PricingPlan[]>([]);
   const [currentSubscription, setCurrentSubscription] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [subscribing, setSubscribing] = useState<string | null>(null);
-  const router = useRouter();
 
   useEffect(() => {
     fetchData();
@@ -63,17 +64,17 @@ export default function SubscriptionPage() {
         // Redirect to Stripe checkout
         window.location.href = data.url;
       } else {
-        throw new Error('No checkout URL received');
+        throw new Error(t('errors.missingCheckoutUrl'));
       }
     } catch (error) {
       console.error('Error creating subscription:', error);
-      alert('Failed to create subscription. Please try again.');
+      alert(t('errors.createSubscription'));
       setSubscribing(null);
     }
   };
 
   const handleCancel = async () => {
-    if (!confirm('Are you sure you want to cancel your subscription?')) {
+    if (!confirm(t('confirmCancel'))) {
       return;
     }
 
@@ -84,14 +85,14 @@ export default function SubscriptionPage() {
       });
 
       if (response.ok) {
-        alert('Subscription canceled successfully');
+        alert(t('cancelSuccess'));
         fetchData();
       } else {
-        throw new Error('Failed to cancel subscription');
+        throw new Error(t('errors.cancelSubscription'));
       }
     } catch (error) {
       console.error('Error canceling subscription:', error);
-      alert('Failed to cancel subscription. Please try again.');
+      alert(t('errors.cancelSubscription'));
     }
   };
 
@@ -111,21 +112,21 @@ export default function SubscriptionPage() {
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-            Choose the plan that's right for you.
+            {t('title')}
           </h1>
           {isSubscribed && (
             <div className="bg-green-500/20 border border-green-500 rounded-lg p-4 max-w-md mx-auto">
               <p className="text-green-400 font-medium">
-                You're currently subscribed to Standard Access
+                {t('activeBanner')}
               </p>
               <p className="text-gray-600 dark:text-gray-300 text-sm mt-1">
-                Valid until: {new Date(currentSubscription.endDate).toLocaleDateString()}
+                {t('validUntil')}: {new Date(currentSubscription.endDate).toLocaleDateString(locale)}
               </p>
               <button
                 onClick={handleCancel}
                 className="mt-3 text-red-400 hover:text-red-300 text-sm underline"
               >
-                Cancel Subscription
+                {t('cancelSubscription')}
               </button>
             </div>
           )}
@@ -133,7 +134,7 @@ export default function SubscriptionPage() {
 
         <div className="mb-8">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white text-center mb-6">
-            For Talents
+            {t('forTalents')}
           </h2>
         </div>
 
@@ -174,12 +175,12 @@ export default function SubscriptionPage() {
                 {subscribing === plan.duration ? (
                   <>
                     <Loader2 className="w-5 h-5 animate-spin" />
-                    Processing...
+                    {t('processing')}
                   </>
                 ) : isSubscribed ? (
-                  'Current Plan'
+                  t('currentPlan')
                 ) : (
-                  'Subscribe with Stripe'
+                  t('subscribe')
                 )}
               </button>
             </div>
@@ -187,9 +188,9 @@ export default function SubscriptionPage() {
         </div>
 
         <div className="mt-12 text-center text-gray-500 dark:text-gray-400 text-sm">
-          <p>Secure payment processing by Stripe</p>
+          <p>{t('securePayment')}</p>
           <p className="mt-2">
-            Questions? Contact us at support@3yeses.online
+            {t('questions')} support@3yeses.online
           </p>
         </div>
       </div>
