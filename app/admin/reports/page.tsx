@@ -447,7 +447,7 @@ export default function ReportsPage() {
                           <div className="px-6 pb-6 relative">
                             <div className="absolute -top-10 left-6 w-20 h-20 rounded-full border-4 border-[var(--admin-surface)] overflow-hidden bg-[var(--admin-bg)]">
                                 {selectedReport.reportedProfile.avatarUrl ? (
-                                    <Image src={selectedReport.reportedProfile.avatarUrl} alt="" fill className="object-cover" />
+                                    <Image src={selectedReport.reportedProfile.avatarUrl} alt="" fill sizes="80px" className="object-cover" />
                                 ) : (
                                     <div className="w-full h-full flex items-center justify-center bg-[var(--admin-bg)]">
                                         <User className="w-8 h-8 text-[var(--admin-muted)]" />

@@ -95,13 +95,14 @@ const CATEGORY_KEYS: Record<string, string> = {
   'Support & Tickets': 'catSupport',
 };
 
-export default function SupportFAQ() {
+export default function SupportFAQ({ faqItems }: { faqItems?: { category: string; q: string; a: string }[] }) {
   const t = useTranslations('support');
   const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const items = faqItems && faqItems.length ? faqItems : FAQ_ITEMS;
 
   return (
     <div className="space-y-3">
-      {FAQ_ITEMS.map((item, idx) => {
+      {items.map((item, idx) => {
         const isOpen = openIndex === idx;
         return (
           <div

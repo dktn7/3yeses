@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { getCategoryData } from '@/lib/data';
 import LocationAutocomplete from '@/components/LocationAutocomplete';
 import { useParams, useRouter, usePathname } from 'next/navigation';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import Image from 'next/image';
 import type { Talent } from '@/types/index.ts';
 import LoadingSpinner from '@/components/LoadingSpinner';
@@ -74,6 +74,7 @@ type EditData = {
 };
 
 export default function TalentProfilePage() {
+  const t = useTranslations('TalentPage');
   const params = useParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -655,9 +656,9 @@ export default function TalentProfilePage() {
 
   const handleCategoryClick = () => {
     if (editMode) return;
-    const categoryName = talent.category;
-    if (categoryName) {
-      router.push(buildLocalizedPath(locale, `/categories?category=${encodeURIComponent(categoryName)}`));
+    const categoryFilter = (data as any)?.talent?.categoryId || editData.categoryId || talent.category;
+    if (categoryFilter) {
+      router.push(buildLocalizedPath(locale, `/categories?category=${encodeURIComponent(categoryFilter)}`));
     } else {
       router.push(buildLocalizedPath(locale, '/categories'));
     }
@@ -824,7 +825,7 @@ export default function TalentProfilePage() {
                                   </>
                                 );
                               }
-                              return <span>Select category</span>;
+                              return <span>{t('selectCategory')}</span>;
                             })()}
                             <ChevronDown size={12} className={`transition-transform ${categoryOpen ? 'rotate-180' : ''}`} />
                           </button>
@@ -834,7 +835,7 @@ export default function TalentProfilePage() {
                                 <input
                                   value={categorySearch}
                                   onChange={(e) => setCategorySearch(e.target.value)}
-                                  placeholder="Search categories..."
+                                  placeholder={t('searchCategories')}
                                   className="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-red-500 text-gray-900 dark:text-white"
                                   autoFocus
                                 />
@@ -922,7 +923,7 @@ export default function TalentProfilePage() {
                           value={editData.role}
                           onChange={(e) => setEditData(prev => ({ ...prev, role: e.target.value }))}
                           className="bg-transparent border-b border-blue-500 dark:border-red-500 outline-none font-medium text-gray-900 dark:text-gray-100"
-                          placeholder="Your role / title"
+                          placeholder={t('rolePlaceholder')}
                         />
                       </div>
                     ) : (
@@ -1229,7 +1230,7 @@ export default function TalentProfilePage() {
                       <textarea
                         value={editData.bio || ''}
                         onChange={(e) => setEditData(prev => ({ ...prev, bio: e.target.value }))}
-                        placeholder="Tell us about yourself, your experience, and what makes you unique..."
+                        placeholder={t('bioPlaceholder')}
                         className="w-full min-h-[200px] text-lg text-gray-600 dark:text-gray-300 leading-relaxed bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-4 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-red-500 resize-y"
                       />
                     ) : (
@@ -1323,7 +1324,7 @@ export default function TalentProfilePage() {
                   <SkillMultiSelect
                     value={editData.skills || []}
                     onChange={(vals) => setEditData(prev => ({ ...prev, skills: vals }))}
-                    placeholder="Add or search skills..."
+                    placeholder={t('skillsPlaceholder')}
                   />
                 </div>
               )}
@@ -1350,7 +1351,7 @@ export default function TalentProfilePage() {
                         options={genderOptions}
                         value={editData.gender}
                         onChange={(v) => setEditData(prev => ({ ...prev, gender: (v as string) || '' }))}
-                        placeholder="Select gender"
+                        placeholder={t('selectGender')}
                         multi={false}
                       />
                     </div>
@@ -1388,7 +1389,7 @@ export default function TalentProfilePage() {
                           options={ethnicityOptions}
                           value={editData.ethnicity}
                           onChange={(v) => setEditData(prev => ({ ...prev, ethnicity: (v as string) || '' }))}
-                          placeholder="Select ethnicity"
+                          placeholder={t('selectEthnicity')}
                           multi={false}
                         />
                       </div>
@@ -1432,7 +1433,7 @@ export default function TalentProfilePage() {
                           options={eyeColorOptions}
                           value={editData.eyeColor}
                           onChange={(v) => setEditData(prev => ({ ...prev, eyeColor: (v as string) || '' }))}
-                          placeholder="Select eye color"
+                          placeholder={t('selectEyeColor')}
                           multi={false}
                         />
                       </div>
@@ -1454,7 +1455,7 @@ export default function TalentProfilePage() {
                           options={hairColorOptions}
                           value={editData.hairColor}
                           onChange={(v) => setEditData(prev => ({ ...prev, hairColor: (v as string) || '' }))}
-                          placeholder="Select hair color"
+                          placeholder={t('selectHairColor')}
                           multi={false}
                         />
                       </div>
@@ -1476,7 +1477,7 @@ export default function TalentProfilePage() {
                           options={bodyTypeOptions}
                           value={editData.bodyType}
                           onChange={(v) => setEditData(prev => ({ ...prev, bodyType: (v as string) || '' }))}
-                          placeholder="Select body type"
+                          placeholder={t('selectBodyType')}
                           multi={false}
                         />
                       </div>
@@ -1594,7 +1595,7 @@ export default function TalentProfilePage() {
                     <LanguageMultiSelect
                       value={editData.languages || []}
                       onChange={(vals) => setEditData(prev => ({ ...prev, languages: vals }))}
-                      placeholder="Select languages"
+                      placeholder={t('selectLanguages')}
                     />
                   </div>
                 )}

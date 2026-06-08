@@ -9,29 +9,29 @@ import SwoopingTick from '@/components/SwoopingTick';
 /* ── Background decoration ─────────────────────────────────────────── */
 function TermsBgDecoration() {
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none select-none z-0 dark:opacity-90" aria-hidden="true">
+    <div className="marketing-wave-tone-support absolute inset-0 overflow-hidden pointer-events-none select-none z-0 dark:opacity-90" aria-hidden="true">
       <svg className="w-full h-full" preserveAspectRatio="none" viewBox="0 0 1440 900" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <linearGradient id="tBg" x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0%" stopColor="var(--brand-from)" stopOpacity="0.16" />
-            <stop offset="60%" stopColor="var(--brand-to)" stopOpacity="0.06" />
+            <stop offset="0%" stopColor="var(--wave-veil, var(--marketing-wave-accent))" stopOpacity="var(--marketing-wave-bg-strong)" />
+            <stop offset="60%" stopColor="var(--wave-primary, var(--marketing-wave-accent))" stopOpacity="var(--marketing-wave-bg-soft)" />
             <stop offset="100%" stopColor="transparent" />
           </linearGradient>
           <linearGradient id="tWave1" x1="0" x2="1" y1="0" y2="1">
-            <stop offset="0%" stopColor="var(--brand-from)" stopOpacity="0.18" />
-            <stop offset="100%" stopColor="var(--brand-to)" stopOpacity="0.08" />
+            <stop offset="0%" stopColor="var(--wave-primary, var(--marketing-wave-accent))" stopOpacity="var(--marketing-wave-main-strong)" />
+            <stop offset="100%" stopColor="var(--wave-secondary, var(--marketing-wave-accent))" stopOpacity="var(--marketing-wave-main-soft)" />
           </linearGradient>
           <linearGradient id="tWave2" x1="1" x2="0" y1="0" y2="1">
-            <stop offset="0%" stopColor="var(--brand-to)" stopOpacity="0.14" />
-            <stop offset="100%" stopColor="var(--brand-from)" stopOpacity="0.04" />
+            <stop offset="0%" stopColor="var(--wave-secondary, var(--marketing-wave-accent))" stopOpacity="var(--marketing-wave-secondary-strong)" />
+            <stop offset="100%" stopColor="var(--wave-primary, var(--marketing-wave-accent))" stopOpacity="var(--marketing-wave-secondary-soft)" />
           </linearGradient>
         </defs>
         <rect width="1440" height="900" fill="url(#tBg)" />
         <path d="M0 430 Q360 330 720 400 T1440 370 V900 H0Z" fill="url(#tWave1)" />
         <path d="M0 620 Q400 550 800 600 T1440 560 V900 H0Z" fill="url(#tWave2)" />
-        <path d="M0 52 C360 104 720 26 1080 72 C1260 96 1380 68 1440 80 L1440 0 L0 0 Z" fill="var(--hero-top-wave, var(--brand-from))" opacity="0.08" />
-        <circle cx="200" cy="100" r="200" fill="var(--brand-to)" opacity="0.08" />
-        <circle cx="1250" cy="800" r="260" fill="var(--brand-from)" opacity="0.07" />
+        <path d="M0 52 C360 104 720 26 1080 72 C1260 96 1380 68 1440 80 L1440 0 L0 0 Z" fill="var(--wave-secondary, var(--marketing-wave-accent))" opacity="var(--marketing-wave-top-opacity)" />
+        <circle cx="200" cy="100" r="200" fill="var(--wave-orb, var(--marketing-wave-accent))" opacity="var(--marketing-wave-orb-opacity)" />
+        <circle cx="1250" cy="800" r="260" fill="var(--wave-secondary, var(--marketing-wave-accent))" opacity="var(--marketing-wave-orb-soft-opacity)" />
       </svg>
     </div>
   );
@@ -119,7 +119,11 @@ export default function TermsPage() {
         {/* Terms Content */}
         <div className="rounded-[2rem] marketing-panel border border-gray-200/50 dark:border-red-400/20 shadow-lg p-8 md:p-12 space-y-10">
 
-          <Section id="overview" number="1" title={t('sections.overview.title') || 'Overview'}>
+          <Section
+            id="overview"
+            number="1"
+            title={t.has('sections.overview.title') ? t('sections.overview.title') : 'Overview'}
+          >
             <p>{t('sections.overview.p1')}</p>
             <p>{t('sections.overview.p2')}</p>
           </Section>

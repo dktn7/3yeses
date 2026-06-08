@@ -213,6 +213,7 @@ const nextConfig = {
         formats: ['image/avif', 'image/webp'],
         deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
         imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+        qualities: [75, 80],
         minimumCacheTTL: 60,
         dangerouslyAllowSVG: true,
         contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
@@ -234,11 +235,6 @@ const nextConfig = {
     // turbo: {
     //     enabled: false,
     // },
-    typescript: {
-        // Temporarily ignore TypeScript build errors so we can iterate on runtime and
-        // server/client boundary issues first. Remove this once types are fixed.
-        ignoreBuildErrors: true,
-    },
 };
 
 export default withNextIntl(nextConfig);

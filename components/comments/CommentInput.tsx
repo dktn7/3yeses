@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { buildLocalizedPath, getLocaleFromPathname } from '@/lib/locale-path';
 
 interface CommentInputProps {
   portfolioItemId?: string;
@@ -19,12 +21,15 @@ export default function CommentInput({
   parentCommentId,
   onCommentPosted,
   onCancel,
-  placeholder = 'Add a comment...',
+  placeholder,
   autoFocus = false,
 }: CommentInputProps) {
+  const t = useTranslations('Comments');
   const [content, setContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
+
+  const placeholderText = placeholder || t('addCommentPlaceholder');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,17 +56,18 @@ export default function CommentInput({
 
       if (!response.ok) {
         if (response.status === 401) {
-          router.push('/login');
+          const locale = typeof window !== 'undefined' ? getLocaleFromPathname(window.location.pathname) : 'en-gb';
+          router.push(buildLocalizedPath(locale, '/auth/signin'));
           return;
         }
-        throw new Error(data.error || 'Failed to post comment');
+        throw new Error(data.error || t('errors.postFailed'));
       }
 
       setContent('');
       onCommentPosted?.();
     } catch (error) {
       console.error('Comment error:', error);
-      alert('Failed to post comment. Please try again.');
+      alert(t('errors.postRetry'));
     } finally {
       setIsSubmitting(false);
     }
@@ -72,7 +78,7 @@ export default function CommentInput({
       <textarea
         value={content}
         onChange={(e) => setContent(e.target.value)}
-        placeholder={placeholder}
+        placeholder={placeholderText}
         autoFocus={autoFocus}
         rows={3}
         disabled={isSubmitting}
@@ -87,7 +93,7 @@ export default function CommentInput({
             disabled={isSubmitting}
             className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white disabled:opacity-50"
           >
-            Cancel
+            {t('cancel')}
           </button>
         )}
         <button
@@ -95,7 +101,7 @@ export default function CommentInput({
           disabled={!content.trim() || isSubmitting}
           className="px-6 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 dark:disabled:bg-gray-600 disabled:cursor-not-allowed transition-colors"
         >
-          {isSubmitting ? 'Posting...' : parentCommentId ? 'Reply' : 'Post'}
+          {isSubmitting ? t('posting') : parentCommentId ? t('reply') : t('post')}
         </button>
       </div>
     </form>

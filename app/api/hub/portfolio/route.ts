@@ -236,10 +236,10 @@ export async function GET(req: NextRequest) {
         break;
       case 'popular':
       case 'likes-desc':
-        orderBy = { talentProfile: { likes: { _count: 'desc' } } };
+        orderBy = { talentProfile: { profileLikes: { _count: 'desc' } } };
         break;
       case 'likes-asc':
-        orderBy = { talentProfile: { likes: { _count: 'asc' } } };
+        orderBy = { talentProfile: { profileLikes: { _count: 'asc' } } };
         break;
       case 'comments-desc':
         orderBy = { comments: { _count: 'desc' } };
@@ -274,11 +274,14 @@ export async function GET(req: NextRequest) {
               },
               category: {
                 select: {
+                  id: true,
                   name: true,
+                  icon: true,
                 },
               },
               subcategory: {
                 select: {
+                  id: true,
                   name: true,
                 },
               },
@@ -374,6 +377,9 @@ export async function GET(req: NextRequest) {
     });
   } catch (error) {
     console.error('Failed to load portfolio items:', error);
-    return NextResponse.json([], { status: 500 });
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : 'Failed to load portfolio items' },
+      { status: 500 }
+    );
   }
 }

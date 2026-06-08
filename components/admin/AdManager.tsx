@@ -143,7 +143,7 @@ export default function AdManager() {
             <div className="w-full h-32 relative rounded mb-2 overflow-hidden">
               {ad.imageUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <Image src={ad.imageUrl} alt={ad.title || "ad"} fill className="object-cover" />
+                <Image src={ad.imageUrl} alt={ad.title || "ad"} fill sizes="100vw" className="object-cover" />
               ) : (
                 <div className="w-full h-32 bg-gray-100" />
               )}

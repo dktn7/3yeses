@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Heart, MessageCircle, Trash2, MoreHorizontal } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import CommentInput from './CommentInput';
 import { formatDistanceToNow } from 'date-fns';
 import LoadingSpinner from '@/components/LoadingSpinner';
@@ -21,6 +22,7 @@ export default function CommentItem({
   talentProfileId,
   isReply = false,
 }: CommentItemProps) {
+  const t = useTranslations('Comments');
   const [liked, setLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(comment.likesCount || 0);
   const [showReplyInput, setShowReplyInput] = useState(false);
@@ -47,7 +49,7 @@ export default function CommentItem({
   };
 
   const handleDelete = async () => {
-    if (!confirm('Are you sure you want to delete this comment?')) return;
+    if (!confirm(t('confirmDelete'))) return;
 
     try {
       const response = await fetch(`/api/comments/${comment.id}`, {
@@ -141,7 +143,7 @@ export default function CommentItem({
                       className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-600 flex items-center gap-2"
                     >
                       <Trash2 className="w-4 h-4" />
-                      Delete
+                      {t('delete')}
                     </button>
                   </div>
                 )}
@@ -177,7 +179,7 @@ export default function CommentItem({
                 className="flex items-center gap-1 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-red-400 transition-colors"
               >
                 <MessageCircle className="w-4 h-4" />
-                Reply
+                {t('reply')}
               </button>
             )}
 
@@ -190,8 +192,8 @@ export default function CommentItem({
                 {loadingReplies
                   ? <LoadingSpinner size="small" className="p-0" />
                   : showReplies
-                  ? 'Hide replies'
-                  : `View ${replyCount} ${replyCount === 1 ? 'reply' : 'replies'}`}
+                  ? t('hideReplies')
+                  : t('viewReplies', { count: replyCount })}
               </button>
             )}
           </div>
@@ -205,7 +207,7 @@ export default function CommentItem({
                 parentCommentId={comment.id}
                 onCommentPosted={handleReplyPosted}
                 onCancel={() => setShowReplyInput(false)}
-                placeholder="Write a reply..."
+                placeholder={t('writeReplyPlaceholder')}
                 autoFocus
               />
             </div>

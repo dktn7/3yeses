@@ -3,35 +3,37 @@
 import { useState } from 'react';
 import { Send, Search } from 'lucide-react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 export default function MessagesPage() {
+  const t = useTranslations('DashboardMessagesPage');
   const [selectedMessage, setSelectedMessage] = useState(0);
   
   const messages = [
     {
       id: 1,
       name: 'Sarah Chen',
-      role: 'Casting Director',
-      lastMessage: 'Hi! I reviewed your portfolio and would love to discuss an upcoming project...',
-      time: '2h ago',
+      role: t('sample.castingDirector'),
+      lastMessage: t('sample.message1'),
+      time: t('sample.time2h'),
       unread: true,
       avatar: 'SC'
     },
     {
       id: 2,
       name: 'Mike Rodriguez',
-      role: 'Director',
-      lastMessage: 'Thank you for your interest. When would you be available for a video call?',
-      time: '1d ago',
+      role: t('sample.director'),
+      lastMessage: t('sample.message2'),
+      time: t('sample.time1d'),
       unread: false,
       avatar: 'MR'
     },
     {
       id: 3,
       name: 'Emma Thompson',
-      role: 'Producer',
-      lastMessage: 'The audition went great! We\'ll be in touch soon with next steps.',
-      time: '2d ago',
+      role: t('sample.producer'),
+      lastMessage: t('sample.message3'),
+      time: t('sample.time2d'),
       unread: false,
       avatar: 'ET'
     }
@@ -40,19 +42,19 @@ export default function MessagesPage() {
   const currentConversation = [
     {
       sender: 'Sarah Chen',
-      message: 'Hi! I reviewed your portfolio and would love to discuss an upcoming project.',
+      message: t('sample.message4'),
       time: '2:30 PM',
       isMe: false
     },
     {
-      sender: 'You',
-      message: 'Thank you for reaching out! I\'d love to hear more about the project.',
+      sender: t('labels.you'),
+      message: t('sample.message5'),
       time: '2:35 PM',
       isMe: true
     },
     {
       sender: 'Sarah Chen',
-      message: 'It\'s a commercial for a major brand. Are you available for a call tomorrow?',
+      message: t('sample.message6'),
       time: '2:40 PM',
       isMe: false
     }
@@ -76,12 +78,12 @@ export default function MessagesPage() {
         {/* Messages List */}
         <div className="w-1/3 bg-light-surface dark:bg-dark-surface border-r border-gray-200 dark:border-gray-700">
         <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-          <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Messages</h1>
+          <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">{t('title')}</h1>
           <div className="relative">
             <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
             <input
               type="text"
-              placeholder="Search conversations..."
+              placeholder={t('searchPlaceholder')}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
             />
           </div>
@@ -166,10 +168,10 @@ export default function MessagesPage() {
           <div className="flex items-center space-x-2">
             <input
               type="text"
-              placeholder="Type your message..."
+              placeholder={t('messagePlaceholder')}
               className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
             />
-            <button className="p-2 bg-primary-blue dark:bg-accent-red text-white rounded-lg hover:bg-primary-blueHover dark:hover:bg-accent-red/80 transition-colors">
+            <button aria-label={t('send')} className="p-2 bg-primary-blue dark:bg-accent-red text-white rounded-lg hover:bg-primary-blueHover dark:hover:bg-accent-red/80 transition-colors">
               <Send size={18} />
             </button>
           </div>

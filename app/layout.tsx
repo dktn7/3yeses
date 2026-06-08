@@ -31,9 +31,7 @@ export default async function RootLayout({
 
     return (
       <html suppressHydrationWarning>
-        <head>
-          <link rel="preload" as="image" href="/images/hero-poster.webp" type="image/webp" />
-        </head>
+        <head />
         <body className={`${inter.className} landing-bg`}>
           <NextIntlClientProvider locale={locale} messages={messages}>
             <ThemeProvider

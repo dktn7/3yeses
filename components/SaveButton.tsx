@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Heart } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAuthRequired } from '@/hooks/useAuthRequired';
 import AuthRequiredModal from '@/components/AuthRequiredModal';
@@ -13,6 +14,7 @@ interface SaveButtonProps {
 }
 
 export default function SaveButton({ talentId, talentName = 'talent', onSaveStatusChange }: SaveButtonProps) {
+  const t = useTranslations('SaveButton');
   const { user } = useAuth();
   const { showAuthModal, openAuthModal, closeAuthModal } = useAuthRequired();
   const [isSaved, setIsSaved] = useState(false);
@@ -88,8 +90,8 @@ export default function SaveButton({ talentId, talentName = 'talent', onSaveStat
         onClick={handleSave}
         disabled={isLoading}
         className="p-2 text-gray-400 hover:text-amber-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-        title={isSaved ? 'Remove from saved' : 'Save talent'}
-        aria-label={isSaved ? 'Remove from saved' : 'Save talent'}
+        title={isSaved ? t('remove') : t('save')}
+        aria-label={isSaved ? t('remove') : t('save')}
       >
         <Heart
           size={20}
@@ -101,9 +103,9 @@ export default function SaveButton({ talentId, talentName = 'talent', onSaveStat
       <AuthRequiredModal
         isOpen={showAuthModal}
         onClose={closeAuthModal}
-        title="Sign in to save"
-        message={`You need an account to save and bookmark ${talentName} profiles. Continue to sign in or create an account.`}
-        action="save profiles"
+        title={t('authModal.title')}
+        message={t('authModal.message', { talentName })}
+        action={t('authModal.action')}
       />
     </>
   );

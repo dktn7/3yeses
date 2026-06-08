@@ -38,7 +38,7 @@ export const mockTalents: Talent[] = [
     category: 'actors',
     subcategory: 'female-actor',
     skills: ['Method Acting', 'Stage Combat', 'Accent Work'],
-    videoUrl: 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4',
+    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
     avatarUrl: 'https://randomuser.me/api/portraits/women/1.jpg',
     location: 'Los Angeles, CA',
     experienceLevel: 8,

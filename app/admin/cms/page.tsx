@@ -341,7 +341,7 @@ export default function CMSPage() {
                   <div className="aspect-square bg-[var(--admin-surface)] rounded-lg mb-3 flex items-center justify-center overflow-hidden">
                     {asset.type === 'IMAGE' ? (
                       <div className="w-full h-full relative">
-                        <Image src={asset.url} alt={asset.filename} fill className="object-cover" />
+                        <Image src={asset.url} alt={asset.filename} fill sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw" className="object-cover" />
                       </div>
                     ) : (
                       getIconForType(asset.type)

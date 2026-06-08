@@ -290,8 +290,10 @@ export async function GET(request: Request) {
       // rating removed per platform decision
       avatarUrl: talent.avatarUrl,
       videoUrl: talent.videoUrl,
+      categoryId: talent.category?.id || '',
       category: talent.category?.name || '',
       categoryIcon: talent.category?.icon || null,
+      subcategoryId: talent.subcategory?.id || '',
       subcategory: talent.subcategory?.name || '',
       skills: talent.skills || [],
       featuredSkills: (talent as any).featuredSkills || [],
@@ -526,8 +528,10 @@ export async function POST(request: Request) {
       },
       avatarUrl: talent.avatarUrl, // For VideoTalentCard
       videoUrl: talent.videoUrl, // For VideoTalentCard
+      categoryId: talent.category?.id || '',
       category: talent.category?.name || '',
       categoryIcon: talent.category?.icon || null,
+      subcategoryId: talent.subcategory?.id || '',
       subcategory: talent.subcategory?.name || '',
       skills: talent.skills || [],
       featuredSkills: (talent as any).featuredSkills || [],

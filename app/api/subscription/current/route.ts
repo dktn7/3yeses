@@ -13,12 +13,20 @@ export async function GET(req: NextRequest) {
     const accessToken = cookieStore.get('accessToken')?.value;
 
     if (!accessToken) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({
+        plan: null,
+        status: 'NONE',
+        features: ['Basic profile', 'Limited portfolio (3 items)', 'Standard search visibility'],
+      });
     }
 
     const decoded = await AuthService.verifyJWT(accessToken);
     if (!decoded) {
-      return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
+      return NextResponse.json({
+        plan: null,
+        status: 'NONE',
+        features: ['Basic profile', 'Limited portfolio (3 items)', 'Standard search visibility'],
+      });
     }
 
     // Get user's current active subscription

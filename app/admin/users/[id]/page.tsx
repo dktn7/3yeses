@@ -548,7 +548,7 @@ export default function UserDetailPage() {
                       <div key={idx} className="group relative aspect-square bg-[var(--admin-bg)] rounded-lg border border-[var(--admin-border)] overflow-hidden cursor-pointer"
                         onClick={() => setMediaPreview({ url, type: 'IMAGE', title: `Image ${idx + 1}` })}
                       >
-                        <Image src={url} alt={`Portfolio image ${idx + 1}`} fill className="object-cover" />
+                        <Image src={url} alt={`Portfolio image ${idx + 1}`} fill sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw" className="object-cover" />
                         <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                           <button className="p-2 bg-white/20 rounded-lg hover:bg-white/30 text-white">
                             <Eye size={16} />
@@ -628,7 +628,7 @@ export default function UserDetailPage() {
                           onClick={() => setMediaPreview({ url: asset.url, type: asset.type, title: asset.filename })}
                         >
                           {asset.type === 'IMAGE' ? (
-                            <Image src={asset.url} alt={asset.altText || asset.filename} fill className="object-cover" />
+                            <Image src={asset.url} alt={asset.altText || asset.filename} fill sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw" className="object-cover" />
                           ) : (
                             <div className="w-full h-full flex flex-col items-center justify-center gap-2 text-[var(--admin-muted)]">
                               {getMediaIcon(asset.type)}

@@ -622,7 +622,7 @@ export default function GalleryPage() {
                             </button>
                             {extractedThumbnail && (
                               <div className="relative aspect-video rounded-xl overflow-hidden border-2 border-green-500 shadow-xl">
-                                <Image src={extractedThumbnail} alt={t('thumbnail')} fill className="object-cover" />
+                                <Image src={extractedThumbnail} alt={t('thumbnail')} fill sizes="100vw" className="object-cover" />
                                 <div className="absolute top-2 right-2 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg flex items-center gap-1">
                                   ✓ {t('ready')}
                                 </div>
@@ -1275,7 +1275,7 @@ export default function GalleryPage() {
                         </button>
                         {extractedThumbnail && (
                           <div className="relative aspect-video rounded-lg overflow-hidden border-2 border-green-500">
-                            <Image src={extractedThumbnail} alt={t('thumbnail')} fill className="object-cover" />
+                            <Image src={extractedThumbnail} alt={t('thumbnail')} fill sizes="100vw" className="object-cover" />
                             <div className="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full font-medium">✓ {t('ready')}</div>
                           </div>
                         )}

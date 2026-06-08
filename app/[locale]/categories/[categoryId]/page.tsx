@@ -13,15 +13,15 @@ interface Props {
 export default async function CategoryPage({ params }: Props) {
   const { locale, categoryId } = params;
 
-  // Look up category name by ID so we can redirect with the correct query param
+  // Keep this legacy route usable while the categories page uses stable query IDs.
   try {
     const category = await prisma.talentCategory.findUnique({
       where: { id: categoryId },
-      select: { name: true },
+      select: { id: true },
     });
 
     if (category) {
-      redirect(buildLocalizedPath(locale, `/categories?category=${encodeURIComponent(category.name)}`));
+      redirect(buildLocalizedPath(locale, `/categories?category=${encodeURIComponent(category.id)}`));
     }
   } catch {
     // If lookup fails, just redirect to categories index

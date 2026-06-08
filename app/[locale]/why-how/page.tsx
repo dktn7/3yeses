@@ -24,7 +24,7 @@ import {
 function WhyHowBg() {
   return (
     <div
-      className="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none dark:opacity-90"
+      className="marketing-wave-tone-structured absolute inset-0 z-0 overflow-hidden pointer-events-none select-none dark:opacity-90"
       aria-hidden="true"
     >
       <svg
@@ -37,29 +37,29 @@ function WhyHowBg() {
           <linearGradient id="whBg" x1="0" x2="0" y1="0" y2="1">
             <stop
               offset="0%"
-              stopColor="var(--brand-from)"
-              stopOpacity="0.18"
+              stopColor="var(--wave-veil, var(--marketing-wave-accent))"
+              stopOpacity="var(--marketing-wave-bg-strong)"
             />
             <stop offset="100%" stopColor="transparent" />
           </linearGradient>
           <linearGradient id="whWave1" x1="0" x2="1" y1="0" y2="1">
             <stop
               offset="0%"
-              stopColor="var(--brand-from)"
-              stopOpacity="0.28"
+              stopColor="var(--wave-primary, var(--marketing-wave-accent))"
+              stopOpacity="var(--marketing-wave-main-strong)"
             />
             <stop
               offset="100%"
-              stopColor="var(--brand-to)"
-              stopOpacity="0.10"
+              stopColor="var(--wave-secondary, var(--marketing-wave-accent))"
+              stopOpacity="var(--marketing-wave-main-soft)"
             />
           </linearGradient>
           <linearGradient id="whWave2" x1="1" x2="0" y1="0" y2="1">
-            <stop offset="0%" stopColor="var(--brand-to)" stopOpacity="0.18" />
+            <stop offset="0%" stopColor="var(--wave-secondary, var(--marketing-wave-accent))" stopOpacity="var(--marketing-wave-secondary-strong)" />
             <stop
               offset="100%"
-              stopColor="var(--brand-from)"
-              stopOpacity="0.08"
+              stopColor="var(--wave-primary, var(--marketing-wave-accent))"
+              stopOpacity="var(--marketing-wave-secondary-soft)"
             />
           </linearGradient>
         </defs>
@@ -74,23 +74,78 @@ function WhyHowBg() {
         />
         <path
           d="M0 80 C360 130 720 40 1080 90 C1260 120 1380 84 1440 98 L1440 0 L0 0 Z"
-          fill="var(--hero-top-wave, var(--brand-from))"
-          opacity="0.10"
+          fill="var(--wave-primary, var(--marketing-wave-accent))"
+          opacity="var(--marketing-wave-top-opacity)"
         />
         <circle
           cx="180"
           cy="160"
           r="220"
-          fill="var(--brand-to)"
-          opacity="0.06"
+          fill="var(--wave-orb, var(--marketing-wave-accent))"
+          opacity="var(--marketing-wave-orb-opacity)"
         />
         <circle
           cx="1280"
           cy="680"
           r="280"
-          fill="var(--brand-from)"
-          opacity="0.05"
+          fill="var(--wave-secondary, var(--marketing-wave-accent))"
+          opacity="var(--marketing-wave-orb-soft-opacity)"
         />
+      </svg>
+    </div>
+  );
+}
+
+function WhyHowMidWaves() {
+  return (
+    <div
+      className="marketing-wave-tone-structured absolute inset-0 -z-10 overflow-hidden pointer-events-none select-none dark:opacity-95"
+      aria-hidden="true"
+    >
+      <svg
+        className="h-full w-full"
+        preserveAspectRatio="none"
+        viewBox="0 0 1440 1500"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          <linearGradient id="whMidWash" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stopColor="transparent" />
+            <stop offset="18%" stopColor="var(--wave-veil, var(--marketing-wave-accent))" stopOpacity="0.22" />
+            <stop offset="54%" stopColor="var(--wave-secondary, var(--marketing-wave-accent))" stopOpacity="0.18" />
+            <stop offset="100%" stopColor="transparent" />
+          </linearGradient>
+          <linearGradient id="whMidRibbonOne" x1="0" x2="1" y1="0" y2="0">
+            <stop offset="0%" stopColor="var(--wave-primary, var(--marketing-wave-accent))" stopOpacity="0.32" />
+            <stop offset="48%" stopColor="var(--wave-secondary, var(--marketing-wave-accent))" stopOpacity="0.18" />
+            <stop offset="100%" stopColor="var(--wave-primary, var(--marketing-wave-accent))" stopOpacity="0.28" />
+          </linearGradient>
+          <linearGradient id="whMidRibbonTwo" x1="1" x2="0" y1="0" y2="1">
+            <stop offset="0%" stopColor="var(--wave-secondary, var(--marketing-wave-accent))" stopOpacity="0.24" />
+            <stop offset="100%" stopColor="var(--wave-primary, var(--marketing-wave-accent))" stopOpacity="0.12" />
+          </linearGradient>
+          <radialGradient id="whMidOrb" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="var(--wave-orb, var(--marketing-wave-accent))" stopOpacity="0.18" />
+            <stop offset="100%" stopColor="transparent" />
+          </radialGradient>
+        </defs>
+        <rect width="1440" height="1500" fill="url(#whMidWash)" />
+        <path
+          d="M-120 180 C160 88 350 230 620 150 C890 70 1030 190 1240 126 C1360 90 1440 72 1560 92 L1560 310 C1320 260 1130 344 890 276 C650 206 390 322 120 252 C0 222 -80 210 -120 216 Z"
+          fill="url(#whMidRibbonOne)"
+        />
+        <path
+          d="M-120 620 C160 535 380 660 620 604 C850 548 1070 640 1320 570 C1430 540 1510 532 1560 548 L1560 850 C1320 784 1110 880 850 802 C610 730 390 830 130 760 C0 724 -72 712 -120 724 Z"
+          fill="url(#whMidRibbonTwo)"
+        />
+        <path
+          d="M-160 1080 C100 980 320 1120 570 1055 C820 990 1040 1118 1280 1040 C1420 995 1510 1005 1600 1040 L1600 1500 L-160 1500 Z"
+          fill="url(#whMidRibbonOne)"
+          opacity="0.82"
+        />
+        <circle cx="220" cy="355" r="260" fill="url(#whMidOrb)" />
+        <circle cx="1190" cy="805" r="310" fill="url(#whMidOrb)" />
+        <circle cx="520" cy="1180" r="340" fill="url(#whMidOrb)" opacity="0.72" />
       </svg>
     </div>
   );
@@ -110,34 +165,28 @@ function FeatureCard({
 }) {
   return (
     <div
-      className="group relative rounded-[1.5rem] backdrop-blur-sm p-1.5 ring-1 ring-black/[0.06] dark:ring-white/[0.08] transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] hover:ring-[var(--brand-primary)]/20 hover:shadow-[0_16px_48px_-8px_rgba(0,0,0,0.08)]"
+      className="marketing-panel group relative rounded-[1.5rem] border border-gray-200/50 p-7 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary-blue/30 hover:shadow-lg dark:border-red-900/25 dark:hover:border-red-800/35"
       style={{
-        background: "color-mix(in srgb, var(--background) 82%, transparent)",
         animationDelay: `${index * 80}ms`,
       }}
     >
-      <div
-        className="rounded-[calc(1.5rem-0.375rem)] p-6 sm:p-8 h-full"
-        style={{ background: "var(--background)" }}
-      >
-        <div className="h-12 w-12 rounded-2xl bg-[var(--brand-primary)]/10 flex items-center justify-center mb-5 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:scale-110">
+      <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 bg-gradient-to-br from-primary-blue/10 to-accent-blue/10 dark:from-accent-red/10 dark:to-primary-red/10">
           <Icon className="w-6 h-6 text-[var(--brand-primary)]" />
-        </div>
+      </div>
         <h3
-          className="text-lg font-bold mb-2 tracking-tight"
+        className="text-base font-bold mb-2 tracking-tight text-gray-900 transition-colors group-hover:text-[var(--marketing-accent)] dark:text-white"
           style={{ color: "var(--foreground)" }}
         >
           {title}
         </h3>
         <p
-          className="text-[15px] leading-relaxed"
+        className="text-sm leading-relaxed text-gray-600 dark:text-gray-300"
           style={{
-            color: "color-mix(in srgb, var(--foreground) 65%, transparent)",
+            color: "color-mix(in srgb, var(--foreground) 72%, transparent)",
           }}
         >
           {description}
         </p>
-      </div>
     </div>
   );
 }
@@ -161,8 +210,7 @@ function StepCard({
       {/* Vertical connector with improved badge */}
       <div className="flex flex-col items-center">
         <div
-          className="h-16 w-16 rounded-3xl bg-gradient-to-br from-[var(--brand-primary)] to-[var(--brand-accent)] flex items-center justify-center shrink-0 shadow-2xl"
-          style={{ boxShadow: "0 8px 28px rgba(59,130,246,0.12)" }}
+          className="h-16 w-16 rounded-3xl bg-gradient-to-br from-[var(--brand-primary)] to-[var(--brand-accent)] flex items-center justify-center shrink-0 shadow-[0_16px_36px_rgba(37,99,235,0.28)] dark:shadow-[0_16px_36px_rgba(220,38,38,0.30)] ring-4 ring-white/80 dark:ring-white/8"
         >
           <span className="text-2xl font-extrabold text-white">{number}</span>
         </div>
@@ -172,23 +220,18 @@ function StepCard({
       </div>
 
       {/* Content with accent strip */}
-      <div className="relative pb-12 last:pb-0 flex-1">
-        <div
-          className="absolute left-0 top-0 bottom-4 w-1 rounded-r-full bg-gradient-to-b from-[var(--brand-primary)] to-transparent opacity-80"
-          aria-hidden="true"
-        />
-
-        <div className="pl-6">
+      <div className="relative pb-10 last:pb-0 flex-1">
+        <div className="marketing-panel rounded-[1.5rem] border border-gray-200/50 p-6 shadow-sm dark:border-red-900/25">
           <h3
-            className="text-2xl sm:text-2xl font-extrabold tracking-tight mb-2"
+            className="text-xl sm:text-2xl font-extrabold tracking-tight mb-2"
             style={{ color: "var(--foreground)" }}
           >
             {title}
           </h3>
           <p
-            className="text-[15.5px] leading-relaxed mb-4 max-w-xl"
+            className="text-[15.5px] leading-relaxed mb-5 max-w-xl"
             style={{
-              color: "color-mix(in srgb, var(--foreground) 65%, transparent)",
+              color: "color-mix(in srgb, var(--foreground) 72%, transparent)",
             }}
           >
             {description}
@@ -239,9 +282,10 @@ function StatBlock({ value, label }: { value: string; label: string }) {
 export default async function WhyHowPage({
   params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
-  const locale = params?.locale ?? "en-gb";
+  const resolvedParams = await params;
+  const locale = resolvedParams?.locale ?? "en-gb";
   const t = await getTranslations("WhyHow");
 
   const features = [
@@ -351,27 +395,13 @@ export default async function WhyHowPage({
             <div className="flex flex-wrap gap-4">
               <Link
                 href={`/${locale}/signup`}
-                className="group relative inline-flex items-center gap-2 text-white rounded-full pl-7 pr-2.5 py-3.5 font-semibold text-base shadow-lg transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-xl active:scale-[0.98]"
-                style={{
-                  background:
-                    "linear-gradient(90deg, var(--brand-primary), var(--brand-accent))",
-                }}
+                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-primary-blue to-accent-blue px-8 py-3.5 text-sm font-semibold text-white shadow-lg shadow-primary-blue/20 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/35 dark:from-accent-red dark:to-primary-red dark:shadow-accent-red/20 dark:focus-visible:ring-accent-red/35"
               >
-                <span>{t("cta.primary")}</span>
-                <span className="flex items-center justify-center w-9 h-9 rounded-full bg-white/15 transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-0.5 group-hover:scale-105">
-                  <ArrowRight className="w-4 h-4" />
-                </span>
+                {t("cta.primary")} <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
                 href={`/${locale}/pricing`}
-                className="inline-flex items-center px-7 py-3.5 rounded-full font-semibold text-base transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]"
-                style={{
-                  color: "var(--brand-primary)",
-                  border:
-                    "2px solid color-mix(in srgb, var(--brand-primary) 50%, transparent)",
-                  background:
-                    "color-mix(in srgb, var(--brand-primary) 7%, transparent)",
-                }}
+                className="inline-flex items-center gap-2 rounded-xl marketing-panel border border-gray-200/60 px-8 py-3.5 text-sm font-semibold text-gray-900 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:text-[var(--marketing-accent)] hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/35 dark:border-red-900/25 dark:text-white dark:focus-visible:ring-accent-red/35"
               >
                 {t("cta.secondary")}
               </Link>
@@ -417,8 +447,11 @@ export default async function WhyHowPage({
         </div>
       </section>
 
-      {/* ── Why 3YESES ── */}
-      <section className="py-20 md:py-28">
+      <section className="relative isolate overflow-hidden">
+        <WhyHowMidWaves />
+
+        {/* ── Why 3YESES ── */}
+        <div className="relative py-20 md:py-28">
         <div className="max-w-6xl mx-auto px-6">
           <div className="max-w-2xl mb-14">
             <span className="marketing-pill inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[10px] uppercase tracking-[0.22em] font-semibold mb-6 shadow-sm backdrop-blur-md">
@@ -444,10 +477,10 @@ export default async function WhyHowPage({
             ))}
           </div>
         </div>
-      </section>
+        </div>
 
       {/* ── How it works ── */}
-      <section className="py-20 md:py-28 bg-[var(--marketing-panel-soft)]">
+        <div className="relative py-20 md:py-28">
         <div className="max-w-6xl mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
             {/* Left: heading */}
@@ -492,6 +525,7 @@ export default async function WhyHowPage({
               ))}
             </div>
           </div>
+        </div>
         </div>
       </section>
 
@@ -568,7 +602,7 @@ export default async function WhyHowPage({
       {/* ── Final CTA ── */}
       <section className="relative isolate overflow-hidden py-24 md:py-32">
         <WhyHowBg />
-        <div className="max-w-4xl mx-auto px-6 text-center">
+        <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
           <h2 className="marketing-hero-title text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tighter mb-5 dark:[text-shadow:0_4px_18px_rgba(0,0,0,0.55)]">
             {t("finalCta.title")}
           </h2>
@@ -578,17 +612,14 @@ export default async function WhyHowPage({
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               href={`/${locale}/signup`}
-              className="group inline-flex items-center gap-3 text-white px-8 py-4 rounded-full font-semibold text-base shadow-lg transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-xl bg-gradient-to-r from-[var(--brand-primary)] to-[var(--brand-accent)] active:scale-[0.98]"
+              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-primary-blue to-accent-blue px-8 py-3.5 text-sm font-semibold text-white shadow-lg shadow-primary-blue/20 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/35 dark:from-accent-red dark:to-primary-red dark:shadow-accent-red/20 dark:focus-visible:ring-accent-red/35"
             >
-              {t("finalCta.talentButton")}
-              <span className="flex items-center justify-center w-9 h-9 rounded-full bg-white/15 transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-0.5">
-                <ArrowRight className="w-4 h-4" />
-              </span>
+              {t("finalCta.talentButton")} <ArrowRight className="w-4 h-4" />
             </Link>
 
             <Link
               href={`/${locale}/pricing`}
-              className="marketing-pill marketing-accent-text inline-flex items-center px-7 py-3.5 rounded-full font-semibold text-base transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] border-2 border-[var(--marketing-pill-border)] bg-light-surface dark:bg-dark-surface hover:bg-light-surface"
+              className="inline-flex items-center gap-2 rounded-xl marketing-panel border border-gray-200/60 px-8 py-3.5 text-sm font-semibold text-gray-900 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:text-[var(--marketing-accent)] hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/35 dark:border-red-900/25 dark:text-white dark:focus-visible:ring-accent-red/35"
             >
               {t("finalCta.viewPricing")}
             </Link>
