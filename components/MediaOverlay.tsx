@@ -274,7 +274,7 @@ export default function MediaOverlay({ media, allMedia, talents = [], onClose, o
       aria-modal={isEmbedded ? undefined : 'true'}
       aria-label={`Media: ${media.title}`}
       className={isEmbedded
-        ? 'relative z-10 bg-gray-100 dark:bg-black overflow-y-auto md:overflow-hidden md:flex min-h-screen'
+        ? 'relative z-10 w-full min-h-[100dvh] bg-gray-100 dark:bg-black overflow-y-auto md:overflow-hidden md:flex'
         : 'fixed inset-0 z-[100] bg-gray-100 dark:bg-black overflow-y-auto md:overflow-hidden md:flex'}
     >
       {/* Left Sidebar - Profile, Filters & Media List */}
@@ -449,7 +449,7 @@ export default function MediaOverlay({ media, allMedia, talents = [], onClose, o
       </div>
 
       {/* Center - Media Viewer */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-y-auto scrollbar-hide relative min-h-screen md:min-h-0">
+      <div className="flex-1 flex flex-col min-w-0 overflow-y-auto scrollbar-hide relative min-h-[100dvh] md:min-h-[100dvh]">
         {/* Mobile Header - Visible on <md where left sidebar is hidden */}
         <div className="md:hidden bg-light-surface dark:bg-dark-surface border-b border-gray-300 dark:border-gray-800 px-3 py-2 flex items-center justify-between flex-shrink-0 sticky top-0 z-40">
           <div className="flex items-center gap-2 min-w-0">

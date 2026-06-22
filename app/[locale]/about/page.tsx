@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import {
   Globe, Heart, Users, Sparkles, Camera, Music, Star, ArrowRight,
   Shield, Mic, Video, Palette, TrendingUp, BarChart3, Image as ImageIcon
@@ -9,6 +9,7 @@ import {
 import Link from 'next/link';
 import SwoopingTick from '@/components/SwoopingTick';
 import Breadcrumbs from '@/components/Breadcrumbs';
+import { buildLocalizedPath } from '@/lib/locale-path';
 
 /* ── Background decoration ─────────────────────────────────────────── */
 function AboutBgDecoration() {
@@ -77,6 +78,8 @@ const TALENT_CATEGORIES = [
 
 export default function AboutPage() {
   const t = useTranslations('About');
+  const tNav = useTranslations('Navigation');
+  const locale = useLocale();
   const emphasisToken = '__EVERYONE__';
   const heroDescription = t('hero.description', { everyone: emphasisToken });
   const [heroBefore, heroAfter = ''] = heroDescription.split(emphasisToken);
@@ -87,7 +90,7 @@ export default function AboutPage() {
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-24">
 
-        <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: t('badge') || 'About' }]} />
+        <Breadcrumbs items={[{ label: tNav('home'), href: buildLocalizedPath(locale, '/') }, { label: t('badge') || 'About' }]} />
         <div className="text-center mb-20">
             <div className="flex justify-center mb-6">
             <span className="marketing-pill inline-flex items-center gap-3 rounded-full px-5 py-2.5 marketing-pill border border-gray-200/60 dark:border-[var(--marketing-pill-border)] shadow-sm">

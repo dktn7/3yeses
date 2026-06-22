@@ -295,17 +295,17 @@ export default function DashboardOverview() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(37,99,235,0.08),transparent_34%),radial-gradient(circle_at_top_right,rgba(185,28,28,0.08),transparent_28%),linear-gradient(180deg,var(--background),color-mix(in_srgb,var(--background)_86%,#f8fafc))]">
       {/* Toast Notifications */}
       <ToastContainer toasts={toasts} onClose={removeToast} />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Enhanced Hero Bar */}
         <div
-          className="relative rounded-2xl shadow-2xl p-10 md:p-12 mb-8 overflow-hidden"
-          style={{ background: 'linear-gradient(90deg, var(--brand-from), var(--brand-to))' }}
+          className="relative mb-8 overflow-hidden rounded-[2rem] border border-slate-200/75 bg-light-surface/95 p-6 shadow-[0_24px_60px_-38px_rgba(15,23,42,0.42)] dark:border-slate-800/70 dark:bg-dark-surface/94 md:p-8"
+          style={{ backgroundImage: 'linear-gradient(90deg, rgba(37,99,235,0.08), rgba(185,28,28,0.08))' }}
         >
-          <div className="absolute right-8 top-8 w-44 h-44 rounded-full bg-gradient-to-tr from-white/6 to-transparent blur-3xl pointer-events-none" />
+          <div className="absolute right-8 top-8 h-44 w-44 rounded-full bg-gradient-to-tr from-[color:var(--brand-primary)]/15 to-transparent blur-3xl pointer-events-none" />
           {user && (
             <DashboardHero
               displayName={displayFirstName}
@@ -321,42 +321,42 @@ export default function DashboardOverview() {
         </div>
 
         {/* Growth Hints Campaign (non-blocking) */}
-        <section className="mb-6 rounded-xl border border-blue-200/80 bg-blue-50/80 dark:bg-red-900/20 dark:border-red-400/40 p-5">
+        <section className="mb-6 rounded-[1.75rem] border border-slate-200/75 bg-white/85 p-5 shadow-[0_18px_44px_-32px_rgba(15,23,42,0.35)] dark:border-slate-800/70 dark:bg-slate-950/40">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="text-sm font-bold text-blue-800 dark:text-red-100">New: Growth Hints</p>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Weekly actions to boost profile visibility</h3>
-              <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">Complete one smart suggestion per week and we’ll promote you in the talent feed.</p>
+              <p className="text-sm font-bold text-[color:var(--brand-primary)]">{t('overview.growthHintsBadge')}</p>
+              <h3 className="text-lg font-semibold text-slate-950 dark:text-white">{t('overview.growthHintsTitle')}</h3>
+              <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{t('overview.growthHintsDesc')}</p>
             </div>
             <Link
               href={buildLocalizedPath(locale, '/dashboard/profile#growth-hints')}
-              className="inline-flex items-center gap-2 rounded-lg bg-primary-blue dark:bg-accent-red text-white px-4 py-2 text-sm font-semibold hover:bg-primary-blueHover dark:hover:bg-accent-red/80 transition-all"
+              className="inline-flex items-center gap-2 rounded-full bg-[color:var(--brand-primary)] px-4 py-2 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:shadow-[0_14px_30px_-18px_rgba(37,99,235,0.9)]"
             >
-              Explore hints
+              {t('overview.growthHintsCta')}
             </Link>
           </div>
         </section>
 
         {warningNotifications.length > 0 && (
-          <section className="mb-6 rounded-xl border border-amber-300/30 bg-amber-50/70 dark:bg-amber-900/20 dark:border-amber-400/40 p-5">
+          <section className="mb-6 rounded-[1.75rem] border border-amber-200/75 bg-amber-50/75 p-5 shadow-[0_18px_44px_-32px_rgba(180,83,9,0.35)] dark:border-amber-500/30 dark:bg-amber-950/20">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-lg font-bold text-amber-800 dark:text-amber-100">Action Required</h2>
-                <p className="text-sm text-amber-600 dark:text-amber-200">You have active account warnings from your admin team.</p>
+                <h2 className="text-lg font-bold text-amber-950 dark:text-amber-100">{t('overview.actionRequiredTitle')}</h2>
+                <p className="text-sm text-amber-700 dark:text-amber-200">{t('overview.actionRequiredDesc')}</p>
               </div>
               <Link
                 href={buildLocalizedPath(locale, '/dashboard/notifications')}
-                className="text-xs font-semibold text-amber-700 dark:text-amber-200 hover:underline"
+                className="text-xs font-semibold text-amber-800 dark:text-amber-200 hover:underline"
               >
-                View all
+                {t('viewAll')}
               </Link>
             </div>
             <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
               {warningNotifications.slice(0, 3).map((n) => (
-                <div key={n.id} className="rounded-lg border border-amber-200 dark:border-amber-500/60 bg-light-surface dark:bg-dark-surface p-3">
-                  <p className="text-sm font-semibold text-amber-700 dark:text-amber-100">{n.title || 'Warning'}</p>
-                  <p className="text-sm text-amber-700/90 dark:text-amber-200 mt-1">{n.message}</p>
-                  <p className="text-xs text-amber-600 dark:text-amber-300 mt-2">{new Date(n.timestamp).toLocaleString(locale)}</p>
+                <div key={n.id} className="rounded-[1.25rem] border border-amber-200/80 bg-light-surface/95 p-3 dark:border-amber-500/30 dark:bg-dark-surface/95">
+                  <p className="text-sm font-semibold text-amber-800 dark:text-amber-100">{n.title || t('overview.warningFallback')}</p>
+                  <p className="mt-1 text-sm text-amber-700/90 dark:text-amber-200">{n.message}</p>
+                  <p className="mt-2 text-xs text-amber-600 dark:text-amber-300">{new Date(n.timestamp).toLocaleString(locale)}</p>
                 </div>
               ))}
             </div>
@@ -366,15 +366,15 @@ export default function DashboardOverview() {
         {!hideContent && (
         <>
         {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-3">
           {/* Profile Views */}
-          <div className="bg-light-surface dark:bg-dark-surface rounded-xl shadow-lg p-6 border-l-4 border-brand-500">
+          <div className="rounded-[1.75rem] border border-slate-200/70 bg-light-surface/95 p-6 shadow-[0_18px_44px_-30px_rgba(15,23,42,0.35)] dark:border-slate-800/70 dark:bg-dark-surface/94">
             <div className="flex justify-between items-start">
               <div>
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wide">
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">
                   {t('overview.profileViews')}
                 </p>
-                <h3 className="text-3xl font-bold text-gray-900 dark:text-white mt-2">
+                <h3 className="mt-2 text-3xl font-semibold tracking-tight text-slate-950 dark:text-white">
                   {stats.totalViews.toLocaleString()}
                 </h3>
                 <div className="flex items-center mt-2">
@@ -395,14 +395,14 @@ export default function DashboardOverview() {
                   )}
                 </div>
               </div>
-              <div className="p-3 bg-[var(--marketing-surface)] dark:bg-[var(--marketing-surface)] rounded-lg">
+              <div className="rounded-2xl bg-[color:var(--brand-primary)]/10 p-3 text-[color:var(--brand-primary)]">
                 <Eye className="h-6 w-6 text-[var(--marketing-pill-icon)] dark:text-[var(--marketing-pill-icon)]" />
               </div>
             </div>
             {viewsHistory.length > 0 && (
-              <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+              <div className="mt-4 border-t border-slate-200/70 pt-4 dark:border-slate-800/70">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-gray-500 dark:text-gray-400">{t('overview.lastSevenDays')}</span>
+                  <span className="text-xs text-slate-500 dark:text-slate-400">{t('overview.lastSevenDays')}</span>
                   <MiniSparkline 
                     data={viewsHistory} 
                     color={stats.viewTrend >= 0 ? '#10b981' : '#B91C1C'}
@@ -415,13 +415,13 @@ export default function DashboardOverview() {
           </div>
 
           {/* Profile Likes */}
-          <div className="bg-light-surface dark:bg-dark-surface rounded-xl shadow-lg p-6 border-l-4 border-brand-600">
+          <div className="rounded-[1.75rem] border border-slate-200/70 bg-light-surface/95 p-6 shadow-[0_18px_44px_-30px_rgba(15,23,42,0.35)] dark:border-slate-800/70 dark:bg-dark-surface/94">
             <div className="flex justify-between items-start">
               <div>
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wide">
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">
                   {t('overview.profileLikes')}
                 </p>
-                <h3 className="text-3xl font-bold text-gray-900 dark:text-white mt-2">
+                <h3 className="mt-2 text-3xl font-semibold tracking-tight text-slate-950 dark:text-white">
                   {stats.totalLikes.toLocaleString()}
                 </h3>
                 <div className="flex items-center mt-2">
@@ -442,14 +442,14 @@ export default function DashboardOverview() {
                   )}
                 </div>
               </div>
-              <div className="p-3 bg-red-100 dark:bg-red-900/30 rounded-lg">
+              <div className="rounded-2xl bg-[color:var(--brand-primary)]/10 p-3 text-[color:var(--brand-primary)]">
                 <SwoopingTick size={24} />
               </div>
             </div>
             {likesHistory.length > 0 && (
-              <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+              <div className="mt-4 border-t border-slate-200/70 pt-4 dark:border-slate-800/70">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-gray-500 dark:text-gray-400">{t('overview.lastSevenDays')}</span>
+                  <span className="text-xs text-slate-500 dark:text-slate-400">{t('overview.lastSevenDays')}</span>
                   <MiniSparkline 
                     data={likesHistory} 
                     color={stats.likeTrend >= 0 ? '#10b981' : '#B91C1C'}
@@ -462,20 +462,20 @@ export default function DashboardOverview() {
           </div>
 
           {/* Saved Talents */}
-          <div className="bg-light-surface dark:bg-dark-surface rounded-xl shadow-lg p-6 border-l-4 border-purple-500">
+          <div className="rounded-[1.75rem] border border-slate-200/70 bg-light-surface/95 p-6 shadow-[0_18px_44px_-30px_rgba(15,23,42,0.35)] dark:border-slate-800/70 dark:bg-dark-surface/94">
             <div className="flex justify-between items-start">
               <div>
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wide">
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">
                   {t('overview.savedTalents')}
                 </p>
-                <h3 className="text-3xl font-bold text-gray-900 dark:text-white mt-2">
+                <h3 className="mt-2 text-3xl font-semibold tracking-tight text-slate-950 dark:text-white">
                   {savedTalents.length.toLocaleString()}
                 </h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+                <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
                   {t('overview.talentsYouSaved')}
                 </p>
               </div>
-              <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+              <div className="rounded-2xl bg-[color:var(--brand-primary)]/10 p-3 text-[color:var(--brand-primary)]">
                 <SwoopingTick size={24} />
               </div>
             </div>

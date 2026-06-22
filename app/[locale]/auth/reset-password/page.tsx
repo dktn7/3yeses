@@ -10,6 +10,7 @@ export default function ResetPasswordPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const t = useTranslations('Auth.resetPassword');
+  const tNav = useTranslations('Navigation');
   
   const [token, setToken] = useState('');
   const [password, setPassword] = useState('');
@@ -96,16 +97,16 @@ export default function ResetPasswordPage() {
               <MdLock className="text-4xl text-red-600 dark:text-red-400" />
             </div>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
-              Invalid Reset Link
+              {t('invalid.title')}
             </h2>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
-              This password reset link is invalid or has expired.
+              {t('invalid.description')}
             </p>
             <Link
               href="/auth/forgot-password"
               className="inline-block px-6 py-3 bg-gradient-to-r from-blue-600 to-red-600 hover:from-blue-700 hover:to-red-700 text-white font-medium rounded-lg transition-all shadow-lg hover:shadow-xl"
             >
-              Request New Link
+              {t('invalid.requestNewLink')}
             </Link>
           </div>
         </div>
@@ -121,18 +122,18 @@ export default function ResetPasswordPage() {
           <ol className="flex items-center space-x-2 text-gray-600 dark:text-gray-400">
             <li>
               <Link href="/" className="hover:text-blue-600 dark:hover:text-red-300 transition-colors">
-                Home
+                {tNav('home')}
               </Link>
             </li>
             <li className="flex items-center">
               <span className="mx-2">/</span>
               <Link href="/auth/signin" className="hover:text-blue-600 dark:hover:text-red-300 transition-colors">
-                Sign In
+                {t('signIn')}
               </Link>
             </li>
             <li className="flex items-center">
               <span className="mx-2">/</span>
-              <span className="text-gray-900 dark:text-gray-100 font-medium">Reset Password</span>
+              <span className="text-gray-900 dark:text-gray-100 font-medium">{t('title')}</span>
             </li>
           </ol>
         </nav>
@@ -241,7 +242,7 @@ export default function ResetPasswordPage() {
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                       </svg>
-                      Resetting...
+                      {t('resetting')}
                     </span>
                   ) : (
                     t('submit')
@@ -263,7 +264,7 @@ export default function ResetPasswordPage() {
                   {t('success.message')}
                 </p>
                 <p className="text-sm text-gray-500 dark:text-gray-500 mb-4">
-                  Redirecting to sign in...
+                  {t('success.redirecting')}
                 </p>
               </div>
             </>

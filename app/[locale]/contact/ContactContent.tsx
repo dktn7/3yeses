@@ -21,6 +21,7 @@ export default function ContactPage() {
     const pathname = usePathname();
     const t = useTranslations('Navigation');
     const tFooter = useTranslations('Footer');
+    const tc = useTranslations('ContactPage');
 
     // Get current locale from pathname, validating against allowed locales
     const locale = getLocaleFromPathname(pathname);
@@ -56,10 +57,10 @@ export default function ContactPage() {
                     {/* Hero Section */}
                     <div className="text-center mt-8 mb-12">
                         <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-                            Get in <span className="marketing-accent-text">Touch</span>
+                            {tc('hero.titlePrefix')} <span className="marketing-accent-text">{tc('hero.titleAccent')}</span>
                         </h1>
                         <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-                            Have questions about 3YESES? We&apos;re here to help you connect with opportunities and talent.
+                            {tc('hero.description')}
                         </p>
                     </div>
 
@@ -69,8 +70,8 @@ export default function ContactPage() {
                             <div className="flex items-center justify-center w-12 h-12 bg-primary-blue/10 dark:bg-accent-red/10 rounded-lg mb-4">
                                 <Mail className="h-6 w-6 marketing-accent-text" />
                             </div>
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Email Us</h3>
-                            <p className="text-gray-600 dark:text-gray-300 mb-2">For general inquiries</p>
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{tc('cards.email.title')}</h3>
+                            <p className="text-gray-600 dark:text-gray-300 mb-2">{tc('cards.email.subtitle')}</p>
                             <a href={`mailto:${tFooter('email')}`} className="marketing-accent-text hover:underline font-medium">
                                 {tFooter('email')}
                             </a>
@@ -80,8 +81,8 @@ export default function ContactPage() {
                             <div className="flex items-center justify-center w-12 h-12 bg-primary-blue/10 dark:bg-accent-red/10 rounded-lg mb-4">
                                 <Phone className="h-6 w-6 marketing-accent-text" />
                             </div>
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Call Us</h3>
-                            <p className="text-gray-600 dark:text-gray-300 mb-2">Mon-Fri 9am-6pm GMT</p>
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{tc('cards.call.title')}</h3>
+                            <p className="text-gray-600 dark:text-gray-300 mb-2">{tc('cards.call.subtitle')}</p>
                             <a href={`tel:${tFooter('phone')}`} className="marketing-accent-text hover:underline font-medium">
                                 {tFooter('phone')}
                             </a>
@@ -91,8 +92,8 @@ export default function ContactPage() {
                             <div className="flex items-center justify-center w-12 h-12 bg-primary-blue/10 dark:bg-accent-red/10 rounded-lg mb-4">
                                 <MapPin className="h-6 w-6 marketing-accent-text" />
                             </div>
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Visit Us</h3>
-                            <p className="text-gray-600 dark:text-gray-300 mb-2">Our Office Location</p>
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{tc('cards.visit.title')}</h3>
+                            <p className="text-gray-600 dark:text-gray-300 mb-2">{tc('cards.visit.subtitle')}</p>
                             <p className="marketing-accent-text font-medium">
                                 {tFooter('location')}
                             </p>
@@ -110,9 +111,9 @@ export default function ContactPage() {
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                                         </svg>
                                     </div>
-                                    <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Message Sent!</h3>
+                                    <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{tc('form.successTitle')}</h3>
                                     <p className="text-gray-600 dark:text-gray-300 mb-6">
-                                        Thank you for reaching out. We&apos;ll get back to you within 24 hours.
+                                        {tc('form.successDescription')}
                                     </p>
                                     <button
                                         onClick={() => {
@@ -121,19 +122,19 @@ export default function ContactPage() {
                                         }}
                                         className="marketing-accent-text hover:underline font-medium"
                                     >
-                                        Send another message
+                                        {tc('form.sendAnother')}
                                     </button>
                                 </div>
                             ) : (
                                 <>
-                                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Send us a Message</h2>
+                                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{tc('form.title')}</h2>
                                     <p className="text-gray-600 dark:text-gray-300 mb-6">
-                                        Fill out the form below and we&apos;ll respond as soon as possible.
+                                        {tc('form.description')}
                                     </p>
                                     <form onSubmit={handleSubmit} className="space-y-5">
                                         <div>
                                             <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                                Full Name <span className="text-red-500">*</span>
+                                                {tc('form.fullName')} <span className="text-red-500">*</span>
                                             </label>
                                             <div className="relative">
                                                 <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
@@ -144,7 +145,7 @@ export default function ContactPage() {
                                                     value={formData.name}
                                                     onChange={handleChange}
                                                     className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-white focus:ring-2 focus:ring-[var(--marketing-ring)] focus:border-transparent transition-all"
-                                                    placeholder="John Doe"
+                                                    placeholder={tc('form.placeholders.name')}
                                                     required
                                                 />
                                             </div>
@@ -152,7 +153,7 @@ export default function ContactPage() {
                                         
                                         <div>
                                             <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                                Email Address <span className="text-red-500">*</span>
+                                                {tc('form.emailAddress')} <span className="text-red-500">*</span>
                                             </label>
                                             <div className="relative">
                                                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
@@ -163,7 +164,7 @@ export default function ContactPage() {
                                                     value={formData.email}
                                                     onChange={handleChange}
                                                     className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-white focus:ring-2 focus:ring-[var(--marketing-ring)] focus:border-transparent transition-all"
-                                                    placeholder="john@example.com"
+                                                    placeholder={tc('form.placeholders.email')}
                                                     required
                                                 />
                                             </div>
@@ -171,7 +172,7 @@ export default function ContactPage() {
 
                                         <div>
                                             <label htmlFor="subject" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                                Subject <span className="text-red-500">*</span>
+                                                {tc('form.subject')} <span className="text-red-500">*</span>
                                             </label>
                                             <input
                                                 type="text"
@@ -180,14 +181,14 @@ export default function ContactPage() {
                                                 value={formData.subject}
                                                 onChange={handleChange}
                                                 className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-white focus:ring-2 focus:ring-[var(--marketing-ring)] focus:border-transparent transition-all"
-                                                placeholder="How can we help you?"
+                                                placeholder={tc('form.placeholders.subject')}
                                                 required
                                             />
                                         </div>
                                         
                                         <div>
                                             <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                                Message <span className="text-red-500">*</span>
+                                                {tc('form.message')} <span className="text-red-500">*</span>
                                             </label>
                                             <div className="relative">
                                                 <MessageSquare className="absolute left-3 top-4 text-gray-400" size={20} />
@@ -198,7 +199,7 @@ export default function ContactPage() {
                                                     value={formData.message}
                                                     onChange={handleChange}
                                                     className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-white focus:ring-2 focus:ring-[var(--marketing-ring)] focus:border-transparent transition-all resize-none"
-                                                    placeholder="Tell us more about your inquiry..."
+                                                    placeholder={tc('form.placeholders.message')}
                                                     required
                                                 ></textarea>
                                             </div>
@@ -212,12 +213,12 @@ export default function ContactPage() {
                                             {isSubmitting ? (
                                                 <>
                                                     <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                                                    Sending...
+                                                    {tc('form.sending')}
                                                 </>
                                             ) : (
                                                 <>
                                                     <Send size={20} />
-                                                    Send Message
+                                                    {tc('form.sendButton')}
                                                 </>
                                             )}
                                         </button>

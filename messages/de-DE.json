@@ -11,30 +11,30 @@
     "legal": "Rechtliches",
     "privacyPolicy": "Datenschutzrichtlinie",
     "termsOfService": "Nutzungsbedingungen",
-    "dashboard": "Dashboard",
+    "dashboard": "Übersicht",
     "profile": "Profil",
     "settings": "Einstellungen",
     "logout": "Abmelden",
     "login": "Anmelden",
     "signup": "Registrieren",
-    "support": "Support",
+    "support": "Hilfe",
     "whyAndHow": "Warum & Wie",
     "talentHub": "Talent-Hub"
   },
   "Footer": {
     "aboutUs": "Über uns",
-    "companyInfo": "Showcase your work to a live audience — subscribe to be discoverable and grow through views, likes, comments and shares.",
+    "companyInfo": "Präsentiere deine Arbeit einem Live-Publikum — abonniere, um auffindbar zu sein und durch Ansichten, Likes, Kommentare und Shares zu wachsen.",
     "forTalent": "Für Talente",
     "joinAsTalent": "Als Talent beitreten",
     "talentDashboard": "Talent-Dashboard",
     "browseCategories": "Kategorien durchsuchen",
-    "pricingPlans": "Preispläne",
-    "howItWorks": "Wie es funktioniert",
+    "pricingPlans": "Preisklassen",
+    "howItWorks": "So funktioniert es",
     "successStories": "Erfolgsgeschichten",
-    "contactUs": "Kontaktieren Sie uns",
-    "email": "contact@3yeses.co.uk",
-    "phone": "+44 121 123 4567",
-    "location": "Birmingham, UK",
+    "contactUs": "Kontaktiere uns",
+    "email": "E-Mail: contact@3yeses.co.uk",
+    "phone": "Telefon: +44 121 123 4567",
+    "location": "Birmingham, Großbritannien",
     "language": "Sprache",
     "copyright": "© 2026 3YESES. Alle Rechte vorbehalten.",
     "privacyPolicy": "Datenschutzrichtlinie",
@@ -53,37 +53,37 @@
     "chinese": "Chinesisch"
   },
   "Home": {
-    "tagline": "Talente und Möglichkeiten in der Unterhaltungsindustrie verbinden.",
+    "tagline": "Verbindung von Talent und Gelegenheit in der Unterhaltungsbranche.",
     "welcome": {
       "title": "Willkommen bei 3YESES",
-      "description": "Finden Sie das perfekte Talent für Ihr nächstes Projekt oder entdecken Sie aufregende Möglichkeiten in der Unterhaltungsindustrie."
+      "description": "Finde das perfekte Talent für dein nächstes Projekt oder entdecke spannende Chancen in der Unterhaltungsbranche."
     },
     "forTalent": {
       "title": "Für Talente",
-      "description": "Präsentieren Sie Ihre Fähigkeiten und finden Sie Ihre nächste große Chance.",
+      "description": "Zeige deine Fähigkeiten und finde deine nächste große Chance.",
       "browse": "Kategorien durchsuchen"
     },
-    "expertTalent": "Expertentalent",
-    "expertTalentDescription": "Zugang zu verifizierten Fachleuten mit nachgewiesener Erfolgsbilanz",
+    "expertTalent": "Experten-Talent",
+    "expertTalentDescription": "Zugang zu verifizierten Profis mit nachweislicher Erfahrung",
     "qualityAssured": "Qualität gesichert",
-    "qualityAssuredDescription": "Alle Talente sind geprüft und verifiziert für Ihre Sicherheit",
-    "qualityAssuredDesc": "Erstklassige Talente für Ihre Projekte",
+    "qualityAssuredDescription": "Alle Talente werden zur Sicherheit geprüft und verifiziert",
+    "qualityAssuredDesc": "Top-Talent für deine Projekte",
     "careerGrowth": "Karrierewachstum",
-    "careerGrowthDescription": "Dauerhafte Verbindungen aufbauen und Karriere vorantreiben",
-    "careerGrowthDesc": "Möglichkeiten, Ihre Karriere voranzutreiben",
+    "careerGrowthDescription": "Baue dauerhafte Verbindungen auf und fördere deine Karriere",
+    "careerGrowthDesc": "Chancen, deine Karriere voranzutreiben",
     "verifiedTalent": "Verifiziertes Talent",
     "verifiedTalentDesc": "Alle Profile werden manuell verifiziert",
-    "searchPlaceholder": "Nach Talenten, Fähigkeiten oder Kategorien suchen...",
+    "searchPlaceholder": "Suche nach Talent, Fähigkeiten oder Kategorien...",
     "searchButton": "Suchen",
     "allCategories": "Alle Kategorien",
     "location": "Standort",
     "filters": "Filter",
     "clearAll": "Alle löschen",
     "applyFilters": "Filter anwenden",
-    "watchEyebrow": "Sehen Sie, worum es bei 3YESES geht",
-    "videoSectionSeeThe": "Entdecken Sie das",
-    "videoSectionExperience": "3YESES-Erlebnis",
-    "videoSectionDescription": "Entdecken Sie, wie Talente gecastet werden und wie Casting-Direktoren jedes Mal die perfekte Besetzung finden.",
+    "watchEyebrow": "Sieh dir an, worum es bei 3YESES geht",
+    "videoSectionSeeThe": "Sieh die",
+    "videoSectionExperience": "3YESES-Erfahrung",
+    "videoSectionDescription": "Entdecke, wie Talente gecastet werden und wie Casting-Regisseure jedes Mal die perfekte Besetzung finden.",
     "allCategory": "Alle {name}",
     "chipAge": "Alter: {min}-{max}",
     "chipHeight": "Größe: {min}-{max}",
@@ -98,9 +98,9 @@
     "reelTitleAccent": "kreativem Talent",
     "reelTalentCount": "{count, plural, one {# Talent} other {# Talente}}",
     "findYourNextJob": "Finden Sie Ihren nächsten Job",
-    "elevateYourCareer": "Verbessern Sie Ihre Karriere",
+    "elevateYourCareer": "Stärke deine Karriere",
     "mobileOptimized": "Mobil-Optimiert",
-    "support247": "24/7 Support",
+    "support247": "24/7-Support",
     "joinNow": "Jetzt beitreten",
     "learnMore": "Mehr erfahren",
     "ctaBrowseTalent": "Talente durchsuchen",
@@ -108,20 +108,20 @@
     "talentHubIntro": "Entdecken Sie den Talent-Hub — kuratierte Profile, erweiterte Filter, verifizierte Fachleute und Demo-Reels, um schnell das perfekte Talent zu finden.",
     "activeTalent": "Aktive Talente",
     "projectsPosted": "Veröffentlichte Projekte",
-    "successRate": "Erfolgsrate",
-    "support": "24/7 Support",
+    "successRate": "Erfolgsquote",
+    "support": "Support rund um die Uhr",
     "howItWorksTitle": "Wie es funktioniert",
-    "howItWorksDescription": "Beginnen Sie in 3 einfachen Schritten",
-    "createYourProfile": "Erstellen Sie Ihr Profil",
-    "createYourProfileDescription": "Präsentieren Sie Ihre Fähigkeiten und Erfahrungen",
-    "showcaseYourWork": "Präsentieren Sie Ihre Arbeit",
-    "showcaseYourWorkDescription": "Laden Sie Ihr Portfolio und Demo-Videos hoch",
-    "buildYourReputation": "Bauen Sie Ihren Ruf auf",
-    "buildYourReputationDescription": "Bewertungen erhalten und Ihr Netzwerk aufbauen",
-    "joinThousands": "Treten Sie tausenden talentierten Fachleuten bei, die 3YESES vertrauen, um sie mit ihren Traumprojekten zu verbinden.",
-    "supportCreativeJourney": "Von Castings bis zu Buchungen sind wir da, um Ihre kreative Reise zu unterstützen.",
+    "howItWorksDescription": "Beginne in 3 einfachen Schritten",
+    "createYourProfile": "Erstelle dein Profil",
+    "createYourProfileDescription": "Präsentiere deine Fähigkeiten und Erfahrungen",
+    "showcaseYourWork": "Präsentiere deine Arbeit",
+    "showcaseYourWorkDescription": "Lade dein Portfolio und Demo-Videos hoch",
+    "buildYourReputation": "Baue deinen Ruf auf",
+    "buildYourReputationDescription": "Baue deinen professionellen Ruf und dein Netzwerk auf",
+    "joinThousands": "Schließe dich tausenden talentierten Profis an, die 3YESES vertrauen, um sie mit ihren Traumprojekten zu verbinden.",
+    "supportCreativeJourney": "Von Castings bis zu Buchungen sind wir da, um deine kreative Reise zu unterstützen.",
     "whyChooseTitle": "Warum wählen",
-    "whyChooseSubtitle": "3YESES",
+    "whyChooseSubtitle": "3yeses",
     "whyChooseDescription": "Entdecken Sie, was 3YESES zu Ihrer bevorzugten Plattform macht, um kreative Talente in der Unterhaltungsbranche zu finden und zu verbinden.",
     "readyToConnectTitle": "Bereit, sich mit kreativen Talenten zu verbinden?",
     "readyToConnectDescription": "Werden Sie Teil der wachsenden Gemeinschaft kreativer Profis, die Möglichkeiten bei 3YESES finden.",
@@ -196,7 +196,8 @@
       "join": "Schließe dich der Talent-Revolution an",
       "break": "Dein nächster großer Durchbruch wartet",
       "passion": "Verwandle deine Leidenschaft in Erfolg"
-    }
+    },
+    "useMyLocation": "Meinen Standort verwenden"
   },
   "News": {
     "title": "Branchennews & Einblicke",
@@ -292,8 +293,8 @@
       },
       "experience": {
         "label": "Erfahrung (Jahre)",
-        "minPlaceholder": "Min",
-        "maxPlaceholder": "Max"
+        "minPlaceholder": "Min.",
+        "maxPlaceholder": "Max."
       },
       "location": {
         "label": "Standort",
@@ -326,40 +327,40 @@
       "dancingChoreography": "Tanz und Choreografie",
       "beautyWellness": "Schönheit und Wellness",
       "sportsFitness": "Sport und Fitness",
-      "stunts": "Stunts",
+      "stunts": "Stunt-Arbeiten",
       "magicIllusion": "Magie und Illusion",
       "circusArts": "Zirkuskünste",
       "comedy": "Komödie",
       "photographyCommercial": "Fotografie (Kommerziell)",
       "graphicDesign": "Grafikdesign",
       "musicProduction": "Musikproduktion",
-      "influencerContentCreator": "Influencer/Content Creator",
+      "influencerContentCreator": "Influencer und Content Creator",
       "hairMakeupProfessional": "Haar und Make-up (Professionell)",
       "stageCrewTechnician": "Bühnentechnik",
-      "animation": "Animation"
+      "animation": "Animationen"
     }
   },
   "SignupPage": {
-    "title": "Talent-Anmeldung",
-    "subtitle": "Erstellen Sie Ihr Konto und beginnen Sie Ihre Reise in 3 einfachen Schritten.",
+    "title": "Talent-Registrierung",
+    "subtitle": "Erstelle dein Konto und beginne deine Reise in 3 einfachen Schritten.",
     "step1": "Konto",
     "step2": "Profil",
-    "step3": "Upload",
-    "startSignup": "Talent-Anmeldung starten",
+    "step3": "Hochladen",
+    "startSignup": "Talent-Registrierung starten",
     "email": "E-Mail",
     "password": "Passwort",
     "confirmPassword": "Passwort bestätigen",
-    "submit": "Anmelden"
+    "submit": "Registrieren"
   },
   "LoginPage": {
     "title": "Anmeldung",
-    "subtitle": "Willkommen zurück! Bitte melden Sie sich in Ihrem Konto an.",
+    "subtitle": "Willkommen zurück! Bitte melde dich in deinem Konto an.",
     "email": "E-Mail",
     "password": "Passwort",
     "forgotPassword": "Passwort vergessen?",
     "rememberMe": "Angemeldet bleiben",
     "submit": "Einloggen",
-    "noAccount": "Haben Sie noch kein Konto?",
+    "noAccount": "Noch kein Konto?",
     "signUpLink": "Hier registrieren"
   },
   "Auth": {
@@ -376,7 +377,7 @@
       "signingIn": "Anmeldung läuft...",
       "noAccount": "Noch kein Konto?",
       "signUpLink": "Registrieren",
-      "orContinueWith": "oder weiter mit E-Mail",
+      "orContinueWith": "oder weiter mit",
       "errors": {
         "emailRequired": "E-Mail ist erforderlich",
         "emailInvalid": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
@@ -388,9 +389,11 @@
       "success": {
         "loginSuccess": "Erfolgreich angemeldet!"
       },
-      "signInButton": "Sign In",
-      "googleSignIn": "Continue with Google",
-      "githubSignIn": "Continue with GitHub"
+      "signInButton": "Anmelden",
+      "googleSignIn": "Weiter mit Google",
+      "githubSignIn": "Weiter mit GitHub",
+      "showPassword": "Passwort anzeigen",
+      "hidePassword": "Passwort verbergen"
     },
     "signup": {
       "title": "Erstellen Sie Ihr Konto",
@@ -515,7 +518,7 @@
       "uploadPortfolio": "Bilder hochladen (Max 10)",
       "videos": "Demo-Videos",
       "videoUrl": "Video-URL",
-      "videoUrlPlaceholder": "https://youtube.com/watch?v=...",
+      "videoUrlPlaceholder": "z. B. https://youtube.com/watch?v=...",
       "addVideo": "Video hinzufügen",
       "removeVideo": "Entfernen",
       "errors": {
@@ -540,48 +543,75 @@
         "bioRequired": "Bitte erzählen Sie uns von sich",
         "locationRequired": "Standort ist erforderlich",
         "serverError": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut",
-        "dateOfBirthRequired": "Date of birth is required",
-        "subcategoryRequired": "Please select a subcategory",
-        "experienceRequired": "Please select your experience level"
+        "dateOfBirthRequired": "Geburtsdatum ist erforderlich",
+        "subcategoryRequired": "Bitte wählen Sie eine Unterkategorie",
+        "experienceRequired": "Bitte wählen Sie Ihr Erfahrungsniveau",
+        "parentGuardianNameRequired": "Name des Elternteils/Vormunds ist erforderlich",
+        "parentGuardianEmailRequired": "E-Mail des Elternteils/Vormunds ist erforderlich",
+        "parentGuardianEmailInvalid": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+        "parentGuardianEmailMustDiffer": "Die Eltern-E-Mail muss sich von Ihrer E-Mail unterscheiden",
+        "profilePhotoRequired": "Profilfoto ist erforderlich",
+        "mediaConsentRequired": "Sie müssen bestätigen, dass Sie berechtigt sind, die Fotos und Medien Ihres Kindes hochzuladen"
       },
       "success": {
         "accountCreated": "Konto erfolgreich erstellt!",
         "redirecting": "Weiterleitung zur Verifizierung..."
       },
       "ageVerification": {
-        "under13Title": "Parent-Managed Account Required",
-        "under13Message": "Users under 13 must have a parent or guardian manage their account. Your parent will create and control the account on your behalf.",
-        "teens13to15Title": "Account Type Selection",
-        "teens13to15Message": "Choose how you'd like to manage your account:",
-        "selfManagedTitle": "Self-Managed Account",
-        "selfManagedDescription": "Manage your own profile with parental approval",
-        "parentManagedTitle": "Parent-Managed Account",
-        "parentManagedDescription": "Your parent/guardian will manage your profile",
-        "parentInfoRequired": "Parent/Guardian Information Required",
-        "parentInfoDescription": "We'll send a consent request to your parent/guardian to approve your account.",
-        "parentName": "Parent/Guardian Name",
-        "parentNamePlaceholder": "Full name",
-        "parentEmail": "Parent/Guardian Email",
-        "parentEmailPlaceholder": "parent@example.com",
-        "parentEmailMatchError": "Parent email must be different from your email",
-        "parentEmailRequired": "Parent/guardian email is required",
-        "parentNameRequired": "Parent/guardian name is required",
-        "consentPendingNotice": "Once you complete signup, a consent request will be sent to your parent/guardian. Your account will be activated after they approve."
+        "under13Title": "Elternverwaltetes Konto erforderlich",
+        "under13Message": "Benutzer unter 13 Jahren müssen ein Konto haben, das von einem Elternteil oder Vormund verwaltet wird. Ihr Elternteil erstellt und kontrolliert das Konto für Sie.",
+        "teens13to15Title": "Kontotypauswahl",
+        "teens13to15Message": "Wählen Sie, wie Sie Ihr Konto verwalten möchten:",
+        "selfManagedTitle": "Selbstverwaltetes Konto",
+        "selfManagedDescription": "Verwalten Sie Ihr eigenes Profil mit Zustimmung der Eltern",
+        "parentManagedTitle": "Elternverwaltetes Konto",
+        "parentManagedDescription": "Ihr Elternteil/Ihr Vormund verwaltet Ihr Profil",
+        "parentInfoRequired": "Eltern-/Vormundinformationen erforderlich",
+        "parentInfoDescription": "Wir senden eine Zustimmungsanfrage an Ihren Elternteil/Ihren Vormund, um Ihr Konto zu genehmigen.",
+        "parentName": "Name des Elternteils/Vormunds",
+        "parentNamePlaceholder": "Vollständiger Name",
+        "parentEmail": "E-Mail des Elternteils/Vormunds",
+        "parentEmailPlaceholder": "elternteil@beispiel.de",
+        "parentEmailMatchError": "Die Eltern-E-Mail muss sich von Ihrer E-Mail unterscheiden",
+        "parentEmailRequired": "E-Mail des Elternteils/Vormunds ist erforderlich",
+        "parentNameRequired": "Name des Elternteils/Vormunds ist erforderlich",
+        "consentPendingNotice": "Nach Abschluss der Registrierung wird eine Zustimmungsanfrage an Ihren Elternteil/Ihren Vormund gesendet. Ihr Konto wird aktiviert, sobald diese bestätigt wurde."
       },
-      "disabilityVisualImpairmentBlindness": "Visual Impairment/Blindness",
-      "disabilityHearingImpairmentDeafness": "Hearing Impairment/Deafness",
-      "disabilitySpeechImpairment": "Speech Impairment",
-      "disabilityDwarfism": "Dwarfism",
-      "disabilityCerebralPalsy": "Cerebral Palsy",
-      "disabilityDownSyndrome": "Down Syndrome",
-      "disabilityAutismSpectrum": "Autism Spectrum",
-      "disabilityLearningDisability": "Learning Disability",
-      "disabilityMentalHealthCondition": "Mental Health Condition",
-      "disabilitySkinCondition": "Skin Condition",
-      "subcategory": "Subcategory",
-      "subcategoryPlaceholder": "Select a subcategory",
-      "disabilities": "Disabilities/Accessibility",
-      "disabilitiesDescription": "Help us understand how to best support you and match you with appropriate opportunities"
+      "disabilityVisualImpairmentBlindness": "Sehbehinderung/Blindheit",
+      "disabilityHearingImpairmentDeafness": "Hörbehinderung/Taubheit",
+      "disabilitySpeechImpairment": "Sprachbehinderung",
+      "disabilityDwarfism": "Kleinwuchs",
+      "disabilityCerebralPalsy": "Zerebralparese",
+      "disabilityDownSyndrome": "Down-Syndrom",
+      "disabilityAutismSpectrum": "Autismus-Spektrum",
+      "disabilityLearningDisability": "Lernbehinderung",
+      "disabilityMentalHealthCondition": "Psychische Erkrankung",
+      "disabilitySkinCondition": "Hauterkrankung",
+      "subcategory": "Unterkategorie",
+      "subcategoryPlaceholder": "Wählen Sie eine Unterkategorie",
+      "disabilities": "Behinderungen/Barrierefreiheit",
+      "disabilitiesDescription": "Helfen Sie uns zu verstehen, wie wir Sie am besten unterstützen können und Sie mit passenden Möglichkeiten zusammenbringen",
+      "under13ParentManagedDescription": "Für Kinder unter 13 Jahren muss ein Elternteil oder Vormund das Konto erstellen und verwalten. Bitte lassen Sie Ihren Elternteil/Vormund dieses Formular ausfüllen.",
+      "selfManagedWithConsentTitle": "Selbstverwaltetes Konto (mit Zustimmung der Eltern)",
+      "selfManagedWithConsentDescription": "Sie verwalten Ihr eigenes Profil, aber wir benötigen die E-Mail Ihres Elternteils/Ihres Vormunds, um eine Zustimmung zu senden.",
+      "parentManagedOptionTitle": "Elternverwaltetes Konto",
+      "parentManagedOptionDescription": "Ihr Elternteil/Ihr Vormund erstellt und verwaltet dieses Konto in Ihrem Namen. Er hat die volle Kontrolle.",
+      "parentalConsentRequiredTitle": "Elterliche Zustimmung erforderlich",
+      "parentalConsentRequiredDescription": "Nachdem Sie die Registrierung abgeschlossen haben, senden wir Ihrem Elternteil/Ihrem Vormund eine Zustimmungs-E-Mail. Ihr Konto ist solange ausstehend, bis diese bestätigt wird.",
+      "parentGuardianContactInformation": "Kontaktinformationen des Elternteils/Vormunds",
+      "parentGuardianContactDescription": "Wir müssen Ihren Elternteil oder Vormund kontaktieren, um zu bestätigen, dass sie Ihrer Kontoerstellung zustimmen.",
+      "parentGuardianFullName": "Name des Elternteils/Vormunds",
+      "parentGuardianFullNamePlaceholder": "z. B. Jane Schmidt",
+      "parentGuardianEmail": "E-Mail des Elternteils/Vormunds",
+      "parentGuardianEmailPlaceholder": "eltern@example.de",
+      "parentGuardianConsentEmailHint": "Wir senden eine Zustimmungs-E-Mail an diese Adresse",
+      "parentGuardianPhonePlaceholder": "Telefonnummer des Elternteils/Vormunds eingeben",
+      "parentManagedStep3Description": "Laden Sie Fotos und Medien hoch, die das Talent Ihres Kindes zeigen",
+      "noteLabel": "Hinweis",
+      "mediaNote": "Medienuploads sind optional, werden aber dringend empfohlen. Sie können sie später jederzeit in Ihrem Profil hinzufügen.",
+      "parentalConsentRequiredLabel": "Elterliche Zustimmung erforderlich",
+      "parentalConsentMediaText": "Ich bestätige, dass ich der Elternteil/gesetzliche Vormund von {childName} bin und das Recht habe, diese Fotos und Medien hochzuladen und zu teilen. Ich verstehe, dass diese Bilder öffentlich auf ihrem Talentprofil sichtbar sein werden.",
+      "creatingAccount": "Konto wird erstellt..."
     },
     "forgotPassword": {
       "title": "Passwort vergessen?",
@@ -594,17 +624,20 @@
         "emailInvalid": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
         "requestFailed": "E-Mail konnte nicht gesendet werden",
         "serverError": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut",
-        "emailNotFound": "No account found with this email"
+        "emailNotFound": "Kein Konto mit dieser E-Mail-Adresse gefunden"
       },
       "success": {
         "title": "E-Mail gesendet!",
         "message": "Wenn ein Konto mit dieser E-Mail existiert, erhalten Sie einen Reset-Link.",
         "checkSpam": "Wenn Sie die E-Mail nicht sehen, überprüfen Sie Ihren Spam-Ordner."
       },
-      "sending": "Sending...",
-      "backToLogin": "Back to Login",
-      "orContactSupport": "Or contact support",
-      "contactSupport": "Contact Support"
+      "sending": "Wird gesendet...",
+      "backToLogin": "Zurück zur Anmeldung",
+      "orContactSupport": "Oder kontaktiere den Support",
+      "contactSupport": "Support kontaktieren",
+      "backToSignIn": "← Zurück zur Anmeldung",
+      "backToSignInButton": "Zurück zur Anmeldung",
+      "rememberPasswordPrompt": "Passwort merken?"
     },
     "resetPassword": {
       "title": "Passwort zurücksetzen",
@@ -623,18 +656,25 @@
         "passwordMismatch": "Passwörter stimmen nicht überein",
         "resetFailed": "Passwort konnte nicht zurückgesetzt werden",
         "serverError": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut",
-        "required": "This field is required",
-        "weakPassword": "Password is too weak",
-        "invalidToken": "Invalid or expired reset link"
+        "required": "Dieses Feld ist erforderlich",
+        "weakPassword": "Das Passwort ist zu schwach",
+        "invalidToken": "Ungültiger oder abgelaufener Link"
       },
       "success": {
         "title": "Passwort zurückgesetzt!",
-        "message": "Ihr Passwort wurde erfolgreich zurückgesetzt."
+        "message": "Ihr Passwort wurde erfolgreich zurückgesetzt.",
+        "redirecting": "Weiterleitung zur Anmeldung..."
       },
-      "password": "New Password",
-      "passwordPlaceholder": "Enter new password",
-      "resetButton": "Reset Password",
-      "resetting": "Resetting..."
+      "password": "Neues Passwort",
+      "passwordPlaceholder": "Gib ein neues Passwort ein",
+      "resetButton": "Zurücksetzen",
+      "resetting": "Wird zurückgesetzt...",
+      "signIn": "Anmelden",
+      "invalid": {
+        "title": "Ungültiger Zurücksetzungslink",
+        "description": "Dieser Link zum Zurücksetzen des Passworts ist ungültig oder abgelaufen.",
+        "requestNewLink": "Neuen Link anfordern"
+      }
     },
     "verifyEmail": {
       "title": "E-Mail verifizieren",
@@ -674,119 +714,119 @@
     "privacyLink": "Datenschutzrichtlinie",
     "and": "und",
     "parentalConsent": {
-      "title": "Parental Consent",
-      "loading": "Loading consent information...",
+      "title": "Elterliche Zustimmung",
+      "loading": "Lade Zustimmungsinformationen...",
       "expired": {
-        "title": "Consent Link Expired",
-        "message": "This consent link has expired. Please contact support for a new link.",
-        "expiredOn": "Expired on {date}"
+        "title": "Zustimmungslink abgelaufen",
+        "message": "Dieser Zustimmungslink ist abgelaufen. Bitte kontaktieren Sie den Support für einen neuen Link.",
+        "expiredOn": "Abgelaufen am {date}"
       },
       "invalidToken": {
-        "title": "Invalid Link",
-        "message": "This consent link is invalid or has already been used."
+        "title": "Ungültiger Link",
+        "message": "Dieser Zustimmungslink ist ungültig oder wurde bereits verwendet."
       },
       "decision": {
-        "title": "Account Approval Request",
-        "greeting": "Dear {parentName},",
-        "requestMessage": "Your child, {teenName}, has requested to create a self-managed account on 3yeses. As they are under 16 years old, we require your consent before their account can become active.",
-        "whatThisMeans": "What does this mean?",
+        "title": "Genehmigungsanfrage für das Konto",
+        "greeting": "Sehr geehrte/r {parentName},",
+        "requestMessage": "Ihr Kind {teenName} hat die Erstellung eines selbstverwalteten Kontos bei 3yeses angefragt. Da es unter 16 Jahre alt ist, benötigen wir Ihre Zustimmung, bevor das Konto aktiviert werden kann.",
+        "whatThisMeans": "Was bedeutet das?",
         "benefits": {
-          "item1": "{teenName} will be able to create and manage their own talent profile",
-          "item2": "They can apply for opportunities and showcase their skills",
-          "item3": "Their profile will have enhanced safety controls",
-          "item4": "You can request access to monitor the account at any time"
+          "item1": "{teenName} kann sein eigenes Talentprofil erstellen und verwalten",
+          "item2": "Sie können sich auf Chancen bewerben und Ihre Fähigkeiten präsentieren",
+          "item3": "Ihr Profil erhält verbesserte Sicherheitskontrollen",
+          "item4": "Sie können jederzeit den Zugang zum Konto anfordern"
         },
-        "chooseOption": "Please choose one of the following options:",
-        "approveButton": "Approve Account",
-        "declineButton": "Decline Account",
-        "approving": "Approving...",
-        "declining": "Declining...",
-        "expiresIn": "This link expires in {hours} hours"
+        "chooseOption": "Bitte wählen Sie eine der folgenden Optionen:",
+        "approveButton": "Konto genehmigen",
+        "declineButton": "Konto ablehnen",
+        "approving": "Genehmigung läuft...",
+        "declining": "Ablehnung läuft...",
+        "expiresIn": "Dieser Link läuft in {hours} Stunden ab"
       },
       "approved": {
-        "title": "Account Approved",
-        "message": "Thank you for approving {teenName}'s account. They can now sign in and start using their profile.",
-        "teenName": "{teenName}'s account has been activated successfully."
+        "title": "Konto genehmigt",
+        "message": "Danke, dass Sie {teenName}s Konto genehmigt haben. Sie können sich jetzt anmelden und das Profil nutzen.",
+        "teenName": "Das Konto von {teenName} wurde erfolgreich aktiviert."
       },
       "declined": {
-        "title": "Account Declined",
-        "message": "The account registration for {teenName} has been declined and removed from our system.",
-        "thankYou": "Thank you for your time."
+        "title": "Konto abgelehnt",
+        "message": "Die Registrierung für {teenName} wurde abgelehnt und aus unserem System entfernt.",
+        "thankYou": "Danke für Ihre Zeit."
       },
       "error": {
-        "title": "Something Went Wrong",
-        "message": "We couldn't process your request. Please try again or contact support.",
-        "alreadyProcessed": "This consent request has already been processed."
+        "title": "Etwas ist schiefgelaufen",
+        "message": "Wir konnten Ihre Anfrage nicht bearbeiten. Bitte versuchen Sie es erneut oder kontaktieren Sie den Support.",
+        "alreadyProcessed": "Diese Zustimmungsanfrage wurde bereits bearbeitet."
       },
-      "contactSupport": "Contact Support",
-      "supportEmail": "support@3yeses.online"
+      "contactSupport": "Support kontaktieren",
+      "supportEmail": "support-de@3yeses.online"
     }
   },
   "Pages": {
     "pricing": {
       "title": "Preispläne",
-      "subtitle": "Wählen Sie den Plan, der am besten zu Ihnen passt"
+      "subtitle": "Wähle den Plan, der am besten zu dir passt"
     },
     "privacy": {
       "title": "Datenschutzrichtlinie",
       "lastUpdated": "Zuletzt aktualisiert: {date}",
-      "badge": "Privacy Policy",
-      "heroTitle": "Your privacy matters",
-      "heroAccent": "How we handle your data",
-      "contents": "Contents",
-      "introP1": "This Privacy Policy explains how 3YESES (\"Platform\", \"we\", \"us\", \"our\") collects, uses, stores, and protects your personal data when you use our subscription-based talent marketplace at 3yeses.online.",
-      "introP2": "We are committed to protecting your privacy and handling your personal data in compliance with the UK General Data Protection Regulation (UK GDPR), the Data Protection Act 2018, and, where applicable, the EU General Data Protection Regulation (GDPR)."
+      "badge": "Rechtliches",
+      "heroTitle": "Datenschutz ",
+      "heroAccent": "Richtlinie",
+      "contents": "Inhalt",
+      "introP1": "Diese Datenschutzrichtlinie erklärt, wie 3YESES (\"Plattform\", \"wir\", \"uns\", \"unser\") deine persönlichen Daten sammelt, nutzt, speichert und schützt, wenn du unseren abonnementbasierten Talent-Marktplatz unter 3yeses.online verwendest.",
+      "introP2": "Wir verpflichten uns, deine Privatsphäre zu schützen und deine persönlichen Daten gemäß UK GDPR, dem Data Protection Act 2018 und, falls zutreffend, der EU GDPR zu verarbeiten."
     },
     "terms": {
       "title": "Nutzungsbedingungen",
       "lastUpdated": "Zuletzt aktualisiert: {date}",
-      "badge": "Terms & Conditions",
-      "heroTitle": "Terms of Service",
-      "heroAccent": "",
-      "contents": "Contents",
+      "badge": "Rechtliches",
+      "heroTitle": "Bedingungen & ",
+      "heroAccent": "Konditionen",
+      "contents": "Inhalt",
       "sections": {
         "overview": {
           "title": "Overview",
-          "p1": "These Terms and Conditions (\"Terms\") govern your use of the 3YESES platform (\"Platform\", \"we\", \"us\", \"our\"), a subscription-based talent marketplace operated at 3yeses.online. By creating an account or using any part of the Platform, you agree to be bound by these Terms.",
-          "p2": "3YESES is a platform where creative professionals — actors, musicians, models, dancers, voice artists, photographers, videographers, DJs, presenters, comedians, and other performers — create profiles, upload portfolio media (photos, videos, audio), and get discovered. The Platform includes a searchable talent directory, a media hub, analytics dashboards, and community features such as comments, likes, and content sharing."
+          "p1": "Diese Nutzungsbedingungen (\"Bedingungen\") regeln deine Nutzung der Plattform 3YESES (\"Plattform\", \"wir\", \"uns\", \"unser\"). Durch das Erstellen eines Kontos oder die Nutzung eines Teils der Plattform erklärst du dich mit diesen Bedingungen einverstanden.",
+          "p2": "3YESES ist eine Plattform, auf der kreative Fachkräfte – Schauspieler, Musiker, Models, Tänzer, Sprecher, Fotografen, Videofilmer, DJs, Moderatoren, Komiker und andere Performer – Profile erstellen, Portfolio-Medien hochladen (Fotos, Videos, Audio) und entdeckt werden. Die Plattform umfasst ein durchsuchbares Talentverzeichnis, ein Medienzentrum, Analyse-Dashboards und Community-Funktionen wie Kommentare, Likes und das Teilen von Inhalten."
         },
         "eligibility": {
-          "p1": "You must be at least 13 years old to create an account. Users aged 13–17 require parental or guardian consent. Users under 13 must have a parent-managed account where the parent or guardian registers and manages the account on their behalf.",
-          "p2": "You are responsible for maintaining the confidentiality of your login credentials and for all activity under your account. Notify us immediately if you suspect unauthorised access.",
-          "p3": "Each individual may maintain only one account. Duplicate accounts may be suspended without notice.",
-          "p4": "You must provide accurate, current information during registration and keep your profile information up to date. Fraudulent or misleading profiles may be removed."
+          "p1": "Du musst mindestens 13 Jahre alt sein, um ein Konto zu erstellen. Nutzer im Alter von 13–17 Jahren benötigen die Zustimmung eines Elternteils oder Erziehungsberechtigten. Nutzer unter 13 Jahren müssen ein von einem Elternteil verwaltetes Konto haben, bei dem der Elternteil oder Erziehungsberechtigte das Konto in ihrem Namen registriert und verwaltet.",
+          "p2": "Du bist verantwortlich für die Vertraulichkeit deiner Login-Daten und für alle Aktivitäten in deinem Konto. Informiere uns sofort, wenn du einen unbefugten Zugriff vermutest.",
+          "p3": "Jede Person darf nur ein Konto führen. Duplikate können ohne Vorankündigung gesperrt werden.",
+          "p4": "Du musst während der Registrierung genaue, aktuelle Informationen angeben und deine Profilinformationen auf dem neuesten Stand halten. Betrügerische oder irreführende Profile können entfernt werden."
         },
         "subscription": {
-          "p1": "An active subscription is required to use the Platform. You subscribe during the sign-up process. Without an active subscription, you cannot access the Platform.",
-          "plansIntro": "We offer one plan — Standard Access — with two duration options:",
+          "p1": "Ein aktives Abonnement ist erforderlich, um die Plattform zu nutzen. Du abonnierst während des Anmeldeprozesses. Ohne ein aktives Abonnement kannst du nicht auf die Plattform zugreifen.",
+          "plansIntro": "Wir bieten einen Plan an – Standard Access – mit zwei Laufzeitoptionen:",
           "plans": [
-            "6 months — £10, billed as a recurring subscription via Stripe.",
-            "12 months — £20, billed as a recurring subscription via Stripe."
+            "6 Monate – £10, berechnet als wiederkehrendes Abonnement über Stripe.",
+            "12 Monate – £20, berechnet als wiederkehrendes Abonnement über Stripe."
           ],
-          "p2": "Both plans include identical features: unlimited portfolio uploads, full profile customisation, priority search ranking, and full dashboard analytics."
+          "p2": "Beide Pläne beinhalten identische Funktionen: unbegrenzte Portfolio-Uploads, vollständige Profilanpassung, priorisierte Suche und vollständige Dashboard-Analysen."
         },
         "content": {
-          "ownership": "You retain full ownership of all content you upload to the Platform. By uploading content, you grant 3YESES a non-exclusive, worldwide, royalty-free licence to display, distribute, and promote your content on the Platform and in marketing materials related to the Platform.",
-          "permitted": "You may upload images (JPEG, PNG, WebP), videos (MP4, MOV), and audio files (MP3, WAV). Individual files must not exceed 50 MB. You may also embed external video links (e.g. YouTube, Vimeo).",
+          "ownership": "Du behältst das volle Eigentum an allen Inhalten, die du auf die Plattform hochlädst. Durch das Hochladen gewährst du 3YESES eine nicht ausschließliche, weltweite, gebührenfreie Lizenz, um deine Inhalte auf der Plattform und in Marketingmaterialien anzuzeigen, zu verteilen und zu bewerben.",
+          "permitted": "Du darfst Bilder (JPEG, PNG, WebP), Videos (MP4, MOV) und Audiodateien (MP3, WAV) hochladen. Einzeldateien dürfen 50 MB nicht überschreiten. Du darfst auch externe Videolinks einbetten (z. B. YouTube, Vimeo).",
           "prohibited": [
-            "Is sexually explicit, pornographic, or depicts nudity intended to be sexual in nature.",
-            "Contains violence, gore, or content depicting harm to individuals.",
-            "Promotes hate speech, discrimination, or harassment based on race, ethnicity, religion, gender, sexual orientation, disability, or any other protected characteristic.",
-            "Infringes on the intellectual property rights of others (copyright, trademark, etc.).",
-            "Contains malware, executable files, or any form of malicious code.",
-            "Is spam, misleading, or fraudulent.",
-            "Depicts minors in inappropriate contexts."
+            "Ist sexuell explizit, pornografisch oder zeigt Nacktheit mit sexuellem Zweck.",
+            "Enthält Gewalt, Blut oder Inhalte, die Schaden an Personen darstellen.",
+            "Fördert Hassrede, Diskriminierung oder Belästigung aufgrund von Rasse, ethnischer Zugehörigkeit, Religion, Geschlecht, sexueller Orientierung, Behinderung oder anderen geschützten Merkmalen.",
+            "Verletzt die geistigen Eigentumsrechte anderer (Urheberrecht, Marke usw.).",
+            "Enthält Malware, ausführbare Dateien oder jegliche Form schädlichen Codes.",
+            "Ist Spam, irreführend oder betrügerisch.",
+            "Stellt Minderjährige in unangemessenen Kontexten dar."
           ]
         }
       }
     },
     "about": {
       "title": "Über 3YESES",
-      "subtitle": "Talente mit Möglichkeiten verbinden"
+      "subtitle": "Talente mit Chancen verbinden"
     },
     "contact": {
-      "title": "Kontaktieren Sie uns",
-      "subtitle": "Kontaktieren Sie unser Team"
+      "title": "Kontaktiere uns",
+      "subtitle": "Nimm Kontakt mit unserem Team auf"
     }
   },
   "Hub": {
@@ -801,7 +841,7 @@
       "all": "Alle",
       "acting": "Schauspiel",
       "music": "Musik",
-      "modeling": "Modeling",
+      "modeling": "Modeln",
       "directing": "Regie",
       "writing": "Schreiben",
       "photography": "Fotografie"
@@ -809,14 +849,14 @@
     "type": {
       "title": "Typ:",
       "all": "Alle",
-      "videos": "Videos",
-      "audio": "Audio",
+      "videos": "Videoinhalte",
+      "audio": "Audiodateien",
       "images": "Bilder"
     },
     "filters": {
       "button": "Filter",
       "popularityTier": "Beliebtheitsstufe",
-      "viral": "Viral",
+      "viral": "Viraltrends",
       "popular": "Beliebt",
       "rising": "Aufsteigend",
       "fresh": "Neu",
@@ -830,13 +870,13 @@
       "trending": "Trending",
       "newest": "Neueste",
       "mostLiked": "Beliebt",
-      "alphabetical": "A-Z",
-      "oldest": "Oldest First",
-      "mostViews": "Most Views",
-      "leastViews": "Least Views",
-      "mostLikes": "Most Likes",
-      "leastLikes": "Least Likes",
-      "zToA": "Z-A",
+      "alphabetical": "A bis Z",
+      "oldest": "Älteste zuerst",
+      "mostViews": "Meiste Aufrufe",
+      "leastViews": "Wenigste Aufrufe",
+      "mostLikes": "Meiste Likes",
+      "leastLikes": "Wenigste Likes",
+      "zToA": "Z bis A",
       "clearAll": "Alle Filter löschen",
       "activeFilters": "Aktive Filter",
       "search": "Suche",
@@ -846,7 +886,7 @@
       "showing": "Zeige",
       "results": "Ergebnis",
       "resultsPlural": "Ergebnisse",
-      "reverseAlphabetical": "Z-A"
+      "reverseAlphabetical": "Z bis A"
     },
     "sections": {
       "featuredCreators": "Empfohlene Kreative",
@@ -870,12 +910,12 @@
       "freshContent": "Frischer Inhalt",
       "mostPopular": "Beliebteste",
       "lovedByCommunity": "Von der Community geliebt",
-      "exploreAll": "Explore All Content",
-      "exploreMoreDescription": "There are {count} more items to discover in our full catalog."
+      "exploreAll": "Alle Inhalte entdecken",
+      "exploreMoreDescription": "Im gesamten Katalog gibt es noch {count} weitere Elemente zu entdecken."
     },
     "badges": {
       "sponsored": "Gesponsert",
-      "trending": "Trending",
+      "trending": "Trend",
       "hot": "Beliebt",
       "new": "Neu",
       "popular": "Beliebt"
@@ -1020,7 +1060,7 @@
     "viewProfile": "Profil anzeigen",
     "viewAll": "Alle anzeigen",
     "profileViews": "Profilansichten",
-    "likes": "Likes",
+    "likes": "Gefällt mir",
     "profileCompletion": "Profilvollständigkeit",
     "totalVisitors": "Gesamtbesucher",
     "totalLiked": "Gesamt-Likes",
@@ -1038,7 +1078,7 @@
     "noRecentActivity": "Keine aktuelle Aktivität anzuzeigen",
     "noNotifications": "Keine Benachrichtigungen anzuzeigen",
     "quickAccess": "Schnellzugriff",
-    "portfolio": "Portfolio",
+    "portfolio": "Portfolio-Bereich",
     "portfolioDesc": "Zeigen Sie Ihre Arbeit und Leistungen",
     "analytics": {
       "title": "Analytics",
@@ -1171,7 +1211,9 @@
       "videoSupportedFormats": "Supported formats: MP4, WebM, MOV",
       "audioTips": "Audio Tips",
       "audioDirectUrl": "Must be a direct audio URL",
-      "audioSupportedFormats": "Supported formats: MP3, WAV, OGG, AAC"
+      "audioSupportedFormats": "Supported formats: MP3, WAV, OGG, AAC",
+      "mediaUrlPlaceholder": "https://beispiel.de/media.jpg",
+      "thumbnailUrlPlaceholder": "https://beispiel.de/thumbnail.jpg"
     },
     "galleryDesc": "Durchsuchen und verwalten Sie Ihre Mediengalerie",
     "subscription": "Abonnement",
@@ -1204,80 +1246,87 @@
     "thisMonth": "Dieser Monat",
     "browseTalents": "Talente durchsuchen",
     "nav": {
-      "overview": "Overview",
-      "profile": "Profile",
-      "gallery": "Gallery",
-      "insights": "Insights",
-      "activity": "Activity",
-      "saved": "Saved",
-      "history": "History",
-      "tickets": "Tickets",
-      "billing": "Billing",
-      "settings": "Settings",
-      "dashboard": "Dashboard"
+      "overview": "Übersicht",
+      "profile": "Profil",
+      "gallery": "Galerie",
+      "insights": "Einblicke",
+      "activity": "Aktivität",
+      "saved": "Gespeichert",
+      "history": "Verlauf",
+      "tickets": "Anfragen",
+      "billing": "Abrechnung",
+      "settings": "Einstellungen",
+      "dashboard": "Übersicht"
     },
     "tickets": {
-      "title": "Support Tickets",
-      "description": "Track and manage your submitted support tickets",
-      "newTicket": "New Ticket",
-      "noTickets": "No tickets yet",
-      "noTicketsDesc": "You haven't submitted any support tickets. If you need help, our team is ready to assist.",
-      "submitFirst": "Submit Your First Ticket",
-      "noMatch": "No tickets match the selected filter.",
-      "all": "All",
-      "updated": "Updated {date}",
-      "visitHelp": "Visit Help Centre",
-      "open": "Open",
-      "inProgress": "In Progress",
-      "resolved": "Resolved",
-      "closed": "Closed",
-      "categoryAccount": "Account",
-      "categoryBilling": "Billing",
-      "categoryPortfolio": "Portfolio",
-      "categoryCategories": "Categories",
-      "categoryNotifications": "Notifications",
-      "categorySecurity": "Security",
-      "categoryOther": "Other"
+      "title": "Support-Tickets",
+      "description": "Verfolgen und verwalten Sie Ihre eingereichten Support-Tickets",
+      "newTicket": "Neues Ticket",
+      "noTickets": "Noch keine Tickets",
+      "noTicketsDesc": "Sie haben noch keine Support-Tickets eingereicht. Wenn Sie Hilfe benötigen, steht unser Team bereit.",
+      "submitFirst": "Senden Sie Ihr erstes Ticket",
+      "noMatch": "Keine Tickets entsprechen dem ausgewählten Filter.",
+      "all": "Alle",
+      "updated": "Aktualisiert {date}",
+      "visitHelp": "Zum Help-Center",
+      "open": "Öffnen",
+      "inProgress": "In Bearbeitung",
+      "resolved": "Gelöst",
+      "closed": "Geschlossen",
+      "categoryAccount": "Konto",
+      "categoryBilling": "Abrechnung",
+      "categoryPortfolio": "Portfolio-Anfrage",
+      "categoryCategories": "Kategorien",
+      "categoryNotifications": "Benachrichtigungen",
+      "categorySecurity": "Sicherheit",
+      "categoryOther": "Andere"
     },
     "activity": {
-      "title": "Activity Feed",
-      "subtitle": "Track all interactions with your profile",
-      "loading": "Loading activities...",
-      "noActivity": "No Activity Yet",
-      "noActivityDesc": "Your activity feed will appear here once people start interacting with your profile."
+      "title": "Aktivitätsfeed",
+      "subtitle": "Verfolgen Sie alle Interaktionen mit Ihrem Profil",
+      "loading": "Aktivitäten werden geladen…",
+      "noActivity": "Noch keine Aktivität",
+      "noActivityDesc": "Ihr Aktivitätsfeed erscheint hier, sobald Menschen mit Ihrem Profil interagieren."
     },
     "billing": {
-      "title": "Billing & Payments",
-      "subtitle": "View your subscription details and payment history",
-      "failedToLoad": "Failed to load billing information",
-      "errorLoading": "An error occurred while loading billing information",
-      "currentSubscription": "Current Subscription",
-      "plan": "Plan",
-      "status": "Status",
-      "currentPeriod": "Current Period",
-      "na": "N/A",
-      "manageSubscription": "Manage Subscription",
-      "paymentHistory": "Payment History",
-      "invoice": "Invoice:",
-      "showingPage": "Showing page {page} of {pages} ({total} total payments)",
-      "noPaymentHistory": "No payment history found"
+      "title": "Abrechnung & Zahlungen",
+      "subtitle": "Überprüfen Sie Ihre Abonnementdetails und Zahlungsübersicht",
+      "failedToLoad": "Fehler beim Laden der Abrechnungsinformationen",
+      "errorLoading": "Beim Laden der Abrechnungsinformationen ist ein Fehler aufgetreten",
+      "currentSubscription": "Aktuelles Abonnement",
+      "plan": "Tarif",
+      "status": "Zustand",
+      "currentPeriod": "Aktueller Zeitraum",
+      "na": "Nicht verfügbar",
+      "manageSubscription": "Abonnement verwalten",
+      "paymentHistory": "Zahlungsverlauf",
+      "invoice": "Rechnung:",
+      "showingPage": "Seite {page} von {pages} angezeigt ({total} Zahlungen insgesamt)",
+      "noPaymentHistory": "Kein Zahlungsverlauf gefunden"
     },
     "overview": {
-      "profileViews": "Profile Views",
-      "profileLikes": "Profile Likes",
-      "savedTalents": "Saved Talents",
-      "talentsYouSaved": "Talents you've saved",
-      "lastSevenDays": "Last 7 days",
-      "topPerformingMedia": "Top Performing Media",
-      "viewFullAnalytics": "View Full Analytics →",
-      "totalViews": "Total Views",
-      "totalLikes": "Total Likes",
-      "avgEngagement": "Avg Engagement",
-      "thisWeek": "This Week",
-      "views": "views",
-      "likes": "likes",
-      "engagement": "engagement",
-      "media": "Media"
+      "profileViews": "Profilansichten",
+      "profileLikes": "Profil-Likes",
+      "savedTalents": "Gespeicherte Talente",
+      "talentsYouSaved": "Talente, die Sie gespeichert haben",
+      "lastSevenDays": "Letzte 7 Tage",
+      "topPerformingMedia": "Bestperformende Medien",
+      "viewFullAnalytics": "Vollständige Analyse anzeigen →",
+      "totalViews": "Gesamtansichten",
+      "totalLikes": "Gesamt-Likes",
+      "avgEngagement": "Ø Engagement",
+      "thisWeek": "Diese Woche",
+      "views": "Ansichten",
+      "likes": "Likes",
+      "engagement": "Engagement",
+      "media": "Medien",
+      "growthHintsBadge": "Neu: Wachstumstipps",
+      "growthHintsTitle": "Wöchentliche Aktionen zur Steigerung Ihrer Sichtbarkeit",
+      "growthHintsDesc": "Führen Sie jede Woche eine clevere Empfehlung aus, und wir fördern Sie im Talent-Feed.",
+      "growthHintsCta": "Tipps entdecken",
+      "actionRequiredTitle": "Handlung erforderlich",
+      "actionRequiredDesc": "Sie haben aktive Kontowarnungen von Ihrem Admin-Team.",
+      "warningFallback": "Warnung"
     }
   },
   "settings": {
@@ -1287,7 +1336,7 @@
     "themeDesc": "Wählen Sie Ihr bevorzugtes Thema",
     "light": "Hell",
     "dark": "Dunkel",
-    "system": "System"
+    "system": "Systemeinstellungen"
   },
   "common": {
     "save": "Speichern"
@@ -1305,11 +1354,11 @@
       "secondary": "Preise ansehen"
     },
     "stats": {
-      "categories": "9",
+      "categories": "20+",
       "categoriesLabel": "Talentkategorien",
-      "subcategories": "50",
+      "subcategories": "145+",
       "subcategoriesLabel": "Unterkategorien",
-      "locales": "10",
+      "locales": "11",
       "localesLabel": "Unterstützte Sprachen",
       "price": "10 £",
       "priceLabel": "Für 6 Monate"
@@ -1333,7 +1382,7 @@
         "desc": "Verfolgen Sie Profilaufrufe, Portfolio-Engagement, Suchimpressionen und Klickraten."
       },
       "categories": {
-        "title": "9 Talentkategorien",
+        "title": "20+ Talentkategorien",
         "desc": "Schauspieler, Musiker, Models, Tänzer, Sprecher, Comedians, DJs, Fotografen und mehr."
       },
       "simple": {
@@ -1413,204 +1462,206 @@
       "subtitle": "Erstellen Sie Ihr Profil, laden Sie Ihre Arbeiten hoch und werden Sie noch heute entdeckt.",
       "button": "Jetzt starten",
       "browse": "Kategorien durchsuchen",
-      "talentButton": "Create your profile",
-      "clientButton": "Hire talent"
-    }
+      "talentButton": "Erstelle dein Profil",
+      "clientButton": "Talente engagieren"
+    },
+    "title": "Warum & wie",
+    "subtitle": "Erfahre, wie 3YESES Talente sichtbar macht und Chancen schafft."
   },
   "Meta": {
-    "title": "3YESES",
-    "description": "3YESES is a subscription-based talent marketplace connecting performers with projects and industry opportunities."
+    "title": "3yeses",
+    "description": "3YESES ist ein abonnementbasierter Talent-Marktplatz, der Performer mit Projekten und Branchenchancen verbindet."
   },
   "About": {
-    "badge": "About 3YESES",
+    "badge": "Über 3YESES",
     "hero": {
-      "title": "Every talent deserves ",
-      "accent": "a stage.",
-      "description": "3YESES started with a simple idea: talented people everywhere should have the chance to be seen. Not just the ones with connections or big-city access — {everyone}. From diverse communities around the world, we're building a place where creatives can showcase their work, build a name for themselves, and get discovered on their own terms.",
-      "everyone": "everyone"
+      "title": "Jedes Talent verdient ",
+      "accent": "eine Bühne.",
+      "description": "3YESES begann mit einer einfachen Idee: talentierte Menschen überall sollten die Chance haben, gesehen zu werden. Nicht nur diejenigen mit Beziehungen oder Großstadtzugang — {everyone}. Aus vielfältigen Gemeinschaften rund um den Globus schaffen wir einen Ort, an dem Kreative ihre Arbeit präsentieren, sich einen Namen machen und auf ihre eigene Weise entdeckt werden können.",
+      "everyone": "jeden"
     },
     "origin": {
-      "title": "Why we built this",
-      "p1": "The creative industry has always had a visibility problem. Talented actors, musicians, models, dancers, voice artists, photographers, and performers of all kinds exist in every corner of the world — but most never get the chance to be seen beyond their local community.",
-      "p2start": "We wanted to change that. 3YESES was born from the belief that ",
-      "p2bold": "talent doesn't have a postcode",
-      "p2end": ". Whether you're a street dancer in Accra, a classical violinist in Mumbai, a voice artist in Manchester, or a model in Buenos Aires — you deserve a professional platform to showcase your work and get noticed.",
-      "p3": "We built 3YESES to be radically simple and affordable. No gatekeeping, no approval process to join, no per-booking fees. One subscription gives you everything: unlimited uploads, a full professional profile, analytics to track your growth, and priority search placement so you actually get discovered.",
-      "p4": "This is your stage. Make it count."
+      "title": "Warum wir das gebaut haben",
+      "p1": "Die Kreativbranche hat schon immer ein Sichtbarkeitsproblem gehabt. Talentierte Schauspieler, Musiker, Models, Tänzer, Voice Artists, Fotografen und Performer aller Art gibt es in jeder Ecke der Welt — aber die meisten bekommen nie die Chance, über ihre lokale Community hinaus gesehen zu werden.",
+      "p2start": "Wir wollten das ändern. 3YESES entstand aus der Überzeugung, dass ",
+      "p2bold": "Talent keine Postleitzahl kennt",
+      "p2end": ". Egal, ob du ein Straßentänzer in Accra, ein klassischer Geiger in Mumbai, ein Voice Artist in Manchester oder ein Model in Buenos Aires bist — du verdienst eine professionelle Plattform, um deine Arbeit zu zeigen und wahrgenommen zu werden.",
+      "p3": "Wir haben 3YESES radikal einfach und erschwinglich gestaltet. Kein Gatekeeping, kein Aufnahmeprozess, keine Gebühren pro Buchung. Ein Abo bietet dir alles: unbegrenzte Uploads, ein vollständiges professionelles Profil, Analysen zur Wachstumskontrolle und priorisierte Platzierung in den Suchergebnissen, damit du wirklich entdeckt wirst.",
+      "p4": "Das ist deine Bühne. Mach sie unvergesslich."
     },
     "values": {
-      "title": "What we stand for",
-      "subtitle": "The principles that guide everything we build.",
-      "openTitle": "Open to Everyone",
-      "openDesc": "No gatekeeping. No auditions to join. If you have talent, you belong here — regardless of where you come from, your background, or how much experience you have.",
-      "diversityTitle": "Diversity First",
-      "diversityDesc": "We celebrate every genre, style, and culture. From classical musicians in Tokyo to street dancers in Lagos to voice artists in São Paulo — every creative deserves a stage.",
-      "communityTitle": "Community Driven",
+      "title": "Wofür wir stehen",
+      "subtitle": "Die Prinzipien, die alles lenken, was wir bauen.",
+      "openTitle": "Offen für alle",
+      "openDesc": "Kein Gatekeeping. Keine Aufnahmeprüfung für den Einstieg. Wenn du Talent hast, gehörst du hierher — egal, woher du kommst, welchen Hintergrund du hast oder wie viel Erfahrung du mitbringst.",
+      "diversityTitle": "Vielfalt zuerst",
+      "diversityDesc": "Wir feiern jedes Genre, jeden Stil und jede Kultur. Von klassischen Musikern in Tokio bis zu Straßentänzern in Lagos und Voice Artists in São Paulo — jede kreative Person verdient eine Bühne.",
+      "communityTitle": "Gemeinschaftlich",
       "communityDesc": "Stobere, like, kommentiere und teile. Unser Hub bringt Auftritte und kuratierte Medien zusammen, damit Kreative sich gegenseitig inspirieren und echte Verbindungen aufbauen konnen.",
-      "fairTitle": "Fair & Affordable",
-      "fairDesc": "One simple subscription — £10 for 6 months or £20 for 12 months. No commissions, no hidden fees, no premium tiers. Everyone gets the same full access."
+      "fairTitle": "Fair & Bezahlbar",
+      "fairDesc": "Ein einfaches Abo — 10 £ für 6 Monate oder 20 £ für 12 Monate. Keine Provisionen, keine versteckten Gebühren, keine Premium-Stufen. Jeder erhält denselben vollständigen Zugang."
     },
     "categories": {
-      "title": "All kinds of talent. All over the world.",
-      "subtitle": "Whatever your creative discipline, there's a home for you on 3yeses."
+      "title": "Alle Arten von Talenten. Auf der ganzen Welt.",
+      "subtitle": "Egal, in welcher kreativen Disziplin du tätig bist, bei 3yeses findest du einen Platz."
     },
     "features": {
-      "title": "Everything you need to get discovered",
-      "subtitle": "One subscription. Full access. No limits.",
-      "photoTitle": "Photo Portfolio",
-      "photoDesc": "Upload unlimited high-quality images — headshots, action shots, behind-the-scenes.",
-      "videoTitle": "Video Showreels",
-      "videoDesc": "Share showreels, performance clips, and YouTube embeds directly on your profile.",
-      "audioTitle": "Audio Demos",
-      "audioDesc": "Musicians and voice artists can upload audio samples — MP3, WAV, and more.",
-      "analyticsTitle": "Analytics Dashboard",
-      "analyticsDesc": "Track who views your profile, which portfolio items perform best, and how you rank in search.",
-      "rankingTitle": "Priority Ranking",
-      "rankingDesc": "Subscribers appear higher in search results so you get discovered faster.",
-      "customTitle": "Full Customisation",
-      "customDesc": "Bio, skills, languages, work history, physical characteristics, social links — make your profile yours.",
-      "categoriesTitle": "15+ Categories",
-      "categoriesDesc": "Actors, musicians, models, dancers, DJs, voice artists, photographers, comedians, presenters and more.",
-      "verifyTitle": "Verification Badges",
-      "verifyDesc": "Complete your profile fully to earn a verified badge that builds trust and boosts visibility.",
+      "title": "Alles, was du brauchst, um entdeckt zu werden",
+      "subtitle": "Ein Abo. Volle Treffer. Keine Grenzen.",
+      "photoTitle": "Fotografie-Portfolio",
+      "photoDesc": "Lade unbegrenzt hochwertige Bilder hoch — Portraits, Action-Shots, Behind-the-Scenes.",
+      "videoTitle": "Video-Showreels",
+      "videoDesc": "Teile Showreels, Performance-Clips und YouTube-Embeds direkt in deinem Profil.",
+      "audioTitle": "Audio-Demos",
+      "audioDesc": "Musiker und Voice Artists können Audio-Proben hochladen — MP3, WAV und mehr.",
+      "analyticsTitle": "Analyse-Dashboard",
+      "analyticsDesc": "Verfolge, wer dein Profil ansieht, welche Portfolio-Elemente am besten funktionieren und wie du in der Suche gerankt wirst.",
+      "rankingTitle": "Priorisierte Platzierung",
+      "rankingDesc": "Abonnenten erscheinen höher in den Suchergebnissen, damit sie schneller entdeckt werden.",
+      "customTitle": "Volle Anpassung",
+      "customDesc": "Bio, Fähigkeiten, Sprachen, Berufserfahrung, körperliche Merkmale, Social-Links — mache dein Profil zu deinem eigenen.",
+      "categoriesTitle": "15+ Kategorien",
+      "categoriesDesc": "Schauspieler, Musiker, Models, Tänzer, DJs, Voice Artists, Fotografen, Comedians, Moderatoren und mehr.",
+      "verifyTitle": "Verifizierungsabzeichen",
+      "verifyDesc": "Vervollständige dein Profil vollständig, um ein verifiziertes Abzeichen zu erhalten, das Vertrauen schafft und die Sichtbarkeit erhöht.",
       "hubTitle": "Talent-Hub",
       "hubDesc": "Entdecke trendende kuratierte Medien auf der gesamten Plattform. Filtere nach Kategorie, Medientyp und Beliebtheit."
     },
     "howItWorks": {
-      "title": "How it works",
-      "step1Title": "Sign up & subscribe",
-      "step1Desc": "Create your account and choose your plan — £10 for 6 months or £20 for 12 months. Payment is handled securely through Stripe.",
-      "step2Title": "Build your profile",
-      "step2Desc": "Choose your category, write your bio, add skills and languages, upload photos, videos, and audio. Our onboarding wizard guides you through every step.",
-      "step3Title": "Get discovered",
-      "step3Desc": "Your profile goes live in search results. Track views and engagement through your analytics dashboard. Share your portfolio link anywhere."
+      "title": "Wie es funktioniert",
+      "step1Title": "Anmelden & abonnieren",
+      "step1Desc": "Erstelle dein Konto und wähle deinen Plan — 10 £ für 6 Monate oder 20 £ für 12 Monate. Die Zahlung wird sicher über Stripe abgewickelt.",
+      "step2Title": "Baue dein Profil auf",
+      "step2Desc": "Wähle deine Kategorie, schreibe deine Bio, füge Fähigkeiten und Sprachen hinzu, lade Fotos, Videos und Audio hoch. Unser Onboarding-Assistent führt dich durch jeden Schritt.",
+      "step3Title": "Lass dich entdecken",
+      "step3Desc": "Dein Profil wird in den Suchergebnissen angezeigt. Verfolge Aufrufe und Engagement in deinem Analytics-Dashboard. Teile deinen Portfolio-Link überall."
     },
     "cta": {
-      "title": "Ready to showcase your talent?",
-      "description": "Join creatives from around the world. Build your portfolio, track your growth, and get discovered.",
-      "getStarted": "Get Started",
-      "viewPricing": "View Pricing"
+      "title": "Bereit, dein Talent zu zeigen?",
+      "description": "Schließe dich Kreativen aus aller Welt an. Baue dein Portfolio, verfolge dein Wachstum und werde entdeckt.",
+      "getStarted": "Loslegen",
+      "viewPricing": "Preise ansehen"
     }
   },
   "Contact": {
-    "title": "Contact Details",
-    "placeholder": "This is a placeholder for contact details."
+    "title": "Kontaktdaten",
+    "placeholder": "Hier Platz für Kontaktdaten."
   },
   "notifications": {
-    "title": "Notifications",
-    "markAllRead": "Mark all read",
-    "clearAll": "Clear all",
-    "noNotifications": "No notifications",
-    "allCaughtUp": "You are all caught up!",
-    "systemAlerts": "System alerts",
-    "settings": "Notification Settings",
-    "profileViews": "Profile Views",
-    "profileViewsDesc": "When someone views your profile",
-    "profileSaves": "Profile Saves",
-    "profileSavesDesc": "When someone saves your profile",
-    "comments": "Comments",
-    "commentsDesc": "New comments on your videos",
-    "likesLabel": "Likes",
-    "likesDesc": "When someone likes your content",
-    "sound": "Sound",
-    "soundDesc": "Play sound for notifications",
-    "dismiss": "Dismiss",
-    "justNow": "Just now",
-    "minutesAgo": "{count}m ago",
-    "hoursAgo": "{count}h ago",
-    "daysAgo": "{count}d ago"
+    "title": "Benachrichtigungen",
+    "markAllRead": "Alle als gelesen markieren",
+    "clearAll": "Alle löschen",
+    "noNotifications": "Keine Benachrichtigungen",
+    "allCaughtUp": "Sie sind auf dem Laufenden!",
+    "systemAlerts": "Systemwarnungen",
+    "settings": "Benachrichtigungseinstellungen",
+    "profileViews": "Profilansichten",
+    "profileViewsDesc": "Wenn jemand Ihr Profil ansieht",
+    "profileSaves": "Profil-Speicherungen",
+    "profileSavesDesc": "Wenn jemand Ihr Profil speichert",
+    "comments": "Kommentare",
+    "commentsDesc": "Neue Kommentare zu Ihren Videos",
+    "likesLabel": "Gefällt mir",
+    "likesDesc": "Wenn jemand Ihren Inhalt liked",
+    "sound": "Ton",
+    "soundDesc": "Ton für Benachrichtigungen abspielen",
+    "dismiss": "Schließen",
+    "justNow": "Gerade eben",
+    "minutesAgo": "{count}m vor",
+    "hoursAgo": "{count}h vor",
+    "daysAgo": "{count}d vor"
   },
   "support": {
-    "helpCentre": "Help Centre",
-    "heroTitle": "How can we",
-    "heroAccent": "help you?",
-    "heroDesc": "Browse our help topics, check the FAQ, or submit a support ticket and our team will get back to you.",
-    "searchPlaceholder": "Search help topics, FAQs, and answers…",
-    "clearSearch": "Clear search",
-    "topicsFound": "{topics} topic(s) · {faqs} FAQ(s) found",
-    "matchingFAQs": "Matching FAQs",
-    "viewAllMatching": "View all {count} matching FAQs",
-    "learnMore": "Learn more",
-    "submitTicket": "Submit a Support Ticket",
-    "submitTicketDesc": "Can't find what you need? Our team will get back to you within 48 hours.",
-    "faqHeading": "Frequently Asked Questions",
-    "faqCountLabel": "FAQs",
-    "allCategories": "All Categories",
-    "needHelp": "Need help?",
-    "needHelpDesc": "Can't find what you need? Submit a ticket and our team will respond within 48 hours.",
-    "faqTitle": "Frequently Asked Questions",
-    "secureEncrypted": "Secure & encrypted",
-    "replyTime": "Typical reply within 48h",
-    "trackedDashboard": "Tracked via your dashboard",
-    "backToHelp": "Back to Help Centre",
-    "ticketLabel": "Support Ticket",
-    "submitATicket": "Submit a",
-    "ticketAccent": "Ticket",
-    "ticketFormDesc": "Choose a category, describe your issue, and our support team will get back to you within 48 hours. You must be logged in to submit a ticket.",
-    "newSupportTicket": "New Support Ticket",
-    "trustSecure": "Secure & Encrypted",
-    "trustSecureDesc": "All data is encrypted in transit",
-    "trustTracked": "Tracked Tickets",
-    "trustTrackedDesc": "View status in your dashboard",
-    "trustReply": "48h Response Time",
-    "trustReplyDesc": "Our team responds within 48 hours",
-    "stillNeedHelp": "Still need help?",
-    "submitTicketLink": "Submit a support ticket →",
-    "relatedTopics": "Related Topics",
-    "quickGuide": "Quick Guide",
-    "topicAccount": "Account & Profile",
-    "topicBilling": "Billing & Subscriptions",
-    "topicCategories": "Categories & Discovery",
-    "topicPortfolio": "Portfolio & Media",
-    "topicNotifications": "Notifications & Alerts",
-    "topicSecurity": "Security & Privacy",
-    "accountLabel": "Account & Profile",
-    "accountTitle": "Account &",
-    "accountAccent": "Profile",
-    "accountDesc": "Registration, profile editing, physical characteristics, work history, social links, visibility settings, and account management.",
-    "billingLabel": "Billing & Subscriptions",
-    "billingTitle": "Billing &",
-    "billingAccent": "Subscriptions",
-    "billingDesc": "Pricing, payment methods, invoices, cancellation, and everything related to your subscription.",
-    "categoriesLabel": "Categories & Discovery",
-    "categoriesTitle": "Categories &",
-    "categoriesAccent": "Discovery",
-    "categoriesDesc": "Search filters, talent directory, Media Hub, grid and list views, and tips for getting discovered.",
-    "portfolioLabel": "Portfolio & Media",
-    "portfolioTitle": "Portfolio &",
-    "portfolioAccent": "Media",
-    "portfolioDesc": "Upload wizard, gallery viewer, media overlay, file types, size limits, and tips for a standout portfolio.",
-    "notificationsLabel": "Notifications & Alerts",
-    "notificationsTitle": "Notifications &",
-    "notificationsAccent": "Alerts",
-    "notificationsDesc": "Comment alerts, like notifications, profile view updates, follower activity, and managing your preferences.",
-    "securityLabel": "Security & Privacy",
-    "securityTitle": "Security &",
-    "securityAccent": "Privacy",
-    "securityDesc": "Profile visibility controls, cookie consent, content reporting, GDPR rights, and keeping your account safe.",
-    "formCategory": "Category",
-    "formCategoryAria": "Ticket category",
-    "formSubject": "Subject",
-    "formSubjectPlaceholder": "Brief summary of your issue",
-    "formDescription": "Description",
-    "formDescPlaceholder": "Describe your issue in detail. Include any relevant steps or screenshots.",
-    "formSubmit": "Submit Ticket",
-    "formSubmitting": "Submitting…",
-    "formSuccess": "Ticket Submitted",
-    "formSuccessMsg": "Your ticket ID is {ticketId}. We'll get back to you within 48 hours.",
-    "formSubmitAnother": "Submit another ticket",
-    "formError": "Failed to submit ticket. Please make sure you are logged in.",
-    "formNetworkError": "Network error — please try again.",
-    "catAccount": "Account & Profile",
-    "catBilling": "Billing & Subscriptions",
-    "catPortfolio": "Portfolio & Media",
-    "catCategories": "Categories & Discovery",
-    "catNotifications": "Notifications & Alerts",
-    "catSecurity": "Security & Privacy",
-    "catOther": "Other",
-    "catAnalytics": "Analytics",
-    "catCommunity": "Community",
-    "catSupport": "Support & Tickets",
+    "helpCentre": "Help Center",
+    "heroTitle": "Wie können wir",
+    "heroAccent": "dir helfen?",
+    "heroDesc": "Durchsuche unsere Hilfeartikel, prüfe die FAQ oder sende ein Support-Ticket, und unser Team meldet sich bei dir.",
+    "searchPlaceholder": "Hilfeartikel, FAQs und Antworten durchsuchen…",
+    "clearSearch": "Suche löschen",
+    "topicsFound": "{topics} Thema(e) · {faqs} FAQ(s) gefunden",
+    "matchingFAQs": "Passende FAQs",
+    "viewAllMatching": "Alle {count} passenden FAQs anzeigen",
+    "learnMore": "Mehr erfahren",
+    "submitTicket": "Support-Ticket einreichen",
+    "submitTicketDesc": "Kannst du nicht finden, was du brauchst? Unser Team meldet sich innerhalb von 48 Stunden.",
+    "faqHeading": "Häufig gestellte Fragen",
+    "faqCountLabel": "Häufige Fragen",
+    "allCategories": "Alle Kategorien",
+    "needHelp": "Brauchst du Hilfe?",
+    "needHelpDesc": "Finde nicht, was du brauchst? Reiche ein Ticket ein und unser Team antwortet innerhalb von 48 Stunden.",
+    "faqTitle": "Häufig gestellte Fragen",
+    "secureEncrypted": "Sicher & verschlüsselt",
+    "replyTime": "Typische Antwortzeit innerhalb von 48 Stunden",
+    "trackedDashboard": "Über dein Dashboard nachverfolgt",
+    "backToHelp": "Zurück zum Help Center",
+    "ticketLabel": "Support-Ticket",
+    "submitATicket": "Ein Ticket einreichen",
+    "ticketAccent": "Support-Ticket",
+    "ticketFormDesc": "Wähle eine Kategorie, beschreibe dein Problem und unser Support-Team meldet sich innerhalb von 48 Stunden. Du musst angemeldet sein, um ein Ticket einzureichen.",
+    "newSupportTicket": "Neues Support-Ticket",
+    "trustSecure": "Sicher & verschlüsselt",
+    "trustSecureDesc": "Alle Daten werden während der Übertragung verschlüsselt",
+    "trustTracked": "Nachverfolgte Tickets",
+    "trustTrackedDesc": "Status in deinem Dashboard anzeigen",
+    "trustReply": "Antwortzeit 48 Stunden",
+    "trustReplyDesc": "Unser Team antwortet innerhalb von 48 Stunden",
+    "stillNeedHelp": "Brauchst du weiterhin Hilfe?",
+    "submitTicketLink": "Support-Ticket einreichen →",
+    "relatedTopics": "Verwandte Themen",
+    "quickGuide": "Kurzleitfaden",
+    "topicAccount": "Konto & Profil",
+    "topicBilling": "Abrechnung & Abonnements",
+    "topicCategories": "Kategorien & Entdeckung",
+    "topicPortfolio": "Portfolio & Medien",
+    "topicNotifications": "Benachrichtigungen & Warnungen",
+    "topicSecurity": "Sicherheit & Datenschutz",
+    "accountLabel": "Konto & Profil",
+    "accountTitle": "Konto &",
+    "accountAccent": "Profil",
+    "accountDesc": "Registrierung, Profilbearbeitung, physische Merkmale, Berufserfahrung, Social Links, Sichtbarkeitseinstellungen und Kontoverwaltung.",
+    "billingLabel": "Abrechnung & Abonnements",
+    "billingTitle": "Abrechnung &",
+    "billingAccent": "Abonnements",
+    "billingDesc": "Preise, Zahlungsmethoden, Rechnungen, Kündigung und alles, was mit deinem Abonnement zu tun hat.",
+    "categoriesLabel": "Kategorien & Entdeckung",
+    "categoriesTitle": "Kategorien &",
+    "categoriesAccent": "Entdeckung",
+    "categoriesDesc": "Suchfilter, Talentverzeichnis, Medien-Hub, Raster- und Listenansichten und Tipps, um entdeckt zu werden.",
+    "portfolioLabel": "Portfolio & Medien",
+    "portfolioTitle": "Portfolio",
+    "portfolioAccent": "Medien",
+    "portfolioDesc": "Upload-Assistent, Galerieansicht, Medien-Overlay, Dateitypen, Größenbeschränkungen und Tipps für ein auffälliges Portfolio.",
+    "notificationsLabel": "Benachrichtigungen & Warnungen",
+    "notificationsTitle": "Benachrichtigungen &",
+    "notificationsAccent": "Warnungen",
+    "notificationsDesc": "Kommentarbenachrichtigungen, Like-Benachrichtigungen, Profilansichten, Follower-Aktivität und Verwaltung deiner Einstellungen.",
+    "securityLabel": "Sicherheit & Datenschutz",
+    "securityTitle": "Sicherheit &",
+    "securityAccent": "Datenschutz",
+    "securityDesc": "Sichtbarkeitseinstellungen, Cookie-Zustimmung, Inhaltsmeldungen, GDPR-Rechte und wie du dein Konto sicher hältst.",
+    "formCategory": "Kategorie",
+    "formCategoryAria": "Ticket-Kategorie",
+    "formSubject": "Betreff",
+    "formSubjectPlaceholder": "Kurze Zusammenfassung Ihres Problems",
+    "formDescription": "Beschreibung",
+    "formDescPlaceholder": "Beschreibe dein Problem ausführlich. Schließe relevante Schritte oder Screenshots ein.",
+    "formSubmit": "Ticket senden",
+    "formSubmitting": "Wird gesendet…",
+    "formSuccess": "Ticket gesendet",
+    "formSuccessMsg": "Deine Ticket-ID ist {ticketId}. Wir melden uns innerhalb von 48 Stunden.",
+    "formSubmitAnother": "Noch ein Ticket senden",
+    "formError": "Ticket konnte nicht gesendet werden. Bitte stelle sicher, dass du angemeldet bist.",
+    "formNetworkError": "Netzwerkfehler — bitte versuchen Sie es erneut.",
+    "catAccount": "Konto & Profil",
+    "catBilling": "Abrechnung & Abonnements",
+    "catPortfolio": "Portfolio & Medien",
+    "catCategories": "Kategorien & Entdeckung",
+    "catNotifications": "Benachrichtigungen & Alarme",
+    "catSecurity": "Sicherheit & Datenschutz",
+    "catOther": "Andere",
+    "catAnalytics": "Analytik",
+    "catCommunity": "Gemeinschaft",
+    "catSupport": "Unterstützung & Tickets",
     "faqItems": [
       {
         "category": "Account & Profile",
@@ -1677,175 +1728,274 @@
         "q": "How long does it take to get a response?",
         "a": "Support tickets are answered within 48 hours."
       }
-    ]
+    ],
+    "billingHelp": {
+      "ticketCategory": "Abrechnung & Abonnements",
+      "faqCostQ": "Wie viel kostet 3YESES?",
+      "faqCostA": "Ein aktives Abonnement ist erforderlich, um die Plattform zu nutzen. Du abonnierst während der Anmeldung - wähle zwischen GBP10 für 6 Monate oder GBP20 für 12 Monate (bestes Angebot). Beide Pläne enthalten identische Funktionen: unbegrenzte Portfolio-Uploads, vollständige Profilanpassung, priorisierte Suchplatzierung, Analyse-Dashboard, Kommentare, Likes und Community-Funktionen. Es gibt keine versteckten Gebühren.",
+      "faqSubscribeQ": "Wie abonniere ich?",
+      "faqSubscribeA": "Das Abonnement erfolgt im Rahmen des Anmeldevorgangs. Nachdem du dein Konto erstellt und dein Alter bestätigt hast, wähle die Laufzeit deines Plans (6 oder 12 Monate) und schließe dann den sicheren Stripe-Checkout ab. Dein Konto wird sofort aktiviert - keine Wartezeit.",
+      "faqCancelQ": "Kann ich mein Abonnement kündigen?",
+      "faqCancelA": "Ja - kündige jederzeit im Dashboard → Abonnement. Du behältst vollen Zugriff bis zum Ende deines aktuellen Abrechnungszeitraums. Dein Profil, Portfolio, Kommentare und Analysedaten bleiben erhalten. Du kannst jederzeit erneut abonnieren, um dort weiterzumachen, wo du aufgehört hast. Es fallen keine Kündigungsgebühren an.",
+      "faqExpireQ": "Was passiert, wenn mein Abonnement abläuft?",
+      "faqExpireA": "Wenn dein Abonnement endet, wird dein Plattformzugriff pausiert. Du kannst dich nicht einloggen, keine Inhalte hochladen oder mit der Community interagieren. Dein Profil, Portfolio-Elemente und alle Daten bleiben jedoch erhalten und werden vollständig wiederhergestellt, wenn du erneut abonnierst.",
+      "faqInvoiceQ": "Wie erhalte ich eine Rechnung?",
+      "faqInvoiceA": "Gehe zu Dashboard → Abonnement, um deine Abrechnungshistorie anzuzeigen. Alle Rechnungen werden von Stripe erstellt und verwaltet. Du kannst PDF-Rechnungen für jede frühere Zahlung direkt von dieser Seite herunterladen.",
+      "faqSwitchPlanQ": "Kann ich zwischen 6-Monats- und 12-Monats-Plänen wechseln?",
+      "faqSwitchPlanA": "Wenn dein aktueller Abonnementzeitraum endet, kannst du bei der Verlängerung eine andere Laufzeit wählen. Die Änderung tritt zu Beginn deines nächsten Abrechnungszyklus in Kraft. Beide Pläne enthalten identische Funktionen.",
+      "guideSubscriptionTitle": "Verstehe dein Abonnement",
+      "guideSubscriptionContent": "Ein Abonnement ist erforderlich, um 3YESES zu nutzen. Du wählst deinen Plan während der Anmeldung: GBP10 für 6 Monate oder GBP20 für 12 Monate (bestes Angebot). Beide Pläne enthalten identische Funktionen - der einzige Unterschied ist die Abrechnungsdauer.",
+      "guideSecurityTitle": "Zahlungssicherheit",
+      "guideSecurityContent": "Alle Zahlungen werden sicher über Stripe verarbeitet. Wir speichern niemals deine Kartendaten auf unseren Servern. Stripe ist PCI DSS Level 1 zertifiziert - die höchste Sicherheitsstufe in der Zahlungsbranche.",
+      "guideRefundTitle": "Rückerstattungsrichtlinie",
+      "guideRefundContent": "Wenn du ein technisches Problem hast, das dich daran hindert, die Plattform zu nutzen, kontaktiere den Support innerhalb von 14 Tagen nach der Zahlung für eine Überprüfung. Rückerstattungen werden im Einzelfall geprüft."
+    }
   },
   "PricingPage": {
     "hero": {
-      "eyebrow": "Your spotlight starts here",
-      "titlePrefix": "Ready for your",
-      "titleAccent": "three yeses?",
-      "description": "Put your work out there. Your photos, videos, and reels - all in one place, seen by the people who matter."
+      "eyebrow": "Dein Auftritt beginnt hier",
+      "titlePrefix": "Bereit für dein",
+      "titleAccent": "drei Ja?",
+      "description": "Präsentiere deine Arbeit. Fotos, Videos und Reels – alles an einem Ort, von den richtigen Menschen gesehen."
     },
     "plans": {
       "sixMonths": {
-        "label": "6 months",
-        "price": "£10",
-        "period": "6 months",
-        "subtext": "Less than a coffee a month",
-        "description": "Dip your toe in. No long-term commitment."
+        "price": "10 £",
+        "label": "6 Monate",
+        "period": "6 Monate",
+        "subtext": "Weniger als ein Kaffee im Monat",
+        "description": "Probiere es aus. Keine langfristige Bindung."
       },
       "twelveMonths": {
-        "label": "12 months",
-        "price": "£20",
-        "period": "year",
-        "subtext": "Same price. Twice the runway.",
-        "description": "Go all in. A full year to get your break.",
-        "badge": "Best Value"
+        "price": "20 £",
+        "label": "12 Monate",
+        "period": "Jahr",
+        "subtext": "Gleicher Preis. Doppelt so viel Zeit.",
+        "description": "Gehe ganz rein. Ein ganzes Jahr, um deinen Durchbruch zu schaffen.",
+        "badge": "Bestes Angebot"
       }
     },
     "features": {
-      "profile": "A profile built to turn heads",
-      "uploads": "Upload everything - no limits, ever",
-      "search": "Jump the queue in every search"
+      "profile": "Ein Profil, das auffällt",
+      "uploads": "Lade alles hoch – keine Limits, niemals",
+      "search": "Spring in jeder Suche nach vorn"
     },
     "trust": {
-      "noLockIn": "No lock-in - quit whenever",
-      "secureCheckout": "Stripe-secure checkout",
-      "liveImmediately": "Live the second you pay"
+      "noLockIn": "Keine Bindung – jederzeit kündbar",
+      "secureCheckout": "Sicherer Stripe-Checkout",
+      "liveImmediately": "Live, sobald du bezahlst"
     },
     "activeSubscription": {
-      "banner": "✓ You already have an active Standard Access subscription.",
-      "manage": "Manage your subscription ->"
+      "banner": "✓ Du hast bereits ein aktives Standard Access Abonnement.",
+      "manage": "Abonnement verwalten →"
     },
-    "planName": "Standard Access",
+    "planName": "Standard-Zugang",
     "aria": {
-      "price": "Price: {price} {period}",
-      "subscribePlan": "Subscribe to Standard Access - {plan}"
+      "price": "Preis: {price} {period}",
+      "subscribePlan": "Standard Access abonnieren – {plan}",
+      "percentOff": "{percent}% Rabatt",
+      "waitingForYou": "Was auf dich wartet"
     },
-    "saveAmount": "Save {amount}",
+    "saveAmount": "Spare {amount}",
     "buttons": {
-      "redirecting": "Redirecting to Stripe...",
-      "alreadySubscribed": "Already subscribed",
-      "subscribe": "Subscribe with Stripe"
+      "redirecting": "Weiterleitung zu Stripe…",
+      "alreadySubscribed": "Bereits abonniert",
+      "subscribe": "Mit Stripe abonnieren"
     },
     "unlock": {
-      "stage": "Your Stage",
-      "showEverything": "Show Everything",
-      "cutQueue": "Cut the Queue",
-      "description": "No fluff. No fake features. Just the tools to get you seen."
+      "stage": "Deine Bühne",
+      "showEverything": "Alles anzeigen",
+      "cutQueue": "Schneide die Schlange",
+      "description": "Kein Schnickschnack. Keine leeren Versprechen. Nur Tools, damit du gesehen wirst."
     },
     "footer": {
-      "secureNote": "Secured via Stripe. Ditch it any time from your dashboard.",
-      "accountPrompt": "Already have an account?",
-      "login": "Log in"
+      "secureNote": "Gesichert via Stripe. Kündige jederzeit in deinem Dashboard.",
+      "accountPrompt": "Hast du bereits ein Konto?",
+      "login": "Einloggen"
     },
     "errors": {
-      "checkoutFailed": "Failed to create checkout session",
-      "missingCheckoutUrl": "No checkout URL received",
-      "generic": "Something went wrong. Please try again."
+      "checkoutFailed": "Checkout-Session konnte nicht erstellt werden",
+      "missingCheckoutUrl": "Keine Checkout-URL erhalten",
+      "generic": "Etwas ist schiefgelaufen. Bitte versuche es erneut."
     }
   },
   "DashboardMessagesPage": {
-    "title": "Messages",
-    "searchPlaceholder": "Search conversations...",
-    "messagePlaceholder": "Type your message...",
-    "send": "Send message",
+    "title": "Nachrichten",
+    "searchPlaceholder": "Konversationen durchsuchen...",
+    "messagePlaceholder": "Gib deine Nachricht ein...",
+    "send": "Nachricht senden",
     "labels": {
-      "you": "You"
+      "you": "Du"
     },
     "sample": {
-      "castingDirector": "Casting Director",
-      "director": "Director",
-      "producer": "Producer",
-      "message1": "Hi! I reviewed your portfolio and would love to discuss an upcoming project...",
-      "message2": "Thank you for your interest. When would you be available for a video call?",
-      "message3": "The audition went great! We'll be in touch soon with next steps.",
-      "message4": "Hi! I reviewed your portfolio and would love to discuss an upcoming project.",
-      "message5": "Thank you for reaching out! I'd love to hear more about the project.",
-      "message6": "It's a commercial for a major brand. Are you available for a call tomorrow?",
-      "time2h": "2h ago",
-      "time1d": "1d ago",
-      "time2d": "2d ago"
+      "castingDirector": "Casting-Direktor",
+      "director": "Regisseur",
+      "producer": "Produzent",
+      "message1": "Hi! Ich habe dein Portfolio gesehen und würde gerne ein kommendes Projekt besprechen...",
+      "message2": "Danke für dein Interesse. Wann wärst du für einen Videoanruf verfügbar?",
+      "message3": "Das Casting lief großartig! Wir melden uns bald mit den nächsten Schritten.",
+      "message4": "Hi! Ich habe dein Portfolio gesehen und würde gerne ein kommendes Projekt besprechen.",
+      "message5": "Danke, dass du dich gemeldet hast! Ich würde gerne mehr über das Projekt erfahren.",
+      "message6": "Es ist ein Werbespot für eine große Marke. Bist du morgen für einen Anruf verfügbar?",
+      "time2h": "Vor 2 Std.",
+      "time1d": "Vor 1 Tag",
+      "time2d": "Vor 2 Tagen"
     }
   },
   "DashboardSubscriptionPage": {
-    "title": "Choose the plan that's right for you.",
-    "activeBanner": "You're currently subscribed to Standard Access",
-    "validUntil": "Valid until",
-    "cancelSubscription": "Cancel Subscription",
-    "forTalents": "For Talents",
-    "processing": "Processing...",
-    "currentPlan": "Current Plan",
-    "subscribe": "Subscribe with Stripe",
-    "securePayment": "Secure payment processing by Stripe",
-    "questions": "Questions? Contact us at",
-    "confirmCancel": "Are you sure you want to cancel your subscription?",
-    "cancelSuccess": "Subscription canceled successfully",
+    "title": "Abonnement",
+    "activeBanner": "Du bist derzeit für Standard Access abonniert",
+    "validUntil": "Gültig bis",
+    "cancelSubscription": "Abonnement kündigen",
+    "forTalents": "Für Talente",
+    "processing": "Wird verarbeitet...",
+    "currentPlan": "Aktueller Plan",
+    "subscribe": "Mit Stripe abonnieren",
+    "securePayment": "Sichere Zahlung über Stripe",
+    "questions": "Fragen? Kontaktiere uns unter",
+    "confirmCancel": "Bist du sicher, dass du dein Abonnement kündigen möchtest?",
+    "cancelSuccess": "Abonnement erfolgreich gekündigt",
     "errors": {
-      "missingCheckoutUrl": "No checkout URL received",
-      "createSubscription": "Failed to create subscription. Please try again.",
-      "cancelSubscription": "Failed to cancel subscription. Please try again."
-    }
+      "missingCheckoutUrl": "Keine Checkout-URL erhalten",
+      "createSubscription": "Fehler beim Erstellen des Abonnements. Bitte versuche es erneut.",
+      "cancelSubscription": "Fehler beim Kündigen des Abonnements. Bitte versuche es erneut."
+    },
+    "subtitle": "Verwalte deinen Standard Access Plan und deine Zahlungseinstellungen"
   },
   "HubMediaPage": {
-    "searchPlaceholder": "Search media...",
-    "viewFullProfile": "View Full Profile",
-    "filterMedia": "Filter Media",
+    "searchPlaceholder": "Medien durchsuchen...",
+    "viewFullProfile": "Vollständiges Profil anzeigen",
+    "filterMedia": "Medien filtern",
     "filters": {
-      "all": "All",
-      "video": "Video",
-      "audio": "Audio",
-      "image": "Image"
+      "all": "Alle",
+      "video": "Video-Dateien",
+      "audio": "Audiodateien",
+      "image": "Bild"
     },
-    "portfolioTitle": "{name}'s Portfolio",
-    "views": "{count} views"
+    "portfolioTitle": "Portfolio von {name}",
+    "views": "{count} Aufrufe"
   },
   "TalentPage": {
-    "selectCategory": "Select category",
-    "searchCategories": "Search categories...",
-    "rolePlaceholder": "Your role / title",
-    "bioPlaceholder": "Tell us about yourself, your experience, and what makes you unique...",
-    "skillsPlaceholder": "Add or search skills...",
-    "selectGender": "Select gender",
-    "selectEthnicity": "Select ethnicity",
-    "selectEyeColor": "Select eye color",
-    "selectHairColor": "Select hair color",
-    "selectBodyType": "Select body type",
-    "selectLanguages": "Select languages"
+    "selectCategory": "Kategorie auswählen",
+    "searchCategories": "Kategorien durchsuchen...",
+    "rolePlaceholder": "Ihre Rolle / Position",
+    "bioPlaceholder": "Erzählen Sie uns von sich, Ihrer Erfahrung und was Sie einzigartig macht...",
+    "skillsPlaceholder": "Fügen Sie Ihre Fähigkeiten hinzu oder suchen Sie danach...",
+    "selectGender": "Geschlecht auswählen",
+    "selectEthnicity": "Ethnie auswählen",
+    "selectEyeColor": "Augenfarbe auswählen",
+    "selectHairColor": "Haarfarbe auswählen",
+    "selectBodyType": "Körpertyp auswählen",
+    "selectLanguages": "Sprachen auswählen"
   },
   "AuthRequiredModal": {
-    "title": "Sign in required",
-    "subtitle": "Your account unlocks talent likes and favorites.",
-    "message": "You need an account to perform {action}. Continue to sign in or create an account.",
+    "title": "Anmeldung erforderlich",
+    "subtitle": "Dein Konto schaltet Talent-Likes und Favoriten frei.",
+    "message": "Du benötigst ein Konto, um {action} auszuführen. Melde dich an oder erstelle ein Konto.",
     "buttons": {
-      "notNow": "Not now",
-      "signIn": "Sign in",
-      "createAccount": "Create an account"
+      "notNow": "Nicht jetzt",
+      "signIn": "Anmelden",
+      "createAccount": "Konto erstellen"
     }
   },
   "Comments": {
-    "addCommentPlaceholder": "Add a comment...",
-    "writeReplyPlaceholder": "Write a reply...",
-    "cancel": "Cancel",
-    "posting": "Posting...",
-    "reply": "Reply",
-    "post": "Post",
-    "delete": "Delete",
-    "confirmDelete": "Are you sure you want to delete this comment?",
-    "hideReplies": "Hide replies",
-    "viewReplies": "View {count, plural, one {# reply} other {# replies}}",
+    "addCommentPlaceholder": "Kommentar hinzufügen...",
+    "writeReplyPlaceholder": "Antwort schreiben...",
+    "cancel": "Abbrechen",
+    "posting": "Wird gepostet...",
+    "reply": "Antwort",
+    "post": "Posten",
+    "delete": "Löschen",
+    "confirmDelete": "Sind Sie sicher, dass Sie diesen Kommentar löschen möchten?",
+    "hideReplies": "Antworten ausblenden",
+    "viewReplies": "{count, plural, one {# Antwort anzeigen} other {# Antworten anzeigen}}",
     "errors": {
-      "postFailed": "Failed to post comment",
-      "postRetry": "Failed to post comment. Please try again."
+      "postFailed": "Kommentar konnte nicht gepostet werden",
+      "postRetry": "Kommentar konnte nicht gepostet werden. Bitte versuchen Sie es erneut."
     }
   },
   "SaveButton": {
-    "save": "Save talent",
-    "remove": "Remove from saved",
+    "save": "Talent speichern",
+    "remove": "Aus gespeicherten entfernen",
     "authModal": {
-      "title": "Sign in to save",
-      "message": "You need an account to save and bookmark {talentName} profiles. Continue to sign in or create an account.",
-      "action": "save profiles"
+      "title": "Melde dich an, um zu speichern",
+      "message": "Du benötigst ein Konto, um Profile von {talentName} zu speichern und zu merken. Melde dich an oder erstelle ein Konto.",
+      "action": "Profile speichern"
+    }
+  },
+  "ContactPage": {
+    "hero": {
+      "titlePrefix": "Nimm",
+      "titleAccent": "Kontakt auf",
+      "description": "Hast du Fragen zu 3YESES? Wir helfen dir, dich mit Chancen und Talenten zu verbinden."
+    },
+    "cards": {
+      "email": {
+        "title": "Schreib uns",
+        "subtitle": "Für allgemeine Anfragen"
+      },
+      "call": {
+        "title": "Ruf uns an",
+        "subtitle": "Mo-Fr 9-18 Uhr GMT"
+      },
+      "visit": {
+        "title": "Besuche uns",
+        "subtitle": "Unser Bürostandort"
+      }
+    },
+    "form": {
+      "successTitle": "Nachricht gesendet!",
+      "successDescription": "Danke für deine Anfrage. Wir melden uns innerhalb von 24 Stunden.",
+      "sendAnother": "Weitere Nachricht senden",
+      "title": "Schick uns eine Nachricht",
+      "description": "Fülle das Formular aus und wir antworten so schnell wie möglich.",
+      "fullName": "Vollständiger Name",
+      "emailAddress": "E-Mail-Adresse",
+      "subject": "Betreff",
+      "message": "Nachricht",
+      "placeholders": {
+        "name": "Max Mustermann",
+        "email": "max@beispiel.de",
+        "subject": "Wie können wir dir helfen?",
+        "message": "Erzähle uns mehr über deine Anfrage..."
+      },
+      "sending": "Senden...",
+      "sendButton": "Nachricht senden"
+    }
+  },
+  "SearchResultsPage": {
+    "title": "Talent-Suche",
+    "resultsFor": "Ergebnisse für „{searchTerm}“",
+    "resultsCount": "{count, plural, one {# Talent gefunden} other {# Talente gefunden}}",
+    "gridViewTitle": "Rasteransicht: kompakte Karten",
+    "listViewTitle": "Listenansicht: erweiterte Zeilen",
+    "searchPlaceholder": "Suche Talente, Fähigkeiten oder Stichworte...",
+    "toggleFilters": "Erweiterte Filter umschalten",
+    "filters": "Filter",
+    "browsing": "Durchsuche:",
+    "suggestions": {
+      "skill": "Als Fähigkeitsfilter hinzufügen",
+      "category": "Kategorie",
+      "inCategory": "in {name} entdecken"
+    }
+  },
+  "SuccessStories": {
+    "breadcrumb": "Erfolgsgeschichten",
+    "title": "Erfolgsgeschichten",
+    "subtitle": "Entdecke inspirierende Reisen talentierter Kreativer, die durch 3YESES Arbeit und Sichtbarkeit gefunden haben.",
+    "stories": {
+      "0": {
+        "title": "Emma Thompson — Musikerin",
+        "body": "Als aufstrebende Gitarristin hatte Emma Schwierigkeiten, im überfüllten Markt aufzufallen. Mit den erweiterten Suchfunktionen unserer Plattform verband sie sich mit Produzenten, die ihren einzigartigen Sound liebten. Das führte zu Kooperationen an zwei Hit-Singles und einer ausverkauften Tour."
+      },
+      "1": {
+        "title": "Liam Garcia — Schauspieler",
+        "body": "Liam, ein vielseitiger Schauspieler mit einer Leidenschaft für Independent-Filme, fand seinen großen Durchbruch über unsere Plattform. Regisseure entdeckten sein Talent über gezielte Profile, was zu Rollen in drei von Kritikern gefeierten Filmen und einer Nominierung als bester Nebendarsteller führte."
+      },
+      "2": {
+        "title": "Sophia Patel — Tänzerin",
+        "body": "Sophias zeitgenössischer Tanzstil fiel Choreografen auf unserer Plattform auf. Seitdem trat sie in Broadway-Produktionen und internationalen Festivals auf und choreografierte sogar eine Welt-Tournee für eine große Popkünstlerin."
+      }
     }
   }
 }

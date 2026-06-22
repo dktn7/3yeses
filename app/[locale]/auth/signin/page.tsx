@@ -18,6 +18,7 @@ export default function SignInPage() {
   const router = useRouter();
   const { login } = useAuth();
   const t = useTranslations('Auth.signin');
+  const tNav = useTranslations('Navigation');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -87,12 +88,12 @@ export default function SignInPage() {
           <ol className="flex items-center space-x-2 text-gray-600 dark:text-gray-400">
             <li>
               <Link href="/" className="hover:text-primary-blue dark:hover:text-accent-red transition-colors">
-                Home
+                {tNav('home')}
               </Link>
             </li>
             <li className="flex items-center">
               <span className="mx-2">/</span>
-              <span className="text-gray-900 dark:text-gray-100 font-medium">Sign In</span>
+              <span className="text-gray-900 dark:text-gray-100 font-medium">{t('title')}</span>
             </li>
           </ol>
         </nav>
@@ -176,7 +177,7 @@ export default function SignInPage() {
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
-                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  aria-label={showPassword ? t('hidePassword') : t('showPassword')}
                 >
                   {showPassword ? (
                     <EyeOff className="w-5 h-5" />

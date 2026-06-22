@@ -15,10 +15,13 @@ import {
   CreditCard, 
   Settings,
   Ticket,
+  Menu,
+  X,
+  ChevronLeft,
   type LucideIcon
 } from 'lucide-react';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import CategoryIconBackground from '@/components/CategoryIconBackground';
+import { buildLocalizedPath, normalizeLocale } from '@/lib/locale-path';
 
 interface User {
   id: string;
@@ -34,6 +37,7 @@ export default function DashboardLayout({
 }) {
   const router = useRouter();
   const pathname = usePathname();
+  const locale = normalizeLocale(pathname?.split('/')[1] || 'en-gb');
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -104,15 +108,28 @@ export default function DashboardLayout({
   ];
 
   return (
-    <div className="relative min-h-screen transition-colors duration-300">
-      <CategoryIconBackground />
+    <div className="relative min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top_left,rgba(37,99,235,0.08),transparent_34%),radial-gradient(circle_at_top_right,rgba(185,28,28,0.10),transparent_28%),linear-gradient(180deg,var(--background),color-mix(in_srgb,var(--background)_86%,#f8fafc))] transition-colors duration-300">
+      <div className="absolute inset-x-0 top-0 h-56 bg-gradient-to-b from-[color-mix(in_srgb,var(--brand-primary)_14%,transparent)] to-transparent pointer-events-none" />
       <div className="relative z-20">
-        {/* Top Navigation Bar */}
-        <div className="sticky top-0 z-40 backdrop-blur-md bg-white/90 dark:bg-dark-surface/90 border-b border-gray-200 dark:border-red-400/20 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            {/* Desktop Tabs */}
-            <nav className="hidden md:flex items-center space-x-1">
+        <div className="sticky top-0 z-40 border-b border-slate-200/70 bg-light-surface/88 backdrop-blur-xl shadow-[0_10px_40px_-30px_rgba(15,23,42,0.45)] dark:bg-dark-surface/86 dark:border-slate-800/70">
+          <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center gap-3">
+              <Link
+                href={buildLocalizedPath(locale, '/')}
+                className="inline-flex items-center gap-2 rounded-full border border-slate-200/80 bg-white/70 px-3 py-1.5 text-xs font-semibold text-slate-700 transition-all hover:border-[color:var(--brand-primary)]/30 hover:text-[color:var(--brand-primary)] dark:border-slate-700/70 dark:bg-slate-900/40 dark:text-slate-200"
+              >
+                <ChevronLeft size={14} />
+                Back to site
+              </Link>
+              <div className="hidden sm:block">
+                <p className="text-[11px] uppercase tracking-[0.28em] text-slate-500 dark:text-slate-400">Dashboard</p>
+                <p className="text-sm font-semibold text-slate-900 dark:text-white">
+                  {user?.name || 'Account'}
+                </p>
+              </div>
+            </div>
+
+            <nav className="hidden md:flex items-center gap-1 rounded-full border border-slate-200/70 bg-white/60 p-1.5 dark:border-slate-800/70 dark:bg-slate-900/30">
               {navigation.map((item) => {
                 const isActive = pathname === item.href || (pathname?.startsWith(item.href + '/') && item.href !== '/dashboard');
                 const Icon = item.icon;
@@ -120,62 +137,58 @@ export default function DashboardLayout({
                   <Link
                     key={item.name}
                     href={item.href}
-                    className={`relative px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
+                    className={`relative flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 ${
                       isActive
-                        ? 'text-primary-blue dark:text-red-100 bg-blue-50 dark:bg-[rgba(185,28,28,0.18)] ring-1 ring-blue-300/90 ring-offset-1 ring-offset-white dark:ring-red-500/20 dark:ring-offset-transparent'
-                        : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
+                        ? 'bg-[color:var(--brand-primary)] text-white shadow-[0_12px_30px_-18px_rgba(37,99,235,0.85)] dark:bg-[color:var(--brand-primary)]'
+                        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800/80 dark:hover:text-white'
                     }`}
                   >
-                    <span className="flex items-center gap-2">
-                      <Icon size={18} strokeWidth={2} />
-                      <span>{item.name}</span>
-                    </span>
-                    {isActive && (
-                      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-primary-blue dark:bg-accent-red rounded-full"></div>
-                    )}
+                    <Icon size={16} strokeWidth={2} />
+                    <span>{item.name}</span>
                   </Link>
                 );
               })}
             </nav>
 
-            {/* Mobile Menu Button */}
-            <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="md:hidden p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-            >
-              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
-
-            {/* Right Actions - Empty, logout moved to ProfileDropdown */}
             <div className="flex items-center gap-2">
+              <div className="hidden lg:flex items-center gap-3 rounded-full border border-slate-200/70 bg-white/70 px-4 py-2 text-sm text-slate-600 dark:border-slate-800/70 dark:bg-slate-900/30 dark:text-slate-300">
+                <User size={16} className="text-[color:var(--brand-primary)]" />
+                <span className="max-w-[12rem] truncate">{user?.email}</span>
+              </div>
+
+              <button
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+                className="md:hidden inline-flex items-center justify-center rounded-full border border-slate-200/70 bg-white/70 p-2 text-slate-700 transition-all hover:border-[color:var(--brand-primary)]/30 hover:text-[color:var(--brand-primary)] dark:border-slate-800/70 dark:bg-slate-900/30 dark:text-slate-200"
+                aria-label={sidebarOpen ? 'Close dashboard menu' : 'Open dashboard menu'}
+              >
+                {sidebarOpen ? <X size={18} /> : <Menu size={18} />}
+              </button>
             </div>
           </div>
         </div>
-      </div>
 
       {/* Mobile Sidebar */}
       {sidebarOpen && (
         <>
           <div
-            className="fixed inset-0 bg-black/50 z-40 md:hidden backdrop-blur-sm"
+            className="fixed inset-0 z-40 bg-slate-950/45 backdrop-blur-sm md:hidden"
             onClick={() => setSidebarOpen(false)}
           ></div>
-          <aside className="fixed top-0 left-0 z-50 h-full w-72 bg-light-surface dark:bg-dark-surface shadow-2xl transform transition-transform duration-300 md:hidden">
-            <div className="p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white">Dashboard</h2>
+          <aside className="fixed left-0 top-0 z-50 h-full w-80 border-r border-slate-200/70 bg-light-surface/98 shadow-2xl shadow-slate-900/15 backdrop-blur-xl transition-transform duration-300 md:hidden dark:border-slate-800/70 dark:bg-dark-surface/96">
+            <div className="flex h-full flex-col p-5">
+              <div className="mb-6 flex items-center justify-between">
+                <div>
+                  <p className="text-[11px] uppercase tracking-[0.28em] text-slate-500 dark:text-slate-400">Menu</p>
+                  <h2 className="text-xl font-semibold text-slate-900 dark:text-white">Dashboard</h2>
+                </div>
                 <button
                   onClick={() => setSidebarOpen(false)}
-                  className="p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800"
+                  className="rounded-full border border-slate-200/70 p-2 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900 dark:border-slate-800/70 dark:hover:bg-slate-800/80 dark:hover:text-white"
                 >
-                  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
+                  <X className="h-5 w-5" />
                 </button>
               </div>
-              <nav className="space-y-1">
+              <nav className="space-y-2">
                 {navigation.map((item) => {
                   const isActive = pathname === item.href || (pathname?.startsWith(item.href + '/') && item.href !== '/dashboard');
                   const Icon = item.icon;
@@ -184,10 +197,10 @@ export default function DashboardLayout({
                       key={item.name}
                       href={item.href}
                       onClick={() => setSidebarOpen(false)}
-                      className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all ${
+                      className={`flex items-center gap-3 rounded-2xl px-4 py-3 font-medium transition-all ${
                         isActive
-                          ? 'bg-primary-blue dark:bg-accent-red text-white shadow-lg ring-1 ring-blue-300/90 ring-offset-1 ring-offset-white dark:ring-red-500/20 dark:ring-offset-transparent'
-                          : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+                          ? 'bg-[color:var(--brand-primary)] text-white shadow-[0_16px_40px_-22px_rgba(37,99,235,0.9)]'
+                          : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800/80'
                       }`}
                     >
                       <Icon size={20} strokeWidth={2} />
@@ -196,13 +209,18 @@ export default function DashboardLayout({
                   );
                 })}
               </nav>
+              <div className="mt-auto rounded-3xl border border-slate-200/70 bg-slate-50/80 p-4 text-sm text-slate-600 dark:border-slate-800/70 dark:bg-slate-900/40 dark:text-slate-300">
+                <p className="text-xs uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">Signed in as</p>
+                <p className="mt-1 font-semibold text-slate-900 dark:text-white">{user.name}</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">{user.email}</p>
+              </div>
             </div>
           </aside>
         </>
       )}
 
       {/* Main Content */}
-      <main className="min-h-[calc(100vh-4rem)]">
+      <main className="relative min-h-[calc(100vh-4rem)]">
         {children}
       </main>
       </div>

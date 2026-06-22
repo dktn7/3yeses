@@ -264,13 +264,13 @@ export default function SignupStep3() {
 
     // Validate required profile photo
     if (!profilePhoto) {
-      setError('Profile photo is required');
+      setError(t('errors.profilePhotoRequired'));
       return;
     }
 
     // Validate media consent for parent-managed accounts
     if (accountType === 'PARENT_MANAGED' && !mediaConsentGiven) {
-      setError('You must confirm that you have permission to upload your child\'s photos and media');
+      setError(t('errors.mediaConsentRequired'));
       return;
     }
 
@@ -381,7 +381,7 @@ export default function SignupStep3() {
             </h1>
             <p className="text-gray-600 dark:text-gray-400">
               {accountType === 'PARENT_MANAGED' 
-                ? "Upload photos and media showcasing your child's talent"
+                ? t('parentManagedStep3Description')
                 : t('step3Description')}
             </p>
           </div>
@@ -629,7 +629,7 @@ export default function SignupStep3() {
             {/* Note */}
             <div className="bg-[var(--marketing-surface)] dark:bg-[var(--marketing-surface)] border border-[var(--marketing-pill-border)] rounded-lg p-4">
               <p className="text-sm text-[var(--marketing-pill-icon)] dark:text-[var(--marketing-pill-icon)]">
-                <strong>Note:</strong> Media uploads are optional but highly recommended. You can always add them later from your profile.
+                <strong>{t('noteLabel')}:</strong> {t('mediaNote')}
               </p>
             </div>
 
@@ -644,9 +644,7 @@ export default function SignupStep3() {
                     className="mt-1 w-5 h-5 text-primary-blue dark:text-accent-red border-gray-300 rounded focus:ring-primary-blue dark:focus:ring-accent-red dark:border-gray-600 dark:bg-gray-700"
                   />
                   <span className="text-sm text-yellow-900 dark:text-yellow-200">
-                    <strong>Parental Consent Required:</strong> I confirm that I am the parent/legal guardian of {childName}, 
-                    and I have the right to upload and share these photos and media. I understand that these images will be 
-                    publicly visible on their talent profile. <span className="text-red-600 dark:text-red-400">*</span>
+                    <strong>{t('parentalConsentRequiredLabel')}:</strong> {t('parentalConsentMediaText', { childName })} <span className="text-red-600 dark:text-red-400">*</span>
                   </span>
                 </label>
               </div>
@@ -671,7 +669,7 @@ export default function SignupStep3() {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    Creating Account...
+                    {t('creatingAccount')}
                   </span>
                 ) : (
                   t('submit')

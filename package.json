@@ -31,7 +31,8 @@
     "secret-scan:local": "node scripts/secret-scan-local.js",
     "prepare": "husky install",
     "locale:find-dupes": "node scripts/find-duplicate-keys.js messages/en.json messages/en-gb.json",
-    "locale:dedupe": "node scripts/dedupe-locales.js --dry-run messages/en.json messages/en-gb.json"
+    "locale:dedupe": "node scripts/dedupe-locales.js --dry-run messages/en.json messages/en-gb.json",
+    "locale:check-fallbacks": "node scripts/check-english-fallbacks.js"
   },
   "dependencies": {
     "@imagekit/next": "^2.1.5",

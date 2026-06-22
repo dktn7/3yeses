@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import Image from 'next/image';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import MediaThumbnailFallback from '@/components/MediaThumbnailFallback';
@@ -28,6 +28,7 @@ interface Media {
 
 export default function GalleryPage() {
   const t = useTranslations('dashboard.gallery');
+  const locale = useLocale();
   // State declarations
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
@@ -527,7 +528,7 @@ export default function GalleryPage() {
                           type="url"
                           value={pendingMediaUrl}
                           onChange={(e) => setPendingMediaUrl(e.target.value)}
-                          placeholder="https://example.com/media.jpg"
+                          placeholder={t('mediaUrlPlaceholder')}
                           className="w-full px-4 py-3 rounded-xl bg-light-surface dark:bg-dark-surface border-2 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:outline-none focus:border-primary-blue dark:focus:border-accent-red"
                         />
                         <p className="text-xs text-gray-500 dark:text-gray-400 mt-1.5">{t('urlHttpsRequired')}</p>
@@ -637,7 +638,7 @@ export default function GalleryPage() {
                             value={pendingThumbnail}
                             onChange={(e) => setPendingThumbnail(e.target.value)}
                             className="w-full px-4 py-2.5 rounded-xl bg-light-surface dark:bg-dark-surface border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red"
-                            placeholder="https://example.com/thumbnail.jpg"
+                            placeholder={t('thumbnailUrlPlaceholder')}
                           />
                         )}
 
@@ -796,7 +797,7 @@ export default function GalleryPage() {
                         value={pendingThumbnail}
                         onChange={(e) => setPendingThumbnail(e.target.value)}
                             className="w-full px-4 py-2.5 rounded-xl bg-light-surface dark:bg-dark-surface border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red"
-                        placeholder="https://example.com/thumbnail.jpg"
+                        placeholder={t('thumbnailUrlPlaceholder')}
                       />
                     </div>
                   )}
@@ -1054,7 +1055,7 @@ export default function GalleryPage() {
                         </span>
                       </div>
                       <span className="text-xs text-gray-500 dark:text-gray-400">
-                        {item.createdAt ? new Date(item.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : t('recentlyAdded')}
+                        {item.createdAt ? new Date(item.createdAt).toLocaleDateString(locale, { month: 'short', day: 'numeric' }) : t('recentlyAdded')}
                       </span>
                     </div>
 
@@ -1287,7 +1288,7 @@ export default function GalleryPage() {
                         value={editThumbnail}
                         onChange={(e) => setEditThumbnail(e.target.value)}
                         className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white"
-                        placeholder="https://example.com/thumbnail.jpg"
+                        placeholder={t('thumbnailUrlPlaceholder')}
                       />
                     )}
                     {thumbnailMethod === 'file' && (

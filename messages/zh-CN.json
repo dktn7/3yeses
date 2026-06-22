@@ -3,7 +3,7 @@
     "home": "首页",
     "about": "关于我们",
     "categories": "分类",
-    "contact": "联系我们",
+    "contact": "联系",
     "news": "新闻",
     "resources": "资源",
     "successStories": "成功案例",
@@ -24,20 +24,20 @@
   },
   "Footer": {
     "aboutUs": "关于我们",
-    "companyInfo": "Showcase your work to a live audience — subscribe to be discoverable and grow through views, likes, comments and shares.",
-    "forTalent": "致人才",
+    "companyInfo": "向实时观众展示你的作品 —— 订阅后即可被发现，并通过浏览、点赞、评论和分享成长。",
+    "forTalent": "面向人才",
     "joinAsTalent": "以人才身份加入",
-    "talentDashboard": "人才仪表板",
-    "browseCategories": "浏览类别",
-    "pricingPlans": "定价计划",
-    "howItWorks": "运作方式",
-    "successStories": "成功案例",
+    "talentDashboard": "人才仪表盘",
+    "browseCategories": "浏览分类",
+    "pricingPlans": "定价方案",
+    "howItWorks": "如何运作",
+    "successStories": "成功故事",
     "contactUs": "联系我们",
-    "email": "contact@3yeses.co.uk",
-    "phone": "+44 121 123 4567",
-    "location": "英国伯明翰",
+    "email": "电邮：contact@3yeses.co.uk",
+    "phone": "电话：+44 121 123 4567",
+    "location": "伯明翰，英国",
     "language": "语言",
-    "copyright": "© 2026 3YESES. 版权所有。",
+    "copyright": "© 2026 3YESES。保留所有权利。",
     "privacyPolicy": "隐私政策",
     "termsOfService": "服务条款"
   },
@@ -54,28 +54,28 @@
     "arabic": "阿拉伯语"
   },
   "Home": {
-    "tagline": "连接娱乐界的才华与机遇。",
+    "tagline": "在娱乐行业连接人才与机会。",
     "welcome": {
       "title": "欢迎来到 3YESES",
-      "description": "为您的下一个项目寻找完美的人才，或在娱乐行业发现激动人心的机会。"
+      "description": "为您的下一个项目找到完美的人才，或发现娱乐行业令人兴奋的机会。"
     },
     "forTalent": {
-      "title": "致人才",
-      "description": "展示您的技能，寻找下一个重要机会。",
-      "browse": "浏览类别"
+      "title": "面向人才",
+      "description": "展示你的技能，找到你的下一个重大机会。",
+      "browse": "浏览分类"
     },
-    "expertTalent": "专家人才",
-    "expertTalentDescription": "访问经过验证的专业人士，他们拥有经过验证的记录",
-    "qualityAssured": "质量保证",
-    "qualityAssuredDescription": "所有人才都经过审查和验证，让您放心",
-    "qualityAssuredDesc": "为您的项目提供一流的人才",
-    "careerGrowth": "职业发展",
-    "careerGrowthDescription": "建立持久联系，推动职业发展",
+    "expertTalent": "专业人才",
+    "expertTalentDescription": "访问经过验证且经验丰富的专业人士",
+    "qualityAssured": "品质保障",
+    "qualityAssuredDescription": "所有人才均经过人工审核验证，保障您的安心",
+    "qualityAssuredDesc": "为您的项目提供顶级人才",
+    "careerGrowth": "职业成长",
+    "careerGrowthDescription": "建立长期联系，推动职业发展",
     "careerGrowthDesc": "推动职业发展的机会",
-    "verifiedTalent": "验证人才",
-    "verifiedTalentDesc": "所有个人资料都经过手动验证",
+    "verifiedTalent": "认证人才",
+    "verifiedTalentDesc": "所有个人资料均经过人工验证",
     "whyChooseTitle": "为什么选择",
-    "whyChooseSubtitle": "3YESES",
+    "whyChooseSubtitle": "3yeses",
     "whyChooseDescription": "发现是什么让3YESES成为您在娱乐行业寻找和连接创意人才的首选平台。",
     "readyToConnectTitle": "准备好与创意人才连接了吗？",
     "readyToConnectDescription": "加入在3YESES找到机会的不断增长的创意专业人士社区。",
@@ -152,19 +152,19 @@
       "passion": "将你的激情转化为成功"
     },
     "mobileOptimized": "移动端优化",
-    "support247": "24/7支持",
-    "searchPlaceholder": "搜索人才、技能或类别...",
+    "support247": "7x24 小时支持",
+    "searchPlaceholder": "搜索人才、技能或分类...",
     "searchButton": "搜索",
-    "allCategories": "所有类别",
+    "allCategories": "全部分类",
     "location": "地点",
     "filters": "筛选",
     "clearAll": "全部清除",
     "applyFilters": "应用筛选",
-    "watchEyebrow": "了解 3YESES 是什么",
-    "videoSectionSeeThe": "体验",
+    "watchEyebrow": "观看 3YESES 的内容",
+    "videoSectionSeeThe": "查看",
     "videoSectionExperience": "3YESES 体验",
-    "videoSectionDescription": "了解人才如何被选中，以及选角导演如何每次都找到最合适的人选。",
-    "allCategory": "全部{name}",
+    "videoSectionDescription": "了解人才如何被选中，以及选角导演如何每次都找到完美人选。",
+    "allCategory": "全部 {name}",
     "chipAge": "年龄: {min}-{max}",
     "chipHeight": "身高: {min}-{max}",
     "chipExp": "经验: {min}-{max}+ 年",
@@ -176,28 +176,29 @@
     "reelEyebrow": "探索人才",
     "reelTitlePrefix": "各类",
     "reelTitleAccent": "创意人才",
-    "reelTalentCount": "{count} 位人才",
+    "reelTalentCount": "{count, plural, one {# 位人才} other {# 位人才}}",
     "findYourNextJob": "找到你的下一份工作",
     "elevateYourCareer": "提升你的职业发展",
     "joinNow": "立即加入",
     "learnMore": "了解更多",
     "ctaBrowseTalent": "浏览人才",
-    "activeTalent": "Active Talent",
-    "projectsPosted": "Projects Posted",
-    "successRate": "Success Rate",
-    "support": "24/7 Support",
-    "howItWorksTitle": "How It Works",
-    "howItWorksDescription": "Get started in 3 simple steps",
-    "createYourProfile": "Create Your Profile",
-    "createYourProfileDescription": "Showcase your skills and experience",
-    "showcaseYourWork": "Showcase Your Work",
-    "showcaseYourWorkDescription": "Upload your portfolio and demo reels",
-    "buildYourReputation": "Build Your Reputation",
-    "buildYourReputationDescription": "Build your professional reputation and network",
-    "joinThousands": "Join thousands of talented professionals who trust 3YESES to connect them with their dream projects.",
-    "supportCreativeJourney": "From auditions to bookings, we're here to support your creative journey.",
-    "visitTalentHub": "Visit the Talent Hub",
-    "talentHubIntro": "Explore the Talent Hub — curated profiles, advanced filters, verified professionals, and demo reels to help you find the perfect talent quickly."
+    "activeTalent": "活跃人才",
+    "projectsPosted": "已发布项目",
+    "successRate": "成功率",
+    "support": "24/7 支持",
+    "howItWorksTitle": "它如何运作",
+    "howItWorksDescription": "通过 3 个简单步骤开始",
+    "createYourProfile": "创建你的个人资料",
+    "createYourProfileDescription": "展示你的技能和经验",
+    "showcaseYourWork": "展示你的作品",
+    "showcaseYourWorkDescription": "上传你的作品集和演示视频",
+    "buildYourReputation": "建立你的声誉",
+    "buildYourReputationDescription": "构建你的专业声誉和网络",
+    "joinThousands": "加入成千上万信任 3YESES 的人才，他们通过平台与梦想项目相连。",
+    "supportCreativeJourney": "从试镜到预订，我们帮助你实现创意旅程。",
+    "visitTalentHub": "访问人才中心",
+    "talentHubIntro": "探索人才中心 — 精选简历、高级筛选、认证专业人士和演示作品，帮助你快速找到理想人才。",
+    "useMyLocation": "使用我的位置"
   },
   "News": {
     "title": "行业新闻与洞察",
@@ -293,8 +294,8 @@
       },
       "experience": {
         "label": "经验（年）",
-        "minPlaceholder": "最小",
-        "maxPlaceholder": "最大"
+        "minPlaceholder": "最少",
+        "maxPlaceholder": "最多"
       },
       "location": {
         "label": "位置",
@@ -345,7 +346,7 @@
       "title": "欢迎回来",
       "subtitle": "登录您的账户",
       "email": "电子邮箱",
-      "emailPlaceholder": "your.email@example.com",
+      "emailPlaceholder": "您的邮箱@example.com",
       "password": "密码",
       "passwordPlaceholder": "请输入您的密码",
       "rememberMe": "记住我",
@@ -364,11 +365,13 @@
       "success": {
         "loginSuccess": "登录成功！"
       },
-      "signInButton": "Sign In",
-      "signingIn": "Signing in...",
-      "orContinueWith": "Or continue with",
-      "googleSignIn": "Continue with Google",
-      "githubSignIn": "Continue with GitHub"
+      "signInButton": "登录",
+      "signingIn": "正在登录...",
+      "orContinueWith": "或继续使用",
+      "googleSignIn": "使用 Google 继续",
+      "githubSignIn": "使用 GitHub 继续",
+      "showPassword": "显示密码",
+      "hidePassword": "隐藏密码"
     },
     "signup": {
       "title": "创建您的账户",
@@ -390,7 +393,7 @@
       "lastName": "姓氏",
       "lastNamePlaceholder": "张",
       "email": "电子邮箱",
-      "emailPlaceholder": "your.email@example.com",
+      "emailPlaceholder": "您的邮箱@example.com",
       "phone": "电话号码",
       "phonePlaceholder": "+86 XXX XXXX XXXX",
       "password": "密码",
@@ -493,7 +496,7 @@
       "uploadPortfolio": "上传图片（最多10张）",
       "videos": "演示视频",
       "videoUrl": "视频URL",
-      "videoUrlPlaceholder": "https://youtube.com/watch?v=...",
+      "videoUrlPlaceholder": "例如：https://youtube.com/watch?v=...",
       "addVideo": "添加视频",
       "removeVideo": "删除",
       "errors": {
@@ -518,71 +521,101 @@
         "bioRequired": "请告诉我们关于您的信息",
         "locationRequired": "位置是必填项",
         "serverError": "发生错误，请重试",
-        "dateOfBirthRequired": "Date of birth is required",
-        "subcategoryRequired": "Please select a subcategory",
-        "experienceRequired": "Please select your experience level"
+        "dateOfBirthRequired": "出生日期为必填项",
+        "subcategoryRequired": "请选择一个子类别",
+        "experienceRequired": "请选择您的经验级别",
+        "parentGuardianNameRequired": "父母/监护人姓名为必填项",
+        "parentGuardianEmailRequired": "父母/监护人邮箱为必填项",
+        "parentGuardianEmailInvalid": "请输入有效的电子邮件地址",
+        "parentGuardianEmailMustDiffer": "父母邮箱必须与您的不同",
+        "profilePhotoRequired": "需要上传个人资料照片",
+        "mediaConsentRequired": "您必须确认您有权上传您孩子的照片和媒体"
       },
       "success": {
         "accountCreated": "账户创建成功！",
         "redirecting": "正在重定向到验证页面..."
       },
       "ageVerification": {
-        "under13Title": "Parent-Managed Account Required",
-        "under13Message": "Users under 13 must have a parent or guardian manage their account. Your parent will create and control the account on your behalf.",
-        "teens13to15Title": "Account Type Selection",
-        "teens13to15Message": "Choose how you'd like to manage your account:",
-        "selfManagedTitle": "Self-Managed Account",
-        "selfManagedDescription": "Manage your own profile with parental approval",
-        "parentManagedTitle": "Parent-Managed Account",
-        "parentManagedDescription": "Your parent/guardian will manage your profile",
-        "parentInfoRequired": "Parent/Guardian Information Required",
-        "parentInfoDescription": "We'll send a consent request to your parent/guardian to approve your account.",
-        "parentName": "Parent/Guardian Name",
-        "parentNamePlaceholder": "Full name",
-        "parentEmail": "Parent/Guardian Email",
-        "parentEmailPlaceholder": "parent@example.com",
-        "parentEmailMatchError": "Parent email must be different from your email",
-        "parentEmailRequired": "Parent/guardian email is required",
-        "parentNameRequired": "Parent/guardian name is required",
-        "consentPendingNotice": "Once you complete signup, a consent request will be sent to your parent/guardian. Your account will be activated after they approve."
+        "under13Title": "需要父母管理的帐户",
+        "under13Message": "13岁以下的用户必须有父母或监护人管理的帐户。您的父母将代表您创建并控制该帐户。",
+        "teens13to15Title": "选择帐户类型",
+        "teens13to15Message": "选择您希望如何管理您的帐户：",
+        "selfManagedTitle": "自主管理帐户",
+        "selfManagedDescription": "在父母同意下管理自己的资料",
+        "parentManagedTitle": "父母管理帐户",
+        "parentManagedDescription": "您的父母/监护人将管理您的资料",
+        "parentInfoRequired": "需要父母/监护人信息",
+        "parentInfoDescription": "我们将向您的父母/监护人发送同意请求以批准您的帐户。",
+        "parentName": "父母/监护人姓名",
+        "parentNamePlaceholder": "全名",
+        "parentEmail": "父母/监护人邮箱",
+        "parentEmailPlaceholder": "父母@example.com",
+        "parentEmailMatchError": "父母邮箱必须与您的不同",
+        "parentEmailRequired": "需要父母/监护人邮箱",
+        "parentNameRequired": "需要父母/监护人姓名",
+        "consentPendingNotice": "完成注册后，我们将向您的父母/监护人发送同意请求。在确认之前，您的帐户将保持待定状态。"
       },
-      "disabilityVisualImpairmentBlindness": "Visual Impairment/Blindness",
-      "disabilityHearingImpairmentDeafness": "Hearing Impairment/Deafness",
-      "disabilitySpeechImpairment": "Speech Impairment",
-      "disabilityDwarfism": "Dwarfism",
-      "disabilityCerebralPalsy": "Cerebral Palsy",
-      "disabilityDownSyndrome": "Down Syndrome",
-      "disabilityAutismSpectrum": "Autism Spectrum",
-      "disabilityLearningDisability": "Learning Disability",
-      "disabilityMentalHealthCondition": "Mental Health Condition",
-      "disabilitySkinCondition": "Skin Condition",
-      "subcategory": "Subcategory",
-      "subcategoryPlaceholder": "Select a subcategory",
-      "disabilities": "Disabilities/Accessibility",
-      "disabilitiesDescription": "Help us understand how to best support you and match you with appropriate opportunities"
+      "disabilityVisualImpairmentBlindness": "视力障碍/失明",
+      "disabilityHearingImpairmentDeafness": "听力障碍/失聪",
+      "disabilitySpeechImpairment": "语言障碍",
+      "disabilityDwarfism": "侏儒症",
+      "disabilityCerebralPalsy": "脑瘫",
+      "disabilityDownSyndrome": "唐氏综合征",
+      "disabilityAutismSpectrum": "自闭症谱系",
+      "disabilityLearningDisability": "学习障碍",
+      "disabilityMentalHealthCondition": "心理健康状况",
+      "disabilitySkinCondition": "皮肤状况",
+      "subcategory": "子类别",
+      "subcategoryPlaceholder": "选择一个子类别",
+      "disabilities": "残疾/无障碍",
+      "disabilitiesDescription": "帮助我们了解如何更好地支持您，并将您与合适的机会联系起来",
+      "under13ParentManagedDescription": "13岁以下儿童必须由父母或监护人创建并管理帐户。请让您的父母/监护人填写此表格。",
+      "selfManagedWithConsentTitle": "自主管理帐户（需父母同意）",
+      "selfManagedWithConsentDescription": "您将管理自己的资料，但我们需要您父母/监护人的电子邮件以发送同意确认。",
+      "parentManagedOptionTitle": "父母管理帐户",
+      "parentManagedOptionDescription": "您的父母/监护人将代表您创建并管理此帐户。他们将拥有完全控制权。",
+      "parentalConsentRequiredTitle": "需要父母同意",
+      "parentalConsentRequiredDescription": "完成注册后，我们会向您的父母/监护人发送同意邮件。在确认之前，帐户将保持待定状态。",
+      "parentGuardianContactInformation": "父母/监护人联系信息",
+      "parentGuardianContactDescription": "我们需要联系您的父母或监护人，以确认他们批准创建您的帐户。",
+      "parentGuardianFullName": "父母/监护人全名",
+      "parentGuardianFullNamePlaceholder": "例如，张伟",
+      "parentGuardianEmail": "父母/监护人邮箱",
+      "parentGuardianEmailPlaceholder": "监护人@example.com",
+      "parentGuardianConsentEmailHint": "我们将向此地址发送同意验证邮件",
+      "parentGuardianPhonePlaceholder": "请输入父母/监护人电话",
+      "parentManagedStep3Description": "上传展示您孩子才能的照片和媒体",
+      "noteLabel": "注意",
+      "mediaNote": "媒体上传是可选的，但强烈建议上传。您可以稍后从个人资料中添加。",
+      "parentalConsentRequiredLabel": "需要父母同意",
+      "parentalConsentMediaText": "我确认我是 {childName} 的父母/法定监护人，并且有权上传和分享这些照片及媒体。我明白这些图像将在他们的才艺资料中公开显示。",
+      "creatingAccount": "正在创建帐户..."
     },
     "forgotPassword": {
       "title": "忘记密码？",
       "subtitle": "输入您的邮箱，我们将发送重置链接给您",
       "email": "电子邮箱",
-      "emailPlaceholder": "your.email@example.com",
+      "emailPlaceholder": "您的邮箱@example.com",
       "submit": "发送重置链接",
       "errors": {
         "emailRequired": "邮箱是必填项",
         "emailInvalid": "请输入有效的电子邮箱地址",
         "requestFailed": "发送邮件失败",
         "serverError": "发生错误，请重试",
-        "emailNotFound": "No account found with this email"
+        "emailNotFound": "未找到该邮箱对应的帐户"
       },
       "success": {
         "title": "邮件已发送！",
         "message": "如果该邮箱对应的账户存在，您将收到重置链接。",
         "checkSpam": "如果没有看到邮件，请检查垃圾邮件文件夹。"
       },
-      "sending": "Sending...",
-      "backToLogin": "Back to Login",
-      "orContactSupport": "Or contact support",
-      "contactSupport": "Contact Support"
+      "sending": "发送中...",
+      "backToLogin": "返回登录",
+      "orContactSupport": "或联系支持",
+      "contactSupport": "联系支持",
+      "backToSignIn": "← 返回登录",
+      "backToSignInButton": "返回登录",
+      "rememberPasswordPrompt": "记住密码？"
     },
     "resetPassword": {
       "title": "重置密码",
@@ -601,18 +634,25 @@
         "passwordMismatch": "密码不匹配",
         "resetFailed": "重置密码失败",
         "serverError": "发生错误，请重试",
-        "required": "This field is required",
-        "weakPassword": "Password is too weak",
-        "invalidToken": "Invalid or expired reset link"
+        "required": "此字段为必填项",
+        "weakPassword": "密码过于简单",
+        "invalidToken": "链接无效或已过期"
       },
       "success": {
         "title": "密码已重置！",
-        "message": "您的密码已成功重置。"
+        "message": "您的密码已成功重置。",
+        "redirecting": "正在重定向到登录..."
       },
-      "password": "New Password",
-      "passwordPlaceholder": "Enter new password",
-      "resetButton": "Reset Password",
-      "resetting": "Resetting..."
+      "password": "新密码",
+      "passwordPlaceholder": "请输入新密码",
+      "resetButton": "重置",
+      "resetting": "重置中...",
+      "signIn": "登录",
+      "invalid": {
+        "title": "无效的重置链接",
+        "description": "此密码重置链接无效或已过期。",
+        "requestNewLink": "请求新链接"
+      }
     },
     "verifyEmail": {
       "title": "验证您的邮箱",
@@ -652,52 +692,52 @@
     "privacyLink": "隐私政策",
     "and": "和",
     "parentalConsent": {
-      "title": "Parental Consent",
-      "loading": "Loading consent information...",
+      "title": "家长同意",
+      "loading": "正在加载同意信息...",
       "expired": {
-        "title": "Consent Link Expired",
-        "message": "This consent link has expired. Please contact support for a new link.",
-        "expiredOn": "Expired on {date}"
+        "title": "同意链接已过期",
+        "message": "此同意链接已过期。请联系支持获取新链接。",
+        "expiredOn": "{date} 已过期"
       },
       "invalidToken": {
-        "title": "Invalid Link",
-        "message": "This consent link is invalid or has already been used."
+        "title": "链接无效",
+        "message": "此同意链接无效或已被使用。"
       },
       "decision": {
-        "title": "Account Approval Request",
-        "greeting": "Dear {parentName},",
-        "requestMessage": "Your child, {teenName}, has requested to create a self-managed account on 3yeses. As they are under 16 years old, we require your consent before their account can become active.",
-        "whatThisMeans": "What does this mean?",
+        "title": "帐户批准请求",
+        "greeting": "亲爱的 {parentName}，",
+        "requestMessage": "您的孩子 {teenName} 已请求在 3yeses 上创建一个自主管理帐户。由于他/她未满 16 岁，我们需要您的同意才能激活该帐户。",
+        "whatThisMeans": "这意味着什么？",
         "benefits": {
-          "item1": "{teenName} will be able to create and manage their own talent profile",
-          "item2": "They can apply for opportunities and showcase their skills",
-          "item3": "Their profile will have enhanced safety controls",
-          "item4": "You can request access to monitor the account at any time"
+          "item1": "{teenName} 可以创建并管理自己的才艺资料",
+          "item2": "他/她可以申请机会并展示自己的技能",
+          "item3": "他的/她的资料将获得增强的安全控制",
+          "item4": "您可以随时请求访问以监督帐户"
         },
-        "chooseOption": "Please choose one of the following options:",
-        "approveButton": "Approve Account",
-        "declineButton": "Decline Account",
-        "approving": "Approving...",
-        "declining": "Declining...",
-        "expiresIn": "This link expires in {hours} hours"
+        "chooseOption": "请选择以下选项之一：",
+        "approveButton": "批准帐户",
+        "declineButton": "拒绝帐户",
+        "approving": "正在批准...",
+        "declining": "正在拒绝...",
+        "expiresIn": "该链接将在 {hours} 小时后失效"
       },
       "approved": {
-        "title": "Account Approved",
-        "message": "Thank you for approving {teenName}'s account. They can now sign in and start using their profile.",
-        "teenName": "{teenName}'s account has been activated successfully."
+        "title": "帐户已批准",
+        "message": "感谢您批准 {teenName} 的帐户。他/她现在可以登录并开始使用资料。",
+        "teenName": "{teenName} 的帐户已成功激活。"
       },
       "declined": {
-        "title": "Account Declined",
-        "message": "The account registration for {teenName} has been declined and removed from our system.",
-        "thankYou": "Thank you for your time."
+        "title": "帐户已拒绝",
+        "message": "{teenName} 的注册已被拒绝并从我们的系统中删除。",
+        "thankYou": "感谢您的时间。"
       },
       "error": {
-        "title": "Something Went Wrong",
-        "message": "We couldn't process your request. Please try again or contact support.",
-        "alreadyProcessed": "This consent request has already been processed."
+        "title": "出现问题",
+        "message": "我们无法处理您的请求。请重试或联系支持。",
+        "alreadyProcessed": "此同意请求已被处理。"
       },
-      "contactSupport": "Contact Support",
-      "supportEmail": "support@3yeses.online"
+      "contactSupport": "联系支持",
+      "supportEmail": "support-cn@3yeses.online"
     }
   },
   "Hub": {
@@ -718,7 +758,7 @@
       "photography": "摄影"
     },
     "type": {
-      "title": "类型:",
+      "title": "类型：",
       "all": "全部",
       "videos": "视频",
       "audio": "音频",
@@ -727,7 +767,7 @@
     "filters": {
       "button": "筛选",
       "popularityTier": "热度等级",
-      "viral": "病毒式",
+      "viral": "病毒式内容",
       "popular": "热门",
       "rising": "上升中",
       "fresh": "新鲜",
@@ -741,13 +781,13 @@
       "trending": "趋势",
       "newest": "最新",
       "mostLiked": "最受欢迎",
-      "alphabetical": "A-Z",
-      "oldest": "Oldest First",
-      "mostViews": "Most Views",
-      "leastViews": "Least Views",
-      "mostLikes": "Most Likes",
-      "leastLikes": "Least Likes",
-      "zToA": "Z-A",
+      "alphabetical": "A→Z",
+      "oldest": "最旧优先",
+      "mostViews": "最多浏览",
+      "leastViews": "最少浏览",
+      "mostLikes": "最多点赞",
+      "leastLikes": "最少点赞",
+      "zToA": "Z→A",
       "clearAll": "清除所有筛选",
       "activeFilters": "活动筛选",
       "search": "搜索",
@@ -757,7 +797,7 @@
       "showing": "显示",
       "results": "结果",
       "resultsPlural": "结果",
-      "reverseAlphabetical": "Z-A"
+      "reverseAlphabetical": "Z→A"
     },
     "sections": {
       "featuredCreators": "精选创作者",
@@ -781,15 +821,15 @@
       "freshContent": "新鲜内容",
       "mostPopular": "最受欢迎",
       "lovedByCommunity": "受到社区喜爱",
-      "exploreAll": "Explore All Content",
-      "exploreMoreDescription": "There are {count} more items to discover in our full catalog."
+      "exploreAll": "查看全部内容",
+      "exploreMoreDescription": "完整目录中还有 {count} 个项目可供发现。"
     },
     "badges": {
       "sponsored": "赞助",
-      "trending": "趋势",
+      "trending": "热门",
       "hot": "热门",
       "new": "新",
-      "popular": "热门"
+      "popular": "受欢迎"
     },
     "pagination": {
       "previous": "上一页",
@@ -1082,7 +1122,9 @@
       "videoSupportedFormats": "Supported formats: MP4, WebM, MOV",
       "audioTips": "Audio Tips",
       "audioDirectUrl": "Must be a direct audio URL",
-      "audioSupportedFormats": "Supported formats: MP3, WAV, OGG, AAC"
+      "audioSupportedFormats": "Supported formats: MP3, WAV, OGG, AAC",
+      "mediaUrlPlaceholder": "https://example.com/zh-media.jpg",
+      "thumbnailUrlPlaceholder": "https://example.com/zh-thumbnail.jpg"
     },
     "galleryDesc": "浏览和管理您的媒体画廊",
     "subscription": "订阅",
@@ -1115,80 +1157,87 @@
     "thisMonth": "本月",
     "browseTalents": "浏览人才",
     "nav": {
-      "overview": "Overview",
-      "profile": "Profile",
-      "gallery": "Gallery",
-      "insights": "Insights",
-      "activity": "Activity",
-      "saved": "Saved",
-      "history": "History",
-      "tickets": "Tickets",
-      "billing": "Billing",
-      "settings": "Settings",
-      "dashboard": "Dashboard"
+      "overview": "概览",
+      "profile": "个人资料",
+      "gallery": "画廊",
+      "insights": "洞察",
+      "activity": "活动",
+      "saved": "已保存",
+      "history": "历史",
+      "tickets": "工单",
+      "billing": "账单",
+      "settings": "设置",
+      "dashboard": "仪表板"
     },
     "tickets": {
-      "title": "Support Tickets",
-      "description": "Track and manage your submitted support tickets",
-      "newTicket": "New Ticket",
-      "noTickets": "No tickets yet",
-      "noTicketsDesc": "You haven't submitted any support tickets. If you need help, our team is ready to assist.",
-      "submitFirst": "Submit Your First Ticket",
-      "noMatch": "No tickets match the selected filter.",
-      "all": "All",
-      "updated": "Updated {date}",
-      "visitHelp": "Visit Help Centre",
-      "open": "Open",
-      "inProgress": "In Progress",
-      "resolved": "Resolved",
-      "closed": "Closed",
-      "categoryAccount": "Account",
-      "categoryBilling": "Billing",
-      "categoryPortfolio": "Portfolio",
-      "categoryCategories": "Categories",
-      "categoryNotifications": "Notifications",
-      "categorySecurity": "Security",
-      "categoryOther": "Other"
+      "title": "支持工单",
+      "description": "跟踪并管理您提交的支持工单",
+      "newTicket": "新工单",
+      "noTickets": "暂无工单",
+      "noTicketsDesc": "您尚未提交任何支持工单。如需帮助，我们的团队随时待命。",
+      "submitFirst": "提交您的第一张工单",
+      "noMatch": "没有符合所选筛选条件的工单。",
+      "all": "全部",
+      "updated": "已更新 {date}",
+      "visitHelp": "访问帮助中心",
+      "open": "打开",
+      "inProgress": "处理中",
+      "resolved": "已解决",
+      "closed": "已关闭",
+      "categoryAccount": "账户",
+      "categoryBilling": "账单",
+      "categoryPortfolio": "作品集",
+      "categoryCategories": "分类",
+      "categoryNotifications": "通知",
+      "categorySecurity": "安全",
+      "categoryOther": "其他"
     },
     "activity": {
-      "title": "Activity Feed",
-      "subtitle": "Track all interactions with your profile",
-      "loading": "Loading activities...",
-      "noActivity": "No Activity Yet",
-      "noActivityDesc": "Your activity feed will appear here once people start interacting with your profile."
+      "title": "活动动态",
+      "subtitle": "跟踪与您个人资料的所有互动",
+      "loading": "正在加载活动…",
+      "noActivity": "暂时没有活动",
+      "noActivityDesc": "当有人与您的个人资料互动时，活动动态将在此显示。"
     },
     "billing": {
-      "title": "Billing & Payments",
-      "subtitle": "View your subscription details and payment history",
-      "failedToLoad": "Failed to load billing information",
-      "errorLoading": "An error occurred while loading billing information",
-      "currentSubscription": "Current Subscription",
-      "plan": "Plan",
-      "status": "Status",
-      "currentPeriod": "Current Period",
-      "na": "N/A",
-      "manageSubscription": "Manage Subscription",
-      "paymentHistory": "Payment History",
-      "invoice": "Invoice:",
-      "showingPage": "Showing page {page} of {pages} ({total} total payments)",
-      "noPaymentHistory": "No payment history found"
+      "title": "账单与支付",
+      "subtitle": "查看您的订阅详情和支付历史",
+      "failedToLoad": "加载账单信息失败",
+      "errorLoading": "加载账单信息时出错",
+      "currentSubscription": "当前订阅",
+      "plan": "方案",
+      "status": "状态",
+      "currentPeriod": "当前周期",
+      "na": "无",
+      "manageSubscription": "管理订阅",
+      "paymentHistory": "支付历史",
+      "invoice": "发票：",
+      "showingPage": "显示第 {page} 页，共 {pages} 页（共 {total} 笔支付）",
+      "noPaymentHistory": "未找到支付历史"
     },
     "overview": {
-      "profileViews": "Profile Views",
-      "profileLikes": "Profile Likes",
-      "savedTalents": "Saved Talents",
-      "talentsYouSaved": "Talents you've saved",
-      "lastSevenDays": "Last 7 days",
-      "topPerformingMedia": "Top Performing Media",
-      "viewFullAnalytics": "View Full Analytics →",
-      "totalViews": "Total Views",
-      "totalLikes": "Total Likes",
-      "avgEngagement": "Avg Engagement",
-      "thisWeek": "This Week",
-      "views": "views",
-      "likes": "likes",
-      "engagement": "engagement",
-      "media": "Media"
+      "profileViews": "个人资料查看",
+      "profileLikes": "个人资料点赞",
+      "savedTalents": "已保存的人才",
+      "talentsYouSaved": "您保存的人才",
+      "lastSevenDays": "过去 7 天",
+      "topPerformingMedia": "最佳表现媒体",
+      "viewFullAnalytics": "查看完整分析 →",
+      "totalViews": "总查看数",
+      "totalLikes": "总点赞数",
+      "avgEngagement": "平均互动",
+      "thisWeek": "本周",
+      "views": "查看",
+      "likes": "点赞",
+      "engagement": "互动",
+      "media": "媒体",
+      "growthHintsBadge": "新增：增长提示",
+      "growthHintsTitle": "每周行动提升曝光",
+      "growthHintsDesc": "每周完成一个智能建议，我们将在人才动态中推广您。",
+      "growthHintsCta": "查看提示",
+      "actionRequiredTitle": "需要操作",
+      "actionRequiredDesc": "您的管理员团队有活动账户警告。",
+      "warningFallback": "警告"
     }
   },
   "settings": {
@@ -1216,13 +1265,13 @@
       "secondary": "查看价格"
     },
     "stats": {
-      "categories": "9",
+      "categories": "20+",
       "categoriesLabel": "人才类别",
-      "subcategories": "50",
+      "subcategories": "145+",
       "subcategoriesLabel": "子类别",
-      "locales": "10",
+      "locales": "11",
       "localesLabel": "支持语言",
-      "price": "£10",
+      "price": "10 英镑",
       "priceLabel": "6个月"
     },
     "whySection": {
@@ -1244,7 +1293,7 @@
         "desc": "跟踪资料浏览量、作品集参与度、搜索展示次数和点击率。"
       },
       "categories": {
-        "title": "9人才类别",
+        "title": "20+人才类别",
         "desc": "演员、音乐家、模特、舞者、配音艺术家、喜剧演员、DJ、摄影师等。"
       },
       "simple": {
@@ -1324,142 +1373,144 @@
       "subtitle": "创建资料，上传作品，今天就开始被发现。",
       "button": "开始",
       "browse": "浏览类别",
-      "talentButton": "Create your profile",
-      "clientButton": "Hire talent"
-    }
+      "talentButton": "创建您的资料",
+      "clientButton": "雇佣人才"
+    },
+    "title": "为什么与如何",
+    "subtitle": "了解 3YESES 如何让人才更具可见性并创造机会。"
   },
   "Meta": {
-    "title": "3YESES",
-    "description": "3YESES is a subscription-based talent marketplace connecting performers with projects and industry opportunities."
+    "title": "3yeses",
+    "description": "3YESES 是一个基于订阅的才艺市场，将表演者与项目和行业机会连接起来。"
   },
   "About": {
-    "badge": "About 3YESES",
+    "badge": "关于 3YESES",
     "hero": {
-      "title": "Every talent deserves ",
-      "accent": "a stage.",
-      "description": "3YESES started with a simple idea: talented people everywhere should have the chance to be seen. Not just the ones with connections or big-city access — {everyone}. From diverse communities around the world, we're building a place where creatives can showcase their work, build a name for themselves, and get discovered on their own terms.",
-      "everyone": "everyone"
+      "title": "每位人才都值得",
+      "accent": "一个舞台。",
+      "description": "3YESES 源于一个简单理念：世界各地有才能的人都应该有机会被看见。不只是那些有关系或住在大城市的人 —— {everyone}。我们正在从多元社区出发，打造一个让创作者展示作品、建立名声并以自己的方式被发现的舞台。",
+      "everyone": "每个人"
     },
     "origin": {
-      "title": "Why we built this",
-      "p1": "The creative industry has always had a visibility problem. Talented actors, musicians, models, dancers, voice artists, photographers, and performers of all kinds exist in every corner of the world — but most never get the chance to be seen beyond their local community.",
-      "p2start": "We wanted to change that. 3YESES was born from the belief that ",
-      "p2bold": "talent doesn't have a postcode",
-      "p2end": ". Whether you're a street dancer in Accra, a classical violinist in Mumbai, a voice artist in Manchester, or a model in Buenos Aires — you deserve a professional platform to showcase your work and get noticed.",
-      "p3": "We built 3YESES to be radically simple and affordable. No gatekeeping, no approval process to join, no per-booking fees. One subscription gives you everything: unlimited uploads, a full professional profile, analytics to track your growth, and priority search placement so you actually get discovered.",
-      "p4": "This is your stage. Make it count."
+      "title": "我们为什么创建它",
+      "p1": "创意行业一直存在可见性问题。才华横溢的演员、音乐人、模特、舞者、声音艺术家、摄影师和各种表演者遍布世界各地——但大多数人从未有机会被本地社区之外的人看到。",
+      "p2start": "我们希望改变这一点。3YESES 源于这样一种信念：",
+      "p2bold": "才华没有邮政编码",
+      "p2end": "。无论你是在阿克拉的街舞演员、孟买的古典小提琴手、曼彻斯特的声音艺术家，还是布宜诺斯艾利斯的模特——你都值得拥有一个专业平台来展示作品并被发现。",
+      "p3": "我们把 3YESES 打造得极简且亲民。无需门槛、无需加入审批、无需按次收费。一个订阅即可享受一切：无限上传、完整的专业资料、用于跟踪成长的分析，以及让你真正被发现的优先搜索排名。",
+      "p4": "这是你的舞台。让它更有意义。"
     },
     "values": {
-      "title": "What we stand for",
-      "subtitle": "The principles that guide everything we build.",
-      "openTitle": "Open to Everyone",
-      "openDesc": "No gatekeeping. No auditions to join. If you have talent, you belong here — regardless of where you come from, your background, or how much experience you have.",
-      "diversityTitle": "Diversity First",
-      "diversityDesc": "We celebrate every genre, style, and culture. From classical musicians in Tokyo to street dancers in Lagos to voice artists in São Paulo — every creative deserves a stage.",
-      "communityTitle": "Community Driven",
+      "title": "我们的价值观",
+      "subtitle": "指导我们构建一切的原则。",
+      "openTitle": "人人可参与",
+      "openDesc": "没有准入门槛。无需试镜即可加入。如果你有才华，无论你来自哪里、背景如何、经验多少，你都属于这里。",
+      "diversityTitle": "多样性优先",
+      "diversityDesc": "我们庆祝每一种风格、文化和类型。从东京的古典音乐人到拉各斯的街舞演员，再到圣保罗的声音艺术家——每位创作者都值得一个舞台。",
+      "communityTitle": "社区驱动",
       "communityDesc": "浏览、点赞、评论并分享。我们的中心汇集了表演与精选媒体内容，让创作者彼此启发并建立真实连接。",
-      "fairTitle": "Fair & Affordable",
-      "fairDesc": "One simple subscription — £10 for 6 months or £20 for 12 months. No commissions, no hidden fees, no premium tiers. Everyone gets the same full access."
+      "fairTitle": "公平且实惠",
+      "fairDesc": "一个简单的订阅 — 6 个月 £10，或 12 个月 £20。没有佣金、没有隐藏费用、没有高级套餐。每个人都获得相同的完整访问权限。"
     },
     "categories": {
-      "title": "All kinds of talent. All over the world.",
-      "subtitle": "Whatever your creative discipline, there's a home for you on 3yeses."
+      "title": "各种人才，遍布全球。",
+      "subtitle": "无论你的创意领域是什么，3yeses 都为你保留一个位置。"
     },
     "features": {
-      "title": "Everything you need to get discovered",
-      "subtitle": "One subscription. Full access. No limits.",
-      "photoTitle": "Photo Portfolio",
-      "photoDesc": "Upload unlimited high-quality images — headshots, action shots, behind-the-scenes.",
-      "videoTitle": "Video Showreels",
-      "videoDesc": "Share showreels, performance clips, and YouTube embeds directly on your profile.",
-      "audioTitle": "Audio Demos",
-      "audioDesc": "Musicians and voice artists can upload audio samples — MP3, WAV, and more.",
-      "analyticsTitle": "Analytics Dashboard",
-      "analyticsDesc": "Track who views your profile, which portfolio items perform best, and how you rank in search.",
-      "rankingTitle": "Priority Ranking",
-      "rankingDesc": "Subscribers appear higher in search results so you get discovered faster.",
-      "customTitle": "Full Customisation",
-      "customDesc": "Bio, skills, languages, work history, physical characteristics, social links — make your profile yours.",
-      "categoriesTitle": "15+ Categories",
-      "categoriesDesc": "Actors, musicians, models, dancers, DJs, voice artists, photographers, comedians, presenters and more.",
-      "verifyTitle": "Verification Badges",
-      "verifyDesc": "Complete your profile fully to earn a verified badge that builds trust and boosts visibility.",
+      "title": "发现你所需的一切",
+      "subtitle": "一个订阅。完整访问。无限可能。",
+      "photoTitle": "照片作品集",
+      "photoDesc": "上传无限高质量图片——头像、动作照、幕后花絮。",
+      "videoTitle": "视频作品集",
+      "videoDesc": "直接在你的个人资料中分享 showreel、演出剪辑和 YouTube 嵌入。",
+      "audioTitle": "音频演示",
+      "audioDesc": "音乐人和声音艺术家可以上传音频样本——MP3、WAV 等。",
+      "analyticsTitle": "分析仪表盘",
+      "analyticsDesc": "追踪谁查看了你的个人资料、哪些作品表现最佳、以及你在搜索中的排名。",
+      "rankingTitle": "优先排名",
+      "rankingDesc": "订阅者在搜索结果中排名更高，从而更快被发现。",
+      "customTitle": "完整自定义",
+      "customDesc": "简介、技能、语言、工作经历、身体特征、社交链接——打造你的专属个人资料。",
+      "categoriesTitle": "15+ 类别",
+      "categoriesDesc": "演员、音乐人、模特、舞者、DJ、声音艺术家、摄影师、喜剧演员、主持人等。",
+      "verifyTitle": "验证徽章",
+      "verifyDesc": "完整完善你的个人资料，获得能够建立信任并提升可见度的验证徽章。",
       "hubTitle": "人才中心",
       "hubDesc": "探索平台内的热门精选媒体内容。可按类别、媒体类型和热度筛选。"
     },
     "howItWorks": {
-      "title": "How it works",
-      "step1Title": "Sign up & subscribe",
-      "step1Desc": "Create your account and choose your plan — £10 for 6 months or £20 for 12 months. Payment is handled securely through Stripe.",
-      "step2Title": "Build your profile",
-      "step2Desc": "Choose your category, write your bio, add skills and languages, upload photos, videos, and audio. Our onboarding wizard guides you through every step.",
-      "step3Title": "Get discovered",
-      "step3Desc": "Your profile goes live in search results. Track views and engagement through your analytics dashboard. Share your portfolio link anywhere."
+      "title": "它如何运作",
+      "step1Title": "注册并订阅",
+      "step1Desc": "创建你的帐户并选择计划 — 6 个月 £10 或 12 个月 £20。付款通过 Stripe 安全处理。",
+      "step2Title": "创建你的个人资料",
+      "step2Desc": "选择你的类别，撰写你的简介，添加技能和语言，上传照片、视频和音频。我们的入门向导会在每一步引导你。",
+      "step3Title": "被发现",
+      "step3Desc": "你的个人资料会上线到搜索结果。通过分析仪表盘跟踪浏览量和互动。随时分享你的作品链接。"
     },
     "cta": {
-      "title": "Ready to showcase your talent?",
-      "description": "Join creatives from around the world. Build your portfolio, track your growth, and get discovered.",
-      "getStarted": "Get Started",
-      "viewPricing": "View Pricing"
+      "title": "准备好展示你的才能了吗？",
+      "description": "加入来自世界各地的创作者。构建你的作品集，跟踪你的成长，并被发现。",
+      "getStarted": "开始",
+      "viewPricing": "查看价格"
     }
   },
   "Contact": {
-    "title": "Contact Details",
-    "placeholder": "This is a placeholder for contact details."
+    "title": "联系详情",
+    "placeholder": "这是联系详情的占位符。"
   },
   "SignupPage": {
-    "title": "Talent Sign Up",
-    "subtitle": "Create your account and start your journey in 3 easy steps.",
-    "step1": "Account",
-    "step2": "Profile",
-    "step3": "Upload",
-    "startSignup": "Start Talent Sign Up",
-    "email": "Email",
-    "password": "Password",
-    "confirmPassword": "Confirm Password",
-    "submit": "Sign Up"
+    "title": "人才注册",
+    "subtitle": "创建你的帐户，轻松开始你的旅程。",
+    "step1": "帐户",
+    "step2": "资料",
+    "step3": "上传",
+    "startSignup": "开始人才注册",
+    "email": "电子邮件",
+    "password": "密码",
+    "confirmPassword": "确认密码",
+    "submit": "注册"
   },
   "LoginPage": {
-    "title": "Login",
-    "subtitle": "Welcome back! Please login to your account.",
-    "email": "Email",
-    "password": "Password",
-    "forgotPassword": "Forgot Password?",
-    "rememberMe": "Remember Me",
-    "submit": "Login",
-    "noAccount": "Don't have an account?",
-    "signUpLink": "Sign up here"
+    "title": "登录",
+    "subtitle": "欢迎回来！请登录你的帐户。",
+    "email": "电子邮件",
+    "password": "密码",
+    "forgotPassword": "忘记密码？",
+    "rememberMe": "记住我",
+    "submit": "登录",
+    "noAccount": "没有帐户？",
+    "signUpLink": "在此注册"
   },
   "Pages": {
     "terms": {
       "badge": "Terms & Conditions",
       "heroTitle": "Terms of Service",
       "heroAccent": "",
-      "contents": "Contents",
+      "contents": "目录",
       "sections": {
         "overview": {
           "title": "Overview",
           "p1": "These Terms and Conditions (\"Terms\") govern your use of the 3YESES platform (\"Platform\", \"we\", \"us\", \"our\"), a subscription-based talent marketplace operated at 3yeses.online. By creating an account or using any part of the Platform, you agree to be bound by these Terms.",
-          "p2": "3YESES is a platform where creative professionals — actors, musicians, models, dancers, voice artists, photographers, videographers, DJs, presenters, comedians, and other performers — create profiles, upload portfolio media (photos, videos, audio), and get discovered. The Platform includes a searchable talent directory, a media hub, analytics dashboards, and community features such as comments, likes, and content sharing."
+          "p2": "3YESES 是一个平台，创意专业人士——演员、音乐人、模特、舞者、配音演员、摄影师、摄像师、DJ、主持人、喜剧演员和其他表演者——可以创建个人资料、上传作品集媒体（照片、视频、音频）并被发现。该平台包括可搜索的人才目录、媒体中心、分析仪表板和评论、点赞、内容分享等社区功能。"
         },
         "eligibility": {
-          "p1": "You must be at least 13 years old to create an account. Users aged 13–17 require parental or guardian consent. Users under 13 must have a parent-managed account where the parent or guardian registers and manages the account on their behalf.",
-          "p2": "You are responsible for maintaining the confidentiality of your login credentials and for all activity under your account. Notify us immediately if you suspect unauthorised access.",
-          "p3": "Each individual may maintain only one account. Duplicate accounts may be suspended without notice.",
-          "p4": "You must provide accurate, current information during registration and keep your profile information up to date. Fraudulent or misleading profiles may be removed."
+          "p1": "您必须年满 13 岁才能创建账户。13 至 17 岁的用户需要父母或监护人同意。13 岁以下的用户必须由父母或监护人管理账户，由父母或监护人代表其注册和管理。",
+          "p2": "您有责任保持登录凭据的机密性，并对账户下的所有活动负责。如果您怀疑未经授权的访问，请立即通知我们。",
+          "p3": "每个人只能拥有一个账户。重复账户可能会在不通知的情况下被暂停。",
+          "p4": "您必须在注册过程中提供准确、最新的信息，并保持您的个人资料信息最新。欺诈或误导性个人资料可能会被删除。"
         },
         "subscription": {
-          "p1": "An active subscription is required to use the Platform. You subscribe during the sign-up process. Without an active subscription, you cannot access the Platform.",
-          "plansIntro": "We offer one plan — Standard Access — with two duration options:",
+          "p1": "使用平台需要有效订阅。您在注册时订阅。没有有效订阅，您无法访问平台。",
+          "plansIntro": "我们提供一个计划 — Standard Access — 具有两个时长选项：",
           "plans": [
             "6 months — £10, billed as a recurring subscription via Stripe.",
             "12 months — £20, billed as a recurring subscription via Stripe."
           ],
-          "p2": "Both plans include identical features: unlimited portfolio uploads, full profile customisation, priority search ranking, and full dashboard analytics."
+          "p2": "两个计划包含相同功能：无限作品集上传、完整个人资料自定义、搜索优先排名和完整仪表板分析。"
         },
         "content": {
-          "ownership": "You retain full ownership of all content you upload to the Platform. By uploading content, you grant 3YESES a non-exclusive, worldwide, royalty-free licence to display, distribute, and promote your content on the Platform and in marketing materials related to the Platform.",
-          "permitted": "You may upload images (JPEG, PNG, WebP), videos (MP4, MOV), and audio files (MP3, WAV). Individual files must not exceed 50 MB. You may also embed external video links (e.g. YouTube, Vimeo).",
+          "ownership": "您对上传到平台的所有内容保留完整所有权。上传内容即授予 3YESES 一项非独占、全球、免版税的许可，以便在平台和与平台相关的营销材料中展示、分发和推广您的内容。",
+          "permitted": "您可以上传图像（JPEG、PNG、WebP）、视频（MP4、MOV）和音频文件（MP3、WAV）。单个文件不得超过 50 MB。您还可以嵌入外部视频链接（例如 YouTube、Vimeo）。",
           "prohibited": [
             "Is sexually explicit, pornographic, or depicts nudity intended to be sexual in nature.",
             "Contains violence, gore, or content depicting harm to individuals.",
@@ -1471,147 +1522,147 @@
           ]
         }
       },
-      "title": "Terms of Service",
-      "lastUpdated": "Last updated: {date}"
+      "title": "服务条款",
+      "lastUpdated": "最后更新：{date}"
     },
     "privacy": {
       "badge": "Privacy Policy",
       "heroTitle": "Your privacy matters",
       "heroAccent": "How we handle your data",
-      "contents": "Contents",
-      "introP1": "This Privacy Policy explains how 3YESES (\"Platform\", \"we\", \"us\", \"our\") collects, uses, stores, and protects your personal data when you use our subscription-based talent marketplace at 3yeses.online.",
-      "introP2": "We are committed to protecting your privacy and handling your personal data in compliance with the UK General Data Protection Regulation (UK GDPR), the Data Protection Act 2018, and, where applicable, the EU General Data Protection Regulation (GDPR).",
-      "title": "Privacy Policy",
-      "lastUpdated": "Last updated: {date}"
+      "contents": "目录",
+      "introP1": "本隐私政策说明 3YESES（“平台”、“我们”、“我们”、“我们的”）在您使用我们的订阅制人才市场 3yeses.online 时，如何收集、使用、存储和保护您的个人数据。",
+      "introP2": "我们致力于保护您的隐私，并按照英国 GDPR、《2018 年数据保护法》以及适用时的欧盟 GDPR 处理您的个人数据。",
+      "title": "隐私政策",
+      "lastUpdated": "最后更新：{date}"
     },
     "pricing": {
-      "title": "Pricing Plans",
-      "subtitle": "Choose the plan that works best for you"
+      "title": "定价方案",
+      "subtitle": "选择最适合你的方案"
     },
     "about": {
-      "title": "About 3YESES",
-      "subtitle": "Connecting talent with opportunity"
+      "title": "关于 3YESES",
+      "subtitle": "让人才与机会相连"
     },
     "contact": {
-      "title": "Contact Us",
-      "subtitle": "Get in touch with our team"
+      "title": "联系我们",
+      "subtitle": "与我们的团队取得联系"
     }
   },
   "notifications": {
-    "title": "Notifications",
-    "markAllRead": "Mark all read",
-    "clearAll": "Clear all",
-    "noNotifications": "No notifications",
-    "allCaughtUp": "You are all caught up!",
-    "systemAlerts": "System alerts",
-    "settings": "Notification Settings",
-    "profileViews": "Profile Views",
-    "profileViewsDesc": "When someone views your profile",
-    "profileSaves": "Profile Saves",
-    "profileSavesDesc": "When someone saves your profile",
-    "comments": "Comments",
-    "commentsDesc": "New comments on your videos",
-    "likesLabel": "Likes",
-    "likesDesc": "When someone likes your content",
-    "sound": "Sound",
-    "soundDesc": "Play sound for notifications",
-    "dismiss": "Dismiss",
-    "justNow": "Just now",
-    "minutesAgo": "{count}m ago",
-    "hoursAgo": "{count}h ago",
-    "daysAgo": "{count}d ago"
+    "title": "通知",
+    "markAllRead": "全部标记为已读",
+    "clearAll": "清除全部",
+    "noNotifications": "暂无通知",
+    "allCaughtUp": "您已全部处理！",
+    "systemAlerts": "系统提醒",
+    "settings": "通知设置",
+    "profileViews": "个人资料查看",
+    "profileViewsDesc": "当有人查看您的个人资料时",
+    "profileSaves": "个人资料保存",
+    "profileSavesDesc": "当有人保存您的个人资料时",
+    "comments": "评论",
+    "commentsDesc": "您的视频有新评论",
+    "likesLabel": "点赞",
+    "likesDesc": "当有人喜欢您的内容时",
+    "sound": "声音",
+    "soundDesc": "为通知播放声音",
+    "dismiss": "关闭",
+    "justNow": "刚刚",
+    "minutesAgo": "{count}分钟前",
+    "hoursAgo": "{count}小时前",
+    "daysAgo": "{count}天前"
   },
   "support": {
-    "helpCentre": "Help Centre",
-    "heroTitle": "How can we",
-    "heroAccent": "help you?",
-    "heroDesc": "Browse our help topics, check the FAQ, or submit a support ticket and our team will get back to you.",
-    "searchPlaceholder": "Search help topics, FAQs, and answers…",
-    "clearSearch": "Clear search",
-    "topicsFound": "{topics} topic(s) · {faqs} FAQ(s) found",
-    "matchingFAQs": "Matching FAQs",
-    "viewAllMatching": "View all {count} matching FAQs",
-    "learnMore": "Learn more",
-    "submitTicket": "Submit a Support Ticket",
-    "submitTicketDesc": "Can't find what you need? Our team will get back to you within 48 hours.",
-    "faqHeading": "Frequently Asked Questions",
-    "faqCountLabel": "FAQs",
-    "allCategories": "All Categories",
-    "needHelp": "Need help?",
-    "needHelpDesc": "Can't find what you need? Submit a ticket and our team will respond within 48 hours.",
-    "faqTitle": "Frequently Asked Questions",
-    "secureEncrypted": "Secure & encrypted",
-    "replyTime": "Typical reply within 48h",
-    "trackedDashboard": "Tracked via your dashboard",
-    "backToHelp": "Back to Help Centre",
-    "ticketLabel": "Support Ticket",
-    "submitATicket": "Submit a",
-    "ticketAccent": "Ticket",
-    "ticketFormDesc": "Choose a category, describe your issue, and our support team will get back to you within 48 hours. You must be logged in to submit a ticket.",
-    "newSupportTicket": "New Support Ticket",
-    "trustSecure": "Secure & Encrypted",
-    "trustSecureDesc": "All data is encrypted in transit",
-    "trustTracked": "Tracked Tickets",
-    "trustTrackedDesc": "View status in your dashboard",
-    "trustReply": "48h Response Time",
-    "trustReplyDesc": "Our team responds within 48 hours",
-    "stillNeedHelp": "Still need help?",
-    "submitTicketLink": "Submit a support ticket →",
-    "relatedTopics": "Related Topics",
-    "quickGuide": "Quick Guide",
-    "topicAccount": "Account & Profile",
-    "topicBilling": "Billing & Subscriptions",
-    "topicCategories": "Categories & Discovery",
-    "topicPortfolio": "Portfolio & Media",
-    "topicNotifications": "Notifications & Alerts",
-    "topicSecurity": "Security & Privacy",
-    "accountLabel": "Account & Profile",
-    "accountTitle": "Account &",
-    "accountAccent": "Profile",
-    "accountDesc": "Registration, profile editing, physical characteristics, work history, social links, visibility settings, and account management.",
-    "billingLabel": "Billing & Subscriptions",
-    "billingTitle": "Billing &",
-    "billingAccent": "Subscriptions",
-    "billingDesc": "Pricing, payment methods, invoices, cancellation, and everything related to your subscription.",
-    "categoriesLabel": "Categories & Discovery",
-    "categoriesTitle": "Categories &",
-    "categoriesAccent": "Discovery",
-    "categoriesDesc": "Search filters, talent directory, Media Hub, grid and list views, and tips for getting discovered.",
-    "portfolioLabel": "Portfolio & Media",
-    "portfolioTitle": "Portfolio &",
-    "portfolioAccent": "Media",
-    "portfolioDesc": "Upload wizard, gallery viewer, media overlay, file types, size limits, and tips for a standout portfolio.",
-    "notificationsLabel": "Notifications & Alerts",
-    "notificationsTitle": "Notifications &",
-    "notificationsAccent": "Alerts",
-    "notificationsDesc": "Comment alerts, like notifications, profile view updates, follower activity, and managing your preferences.",
-    "securityLabel": "Security & Privacy",
-    "securityTitle": "Security &",
-    "securityAccent": "Privacy",
-    "securityDesc": "Profile visibility controls, cookie consent, content reporting, GDPR rights, and keeping your account safe.",
-    "formCategory": "Category",
-    "formCategoryAria": "Ticket category",
-    "formSubject": "Subject",
-    "formSubjectPlaceholder": "Brief summary of your issue",
-    "formDescription": "Description",
-    "formDescPlaceholder": "Describe your issue in detail. Include any relevant steps or screenshots.",
-    "formSubmit": "Submit Ticket",
-    "formSubmitting": "Submitting…",
-    "formSuccess": "Ticket Submitted",
-    "formSuccessMsg": "Your ticket ID is {ticketId}. We'll get back to you within 48 hours.",
-    "formSubmitAnother": "Submit another ticket",
-    "formError": "Failed to submit ticket. Please make sure you are logged in.",
-    "formNetworkError": "Network error — please try again.",
-    "catAccount": "Account & Profile",
-    "catBilling": "Billing & Subscriptions",
-    "catPortfolio": "Portfolio & Media",
-    "catCategories": "Categories & Discovery",
-    "catNotifications": "Notifications & Alerts",
-    "catSecurity": "Security & Privacy",
-    "catOther": "Other",
-    "catAnalytics": "Analytics",
-    "catCommunity": "Community",
-    "catSupport": "Support & Tickets",
+    "helpCentre": "帮助中心",
+    "heroTitle": "我们能为您",
+    "heroAccent": "做些什么？",
+    "heroDesc": "浏览我们的帮助主题，查看常见问题，或提交支持工单，我们的团队将在 48 小时内回复您。",
+    "searchPlaceholder": "搜索帮助主题、FAQ 和答案…",
+    "clearSearch": "清除搜索",
+    "topicsFound": "{topics} 个主题 · {faqs} 个 FAQ",
+    "matchingFAQs": "匹配的常见问题",
+    "viewAllMatching": "查看全部 {count} 个匹配的 FAQ",
+    "learnMore": "了解更多",
+    "submitTicket": "提交支持工单",
+    "submitTicketDesc": "找不到所需内容？我们的团队将在 48 小时内联系您。",
+    "faqHeading": "常见问题",
+    "faqCountLabel": "常见问题",
+    "allCategories": "全部分类",
+    "needHelp": "需要帮助？",
+    "needHelpDesc": "找不到所需内容？提交工单，我们的团队将在 48 小时内回复。",
+    "faqTitle": "常见问题",
+    "secureEncrypted": "安全且加密",
+    "replyTime": "通常 48 小时内回复",
+    "trackedDashboard": "可在您的仪表板中跟踪",
+    "backToHelp": "返回帮助中心",
+    "ticketLabel": "支持工单",
+    "submitATicket": "提交",
+    "ticketAccent": "工单",
+    "ticketFormDesc": "选择类别，描述您的问题，我们的支持团队将在 48 小时内回复。您必须先登录。",
+    "newSupportTicket": "新的支持工单",
+    "trustSecure": "安全且加密",
+    "trustSecureDesc": "所有数据在传输过程中均已加密。",
+    "trustTracked": "跟踪工单",
+    "trustTrackedDesc": "在您的仪表板中查看状态",
+    "trustReply": "48 小时回复",
+    "trustReplyDesc": "我们的团队将在 48 小时内回复。",
+    "stillNeedHelp": "仍然需要帮助？",
+    "submitTicketLink": "提交支持工单 →",
+    "relatedTopics": "相关主题",
+    "quickGuide": "快速指南",
+    "topicAccount": "帐户与资料",
+    "topicBilling": "计费与订阅",
+    "topicCategories": "分类与发现",
+    "topicPortfolio": "作品集与媒体",
+    "topicNotifications": "通知与提醒",
+    "topicSecurity": "安全与隐私",
+    "accountLabel": "帐户与资料",
+    "accountTitle": "帐户与",
+    "accountAccent": "资料",
+    "accountDesc": "注册、资料编辑、身体特征、工作经历、社交链接、可见性设置和帐户管理。",
+    "billingLabel": "计费与订阅",
+    "billingTitle": "计费与",
+    "billingAccent": "订阅",
+    "billingDesc": "价格、支付方式、发票、取消以及与订阅相关的所有内容。",
+    "categoriesLabel": "分类与发现",
+    "categoriesTitle": "分类与",
+    "categoriesAccent": "发现",
+    "categoriesDesc": "搜索筛选、人才目录、媒体中心、网格和列表视图，以及获取发现的技巧。",
+    "portfolioLabel": "作品集与媒体",
+    "portfolioTitle": "作品集",
+    "portfolioAccent": "媒体",
+    "portfolioDesc": "上传向导、画廊查看、媒体覆盖、文件类型、大小限制，以及打造出色作品集的建议。",
+    "notificationsLabel": "通知与提醒",
+    "notificationsTitle": "通知 &",
+    "notificationsAccent": "提醒",
+    "notificationsDesc": "评论提醒、点赞通知、个人资料查看更新、关注者活动和偏好设置管理。",
+    "securityLabel": "安全与隐私",
+    "securityTitle": "安全与",
+    "securityAccent": "隐私",
+    "securityDesc": "个人资料可见性控制、Cookie 同意、内容举报、GDPR 权利和帐户安全。",
+    "formCategory": "类别",
+    "formCategoryAria": "工单类别",
+    "formSubject": "主题",
+    "formSubjectPlaceholder": "您的问题简要说明",
+    "formDescription": "描述",
+    "formDescPlaceholder": "详细描述您的问题。包括相关步骤或屏幕截图。",
+    "formSubmit": "提交工单",
+    "formSubmitting": "提交中…",
+    "formSuccess": "工单已提交",
+    "formSuccessMsg": "您的工单 ID 为 {ticketId}。我们将在 48 小时内回复。",
+    "formSubmitAnother": "提交另一个工单",
+    "formError": "无法提交工单。请确保您已登录。",
+    "formNetworkError": "网络错误 — 请重试。",
+    "catAccount": "帐户与资料",
+    "catBilling": "计费与订阅",
+    "catPortfolio": "作品集与媒体",
+    "catCategories": "分类与发现",
+    "catNotifications": "通知与提醒",
+    "catSecurity": "安全与隐私",
+    "catOther": "其他",
+    "catAnalytics": "分析",
+    "catCommunity": "社区",
+    "catSupport": "支持 & 工单",
     "faqItems": [
       {
         "category": "Account & Profile",
@@ -1678,175 +1729,274 @@
         "q": "How long does it take to get a response?",
         "a": "Support tickets are answered within 48 hours."
       }
-    ]
+    ],
+    "billingHelp": {
+      "ticketCategory": "账单 & 订阅",
+      "faqCostQ": "3YESES 的费用是多少？",
+      "faqCostA": "使用平台需要有效订阅。您在注册时订阅：选择 6 个月 GBP10 或 12 个月 GBP20（超值）。两个计划均包含相同功能：无限作品集上传、完整个人资料自定义、搜索优先排名、分析仪表盘、评论、点赞和社区功能。没有隐藏费用。",
+      "faqSubscribeQ": "我如何订阅？",
+      "faqSubscribeA": "订阅在注册过程中完成。创建帐户并确认年龄后，选择计划时长（6 或 12 个月），然后完成安全的 Stripe 结账。您的帐户会立即激活，无需等待。",
+      "faqCancelQ": "我可以取消订阅吗？",
+      "faqCancelA": "可以 — 通过 Dashboard → Subscription 随时取消。您将保留当前计费周期结束前的全部访问权限。您的个人资料、作品集、评论和分析数据将被保留。您可以随时重新订阅，以便从中断处继续。无取消费用。",
+      "faqExpireQ": "我的订阅到期后会怎样？",
+      "faqExpireA": "当您的订阅结束时，平台访问将暂停。您无法登录、上传内容或与社区互动。但是，您的个人资料、作品集项和所有数据都会保留，并将在您重新订阅时恢复。",
+      "faqInvoiceQ": "我如何获取发票？",
+      "faqInvoiceA": "转到 Dashboard → Subscription 查看账单历史。所有发票由 Stripe 生成和管理。您可以直接从此页面下载过去任何付款的 PDF 发票。",
+      "faqSwitchPlanQ": "我可以在 6 个月和 12 个月计划之间切换吗？",
+      "faqSwitchPlanA": "当您当前的订阅周期结束时，可以在续订时选择不同的时长。更改将于下一个计费周期开始时生效。两个计划均包含相同功能。",
+      "guideSubscriptionTitle": "了解您的订阅",
+      "guideSubscriptionContent": "使用 3YESES 必须订阅。您在注册时选择计划：6 个月 GBP10 或 12 个月 GBP20（超值）。两个计划均包含相同功能，唯一不同的是计费时长。",
+      "guideSecurityTitle": "支付安全",
+      "guideSecurityContent": "所有支付均通过 Stripe 安全处理。我们绝不会在服务器上存储您的卡片信息。Stripe 获得了 PCI DSS 1 级认证——支付行业中的最高安全级别。",
+      "guideRefundTitle": "退款政策",
+      "guideRefundContent": "如果您遇到技术问题，导致无法使用平台，请在付款后 14 天内联系支持进行审核。退款将逐案评估。"
+    }
   },
   "PricingPage": {
     "hero": {
-      "eyebrow": "Your spotlight starts here",
-      "titlePrefix": "Ready for your",
-      "titleAccent": "three yeses?",
-      "description": "Put your work out there. Your photos, videos, and reels - all in one place, seen by the people who matter."
+      "eyebrow": "你的聚光灯从这里开始",
+      "titlePrefix": "准备好你的",
+      "titleAccent": "三个是吗？",
+      "description": "展示你的作品。你的照片、视频和 reels——全部集中在一个地方，让重要的人看到。"
     },
     "plans": {
       "sixMonths": {
-        "label": "6 months",
-        "price": "£10",
-        "period": "6 months",
-        "subtext": "Less than a coffee a month",
-        "description": "Dip your toe in. No long-term commitment."
+        "price": "10 £",
+        "label": "6 个月",
+        "period": "6 个月",
+        "subtext": "每月不到一杯咖啡的钱",
+        "description": "先试水。无需长期承诺。"
       },
       "twelveMonths": {
-        "label": "12 months",
-        "price": "£20",
-        "period": "year",
-        "subtext": "Same price. Twice the runway.",
-        "description": "Go all in. A full year to get your break.",
-        "badge": "Best Value"
+        "price": "20 £",
+        "label": "12 个月",
+        "period": "年",
+        "subtext": "同样价格。期限翻倍。",
+        "description": "全力以赴。整整一年，争取你的机会。",
+        "badge": "最佳性价比"
       }
     },
     "features": {
-      "profile": "A profile built to turn heads",
-      "uploads": "Upload everything - no limits, ever",
-      "search": "Jump the queue in every search"
+      "profile": "打造引人注目的个人主页",
+      "uploads": "上传所有内容——永不限制",
+      "search": "在每次搜索中抢先一步"
     },
     "trust": {
-      "noLockIn": "No lock-in - quit whenever",
-      "secureCheckout": "Stripe-secure checkout",
-      "liveImmediately": "Live the second you pay"
+      "noLockIn": "无绑定——随时取消",
+      "secureCheckout": "Stripe 安全结账",
+      "liveImmediately": "付款后立即上线"
     },
     "activeSubscription": {
-      "banner": "✓ You already have an active Standard Access subscription.",
-      "manage": "Manage your subscription ->"
+      "banner": "✓ 你已拥有一个有效的 Standard Access 订阅。",
+      "manage": "管理你的订阅 →"
     },
-    "planName": "Standard Access",
+    "planName": "标准访问",
     "aria": {
-      "price": "Price: {price} {period}",
-      "subscribePlan": "Subscribe to Standard Access - {plan}"
+      "price": "价格：{price} {period}",
+      "subscribePlan": "订阅 Standard Access - {plan}",
+      "percentOff": "{percent}% 折扣",
+      "waitingForYou": "等你来体验"
     },
-    "saveAmount": "Save {amount}",
+    "saveAmount": "省下 {amount}",
     "buttons": {
-      "redirecting": "Redirecting to Stripe...",
-      "alreadySubscribed": "Already subscribed",
-      "subscribe": "Subscribe with Stripe"
+      "redirecting": "正在重定向到 Stripe…",
+      "alreadySubscribed": "已订阅",
+      "subscribe": "通过 Stripe 订阅"
     },
     "unlock": {
-      "stage": "Your Stage",
-      "showEverything": "Show Everything",
-      "cutQueue": "Cut the Queue",
-      "description": "No fluff. No fake features. Just the tools to get you seen."
+      "stage": "你的舞台",
+      "showEverything": "显示全部",
+      "cutQueue": "优先排队",
+      "description": "没有花哨。没有虚假功能。只有让你被看见的工具。"
     },
     "footer": {
-      "secureNote": "Secured via Stripe. Ditch it any time from your dashboard.",
-      "accountPrompt": "Already have an account?",
-      "login": "Log in"
+      "secureNote": "通过 Stripe 保护。你可以随时在仪表板中取消。",
+      "accountPrompt": "已经有账户了吗？",
+      "login": "登录"
     },
     "errors": {
-      "checkoutFailed": "Failed to create checkout session",
-      "missingCheckoutUrl": "No checkout URL received",
-      "generic": "Something went wrong. Please try again."
+      "checkoutFailed": "创建结账会话失败",
+      "missingCheckoutUrl": "未收到结账链接",
+      "generic": "出现错误。请重试。"
     }
   },
   "DashboardMessagesPage": {
-    "title": "Messages",
-    "searchPlaceholder": "Search conversations...",
-    "messagePlaceholder": "Type your message...",
-    "send": "Send message",
+    "title": "消息",
+    "searchPlaceholder": "搜索会话...",
+    "messagePlaceholder": "输入您的消息...",
+    "send": "发送消息",
     "labels": {
-      "you": "You"
+      "you": "你"
     },
     "sample": {
-      "castingDirector": "Casting Director",
-      "director": "Director",
-      "producer": "Producer",
-      "message1": "Hi! I reviewed your portfolio and would love to discuss an upcoming project...",
-      "message2": "Thank you for your interest. When would you be available for a video call?",
-      "message3": "The audition went great! We'll be in touch soon with next steps.",
-      "message4": "Hi! I reviewed your portfolio and would love to discuss an upcoming project.",
-      "message5": "Thank you for reaching out! I'd love to hear more about the project.",
-      "message6": "It's a commercial for a major brand. Are you available for a call tomorrow?",
-      "time2h": "2h ago",
-      "time1d": "1d ago",
-      "time2d": "2d ago"
+      "castingDirector": "选角导演",
+      "director": "导演",
+      "producer": "制片人",
+      "message1": "嗨！我看过你的作品集，很想讨论一个即将到来的项目...",
+      "message2": "感谢你的关注。你什么时候方便进行视频通话？",
+      "message3": "试镜进行得很顺利！我们会尽快与您联系，告知下一步。",
+      "message4": "嗨！我看过你的作品集，很想讨论一个即将到来的项目。",
+      "message5": "感谢你的联系！我想更多地了解这个项目。",
+      "message6": "这是一个知名品牌的广告。你明天有时间接听电话吗？",
+      "time2h": "2小时前",
+      "time1d": "1天前",
+      "time2d": "2天前"
     }
   },
   "DashboardSubscriptionPage": {
-    "title": "Choose the plan that's right for you.",
-    "activeBanner": "You're currently subscribed to Standard Access",
-    "validUntil": "Valid until",
-    "cancelSubscription": "Cancel Subscription",
-    "forTalents": "For Talents",
-    "processing": "Processing...",
-    "currentPlan": "Current Plan",
-    "subscribe": "Subscribe with Stripe",
-    "securePayment": "Secure payment processing by Stripe",
-    "questions": "Questions? Contact us at",
-    "confirmCancel": "Are you sure you want to cancel your subscription?",
-    "cancelSuccess": "Subscription canceled successfully",
+    "title": "订阅",
+    "activeBanner": "您当前已订阅 Standard Access",
+    "validUntil": "有效期至",
+    "cancelSubscription": "取消订阅",
+    "forTalents": "面向人才",
+    "processing": "处理中...",
+    "currentPlan": "当前计划",
+    "subscribe": "使用 Stripe 订阅",
+    "securePayment": "Stripe 安全支付",
+    "questions": "有问题？联系我们：",
+    "confirmCancel": "您确定要取消订阅吗？",
+    "cancelSuccess": "订阅已成功取消",
     "errors": {
-      "missingCheckoutUrl": "No checkout URL received",
-      "createSubscription": "Failed to create subscription. Please try again.",
-      "cancelSubscription": "Failed to cancel subscription. Please try again."
-    }
+      "missingCheckoutUrl": "未收到结账链接",
+      "createSubscription": "创建订阅失败。请重试。",
+      "cancelSubscription": "取消订阅失败。请重试。"
+    },
+    "subtitle": "管理您的 Standard Access 计划和支付设置"
   },
   "HubMediaPage": {
-    "searchPlaceholder": "Search media...",
-    "viewFullProfile": "View Full Profile",
-    "filterMedia": "Filter Media",
+    "searchPlaceholder": "搜索媒体...",
+    "viewFullProfile": "查看完整资料",
+    "filterMedia": "筛选媒体",
     "filters": {
-      "all": "All",
-      "video": "Video",
-      "audio": "Audio",
-      "image": "Image"
+      "all": "全部",
+      "video": "视频",
+      "audio": "音频",
+      "image": "图像"
     },
-    "portfolioTitle": "{name}'s Portfolio",
-    "views": "{count} views"
+    "portfolioTitle": "{name} 的作品集",
+    "views": "{count} 次查看"
   },
   "TalentPage": {
-    "selectCategory": "Select category",
-    "searchCategories": "Search categories...",
-    "rolePlaceholder": "Your role / title",
-    "bioPlaceholder": "Tell us about yourself, your experience, and what makes you unique...",
-    "skillsPlaceholder": "Add or search skills...",
-    "selectGender": "Select gender",
-    "selectEthnicity": "Select ethnicity",
-    "selectEyeColor": "Select eye color",
-    "selectHairColor": "Select hair color",
-    "selectBodyType": "Select body type",
-    "selectLanguages": "Select languages"
+    "selectCategory": "选择类别",
+    "searchCategories": "搜索类别...",
+    "rolePlaceholder": "您的角色 / 职称",
+    "bioPlaceholder": "告诉我们您自己、您的经验以及您的独特之处...",
+    "skillsPlaceholder": "添加或搜索技能...",
+    "selectGender": "选择性别",
+    "selectEthnicity": "选择族裔",
+    "selectEyeColor": "选择眼睛颜色",
+    "selectHairColor": "选择头发颜色",
+    "selectBodyType": "选择体型",
+    "selectLanguages": "选择语言"
   },
   "AuthRequiredModal": {
-    "title": "Sign in required",
-    "subtitle": "Your account unlocks talent likes and favorites.",
-    "message": "You need an account to perform {action}. Continue to sign in or create an account.",
+    "title": "需要登录",
+    "subtitle": "您的账户可解锁人才点赞和收藏。",
+    "message": "您需要一个账户来执行 {action}。继续登录或创建一个账户。",
     "buttons": {
-      "notNow": "Not now",
-      "signIn": "Sign in",
-      "createAccount": "Create an account"
+      "notNow": "先不要",
+      "signIn": "登录",
+      "createAccount": "创建账户"
     }
   },
   "Comments": {
-    "addCommentPlaceholder": "Add a comment...",
-    "writeReplyPlaceholder": "Write a reply...",
-    "cancel": "Cancel",
-    "posting": "Posting...",
-    "reply": "Reply",
-    "post": "Post",
-    "delete": "Delete",
-    "confirmDelete": "Are you sure you want to delete this comment?",
-    "hideReplies": "Hide replies",
-    "viewReplies": "View {count, plural, one {# reply} other {# replies}}",
+    "addCommentPlaceholder": "添加评论...",
+    "writeReplyPlaceholder": "写回复...",
+    "cancel": "取消",
+    "posting": "发布中...",
+    "reply": "回复",
+    "post": "发布",
+    "delete": "删除",
+    "confirmDelete": "是否确定要删除此评论？",
+    "hideReplies": "隐藏回复",
+    "viewReplies": "{count, plural, one {显示 # 条回复} other {显示 # 条回复}}",
     "errors": {
-      "postFailed": "Failed to post comment",
-      "postRetry": "Failed to post comment. Please try again."
+      "postFailed": "评论发布失败",
+      "postRetry": "评论发布失败。请再试一次。"
     }
   },
   "SaveButton": {
-    "save": "Save talent",
-    "remove": "Remove from saved",
+    "save": "保存人才",
+    "remove": "从已保存中移除",
     "authModal": {
-      "title": "Sign in to save",
-      "message": "You need an account to save and bookmark {talentName} profiles. Continue to sign in or create an account.",
-      "action": "save profiles"
+      "title": "登录后可保存",
+      "message": "您需要一个账户才能保存并收藏 {talentName} 的个人资料。继续登录或创建一个账户。",
+      "action": "保存个人资料"
+    }
+  },
+  "ContactPage": {
+    "hero": {
+      "titlePrefix": "联系我们",
+      "titleAccent": "联系",
+      "description": "对 3YESES 有疑问？我们随时为您提供帮助，连接机会与人才。"
+    },
+    "cards": {
+      "email": {
+        "title": "给我们发邮件",
+        "subtitle": "用于一般咨询"
+      },
+      "call": {
+        "title": "给我们打电话",
+        "subtitle": "周一至周五 9am-6pm GMT"
+      },
+      "visit": {
+        "title": "来访我们",
+        "subtitle": "我们的办公地点"
+      }
+    },
+    "form": {
+      "successTitle": "消息已发送！",
+      "successDescription": "感谢您的联系。我们将在 24 小时内回复。",
+      "sendAnother": "发送另一条消息",
+      "title": "给我们留言",
+      "description": "填写以下表单，我们会尽快回复。",
+      "fullName": "全名",
+      "emailAddress": "电子邮件地址",
+      "subject": "主题",
+      "message": "消息",
+      "placeholders": {
+        "name": "张三",
+        "email": "zhang@example.com",
+        "subject": "我们能为您做些什么？",
+        "message": "告诉我们您的问题详情..."
+      },
+      "sending": "发送中...",
+      "sendButton": "发送消息"
+    }
+  },
+  "SearchResultsPage": {
+    "title": "人才搜索",
+    "resultsFor": "“{searchTerm}”的结果",
+    "resultsCount": "{count, plural, one {找到 # 位人才} other {找到 # 位人才}}",
+    "gridViewTitle": "网格视图：紧凑卡片",
+    "listViewTitle": "列表视图：扩展行",
+    "searchPlaceholder": "搜索人才、技能或关键字...",
+    "toggleFilters": "切换高级筛选",
+    "filters": "筛选",
+    "browsing": "浏览：",
+    "suggestions": {
+      "skill": "添加为技能筛选",
+      "category": "类别",
+      "inCategory": "在 {name}"
+    }
+  },
+  "SuccessStories": {
+    "breadcrumb": "成功故事",
+    "title": "成功故事",
+    "subtitle": "探索通过 3YESES 找到工作和可见性的才华创作者的励志旅程。",
+    "stories": {
+      "0": {
+        "title": "Emma Thompson — 音乐人",
+        "body": "作为一名崭露头角的吉他手，Emma 在竞争激烈的市场中很难被注意到。使用我们平台的高级搜索功能，她与喜欢她独特声音的制作人建立了联系。这导致了两首热门单曲的合作和一场销售一空的巡演。"
+      },
+      "1": {
+        "title": "Liam Garcia — 演员",
+        "body": "Liam 是一位热爱独立电影的多才演员，通过我们的平台找到了他的重大机会。导演通过目标明确的个人资料发现了他的才华，结果他出演了三部备受好评的电影，并获得了最佳男配角提名。"
+      },
+      "2": {
+        "title": "Sophia Patel — 舞者",
+        "body": "Sophia 的现代舞风格吸引了我们平台上的编舞师。从那时起，她曾在百老汇制作和国际节日上演出，甚至为一位知名流行歌手的世界巡演编舞。"
+      }
     }
   }
 }

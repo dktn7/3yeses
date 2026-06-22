@@ -17,6 +17,7 @@ import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import { dirname, resolve } from 'path';
+import { randomUUID } from 'crypto';
 
 // Load environment variables from .env file
 const __filename = fileURLToPath(import.meta.url);
@@ -1228,6 +1229,7 @@ async function generateTalent(index, category, subcategory, passwordHash) {
   // Create user and profile
   const user = await prisma.user.create({
     data: {
+      id: randomUUID(),
       name: fullName,
       email: email,
       password: passwordHash,

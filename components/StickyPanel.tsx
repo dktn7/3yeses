@@ -23,13 +23,13 @@ export default function StickyPanel() {
 
   return (
     <div className="fixed right-4 bottom-4 z-50">
-      <div className={`rounded-2xl border border-[var(--chrome-border)] bg-[var(--chrome-panel)] backdrop-blur-md shadow-2xl transition-all duration-300 ease-in-out ${
+      <div className={`rounded-[1.75rem] border border-slate-200/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.95),rgba(248,250,252,0.92))] shadow-[0_24px_60px_-34px_rgba(15,23,42,0.48)] backdrop-blur-xl transition-all duration-300 ease-in-out dark:border-slate-800/70 dark:bg-[linear-gradient(180deg,rgba(24,24,27,0.96),rgba(17,24,39,0.92))] ${
         isExpanded ? 'p-4' : 'p-3'
       }`}>
         {/* Toggle Button */}
         <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="mb-3 flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-primary-blue to-accent-red p-2 text-white transition-all duration-200 hover:shadow-lg"
+          className="mb-3 flex w-full items-center justify-center rounded-xl bg-[linear-gradient(135deg,var(--brand-primary),color-mix(in_srgb,var(--brand-primary)_72%,#1d4ed8))] p-2.5 text-white transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_18px_36px_-22px_rgba(37,99,235,0.9)]"
           aria-label={isExpanded ? 'Collapse panel' : 'Expand panel'}
         >
           {isExpanded ? (
@@ -45,7 +45,7 @@ export default function StickyPanel() {
         }`}>
           {/* Theme Toggle */}
           <div className="mb-4">
-            <div className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-2 text-center">
+            <div className="mb-2 text-center text-xs font-semibold uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">
               Theme
             </div>
             <div className="flex justify-center">
@@ -54,38 +54,38 @@ export default function StickyPanel() {
           </div>
 
           {/* Divider */}
-          <div className="w-full h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-600 to-transparent mb-4"></div>
+          <div className="mb-4 h-px w-full bg-gradient-to-r from-transparent via-slate-300 to-transparent dark:via-slate-700"></div>
 
           {/* Social Media */}
           <div>
-            <div className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-3 text-center">
+            <div className="mb-3 text-center text-xs font-semibold uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">
               Follow Us
             </div>
             <div className="grid grid-cols-2 gap-2">
               <button 
                 type="button"
-                className="group flex items-center justify-center rounded-xl bg-[var(--brand-primary)]/10 p-3 text-[var(--brand-primary)] transition-all duration-200 hover:bg-[var(--brand-primary)]/18 dark:bg-[var(--brand-primary)]/14 dark:text-red-100 dark:hover:bg-[var(--brand-primary)]/24"
+                className="group flex items-center justify-center rounded-xl border border-slate-200/70 bg-[color-mix(in_srgb,var(--brand-primary)_10%,white)] p-3 text-[var(--brand-primary)] transition-all duration-200 hover:-translate-y-0.5 hover:border-[color:var(--brand-primary)]/30 hover:bg-[color-mix(in_srgb,var(--brand-primary)_16%,white)] dark:border-slate-800/70 dark:bg-[color-mix(in_srgb,var(--brand-primary)_16%,#111827)] dark:text-red-100 dark:hover:bg-[color-mix(in_srgb,var(--brand-primary)_24%,#111827)]"
                 aria-label="Follow us on Facebook"
               >
                 <FaFacebookF className="w-4 h-4 group-hover:scale-110 transition-transform" />
               </button>
               <button 
                 type="button"
-                className="p-3 rounded-xl bg-sky-50 dark:bg-red-900/20 text-sky-600 dark:text-red-400 hover:bg-sky-100 dark:hover:bg-red-900/40 transition-all duration-200 flex items-center justify-center group"
+                className="group flex items-center justify-center rounded-xl border border-slate-200/70 bg-sky-50 p-3 text-sky-600 transition-all duration-200 hover:-translate-y-0.5 hover:bg-sky-100 dark:border-slate-800/70 dark:bg-red-950/25 dark:text-red-300 dark:hover:bg-red-950/45"
                 aria-label="Follow us on Twitter"
               >
                 <FaTwitter className="w-4 h-4 group-hover:scale-110 transition-transform" />
               </button>
               <button 
                 type="button"
-                className="p-3 rounded-xl bg-[var(--marketing-pill-bg)] dark:bg-[var(--marketing-pill-bg)] text-[var(--marketing-pill-icon)] dark:text-[var(--marketing-pill-icon)] hover:brightness-105 transition-all duration-200 flex items-center justify-center group"
+                className="group flex items-center justify-center rounded-xl border border-slate-200/70 bg-[var(--marketing-pill-bg)] p-3 text-[var(--marketing-pill-icon)] transition-all duration-200 hover:-translate-y-0.5 hover:brightness-105 dark:border-slate-800/70 dark:bg-[var(--marketing-pill-bg)] dark:text-[var(--marketing-pill-icon)]"
                 aria-label="Follow us on Instagram"
               >
                 <FaInstagram className="w-4 h-4 group-hover:scale-110 transition-transform" />
               </button>
               <button 
                 type="button"
-                className="group flex items-center justify-center rounded-xl bg-[var(--brand-primary)]/10 p-3 text-[var(--brand-primary)] transition-all duration-200 hover:bg-[var(--brand-primary)]/18 dark:bg-[var(--brand-primary)]/14 dark:text-red-100 dark:hover:bg-[var(--brand-primary)]/24"
+                className="group flex items-center justify-center rounded-xl border border-slate-200/70 bg-[color-mix(in_srgb,var(--brand-primary)_10%,white)] p-3 text-[var(--brand-primary)] transition-all duration-200 hover:-translate-y-0.5 hover:border-[color:var(--brand-primary)]/30 hover:bg-[color-mix(in_srgb,var(--brand-primary)_16%,white)] dark:border-slate-800/70 dark:bg-[color-mix(in_srgb,var(--brand-primary)_16%,#111827)] dark:text-red-100 dark:hover:bg-[color-mix(in_srgb,var(--brand-primary)_24%,#111827)]"
                 aria-label="Connect with us on LinkedIn"
               >
                 <FaLinkedinIn className="w-4 h-4 group-hover:scale-110 transition-transform" />
@@ -108,14 +108,14 @@ export default function StickyPanel() {
             <div className="flex space-x-1">
               <button 
                 type="button"
-                className="rounded-lg bg-[var(--brand-primary)]/10 p-1.5 text-[var(--brand-primary)] transition-all duration-200 hover:bg-[var(--brand-primary)]/18 dark:bg-[var(--brand-primary)]/14 dark:text-red-100 dark:hover:bg-[var(--brand-primary)]/24"
+                className="rounded-lg border border-slate-200/70 bg-[color-mix(in_srgb,var(--brand-primary)_10%,white)] p-1.5 text-[var(--brand-primary)] transition-all duration-200 hover:bg-[color-mix(in_srgb,var(--brand-primary)_16%,white)] dark:border-slate-800/70 dark:bg-[color-mix(in_srgb,var(--brand-primary)_16%,#111827)] dark:text-red-100 dark:hover:bg-[color-mix(in_srgb,var(--brand-primary)_24%,#111827)]"
                 aria-label="Follow us on Facebook"
               >
                 <FaFacebookF className="w-3 h-3" />
               </button>
               <button 
                 type="button"
-                className="p-1.5 rounded-lg bg-[var(--marketing-pill-bg)] dark:bg-[var(--marketing-pill-bg)] text-[var(--marketing-pill-icon)] dark:text-[var(--marketing-pill-icon)] hover:brightness-105 transition-all duration-200"
+                className="rounded-lg border border-slate-200/70 bg-[var(--marketing-pill-bg)] p-1.5 text-[var(--marketing-pill-icon)] transition-all duration-200 hover:brightness-105 dark:border-slate-800/70 dark:bg-[var(--marketing-pill-bg)] dark:text-[var(--marketing-pill-icon)]"
                 aria-label="Follow us on Instagram"
               >
                 <FaInstagram className="w-3 h-3" />

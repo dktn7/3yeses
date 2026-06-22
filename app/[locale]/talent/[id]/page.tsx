@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { getCategoryData } from '@/lib/data';
 import LocationAutocomplete from '@/components/LocationAutocomplete';
-import { useParams, useRouter, usePathname } from 'next/navigation';
+import { useParams, useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import Image from 'next/image';
 import type { Talent } from '@/types/index.ts';
@@ -19,6 +19,7 @@ import SkillMultiSelect from '@/components/SkillMultiSelect';
 import LanguageMultiSelect from '@/components/LanguageMultiSelect';
 import CharacteristicSelect from '@/components/CharacteristicSelect';
 import ProfileOnboardingGuide from '@/components/ProfileOnboardingGuide';
+import ProfileSurfaceCustomizer, { type BackgroundPattern } from '@/components/ProfileSurfaceCustomizer';
 import { buildLocalizedPath } from '@/lib/locale-path';
 import {
   genderOptions,
@@ -30,7 +31,7 @@ import {
 import {
   Briefcase, MapPin, Languages, Film, ImageIcon, Music, Flag, 
   Eye, Share2, Users, TrendingUp, Building2, 
-  Calendar, Ruler, Palette, User, CheckCircle2, PlayCircle,
+  Calendar, Ruler, User, CheckCircle2, PlayCircle,
   Sparkles, Zap, Edit2, X, Check,
   Mic, Globe, PenTool, Clapperboard, Camera, UserCheck, Heart, Trophy,
   Flame, Tent, Smile, Aperture, Sliders, Smartphone, Scissors, Wrench,
@@ -54,7 +55,7 @@ type TalentProfileData = {
 
 type EditData = {
   avatarUrl?: string;
-  bannerUrl?: string;
+  bannerUrl?: string | null;
   name: string;
   role: string;
   bio: string;
@@ -73,11 +74,150 @@ type EditData = {
   contentBackground?: string | null;
 };
 
+const DEFAULT_BANNER_COLOR = '#2563eb';
+const DEFAULT_BACKGROUND_COLOR = '#f8fafc';
+
+const LEGACY_BANNER_GRADIENTS: Record<string, string> = {
+  'preset-1': 'linear-gradient(135deg, #0ea5e9 0%, #1e3a8a 100%)',
+  'preset-2': 'linear-gradient(135deg, #f97316 0%, #be123c 100%)',
+  'preset-3': 'linear-gradient(135deg, #22c55e 0%, #0f766e 100%)',
+  'preset-4': 'linear-gradient(135deg, #1e293b 0%, #334155 100%)',
+  'preset-5': 'linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%)',
+  'preset-6': 'linear-gradient(135deg, #38bdf8 0%, #6366f1 100%)',
+  'preset-7': 'linear-gradient(135deg, #16a34a 0%, #166534 100%)',
+  'preset-8': 'linear-gradient(135deg, #f59e0b 0%, #b45309 100%)',
+  'preset-9': 'linear-gradient(135deg, #f472b6 0%, #fb7185 100%)',
+  'preset-10': 'linear-gradient(135deg, #6366f1 0%, #1e1b4b 100%)',
+};
+
+const LEGACY_BANNER_COLORS: Record<string, string> = {
+  'preset-1': '#0ea5e9',
+  'preset-2': '#f97316',
+  'preset-3': '#22c55e',
+  'preset-4': '#334155',
+  'preset-5': '#ec4899',
+  'preset-6': '#38bdf8',
+  'preset-7': '#16a34a',
+  'preset-8': '#f59e0b',
+  'preset-9': '#f472b6',
+  'preset-10': '#6366f1',
+};
+
+const LEGACY_BACKGROUND_SURFACES: Record<string, { color: string; pattern: BackgroundPattern }> = {
+  default: { color: DEFAULT_BACKGROUND_COLOR, pattern: 'none' },
+  'cbg-warm': { color: '#fff7ed', pattern: 'none' },
+  'cbg-cool': { color: '#eef2ff', pattern: 'none' },
+  'cbg-mint': { color: '#ecfdf5', pattern: 'none' },
+  'cbg-rose': { color: '#fff1f2', pattern: 'none' },
+  'cbg-lavender': { color: '#f3e8ff', pattern: 'none' },
+  'cbg-peach': { color: '#fff7ed', pattern: 'none' },
+  'cbg-slate': { color: '#f8fafc', pattern: 'none' },
+  'cbg-dark': { color: '#1e293b', pattern: 'none' },
+  'pattern-dots': { color: '#f8fafc', pattern: 'dots' },
+  'pattern-hatch': { color: '#f8fafc', pattern: 'hatch' },
+  'pattern-grid': { color: '#f8fafc', pattern: 'grid' },
+  'pattern-noise': { color: '#f8fafc', pattern: 'noise' },
+};
+
+function isHexColor(value: string) {
+  return /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(value.trim());
+}
+
+function expandHex(hex: string) {
+  const value = hex.trim().replace('#', '');
+  if (value.length === 3) {
+    return value
+      .split('')
+      .map((char) => char + char)
+      .join('');
+  }
+  return value.padEnd(6, '0').slice(0, 6);
+}
+
+function isLightColor(value: string) {
+  if (!isHexColor(value)) return true;
+  const expanded = expandHex(value);
+  const r = parseInt(expanded.slice(0, 2), 16);
+  const g = parseInt(expanded.slice(2, 4), 16);
+  const b = parseInt(expanded.slice(4, 6), 16);
+  const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+  return luminance > 0.7;
+}
+
+function resolveBannerColor(value?: string | null) {
+  if (!value) return DEFAULT_BANNER_COLOR;
+  if (isHexColor(value)) return value;
+  if (LEGACY_BANNER_COLORS[value]) return LEGACY_BANNER_COLORS[value];
+  return DEFAULT_BANNER_COLOR;
+}
+
+function resolveBannerStyle(value?: string | null) {
+  if (!value) return null;
+  if (LEGACY_BANNER_GRADIENTS[value]) {
+    return { backgroundImage: LEGACY_BANNER_GRADIENTS[value] };
+  }
+  if (isHexColor(value)) return { backgroundColor: value };
+  if (value.startsWith('linear-gradient(') || value.startsWith('radial-gradient(')) {
+    return { backgroundImage: value };
+  }
+  return { backgroundImage: `url(${value})` };
+}
+
+function parseBackgroundSurface(value?: string | null): { color: string; pattern: BackgroundPattern } {
+  if (!value) return { color: DEFAULT_BACKGROUND_COLOR, pattern: 'none' };
+  if (value.startsWith('pattern:')) {
+    const payload = value.slice('pattern:'.length);
+    const [patternRaw, colorRaw] = payload.split('|');
+    const pattern = (patternRaw as BackgroundPattern) || 'none';
+    return {
+      color: colorRaw && isHexColor(colorRaw) ? colorRaw : DEFAULT_BACKGROUND_COLOR,
+      pattern,
+    };
+  }
+  if (isHexColor(value)) return { color: value, pattern: 'none' };
+  const legacy = LEGACY_BACKGROUND_SURFACES[value];
+  if (legacy) return legacy;
+  return { color: DEFAULT_BACKGROUND_COLOR, pattern: 'none' };
+}
+
+function serializeBackgroundSurface(color: string, pattern: BackgroundPattern) {
+  if (pattern === 'none') return color;
+  return `pattern:${pattern}|${color}`;
+}
+
+function resolveContentBgStyle(value?: string | null) {
+  const resolved = parseBackgroundSurface(value);
+  const overlay = isLightColor(resolved.color)
+    ? 'rgba(15, 23, 42, 0.08)'
+    : 'rgba(255, 255, 255, 0.12)';
+
+  const style: Record<string, string> = {
+    backgroundColor: resolved.color,
+  };
+
+  if (resolved.pattern === 'dots') {
+    style.backgroundImage = `radial-gradient(circle at 1px 1px, ${overlay} 1px, transparent 0)`;
+    style.backgroundSize = '16px 16px';
+  } else if (resolved.pattern === 'hatch') {
+    style.backgroundImage = `repeating-linear-gradient(45deg, ${overlay} 0 1px, transparent 1px 10px)`;
+  } else if (resolved.pattern === 'grid') {
+    style.backgroundImage = [
+      `repeating-linear-gradient(0deg, ${overlay} 0 1px, transparent 1px 18px)`,
+      `repeating-linear-gradient(90deg, ${overlay} 0 1px, transparent 1px 18px)`,
+    ].join(', ');
+  } else if (resolved.pattern === 'noise') {
+    style.backgroundImage = `linear-gradient(0deg, ${overlay}, ${overlay})`;
+  }
+
+  return style;
+}
+
 export default function TalentProfilePage() {
   const t = useTranslations('TalentPage');
   const params = useParams();
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const { user } = useAuth();
   const locale = useLocale();
   const id = params?.id as string;
@@ -122,7 +262,9 @@ export default function TalentProfilePage() {
   const [missingFields, setMissingFields] = useState<string[]>([]);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [uploadingBanner, setUploadingBanner] = useState(false);
-  const [showBannerPicker, setShowBannerPicker] = useState(false);
+  const [bannerColorDraft, setBannerColorDraft] = useState(DEFAULT_BANNER_COLOR);
+  const [backgroundColorDraft, setBackgroundColorDraft] = useState(DEFAULT_BACKGROUND_COLOR);
+  const [backgroundPatternDraft, setBackgroundPatternDraft] = useState<BackgroundPattern>('none');
   const [newSkill, setNewSkill] = useState('');
   const [newLanguage, setNewLanguage] = useState('');
   const [showOnboarding, setShowOnboarding] = useState(false);
@@ -166,6 +308,10 @@ export default function TalentProfilePage() {
             bodyType: result.talent.bodyType,
             languages: result.talent.languages || [],
           });
+          setBannerColorDraft(resolveBannerColor(result.talent.bannerUrl));
+          const initialBackground = parseBackgroundSurface((result.talent as any).contentBackground || null);
+          setBackgroundColorDraft(initialBackground.color);
+          setBackgroundPatternDraft(initialBackground.pattern);
           
           // Check if this is the user's own profile
           if (user && (user.id === id || user.id === result.talent.userId)) {
@@ -238,6 +384,7 @@ export default function TalentProfilePage() {
   // Initialize editData when entering edit mode to ensure controlled inputs have values
   useEffect(() => {
     if (editMode && data) {
+      const backgroundSurface = parseBackgroundSurface((data.talent as any).contentBackground || null);
       setEditData({
         name: data.talent.name,
         location: data.talent.location,
@@ -258,64 +405,11 @@ export default function TalentProfilePage() {
         languages: data.talent.languages || [],
         contentBackground: (data.talent as any).contentBackground || null,
       });
+      setBannerColorDraft(resolveBannerColor(data.talent.bannerUrl));
+      setBackgroundColorDraft(backgroundSurface.color);
+      setBackgroundPatternDraft(backgroundSurface.pattern);
     }
   }, [editMode, data]);
-
-  const bannerPresets = [
-    { id: 'preset-1', label: 'Ocean', gradient: 'linear-gradient(135deg, #0ea5e9 0%, #1e3a8a 100%)' },
-    { id: 'preset-2', label: 'Sunset', gradient: 'linear-gradient(135deg, #f97316 0%, #be123c 100%)' },
-    { id: 'preset-3', label: 'Aurora', gradient: 'linear-gradient(135deg, #22c55e 0%, #0f766e 100%)' },
-    { id: 'preset-4', label: 'Midnight', gradient: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)' },
-    { id: 'preset-5', label: 'Candy', gradient: 'linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%)' },
-    { id: 'preset-6', label: 'Skyline', gradient: 'linear-gradient(135deg, #38bdf8 0%, #6366f1 100%)' },
-    { id: 'preset-7', label: 'Forest', gradient: 'linear-gradient(135deg, #16a34a 0%, #166534 100%)' },
-    { id: 'preset-8', label: 'Gold', gradient: 'linear-gradient(135deg, #f59e0b 0%, #b45309 100%)' },
-    { id: 'preset-9', label: 'Blush', gradient: 'linear-gradient(135deg, #f472b6 0%, #fb7185 100%)' },
-    { id: 'preset-10', label: 'Indigo', gradient: 'linear-gradient(135deg, #6366f1 0%, #1e1b4b 100%)' },
-  ];
-
-  const contentBgPresets = [
-    { id: 'default', label: 'Default', color: '', gradient: '' },
-    { id: 'cbg-warm', label: 'Warm', gradient: 'linear-gradient(180deg, #fff7ed 0%, #fee2b3 100%)' },
-    { id: 'cbg-cool', label: 'Cool', gradient: 'linear-gradient(180deg, #eef2ff 0%, #dbeafe 100%)' },
-    { id: 'cbg-mint', label: 'Mint', gradient: 'linear-gradient(180deg, #ecfdf5 0%, #bbf7d0 100%)' },
-    { id: 'cbg-rose', label: 'Rose', gradient: 'linear-gradient(180deg, #fff1f2 0%, #ffd6e0 100%)' },
-    { id: 'cbg-lavender', label: 'Lavender', gradient: 'linear-gradient(180deg, #f3e8ff 0%, #e9d5ff 100%)' },
-    { id: 'cbg-peach', label: 'Peach', gradient: 'linear-gradient(180deg, #fff7ed 0%, #ffedd5 100%)' },
-    { id: 'cbg-slate', label: 'Slate', gradient: 'linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%)' },
-    { id: 'cbg-dark', label: 'Dark', gradient: 'linear-gradient(180deg, #1e293b 0%, #020617 100%)' },
-    // Patterned low-contrast options
-    { id: 'pattern-dots', label: 'Dots', pattern: 'radial-gradient(rgba(0,0,0,0.03) 1px, transparent 1px)', gradient: 'linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.4))' },
-    { id: 'pattern-hatch', label: 'Hatch', pattern: 'repeating-linear-gradient(45deg, rgba(0,0,0,0.03) 0 1px, transparent 1px 8px)', gradient: 'linear-gradient(180deg, rgba(250,250,250,0.7), rgba(240,240,255,0.6))' },
-    { id: 'pattern-grid', label: 'Grid', pattern: 'repeating-linear-gradient(0deg, rgba(0,0,0,0.03) 0 1px, transparent 1px 32px), repeating-linear-gradient(90deg, rgba(0,0,0,0.03) 0 1px, transparent 1px 32px)', gradient: 'linear-gradient(180deg, rgba(255,255,255,0.8), rgba(250,250,255,0.6))' },
-    { id: 'pattern-noise', label: 'Noise', pattern: 'linear-gradient(0deg, rgba(0,0,0,0.02), rgba(0,0,0,0.02))', gradient: 'linear-gradient(180deg, rgba(255,255,255,0.95), rgba(250,250,250,0.95))' },
-  ];
-
-  const resolveContentBgStyle = (bg?: string | null) => {
-    if (!bg) return undefined;
-    const preset = contentBgPresets.find(p => p.id === bg);
-    if (preset) {
-      if ((preset as any).pattern) {
-        const layers: string[] = [];
-        if ((preset as any).gradient) layers.push((preset as any).gradient);
-        layers.push((preset as any).pattern);
-        return { backgroundImage: layers.join(', '), backgroundSize: 'auto, 32px 32px' };
-      }
-      return (preset as any).gradient ? { backgroundImage: (preset as any).gradient } : undefined;
-    }
-    // Treat as hex color
-    if (bg.startsWith('#')) return { backgroundColor: bg };
-    return undefined;
-  };
-
-  const resolveBannerStyle = (bannerUrl?: string) => {
-    if (!bannerUrl) return null;
-    if (bannerUrl.startsWith('preset-')) {
-      const preset = bannerPresets.find(p => p.id === bannerUrl);
-      return preset ? { backgroundImage: preset.gradient } : null;
-    }
-    return { backgroundImage: `url(${bannerUrl})` };
-  };
 
   const handleAvatarUpload = async (file: File) => {
     setUploadingAvatar(true);
@@ -348,6 +442,7 @@ export default function TalentProfilePage() {
         const data = await res.json();
         if (data.success && data.url) {
           setEditData(prev => ({ ...prev, bannerUrl: data.url }));
+          setBannerColorDraft(DEFAULT_BANNER_COLOR);
         }
       }
     } catch (error) {
@@ -355,6 +450,43 @@ export default function TalentProfilePage() {
     } finally {
       setUploadingBanner(false);
     }
+  };
+
+  const handleBannerColorChange = (value: string) => {
+    setBannerColorDraft(value);
+    setEditData((prev) => ({ ...prev, bannerUrl: value }));
+  };
+
+  const handleBackgroundColorChange = (value: string) => {
+    setBackgroundColorDraft(value);
+    setEditData((prev) => ({
+      ...prev,
+      contentBackground: serializeBackgroundSurface(value, backgroundPatternDraft),
+    }));
+  };
+
+  const handleBackgroundPatternChange = (value: BackgroundPattern) => {
+    setBackgroundPatternDraft(value);
+    setEditData((prev) => ({
+      ...prev,
+      contentBackground: serializeBackgroundSurface(backgroundColorDraft, value),
+    }));
+  };
+
+  const handleResetBanner = () => {
+    setBannerColorDraft(DEFAULT_BANNER_COLOR);
+    setEditData((prev) => ({ ...prev, bannerUrl: null }));
+  };
+
+  const handleResetBackground = () => {
+    setBackgroundColorDraft(DEFAULT_BACKGROUND_COLOR);
+    setBackgroundPatternDraft('none');
+    setEditData((prev) => ({ ...prev, contentBackground: null }));
+  };
+
+  const handleResetProfileSurfaces = () => {
+    handleResetBanner();
+    handleResetBackground();
   };
 
   const handleSaveProfile = async () => {
@@ -442,6 +574,10 @@ export default function TalentProfilePage() {
         languages: result.talent.languages || [],
         contentBackground: result.talent.contentBackground || null,
       });
+      setBannerColorDraft(resolveBannerColor(result.talent.bannerUrl));
+      const savedBackground = parseBackgroundSurface(result.talent.contentBackground || null);
+      setBackgroundColorDraft(savedBackground.color);
+      setBackgroundPatternDraft(savedBackground.pattern);
       setNewSkill('');
       setNewLanguage('');
       setEditMode(false);
@@ -585,7 +721,7 @@ export default function TalentProfilePage() {
   };
 
   const socialProof = getSocialProofData(talent);
-  const bannerStyle = resolveBannerStyle(editData.bannerUrl || talent.bannerUrl);
+  const bannerStyle = resolveBannerStyle(editMode ? editData.bannerUrl : talent.bannerUrl);
 
   const path = new URLSearchParams(window.location.search).get('path');
   const breadcrumbPath = path ? path.split(',') : [talent.category];
@@ -669,6 +805,36 @@ export default function TalentProfilePage() {
     setGalleryOpen(true);
   };
 
+  useEffect(() => {
+    if (!talent.portfolio?.length) return;
+
+    const mediaId = searchParams.get('mediaId');
+    if (!mediaId) return;
+
+    const mediaIndex = talent.portfolio.findIndex((item: any) => item.id === mediaId);
+    if (mediaIndex >= 0) {
+      setGalleryIndex(mediaIndex);
+      setGalleryOpen(true);
+    }
+  }, [searchParams, talent.portfolio]);
+
+  useEffect(() => {
+    if (!talent.portfolio?.length) return;
+
+    const nextParams = new URLSearchParams(searchParams.toString());
+    const currentMediaId = galleryOpen ? talent.portfolio[galleryIndex]?.id : null;
+
+    if (currentMediaId) nextParams.set('mediaId', currentMediaId);
+    else nextParams.delete('mediaId');
+
+    const nextQuery = nextParams.toString();
+    const currentQuery = searchParams.toString();
+    if (nextQuery === currentQuery) return;
+
+    const url = nextQuery ? `${pathname}?${nextQuery}` : pathname;
+    router.replace(buildLocalizedPath(locale, url), { scroll: false });
+  }, [galleryOpen, galleryIndex, locale, pathname, router, searchParams, talent.portfolio]);
+
   const getPeriod = (start: string | Date, end?: string | Date | null, isCurrent?: boolean) => {
     const startYear = new Date(start).getFullYear();
     if (isCurrent || !end) return `${startYear} - Present`;
@@ -737,6 +903,10 @@ export default function TalentProfilePage() {
                         languages: data.talent.languages || [],
                         contentBackground: (data.talent as any).contentBackground || null,
                       });
+                      setBannerColorDraft(resolveBannerColor(data.talent.bannerUrl));
+                      const cancelledBackground = parseBackgroundSurface((data.talent as any).contentBackground || null);
+                      setBackgroundColorDraft(cancelledBackground.color);
+                      setBackgroundPatternDraft(cancelledBackground.pattern);
                       setNewSkill('');
                       setNewLanguage('');
                     }}
@@ -1021,48 +1191,21 @@ export default function TalentProfilePage() {
               )}
 
               {editMode && isOwnProfile && (
-                <div className="mt-6 bg-white/70 dark:bg-gray-900/70 backdrop-blur-sm rounded-xl p-4 border border-gray-200 dark:border-gray-800">
-                  <div className="flex items-center justify-between mb-3">
-                    <h4 className="text-sm font-semibold text-gray-900 dark:text-white">Banner</h4>
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => setShowBannerPicker(!showBannerPicker)}
-                        className="text-xs font-semibold text-blue-600 dark:text-red-400 hover:underline"
-                      >
-                        {showBannerPicker ? 'Hide options' : 'Choose banner'}
-                      </button>
-                      <label className="text-xs font-semibold text-blue-600 dark:text-red-400 hover:underline cursor-pointer">
-                        {uploadingBanner ? 'Uploading...' : 'Upload'}
-                        <input
-                          type="file"
-                          accept="image/*"
-                          className="hidden"
-                          onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            if (file) handleBannerUpload(file);
-                          }}
-                        />
-                      </label>
-                    </div>
-                  </div>
-                  {showBannerPicker && (
-                    <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
-                      {bannerPresets.map((preset) => (
-                        <button
-                          key={preset.id}
-                          onClick={() => setEditData(prev => ({ ...prev, bannerUrl: preset.id }))}
-                          className={`h-12 rounded-lg border ${
-                            editData.bannerUrl === preset.id
-                              ? 'border-blue-500 dark:border-red-500'
-                              : 'border-gray-200 dark:border-gray-700'
-                          }`}
-                          style={{ backgroundImage: preset.gradient }}
-                          title={preset.label}
-                        />
-                      ))}
-                    </div>
-                  )}
-                </div>
+                <ProfileSurfaceCustomizer
+                  bannerColor={bannerColorDraft}
+                  bannerPreviewStyle={resolveBannerStyle(editData.bannerUrl) || undefined}
+                  backgroundColor={backgroundColorDraft}
+                  backgroundPattern={backgroundPatternDraft}
+                  backgroundPreviewStyle={resolveContentBgStyle(editData.contentBackground)}
+                  bannerUploading={uploadingBanner}
+                  onBannerColorChange={handleBannerColorChange}
+                  onBackgroundColorChange={handleBackgroundColorChange}
+                  onBackgroundPatternChange={handleBackgroundPatternChange}
+                  onBannerUpload={handleBannerUpload}
+                  onResetBanner={handleResetBanner}
+                  onResetBackground={handleResetBackground}
+                  onResetAll={handleResetProfileSurfaces}
+                />
               )}
             </div>
           </div>
@@ -1074,49 +1217,6 @@ export default function TalentProfilePage() {
         className="relative transition-all duration-300"
         style={resolveContentBgStyle(editMode ? editData.contentBackground : (data?.talent as any)?.contentBackground)}
       >
-        {/* Content Background Picker (edit mode) */}
-        {editMode && isOwnProfile && (
-          <div className="container mx-auto px-4 pt-6 pb-2">
-            <div className="flex items-center gap-3 mb-2">
-              <Palette size={16} className="text-blue-500 dark:text-red-500" />
-              <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">Section Background</span>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {contentBgPresets.map((preset) => {
-                const isActive = (editData.contentBackground === preset.id) || (!editData.contentBackground && preset.id === 'default');
-                const style: any = {};
-                if ((preset as any).pattern) {
-                  const layers: string[] = [];
-                  if ((preset as any).gradient) layers.push((preset as any).gradient);
-                  layers.push((preset as any).pattern);
-                  style.backgroundImage = layers.join(', ');
-                  style.backgroundSize = 'auto, 24px 24px';
-                } else if ((preset as any).gradient) {
-                  style.backgroundImage = (preset as any).gradient;
-                } else if (preset.id === 'default') {
-                  style.backgroundColor = '#f9fafb';
-                }
-
-                return (
-                  <button
-                    key={preset.id}
-                    onClick={() => setEditData(prev => ({ ...prev, contentBackground: preset.id === 'default' ? null : preset.id }))}
-                    className={`h-8 w-16 rounded-lg border-2 text-xs font-medium flex items-center justify-center transition-all ${
-                      isActive
-                        ? 'border-blue-500 dark:border-red-500 ring-2 ring-blue-300 dark:ring-red-400'
-                        : 'border-gray-200 dark:border-gray-700 hover:border-gray-400'
-                    }`}
-                    style={style}
-                    title={preset.label}
-                  >
-                    {preset.id === 'default' && <span className="text-gray-500">None</span>}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
       <div className="container mx-auto px-4 py-12">
         {!hideContent && (
         <>
@@ -1666,7 +1766,7 @@ export default function TalentProfilePage() {
             location: editData.location,
             bio: editData.bio,
             avatarUrl: editData.avatarUrl,
-            bannerUrl: editData.bannerUrl,
+            bannerUrl: editData.bannerUrl || undefined,
             categoryId: editData.categoryId,
             subcategoryId: editData.subcategoryId,
             skills: editData.skills,
@@ -1682,6 +1782,7 @@ export default function TalentProfilePage() {
           onClose={() => setGalleryOpen(false)}
           items={talent.portfolio}
           initialIndex={galleryIndex}
+          mediaOwnerId={talentUserId}
         />
       )}
     </div>

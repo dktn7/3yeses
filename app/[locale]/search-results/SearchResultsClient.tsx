@@ -42,6 +42,7 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
   const router = useRouter();
   const searchParams = useSearchParams();
   const t = useTranslations('Home');
+  const ts = useTranslations('SearchResultsPage');
   
   const [results, setResults] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -545,11 +546,11 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
               </button>
               <div>
                 <h1 className="text-2xl font-bold text-white">
-                  {searchTerm ? `Results for "${searchTerm}"` : 'Talent Search'}
+                  {searchTerm ? ts('resultsFor', { searchTerm }) : ts('title')}
                 </h1>
                 {!isLoading && (
                   <p className="text-sm text-blue-100">
-                    {totalCount} {totalCount === 1 ? 'talent' : 'talents'} found
+                    {ts('resultsCount', { count: totalCount })}
                   </p>
                 )}
               </div>
@@ -558,14 +559,14 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
             {/* View Toggle */}
             <div className="flex items-center gap-2 bg-white/15 rounded-xl p-1.5 backdrop-blur-sm">
               <button
-                title="Grid view: compact cards"
+                title={ts('gridViewTitle')}
                 onClick={() => setViewMode('grid')}
                 className={`p-2 rounded-lg transition-all ${viewMode === 'grid' ? 'bg-white text-[#1D4ED8] shadow-lg dark:text-red-500 dark:bg-slate-950/95' : 'bg-transparent text-white/80 dark:text-red-200 hover:bg-white/15 dark:hover:bg-red-500/10 hover:text-white dark:hover:text-red-100'}`}
               >
                 <Grid3X3 className="w-5 h-5" />
               </button>
               <button
-                title="List view: expanded lines"
+                title={ts('listViewTitle')}
                 onClick={() => setViewMode('list')}
                 className={`p-2 rounded-lg transition-all ${viewMode === 'list' ? 'bg-white text-[#1D4ED8] shadow-lg dark:text-red-500 dark:bg-slate-950/95' : 'bg-transparent text-white/80 dark:text-red-200 hover:bg-white/15 dark:hover:bg-red-500/10 hover:text-white dark:hover:text-red-100'}`}
               >
@@ -582,7 +583,7 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-blue-200 dark:text-red-300 z-10" />
                 <input
                   type="text"
-                  placeholder="Search talents, skills, or keywords..."
+                  placeholder={ts('searchPlaceholder')}
                   value={searchTerm}
                   onChange={(e) => {
                     setSearchTerm(e.target.value);
@@ -622,9 +623,9 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
                       <div className="flex flex-col">
                         <span className="font-medium">{suggestion.name}</span>
                         <span className="text-xs text-gray-500 dark:text-gray-400">
-                          {suggestion.type === 'skill' && 'Add as skill filter'}
-                          {suggestion.type === 'category' && 'Category'}
-                          {suggestion.type === 'subcategory' && `in ${suggestion.parentName}`}
+                          {suggestion.type === 'skill' && ts('suggestions.skill')}
+                          {suggestion.type === 'category' && ts('suggestions.category')}
+                          {suggestion.type === 'subcategory' && ts('suggestions.inCategory', { name: suggestion.parentName })}
                         </span>
                       </div>
                     </button>
@@ -636,7 +637,7 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
             {/* Filter Button */}
             <button
               onClick={() => setShowFilters(!showFilters)}
-              title="Toggle advanced filters"
+              title={ts('toggleFilters')}
               className={`flex items-center gap-2 px-5 py-3 rounded-xl border-2 transition-all font-semibold whitespace-nowrap ${
                 showFilters
                   ? 'bg-white text-[#1D4ED8] border-white shadow-lg dark:bg-red-500 dark:text-white dark:border-red-500'
@@ -644,7 +645,7 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
             `}
             >
               <SlidersHorizontal className="w-4 h-4 text-current" />
-              <span>Filters</span>
+              <span>{ts('filters')}</span>
               {activeFilterCount > 0 && (
                 <span className="ml-1 px-2 py-0.5 rounded-full text-xs font-bold bg-white text-[#1D4ED8] dark:bg-white dark:text-red-950">
                   {activeFilterCount}
@@ -656,7 +657,7 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
           {/* Active Category/Subcategory Pills */}
           {hasCategoryFilters && (
             <div className="flex flex-wrap items-center gap-2 mt-4">
-              <span className="text-xs text-blue-100 uppercase tracking-wide">Browsing:</span>
+              <span className="text-xs text-blue-100 uppercase tracking-wide">{ts('browsing')}</span>
               {selectedCategories.map(cat => {
                 const catObj = categoryById.get(cat) || categories.find(c => c.name === cat || c.name.toLowerCase() === cat.toLowerCase());
                 const iconKey = catObj?.icon || null;

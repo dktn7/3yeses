@@ -2,10 +2,23 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { X, ChevronLeft, ChevronRight, Play, ExternalLink, ImageIcon, Music, Heart, Flag } from 'lucide-react';
+import {
+  X,
+  ChevronLeft,
+  ChevronRight,
+  Play,
+  ExternalLink,
+  ImageIcon,
+  Music,
+  Heart,
+  Share2,
+  MessageCircle,
+} from 'lucide-react';
 import VideoPlayer from './VideoPlayer.tsx';
-import FlagButton from './FlagButton';
 import CommentsSection from './CommentsSection';
+import AuthRequiredModal from './AuthRequiredModal';
+import { useAuth } from '@/contexts/AuthContext';
+import { useAuthRequired } from '@/hooks/useAuthRequired';
 
 interface GalleryItem {
   id: string;
@@ -21,18 +34,18 @@ interface GalleryViewerProps {
   readonly initialIndex: number;
   readonly isOpen: boolean;
   readonly onClose: () => void;
+  readonly mediaOwnerId?: string;
 }
 
-export default function GalleryViewer({ items, initialIndex, isOpen, onClose }: GalleryViewerProps) {
+export default function GalleryViewer({ items, initialIndex, isOpen, onClose, mediaOwnerId }: GalleryViewerProps) {
+  const { user } = useAuth();
+  const { showAuthModal, openAuthModal, closeAuthModal } = useAuthRequired();
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [isLiked, setIsLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(0);
+  const [showCopiedToast, setShowCopiedToast] = useState(false);
   const viewerRef = useRef<HTMLDivElement>(null);
 
-  // Fullscreen modal – ignore page layout (sidebar/topbar)
-  // Positioning handled entirely by fixed + inset-0 classes
-
-  // Prevent body scroll when overlay is open
   useEffect(() => {
     if (!isOpen) return;
     const prev = document.body.style.overflow;
@@ -42,21 +55,20 @@ export default function GalleryViewer({ items, initialIndex, isOpen, onClose }: 
     };
   }, [isOpen]);
 
-  // Define callbacks before using them in useEffect
   const nextItem = useCallback(() => {
+    if (!items.length) return;
     setCurrentIndex((prev) => (prev + 1) % items.length);
   }, [items.length]);
 
   const prevItem = useCallback(() => {
+    if (!items.length) return;
     setCurrentIndex((prev) => (prev - 1 + items.length) % items.length);
   }, [items.length]);
 
-  // Update currentIndex when initialIndex changes
   useEffect(() => {
     setCurrentIndex(initialIndex);
   }, [initialIndex]);
 
-  // Keyboard navigation
   useEffect(() => {
     if (!isOpen) return;
 
@@ -78,18 +90,14 @@ export default function GalleryViewer({ items, initialIndex, isOpen, onClose }: 
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose, nextItem, prevItem]);
 
-  // Mouse wheel navigation
   useEffect(() => {
     if (!isOpen) return;
 
     const handleWheel = (e: Event) => {
       const wheelEvent = e as WheelEvent;
       e.preventDefault();
-      if (wheelEvent.deltaY > 0) {
-        nextItem();
-      } else if (wheelEvent.deltaY < 0) {
-        prevItem();
-      }
+      if (wheelEvent.deltaY > 0) nextItem();
+      else if (wheelEvent.deltaY < 0) prevItem();
     };
 
     const galleryElement = document.querySelector('.gallery-viewer');
@@ -99,7 +107,6 @@ export default function GalleryViewer({ items, initialIndex, isOpen, onClose }: 
     }
   }, [isOpen, nextItem, prevItem]);
 
-  // Touch/swipe navigation for mobile
   useEffect(() => {
     if (!isOpen) return;
 
@@ -115,14 +122,9 @@ export default function GalleryViewer({ items, initialIndex, isOpen, onClose }: 
       const touchEvent = e as TouchEvent;
       touchEndX = touchEvent.changedTouches[0].screenX;
       const swipeThreshold = 50;
-      
-      if (touchStartX - touchEndX > swipeThreshold) {
-        // Swipe left - next item
-        nextItem();
-      } else if (touchEndX - touchStartX > swipeThreshold) {
-        // Swipe right - previous item
-        prevItem();
-      }
+
+      if (touchStartX - touchEndX > swipeThreshold) nextItem();
+      else if (touchEndX - touchStartX > swipeThreshold) prevItem();
     };
 
     const galleryElement = document.querySelector('.gallery-viewer');
@@ -139,29 +141,66 @@ export default function GalleryViewer({ items, initialIndex, isOpen, onClose }: 
   const currentItem = items[currentIndex];
 
   useEffect(() => {
+    if (!currentItem?.id) return;
+
+    let cancelled = false;
     setIsLiked(false);
-    setLikesCount(currentItem?.likeCount || 0);
+    setLikesCount(currentItem.likeCount || 0);
+
+    fetch(`/api/portfolio/${currentItem.id}/like`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (cancelled || !data) return;
+        if (typeof data.isLiked === 'boolean') setIsLiked(data.isLiked);
+        if (typeof data.likeCount === 'number') setLikesCount(data.likeCount);
+      })
+      .catch(() => {});
+
+    return () => {
+      cancelled = true;
+    };
   }, [currentItem?.id, currentItem?.likeCount]);
 
-  if (!isOpen) return null;
+  if (!isOpen || !currentItem) return null;
 
   const handleLike = async () => {
     if (!currentItem?.id) return;
+    if (!user) {
+      openAuthModal();
+      return;
+    }
+
     const nextLiked = !isLiked;
     setIsLiked(nextLiked);
     setLikesCount((prev) => (nextLiked ? prev + 1 : Math.max(0, prev - 1)));
+
     try {
       const res = await fetch(`/api/portfolio/${currentItem.id}/like`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ like: nextLiked }),
       });
-      if (res.ok) {
-        const data = await res.json();
-        if (typeof data.likeCount === 'number') setLikesCount(data.likeCount);
-      }
+
+      if (!res.ok) throw new Error('Like request failed');
+      const data = await res.json();
+      if (typeof data.likeCount === 'number') setLikesCount(data.likeCount);
+      if (typeof data.isLiked === 'boolean') setIsLiked(data.isLiked);
     } catch (error) {
       console.error('Failed to like portfolio item:', error);
+      setIsLiked(!nextLiked);
+      setLikesCount((prev) => (nextLiked ? Math.max(0, prev - 1) : prev + 1));
+    }
+  };
+
+  const handleShare = async () => {
+    try {
+      const shareUrl = new URL(window.location.href);
+      shareUrl.searchParams.set('mediaId', currentItem.id);
+      await navigator.clipboard.writeText(shareUrl.toString());
+      setShowCopiedToast(true);
+      setTimeout(() => setShowCopiedToast(false), 2000);
+    } catch (error) {
+      console.error('Failed to copy gallery link:', error);
     }
   };
 
@@ -169,34 +208,39 @@ export default function GalleryViewer({ items, initialIndex, isOpen, onClose }: 
     setCurrentIndex(index);
   };
 
-  const renderMainContent = () => {
-    if (!isOpen) return null;
+  const renderMedia = () => {
     switch (currentItem.type) {
       case 'video':
         return (
-          <div key={`video-${currentIndex}`} className="flex items-center justify-center max-w-full max-h-full">
-            <VideoPlayer url={currentItem.mediaUrl} type="VIDEO" />
+          <div key={`video-${currentIndex}`} className="flex h-full w-full items-center justify-center p-3 sm:p-4">
+            <div className="w-full max-w-6xl overflow-hidden rounded-2xl border border-white/10 bg-black shadow-2xl">
+              <VideoPlayer url={currentItem.mediaUrl} type="VIDEO" />
+            </div>
           </div>
         );
       case 'image':
         return (
-          <div key={`image-${currentIndex}`} className="flex items-center justify-center max-w-full max-h-full">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={currentItem.mediaUrl}
-              alt={currentItem.title}
-              className="max-w-full max-h-[85vh] w-auto h-auto object-contain rounded-lg shadow-lg"
-            />
+          <div key={`image-${currentIndex}`} className="flex h-full w-full items-center justify-center p-3 sm:p-4">
+            <div className="flex h-full w-full max-w-6xl items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-black/50 shadow-2xl">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={currentItem.mediaUrl}
+                alt={currentItem.title}
+                className="max-h-[min(72vh,56rem)] w-auto max-w-full object-contain"
+              />
+            </div>
           </div>
         );
       case 'audio':
         return (
-          <div key={`audio-${currentIndex}`} className="flex flex-col items-center justify-center px-4 sm:px-6 md:px-8 max-w-full max-h-full">
-            <VideoPlayer
-              url={currentItem.mediaUrl}
-              type="AUDIO"
-              talentProfile={{ id: 'gallery', name: currentItem.title }}
-            />
+          <div key={`audio-${currentIndex}`} className="flex h-full w-full items-center justify-center p-3 sm:p-4">
+            <div className="flex w-full max-w-3xl flex-col items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-black/60 p-4 shadow-2xl sm:p-6">
+              <VideoPlayer
+                url={currentItem.mediaUrl}
+                type="AUDIO"
+                talentProfile={{ id: mediaOwnerId || 'gallery', name: currentItem.title }}
+              />
+            </div>
           </div>
         );
       default:
@@ -218,29 +262,28 @@ export default function GalleryViewer({ items, initialIndex, isOpen, onClose }: 
   };
 
   return createPortal(
-    <div 
-      className="fixed inset-0 z-[100] bg-black/90 flex flex-col gallery-viewer"
+    <div
+      className="gallery-viewer fixed inset-0 z-[100] flex flex-col bg-black/95"
       ref={viewerRef}
     >
-      {/* Header - Compact and responsive */}
-      <div className="flex items-center justify-between px-3 sm:px-4 md:px-6 py-2 sm:py-3 bg-black/60 text-white border-b border-gray-700">
-        <div className="flex items-center gap-2 min-w-0">
-          <h2 className="text-sm sm:text-base md:text-lg font-semibold truncate">{currentItem.title}</h2>
-          <span className="text-xs bg-gray-700 px-2 py-0.5 rounded capitalize flex-shrink-0">
+      <div className="flex items-center justify-between border-b border-white/10 bg-black/70 px-3 py-2 text-white sm:px-4 sm:py-3 md:px-6">
+        <div className="flex min-w-0 items-center gap-2">
+          <h2 className="truncate text-sm font-semibold sm:text-base md:text-lg">{currentItem.title}</h2>
+          <span className="flex-shrink-0 rounded bg-white/10 px-2 py-0.5 text-xs capitalize">
             {currentItem.type}
           </span>
         </div>
         <div className="flex items-center gap-1">
           <button
             onClick={() => window.open(currentItem.mediaUrl, '_blank')}
-            className="p-1.5 hover:bg-gray-700 rounded-lg transition-colors"
+            className="rounded-lg p-1.5 transition-colors hover:bg-white/10"
             title="Open in new tab"
           >
             <ExternalLink size={18} />
           </button>
           <button
             onClick={onClose}
-            className="p-1.5 hover:bg-gray-700 rounded-lg transition-colors"
+            className="rounded-lg p-1.5 transition-colors hover:bg-white/10"
             title="Close gallery"
           >
             <X size={18} />
@@ -248,104 +291,163 @@ export default function GalleryViewer({ items, initialIndex, isOpen, onClose }: 
         </div>
       </div>
 
-      {/* Main Content Area */}
-      <div className="flex-1 flex items-center justify-center p-2 sm:p-3 md:p-4 relative">
-        {/* Navigation Arrows */}
-        {items.length > 1 && (
-          <>
-            <button
-              onClick={prevItem}
-              className="absolute left-2 sm:left-3 md:left-4 top-1/2 transform -translate-y-1/2 p-2 sm:p-3 bg-black/50 hover:bg-black/70 text-white rounded-full transition-all z-50"
-              title="Previous item"
-            >
-              <ChevronLeft size={24} />
-            </button>
-            <button
-              onClick={nextItem}
-              className="absolute right-2 sm:right-3 md:right-4 top-1/2 transform -translate-y-1/2 p-2 sm:p-3 bg-black/50 hover:bg-black/70 text-white rounded-full transition-all z-50"
-              title="Next item"
-            >
-              <ChevronRight size={24} />
-            </button>
-          </>
-        )}
-
-        {/* Main Content */}
-        {renderMainContent()}
-      </div>
-
-      {/* Thumbnail Navigation */}
-      {items.length > 1 && (
-        <div className="bg-gradient-to-t from-black/80 via-black/70 to-black/60 backdrop-blur-md border-t border-gray-700/50 p-3 sm:p-4 flex flex-col">
-          <div className="flex justify-center items-center gap-3 h-20 sm:h-24 md:h-28">
-            {/* Scroll indicator left */}
-            {items.length > 6 && (
-              <button
-                onClick={() => {
-                  const container = document.querySelector('.thumbnail-scroll');
-                  if (container) container.scrollBy({ left: -200, behavior: 'smooth' });
-                }}
-                className="hidden md:flex items-center justify-center w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all flex-shrink-0"
-              >
-                <ChevronLeft size={20} />
-              </button>
-            )}
-            
-            <div className="flex gap-2 sm:gap-3 max-w-full overflow-x-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent thumbnail-scroll scroll-smooth">
-              {items.map((item, index) => (
+      <div className="grid min-h-0 flex-1 grid-cols-1 xl:grid-cols-[minmax(0,1fr)_22rem]">
+        <div className="flex min-h-0 flex-col">
+          <div className="relative flex min-h-0 flex-1 items-center justify-center p-2 sm:p-3 md:p-4">
+            {items.length > 1 && (
+              <>
                 <button
-                  key={`${item.mediaUrl}-${index}`}
-                  onClick={() => goToItem(index)}
-                  className={`flex-shrink-0 w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-lg overflow-hidden border-2 transition-colors duration-200 ${
-                    index === currentIndex
-                      ? 'border-blue-500'
-                      : 'border-gray-600/80 hover:border-gray-400'
-                  }`}
-                  title={item.title}
+                  onClick={prevItem}
+                  className="absolute left-2 top-1/2 z-50 -translate-y-1/2 rounded-full bg-black/55 p-2 text-white transition-all hover:bg-black/80 sm:left-3 md:left-4"
+                  title="Previous item"
                 >
-                  <div className="w-full h-full bg-gradient-to-br from-gray-800 via-gray-900 to-black flex items-center justify-center overflow-hidden">
-                    {item.thumbnail || item.type === 'image' ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={item.thumbnail || item.mediaUrl}
-                        alt={item.title}
-                        className="block w-full h-full object-cover scale-100"
-                      />
-                    ) : (
-                      <div className="flex flex-col items-center justify-center gap-1.5 text-white bg-gradient-to-br from-gray-700/50 to-gray-900/50 w-full h-full backdrop-blur-sm">
-                        <div className={`p-2 rounded-full ${
-                          item.type === 'video' ? 'bg-blue-500/20' : 'bg-blue-500/20'
-                        }`}>
-                          {getItemIcon(item.type)}
-                        </div>
-                        <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wide">{item.type}</span>
-                      </div>
-                    )}
-                  </div>
+                  <ChevronLeft size={24} />
                 </button>
-              ))}
-            </div>
-            
-            {/* Scroll indicator right */}
-            {items.length > 6 && (
-              <button
-                onClick={() => {
-                  const container = document.querySelector('.thumbnail-scroll');
-                  if (container) container.scrollBy({ left: 200, behavior: 'smooth' });
-                }}
-                className="hidden md:flex items-center justify-center w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all flex-shrink-0"
-              >
-                <ChevronRight size={20} />
-              </button>
+                <button
+                  onClick={nextItem}
+                  className="absolute right-2 top-1/2 z-50 -translate-y-1/2 rounded-full bg-black/55 p-2 text-white transition-all hover:bg-black/80 sm:right-3 md:right-4"
+                  title="Next item"
+                >
+                  <ChevronRight size={24} />
+                </button>
+              </>
             )}
+
+            {renderMedia()}
           </div>
-          <div className="text-center mt-2 sm:mt-3">
-            <span className="text-white font-semibold text-sm sm:text-base">
-              {currentIndex + 1} <span className="text-gray-400">/</span> {items.length}
-            </span>
+
+          {items.length > 1 && (
+            <div className="border-t border-white/10 bg-black/70 p-3 backdrop-blur-md sm:p-4">
+              <div className="flex items-center justify-center gap-3">
+                {items.length > 6 && (
+                  <button
+                    onClick={() => {
+                      const container = document.querySelector('.thumbnail-scroll');
+                      if (container) container.scrollBy({ left: -200, behavior: 'smooth' });
+                    }}
+                    className="hidden h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-white/10 text-white transition-all hover:bg-white/20 md:flex"
+                  >
+                    <ChevronLeft size={20} />
+                  </button>
+                )}
+
+                <div className="thumbnail-scroll flex max-w-full gap-2 overflow-x-auto scroll-smooth scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent sm:gap-3">
+                  {items.map((item, index) => (
+                    <button
+                      key={`${item.mediaUrl}-${index}`}
+                      onClick={() => goToItem(index)}
+                      className={`flex-shrink-0 overflow-hidden rounded-lg border-2 transition-colors duration-200 ${
+                        index === currentIndex ? 'border-blue-500' : 'border-gray-600/80 hover:border-gray-400'
+                      } h-14 w-14 sm:h-16 sm:w-16 md:h-20 md:w-20`}
+                      title={item.title}
+                    >
+                      <div className="flex h-full w-full items-center justify-center overflow-hidden bg-gradient-to-br from-gray-800 via-gray-900 to-black">
+                        {item.thumbnail || item.type === 'image' ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={item.thumbnail || item.mediaUrl}
+                            alt={item.title}
+                            className="block h-full w-full object-cover"
+                          />
+                        ) : (
+                          <div className="flex h-full w-full flex-col items-center justify-center gap-1.5 bg-gradient-to-br from-gray-700/50 to-gray-900/50 text-white backdrop-blur-sm">
+                            <div className="rounded-full bg-blue-500/20 p-2">
+                              {getItemIcon(item.type)}
+                            </div>
+                            <span className="text-[10px] font-semibold uppercase tracking-wide sm:text-xs">{item.type}</span>
+                          </div>
+                        )}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+
+                {items.length > 6 && (
+                  <button
+                    onClick={() => {
+                      const container = document.querySelector('.thumbnail-scroll');
+                      if (container) container.scrollBy({ left: 200, behavior: 'smooth' });
+                    }}
+                    className="hidden h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-white/10 text-white transition-all hover:bg-white/20 md:flex"
+                  >
+                    <ChevronRight size={20} />
+                  </button>
+                )}
+              </div>
+
+              <div className="mt-2 text-center">
+                <span className="text-sm font-semibold text-white sm:text-base">
+                  {currentIndex + 1} <span className="text-gray-400">/</span> {items.length}
+                </span>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="flex min-h-0 flex-col border-t border-white/10 bg-black/75 xl:border-l xl:border-t-0">
+          <div className="border-b border-white/10 p-4 sm:p-5">
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/50">Profile media</p>
+                <h3 className="mt-1 truncate text-lg font-semibold text-white">{currentItem.title}</h3>
+                <p className="text-sm capitalize text-white/50">{currentItem.type}</p>
+              </div>
+              <button
+                onClick={() => window.open(currentItem.mediaUrl, '_blank')}
+                className="rounded-full bg-white/10 px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-white/20"
+                title="Open in new tab"
+              >
+                Open
+              </button>
+            </div>
+
+            <div className="mt-4 flex flex-wrap items-center gap-2">
+              <button
+                onClick={handleLike}
+                className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-all ${
+                  isLiked
+                    ? 'bg-rose-500/15 text-rose-300 ring-1 ring-rose-400/30'
+                    : 'bg-white/10 text-white/80 hover:bg-white/15'
+                }`}
+              >
+                <Heart size={16} className={isLiked ? 'fill-current' : ''} />
+                <span>{likesCount}</span>
+              </button>
+
+              <button
+                onClick={handleShare}
+                className="inline-flex items-center gap-2 rounded-full bg-blue-500 px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90"
+              >
+                <Share2 size={16} />
+                Share
+              </button>
+
+              <div className="inline-flex items-center gap-2 rounded-full bg-white/8 px-4 py-2 text-sm text-white/60">
+                <MessageCircle size={16} />
+                Comments
+              </div>
+            </div>
+
+            <div className={`mt-3 rounded-full px-3 py-2 text-xs transition-colors ${showCopiedToast ? 'bg-emerald-500/20 text-emerald-200' : 'bg-white/5 text-white/45'}`}>
+              {showCopiedToast ? 'Link copied to clipboard.' : 'Share uses a deep-link to this exact media item.'}
+            </div>
+          </div>
+
+          <div className="min-h-0 flex-1 overflow-y-auto p-3 sm:p-4">
+            <div className="rounded-2xl border border-white/10 bg-white/[0.03]">
+              <CommentsSection mediaId={currentItem.id} mediaOwnerId={mediaOwnerId} />
+            </div>
           </div>
         </div>
-      )}
+      </div>
+
+      <AuthRequiredModal
+        isOpen={showAuthModal}
+        onClose={closeAuthModal}
+        title="Sign in to like"
+        message="You need an account to like media. Continue to sign in or create an account."
+        action="like media"
+      />
     </div>,
     document.body
   );

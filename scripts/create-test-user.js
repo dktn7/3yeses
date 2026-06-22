@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs');
 const { PrismaClient } = require('@prisma/client');
+const { randomUUID } = require('crypto');
 
 const prisma = new PrismaClient();
 
@@ -22,6 +23,7 @@ async function createTestUser() {
       const hashedPassword = await bcrypt.hash('Test123!', 12);
       const user = await prisma.user.create({
         data: {
+          id: randomUUID(),
           email: 'test@3yeses.online',
           password: hashedPassword,
           name: 'Test User',

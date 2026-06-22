@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import { dirname, resolve } from 'path';
 import { spawn } from 'child_process';
+import { randomUUID } from 'crypto';
 
 // Resolve __dirname for ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -23,6 +24,7 @@ async function ensureUser(email, name, password, role = 'TALENT') {
   const hash = await bcrypt.hash(password, 10);
   return prisma.user.create({
     data: {
+      id: randomUUID(),
       email,
       name: name || email,
       password: hash,

@@ -24,20 +24,20 @@
   },
   "Footer": {
     "aboutUs": "私たちについて",
-    "companyInfo": "Showcase your work to a live audience — subscribe to be discoverable and grow through views, likes, comments and shares.",
+    "companyInfo": "ライブオーディエンスにあなたの仕事を披露しましょう — 見つけられるように登録し、閲覧、いいね、コメント、共有で成長しましょう。",
     "forTalent": "タレント向け",
     "joinAsTalent": "タレントとして参加",
     "talentDashboard": "タレントダッシュボード",
-    "browseCategories": "カテゴリを閲覧",
+    "browseCategories": "カテゴリを探す",
     "pricingPlans": "料金プラン",
-    "howItWorks": "仕組み",
+    "howItWorks": "使い方",
     "successStories": "成功事例",
     "contactUs": "お問い合わせ",
-    "email": "contact@3yeses.co.uk",
-    "phone": "+44 121 123 4567",
-    "location": "イギリス、バーミンガム",
+    "email": "メール: contact@3yeses.co.uk",
+    "phone": "電話: +44 121 123 4567",
+    "location": "バーミンガム、英国",
     "language": "言語",
-    "copyright": "© 2026 3YESES. 全著作権所有。",
+    "copyright": "© 2026 3YESES. 無断転載禁止。",
     "privacyPolicy": "プライバシーポリシー",
     "termsOfService": "利用規約"
   },
@@ -54,28 +54,28 @@
     "arabic": "アラビア語"
   },
   "Home": {
-    "tagline": "エンターテインメント業界の才能と機会をつなぐ。",
+    "tagline": "エンターテインメント業界で才能と機会をつなぐ。",
     "welcome": {
       "title": "3YESESへようこそ",
-      "description": "次のプロジェクトに最適な才能を見つけるか、エンターテインメント業界でエキサイティングな機会を発見してください。"
+      "description": "次のプロジェクトにぴったりのタレントを見つけるか、エンタメ業界の刺激的な機会を発見しましょう。"
     },
     "forTalent": {
       "title": "タレント向け",
-      "description": "あなたのスキルを披露し、次の大きなチャンスを見つけてください。",
-      "browse": "カテゴリを閲覧"
+      "description": "あなたのスキルを披露し、次の大きなチャンスを見つけましょう。",
+      "browse": "カテゴリを探す"
     },
     "expertTalent": "エキスパートタレント",
-    "expertTalentDescription": "実績のある検証済みプロフェッショナルへのアクセス",
+    "expertTalentDescription": "実績あるプロフェッショナルへのアクセス",
     "qualityAssured": "品質保証",
-    "qualityAssuredDescription": "すべてのタレントはあなたの安心のために審査・検証されています",
-    "qualityAssuredDesc": "あなたのプロジェクトのためのトップクラスタレント",
+    "qualityAssuredDescription": "すべてのタレントは安心のために審査・認証されています",
+    "qualityAssuredDesc": "あなたのプロジェクトのためのトップタレント",
     "careerGrowth": "キャリア成長",
-    "careerGrowthDescription": "永続的なつながりを築き、キャリアを前進させる",
-    "careerGrowthDesc": "キャリアを前進させる機会",
-    "verifiedTalent": "検証済みタレント",
-    "verifiedTalentDesc": "すべてのプロフィールは手動で検証されています",
+    "careerGrowthDescription": "長期的なつながりを築き、キャリアを前進させる",
+    "careerGrowthDesc": "キャリアを伸ばすチャンス",
+    "verifiedTalent": "認証タレント",
+    "verifiedTalentDesc": "すべてのプロフィールは手動で確認されています",
     "whyChooseTitle": "なぜ選ぶのか",
-    "whyChooseSubtitle": "3YESES",
+    "whyChooseSubtitle": "3yeses",
     "whyChooseDescription": "エンターテインメント業界でクリエイティブな才能を見つけて繋がるための、あなたの理想的なプラットフォームとして3YESESを選ぶ理由をご覧ください。",
     "readyToConnectTitle": "クリエイティブな才能と繋がる準備はできましたか？",
     "readyToConnectDescription": "3YESESで機会を見つけているクリエイティブなプロフェッショナルの成長するコミュニティに参加してください。",
@@ -152,18 +152,18 @@
       "passion": "情熱を成功に変えよう"
     },
     "mobileOptimized": "モバイル最適化",
-    "support247": "24/7サポート",
-    "searchPlaceholder": "タレント、スキル、カテゴリーを検索...",
+    "support247": "24時間年中無休サポート",
+    "searchPlaceholder": "タレント、スキル、カテゴリを検索...",
     "searchButton": "検索",
-    "allCategories": "すべてのカテゴリー",
+    "allCategories": "すべてのカテゴリ",
     "location": "場所",
     "filters": "フィルター",
     "clearAll": "すべてクリア",
     "applyFilters": "フィルターを適用",
-    "watchEyebrow": "3YESESとは何かを見る",
-    "videoSectionSeeThe": "体験する",
-    "videoSectionExperience": "3YESESの世界",
-    "videoSectionDescription": "タレントがどのようにキャスティングされ、キャスティングディレクターが毎回ぴったりの人材を見つけるのかをご覧ください。",
+    "watchEyebrow": "3YESESの内容を見てみよう",
+    "videoSectionSeeThe": "見る",
+    "videoSectionExperience": "3YESES体験",
+    "videoSectionDescription": "タレントがどのようにキャスティングされ、キャスティングディレクターが毎回完璧な人材を見つけるのかをご紹介します。",
     "allCategory": "すべての{name}",
     "chipAge": "年齢: {min}-{max}",
     "chipHeight": "身長: {min}-{max}",
@@ -176,28 +176,29 @@
     "reelEyebrow": "タレントを探す",
     "reelTitlePrefix": "あらゆる",
     "reelTitleAccent": "クリエイティブタレント",
-    "reelTalentCount": "{count}人のタレント",
+    "reelTalentCount": "{count, plural, one {# 人のタレント} other {# 人のタレント}}",
     "findYourNextJob": "次の仕事を見つける",
     "elevateYourCareer": "キャリアを高める",
     "joinNow": "今すぐ参加",
-    "learnMore": "詳しく見る",
+    "learnMore": "詳細を見る",
     "ctaBrowseTalent": "タレントを探す",
     "visitTalentHub": "タレントハブを見る",
     "talentHubIntro": "タレントハブを探索 — 厳選されたプロフィール、詳細なフィルター、認証済みのプロフェッショナル、デモリールで理想の人材を素早く見つけられます。",
-    "activeTalent": "Active Talent",
-    "projectsPosted": "Projects Posted",
-    "successRate": "Success Rate",
-    "support": "24/7 Support",
-    "howItWorksTitle": "How It Works",
-    "howItWorksDescription": "Get started in 3 simple steps",
-    "createYourProfile": "Create Your Profile",
-    "createYourProfileDescription": "Showcase your skills and experience",
-    "showcaseYourWork": "Showcase Your Work",
-    "showcaseYourWorkDescription": "Upload your portfolio and demo reels",
-    "buildYourReputation": "Build Your Reputation",
-    "buildYourReputationDescription": "Build your professional reputation and network",
-    "joinThousands": "Join thousands of talented professionals who trust 3YESES to connect them with their dream projects.",
-    "supportCreativeJourney": "From auditions to bookings, we're here to support your creative journey."
+    "activeTalent": "アクティブな才能",
+    "projectsPosted": "掲載プロジェクト",
+    "successRate": "成功率",
+    "support": "24時間サポート",
+    "howItWorksTitle": "使い方",
+    "howItWorksDescription": "3つの簡単なステップで始めましょう",
+    "createYourProfile": "プロフィールを作成",
+    "createYourProfileDescription": "あなたのスキルと経験をアピールしましょう",
+    "showcaseYourWork": "作品を紹介",
+    "showcaseYourWorkDescription": "ポートフォリオとデモをアップロード",
+    "buildYourReputation": "信頼を築く",
+    "buildYourReputationDescription": "プロとしての評価とネットワークを築きましょう",
+    "joinThousands": "夢のプロジェクトに繋がるために3YESESを信頼する何千人もの才能あるプロに参加しましょう。",
+    "supportCreativeJourney": "オーディションから予約まで、あなたのクリエイティブな旅をサポートします。",
+    "useMyLocation": "現在地を使用"
   },
   "News": {
     "title": "業界ニュースとインサイト",
@@ -345,7 +346,7 @@
       "title": "おかえりなさい",
       "subtitle": "アカウントにログイン",
       "email": "メールアドレス",
-      "emailPlaceholder": "your.email@example.com",
+      "emailPlaceholder": "あなたのメール@example.com",
       "password": "パスワード",
       "passwordPlaceholder": "パスワードを入力してください",
       "rememberMe": "ログイン状態を保持する",
@@ -364,11 +365,13 @@
       "success": {
         "loginSuccess": "ログインに成功しました！"
       },
-      "signInButton": "Sign In",
-      "signingIn": "Signing in...",
-      "orContinueWith": "Or continue with",
-      "googleSignIn": "Continue with Google",
-      "githubSignIn": "Continue with GitHub"
+      "signInButton": "サインイン",
+      "signingIn": "サインインしています...",
+      "orContinueWith": "または次で続行",
+      "googleSignIn": "Googleで続行",
+      "githubSignIn": "GitHubで続行",
+      "showPassword": "パスワードを表示",
+      "hidePassword": "パスワードを非表示"
     },
     "signup": {
       "title": "アカウントを作成",
@@ -390,7 +393,7 @@
       "lastName": "姓",
       "lastNamePlaceholder": "山田",
       "email": "メールアドレス",
-      "emailPlaceholder": "your.email@example.com",
+      "emailPlaceholder": "あなたのメール@example.com",
       "phone": "電話番号",
       "phonePlaceholder": "+81 XX XXXX XXXX",
       "password": "パスワード",
@@ -493,7 +496,7 @@
       "uploadPortfolio": "画像をアップロード（最大10枚）",
       "videos": "デモ動画",
       "videoUrl": "動画URL",
-      "videoUrlPlaceholder": "https://youtube.com/watch?v=...",
+      "videoUrlPlaceholder": "例: https://youtube.com/watch?v=...",
       "addVideo": "動画を追加",
       "removeVideo": "削除",
       "errors": {
@@ -518,71 +521,101 @@
         "bioRequired": "自己紹介を入力してください",
         "locationRequired": "場所は必須です",
         "serverError": "エラーが発生しました。もう一度お試しください",
-        "dateOfBirthRequired": "Date of birth is required",
-        "subcategoryRequired": "Please select a subcategory",
-        "experienceRequired": "Please select your experience level"
+        "dateOfBirthRequired": "生年月日は必須です",
+        "subcategoryRequired": "サブカテゴリを選択してください",
+        "experienceRequired": "経験レベルを選択してください",
+        "parentGuardianNameRequired": "保護者/後見人の名前は必須です",
+        "parentGuardianEmailRequired": "保護者/後見人のメールは必須です",
+        "parentGuardianEmailInvalid": "有効なメールアドレスを入力してください",
+        "parentGuardianEmailMustDiffer": "保護者のメールはご自身のメールと異なる必要があります",
+        "profilePhotoRequired": "プロフィール写真は必須です",
+        "mediaConsentRequired": "お子様の写真やメディアをアップロードする権限があることを確認してください"
       },
       "success": {
         "accountCreated": "アカウントが正常に作成されました！",
         "redirecting": "確認ページにリダイレクト中..."
       },
       "ageVerification": {
-        "under13Title": "Parent-Managed Account Required",
-        "under13Message": "Users under 13 must have a parent or guardian manage their account. Your parent will create and control the account on your behalf.",
-        "teens13to15Title": "Account Type Selection",
-        "teens13to15Message": "Choose how you'd like to manage your account:",
-        "selfManagedTitle": "Self-Managed Account",
-        "selfManagedDescription": "Manage your own profile with parental approval",
-        "parentManagedTitle": "Parent-Managed Account",
-        "parentManagedDescription": "Your parent/guardian will manage your profile",
-        "parentInfoRequired": "Parent/Guardian Information Required",
-        "parentInfoDescription": "We'll send a consent request to your parent/guardian to approve your account.",
-        "parentName": "Parent/Guardian Name",
-        "parentNamePlaceholder": "Full name",
-        "parentEmail": "Parent/Guardian Email",
-        "parentEmailPlaceholder": "parent@example.com",
-        "parentEmailMatchError": "Parent email must be different from your email",
-        "parentEmailRequired": "Parent/guardian email is required",
-        "parentNameRequired": "Parent/guardian name is required",
-        "consentPendingNotice": "Once you complete signup, a consent request will be sent to your parent/guardian. Your account will be activated after they approve."
+        "under13Title": "保護者管理アカウントが必要です",
+        "under13Message": "13歳未満のユーザーは、保護者または後見人が管理するアカウントが必要です。保護者があなたの代わりにアカウントを作成し、管理します。",
+        "teens13to15Title": "アカウントタイプの選択",
+        "teens13to15Message": "アカウントの管理方法を選択してください：",
+        "selfManagedTitle": "自己管理アカウント",
+        "selfManagedDescription": "保護者の承認のもとで自分のプロフィールを管理します",
+        "parentManagedTitle": "保護者管理アカウント",
+        "parentManagedDescription": "保護者/後見人があなたのプロフィールを管理します",
+        "parentInfoRequired": "保護者情報が必要です",
+        "parentInfoDescription": "アカウントを承認するために、保護者/後見人に同意リクエストを送信します。",
+        "parentName": "保護者/後見人の名前",
+        "parentNamePlaceholder": "氏名",
+        "parentEmail": "保護者/後見人のメール",
+        "parentEmailPlaceholder": "親@example.com",
+        "parentEmailMatchError": "保護者のメールはご自身のメールと異なる必要があります",
+        "parentEmailRequired": "保護者/後見人のメールが必要です",
+        "parentNameRequired": "保護者/後見人の名前が必要です",
+        "consentPendingNotice": "登録完了後、保護者/後見人へ同意リクエストを送信します。アカウントは承認されるまで保留になります。"
       },
-      "disabilityVisualImpairmentBlindness": "Visual Impairment/Blindness",
-      "disabilityHearingImpairmentDeafness": "Hearing Impairment/Deafness",
-      "disabilitySpeechImpairment": "Speech Impairment",
-      "disabilityDwarfism": "Dwarfism",
-      "disabilityCerebralPalsy": "Cerebral Palsy",
-      "disabilityDownSyndrome": "Down Syndrome",
-      "disabilityAutismSpectrum": "Autism Spectrum",
-      "disabilityLearningDisability": "Learning Disability",
-      "disabilityMentalHealthCondition": "Mental Health Condition",
-      "disabilitySkinCondition": "Skin Condition",
-      "subcategory": "Subcategory",
-      "subcategoryPlaceholder": "Select a subcategory",
-      "disabilities": "Disabilities/Accessibility",
-      "disabilitiesDescription": "Help us understand how to best support you and match you with appropriate opportunities"
+      "disabilityVisualImpairmentBlindness": "視覚障害/失明",
+      "disabilityHearingImpairmentDeafness": "聴覚障害/難聴",
+      "disabilitySpeechImpairment": "発話障害",
+      "disabilityDwarfism": "低身長症",
+      "disabilityCerebralPalsy": "脳性まひ",
+      "disabilityDownSyndrome": "ダウン症",
+      "disabilityAutismSpectrum": "自閉症スペクトラム",
+      "disabilityLearningDisability": "学習障害",
+      "disabilityMentalHealthCondition": "メンタルヘルスの状態",
+      "disabilitySkinCondition": "皮膚の状態",
+      "subcategory": "サブカテゴリ",
+      "subcategoryPlaceholder": "サブカテゴリを選択",
+      "disabilities": "障がい/アクセシビリティ",
+      "disabilitiesDescription": "適切な機会とマッチするために、どのようにサポートできるか教えてください",
+      "under13ParentManagedDescription": "13歳未満の子どもには、保護者または後見人がアカウントを作成・管理する必要があります。保護者/後見人にこのフォームを記入してもらってください。",
+      "selfManagedWithConsentTitle": "同意付き自己管理アカウント",
+      "selfManagedWithConsentDescription": "プロフィールはご自身で管理しますが、保護者/後見人のメールが必要です。",
+      "parentManagedOptionTitle": "保護者管理アカウント",
+      "parentManagedOptionDescription": "保護者/後見人があなたの代わりにこのアカウントを作成・管理します。",
+      "parentalConsentRequiredTitle": "保護者の同意が必要です",
+      "parentalConsentRequiredDescription": "登録完了後、保護者/後見人に同意メールを送信します。承認されるまでアカウントは保留されます。",
+      "parentGuardianContactInformation": "保護者/後見人の連絡先情報",
+      "parentGuardianContactDescription": "アカウント作成を承認しているか確認するために、保護者/後見人へ連絡する必要があります。",
+      "parentGuardianFullName": "保護者/後見人の氏名",
+      "parentGuardianFullNamePlaceholder": "例: 山田 太郎",
+      "parentGuardianEmail": "保護者/後見人のメール",
+      "parentGuardianEmailPlaceholder": "保護者@example.com",
+      "parentGuardianConsentEmailHint": "このアドレスに同意確認メールを送信します",
+      "parentGuardianPhonePlaceholder": "保護者/後見人の電話番号を入力してください",
+      "parentManagedStep3Description": "お子様の才能を示す写真やメディアをアップロードしてください",
+      "noteLabel": "注意",
+      "mediaNote": "メディアのアップロードは任意ですが、強く推奨されます。後でプロフィールから追加できます。",
+      "parentalConsentRequiredLabel": "保護者の同意が必要です",
+      "parentalConsentMediaText": "私は {childName} の保護者/法的後見人であり、これらの写真とメディアをアップロードおよび共有する権利があることを確認します。これらの画像はその才能プロフィールで公開されることを理解しています。",
+      "creatingAccount": "アカウントを作成しています..."
     },
     "forgotPassword": {
       "title": "パスワードをお忘れですか？",
       "subtitle": "メールアドレスを入力すると、リセットリンクを送信します",
       "email": "メールアドレス",
-      "emailPlaceholder": "your.email@example.com",
+      "emailPlaceholder": "あなたのメール@example.com",
       "submit": "リセットリンクを送信",
       "errors": {
         "emailRequired": "メールアドレスは必須です",
         "emailInvalid": "有効なメールアドレスを入力してください",
         "requestFailed": "メール送信に失敗しました",
         "serverError": "エラーが発生しました。もう一度お試しください",
-        "emailNotFound": "No account found with this email"
+        "emailNotFound": "このメールアドレスのアカウントは見つかりませんでした"
       },
       "success": {
         "title": "メールを送信しました！",
         "message": "このメールアドレスでアカウントが存在する場合、リセットリンクが送信されます。",
         "checkSpam": "メールが見つからない場合は、迷惑メールフォルダを確認してください。"
       },
-      "sending": "Sending...",
-      "backToLogin": "Back to Login",
-      "orContactSupport": "Or contact support",
-      "contactSupport": "Contact Support"
+      "sending": "送信中...",
+      "backToLogin": "ログインに戻る",
+      "orContactSupport": "またはサポートに連絡してください",
+      "contactSupport": "サポートに連絡",
+      "backToSignIn": "← サインインに戻る",
+      "backToSignInButton": "サインインに戻る",
+      "rememberPasswordPrompt": "パスワードを覚えますか？"
     },
     "resetPassword": {
       "title": "パスワードをリセット",
@@ -601,18 +634,25 @@
         "passwordMismatch": "パスワードが一致しません",
         "resetFailed": "パスワードのリセットに失敗しました",
         "serverError": "エラーが発生しました。もう一度お試しください",
-        "required": "This field is required",
-        "weakPassword": "Password is too weak",
-        "invalidToken": "Invalid or expired reset link"
+        "required": "この項目は必須です",
+        "weakPassword": "パスワードが弱すぎます",
+        "invalidToken": "無効または期限切れのリンクです"
       },
       "success": {
         "title": "パスワードがリセットされました！",
-        "message": "パスワードが正常にリセットされました。"
+        "message": "パスワードが正常にリセットされました。",
+        "redirecting": "サインインにリダイレクトしています..."
       },
-      "password": "New Password",
-      "passwordPlaceholder": "Enter new password",
-      "resetButton": "Reset Password",
-      "resetting": "Resetting..."
+      "password": "新しいパスワード",
+      "passwordPlaceholder": "新しいパスワードを入力",
+      "resetButton": "リセット",
+      "resetting": "リセット中...",
+      "signIn": "サインイン",
+      "invalid": {
+        "title": "無効なリセットリンク",
+        "description": "このパスワードリセットリンクは無効であるか期限が切れています。",
+        "requestNewLink": "新しいリンクをリクエスト"
+      }
     },
     "verifyEmail": {
       "title": "メールアドレスを確認",
@@ -652,52 +692,52 @@
     "privacyLink": "プライバシーポリシー",
     "and": "と",
     "parentalConsent": {
-      "title": "Parental Consent",
-      "loading": "Loading consent information...",
+      "title": "保護者の同意",
+      "loading": "同意情報を読み込んでいます...",
       "expired": {
-        "title": "Consent Link Expired",
-        "message": "This consent link has expired. Please contact support for a new link.",
-        "expiredOn": "Expired on {date}"
+        "title": "同意リンクの期限切れ",
+        "message": "この同意リンクの有効期限が切れました。新しいリンクについてサポートにお問い合わせください。",
+        "expiredOn": "{date} に期限切れ"
       },
       "invalidToken": {
-        "title": "Invalid Link",
-        "message": "This consent link is invalid or has already been used."
+        "title": "無効なリンク",
+        "message": "この同意リンクは無効であるか、すでに使用されています。"
       },
       "decision": {
-        "title": "Account Approval Request",
-        "greeting": "Dear {parentName},",
-        "requestMessage": "Your child, {teenName}, has requested to create a self-managed account on 3yeses. As they are under 16 years old, we require your consent before their account can become active.",
-        "whatThisMeans": "What does this mean?",
+        "title": "アカウント承認リクエスト",
+        "greeting": "親愛なる {parentName} 様、",
+        "requestMessage": "{teenName} さんが 3yeses で自己管理アカウントの作成を申請しました。16歳未満のため、アカウントを有効にする前にあなたの同意が必要です。",
+        "whatThisMeans": "これはどういう意味ですか？",
         "benefits": {
-          "item1": "{teenName} will be able to create and manage their own talent profile",
-          "item2": "They can apply for opportunities and showcase their skills",
-          "item3": "Their profile will have enhanced safety controls",
-          "item4": "You can request access to monitor the account at any time"
+          "item1": "{teenName} さんは自分の才能プロフィールを作成・管理できます",
+          "item2": "機会に応募し、スキルを披露できます",
+          "item3": "プロフィールは強化されたセキュリティ管理を受けます",
+          "item4": "いつでもアカウントの監視アクセスを要求できます"
         },
-        "chooseOption": "Please choose one of the following options:",
-        "approveButton": "Approve Account",
-        "declineButton": "Decline Account",
-        "approving": "Approving...",
-        "declining": "Declining...",
-        "expiresIn": "This link expires in {hours} hours"
+        "chooseOption": "次のオプションのいずれかを選択してください：",
+        "approveButton": "アカウントを承認",
+        "declineButton": "アカウントを拒否",
+        "approving": "承認中...",
+        "declining": "拒否中...",
+        "expiresIn": "このリンクは {hours} 時間で期限切れになります"
       },
       "approved": {
-        "title": "Account Approved",
-        "message": "Thank you for approving {teenName}'s account. They can now sign in and start using their profile.",
-        "teenName": "{teenName}'s account has been activated successfully."
+        "title": "アカウントが承認されました",
+        "message": "{teenName} さんのアカウントを承認していただきありがとうございます。今すぐサインインしてプロフィールを利用できます。",
+        "teenName": "{teenName} さんのアカウントは正常に有効化されました。"
       },
       "declined": {
-        "title": "Account Declined",
-        "message": "The account registration for {teenName} has been declined and removed from our system.",
-        "thankYou": "Thank you for your time."
+        "title": "アカウントが拒否されました",
+        "message": "{teenName} さんの登録は拒否され、システムから削除されました。",
+        "thankYou": "お時間いただきありがとうございました。"
       },
       "error": {
-        "title": "Something Went Wrong",
-        "message": "We couldn't process your request. Please try again or contact support.",
-        "alreadyProcessed": "This consent request has already been processed."
+        "title": "問題が発生しました",
+        "message": "リクエストを処理できませんでした。再試行するかサポートに連絡してください。",
+        "alreadyProcessed": "この同意リクエストは既に処理されています。"
       },
-      "contactSupport": "Contact Support",
-      "supportEmail": "support@3yeses.online"
+      "contactSupport": "サポートに連絡",
+      "supportEmail": "support-jp@3yeses.online"
     }
   },
   "Hub": {
@@ -718,16 +758,16 @@
       "photography": "写真撮影"
     },
     "type": {
-      "title": "タイプ:",
+      "title": "種類:",
       "all": "すべて",
       "videos": "動画",
-      "audio": "音声",
+      "audio": "オーディオ",
       "images": "画像"
     },
     "filters": {
       "button": "フィルター",
       "popularityTier": "人気度",
-      "viral": "バイラル",
+      "viral": "バイラルコンテンツ",
       "popular": "人気",
       "rising": "上昇中",
       "fresh": "新着",
@@ -741,23 +781,23 @@
       "trending": "トレンド",
       "newest": "最新",
       "mostLiked": "人気",
-      "alphabetical": "A-Z",
-      "oldest": "Oldest First",
-      "mostViews": "Most Views",
-      "leastViews": "Least Views",
-      "mostLikes": "Most Likes",
-      "leastLikes": "Least Likes",
-      "zToA": "Z-A",
+      "alphabetical": "A→Z",
+      "oldest": "古い順",
+      "mostViews": "再生数順",
+      "leastViews": "再生数の少ない順",
+      "mostLikes": "いいね数順",
+      "leastLikes": "いいね数の少ない順",
+      "zToA": "Z→A",
       "clearAll": "すべてのフィルターをクリア",
       "activeFilters": "アクティブなフィルター",
       "search": "検索",
       "category": "カテゴリー",
-      "type": "タイプ",
+      "type": "種類",
       "sort": "並べ替え",
       "showing": "表示中",
       "results": "件",
       "resultsPlural": "件",
-      "reverseAlphabetical": "Z-A"
+      "reverseAlphabetical": "Z→A"
     },
     "sections": {
       "featuredCreators": "注目のクリエイター",
@@ -781,8 +821,8 @@
       "freshContent": "新着コンテンツ",
       "mostPopular": "最も人気",
       "lovedByCommunity": "コミュニティに愛されています",
-      "exploreAll": "Explore All Content",
-      "exploreMoreDescription": "There are {count} more items to discover in our full catalog."
+      "exploreAll": "すべてのコンテンツを表示",
+      "exploreMoreDescription": "完全なカタログには、さらに {count} 件のアイテムがあります。"
     },
     "badges": {
       "sponsored": "スポンサー",
@@ -1082,7 +1122,9 @@
       "videoSupportedFormats": "Supported formats: MP4, WebM, MOV",
       "audioTips": "Audio Tips",
       "audioDirectUrl": "Must be a direct audio URL",
-      "audioSupportedFormats": "Supported formats: MP3, WAV, OGG, AAC"
+      "audioSupportedFormats": "Supported formats: MP3, WAV, OGG, AAC",
+      "mediaUrlPlaceholder": "https://example.com/ja-media.jpg",
+      "thumbnailUrlPlaceholder": "https://example.com/ja-thumbnail.jpg"
     },
     "galleryDesc": "メディアギャラリーを閲覧し管理",
     "subscription": "サブスクリプション",
@@ -1115,80 +1157,87 @@
     "thisMonth": "今月",
     "browseTalents": "タレントを探す",
     "nav": {
-      "overview": "Overview",
-      "profile": "Profile",
-      "gallery": "Gallery",
-      "insights": "Insights",
-      "activity": "Activity",
-      "saved": "Saved",
-      "history": "History",
-      "tickets": "Tickets",
-      "billing": "Billing",
-      "settings": "Settings",
-      "dashboard": "Dashboard"
+      "overview": "概要",
+      "profile": "プロフィール",
+      "gallery": "ギャラリー",
+      "insights": "インサイト",
+      "activity": "アクティビティ",
+      "saved": "保存済み",
+      "history": "履歴",
+      "tickets": "チケット",
+      "billing": "請求",
+      "settings": "設定",
+      "dashboard": "ダッシュボード"
     },
     "tickets": {
-      "title": "Support Tickets",
-      "description": "Track and manage your submitted support tickets",
-      "newTicket": "New Ticket",
-      "noTickets": "No tickets yet",
-      "noTicketsDesc": "You haven't submitted any support tickets. If you need help, our team is ready to assist.",
-      "submitFirst": "Submit Your First Ticket",
-      "noMatch": "No tickets match the selected filter.",
-      "all": "All",
-      "updated": "Updated {date}",
-      "visitHelp": "Visit Help Centre",
-      "open": "Open",
-      "inProgress": "In Progress",
-      "resolved": "Resolved",
-      "closed": "Closed",
-      "categoryAccount": "Account",
-      "categoryBilling": "Billing",
-      "categoryPortfolio": "Portfolio",
-      "categoryCategories": "Categories",
-      "categoryNotifications": "Notifications",
-      "categorySecurity": "Security",
-      "categoryOther": "Other"
+      "title": "サポートチケット",
+      "description": "送信したサポートチケットを追跡して管理する",
+      "newTicket": "新しいチケット",
+      "noTickets": "まだチケットはありません",
+      "noTicketsDesc": "まだサポートチケットを送信していません。サポートが必要な場合はチームが対応します。",
+      "submitFirst": "最初のチケットを送信",
+      "noMatch": "選択したフィルターに一致するチケットはありません。",
+      "all": "すべて",
+      "updated": "{date}に更新",
+      "visitHelp": "ヘルプセンターに移動",
+      "open": "開く",
+      "inProgress": "進行中",
+      "resolved": "解決済み",
+      "closed": "クローズ済み",
+      "categoryAccount": "アカウント",
+      "categoryBilling": "請求",
+      "categoryPortfolio": "ポートフォリオ",
+      "categoryCategories": "カテゴリ",
+      "categoryNotifications": "通知",
+      "categorySecurity": "セキュリティ",
+      "categoryOther": "その他"
     },
     "activity": {
-      "title": "Activity Feed",
-      "subtitle": "Track all interactions with your profile",
-      "loading": "Loading activities...",
-      "noActivity": "No Activity Yet",
-      "noActivityDesc": "Your activity feed will appear here once people start interacting with your profile."
+      "title": "アクティビティフィード",
+      "subtitle": "あなたのプロフィールへのすべての反応を追跡します",
+      "loading": "アクティビティを読み込み中…",
+      "noActivity": "アクティビティはまだありません",
+      "noActivityDesc": "プロフィールに対する反応があると、ここにアクティビティが表示されます。"
     },
     "billing": {
-      "title": "Billing & Payments",
-      "subtitle": "View your subscription details and payment history",
-      "failedToLoad": "Failed to load billing information",
-      "errorLoading": "An error occurred while loading billing information",
-      "currentSubscription": "Current Subscription",
-      "plan": "Plan",
-      "status": "Status",
-      "currentPeriod": "Current Period",
-      "na": "N/A",
-      "manageSubscription": "Manage Subscription",
-      "paymentHistory": "Payment History",
-      "invoice": "Invoice:",
-      "showingPage": "Showing page {page} of {pages} ({total} total payments)",
-      "noPaymentHistory": "No payment history found"
+      "title": "請求と支払い",
+      "subtitle": "サブスクリプションの詳細と支払い履歴を確認する",
+      "failedToLoad": "請求情報の読み込みに失敗しました",
+      "errorLoading": "請求情報の読み込み中にエラーが発生しました",
+      "currentSubscription": "現在のサブスクリプション",
+      "plan": "プラン",
+      "status": "ステータス",
+      "currentPeriod": "現在の期間",
+      "na": "該当なし",
+      "manageSubscription": "サブスクリプションを管理",
+      "paymentHistory": "支払い履歴",
+      "invoice": "請求書：",
+      "showingPage": "ページ {page} / {pages} を表示中（合計 {total} 件）",
+      "noPaymentHistory": "支払い履歴が見つかりません"
     },
     "overview": {
-      "profileViews": "Profile Views",
-      "profileLikes": "Profile Likes",
-      "savedTalents": "Saved Talents",
-      "talentsYouSaved": "Talents you've saved",
-      "lastSevenDays": "Last 7 days",
-      "topPerformingMedia": "Top Performing Media",
-      "viewFullAnalytics": "View Full Analytics →",
-      "totalViews": "Total Views",
-      "totalLikes": "Total Likes",
-      "avgEngagement": "Avg Engagement",
-      "thisWeek": "This Week",
-      "views": "views",
-      "likes": "likes",
-      "engagement": "engagement",
-      "media": "Media"
+      "profileViews": "プロフィール閲覧",
+      "profileLikes": "プロフィールいいね",
+      "savedTalents": "保存したタレント",
+      "talentsYouSaved": "保存したタレント",
+      "lastSevenDays": "過去7日間",
+      "topPerformingMedia": "人気メディア",
+      "viewFullAnalytics": "詳細分析を見る →",
+      "totalViews": "総閲覧数",
+      "totalLikes": "総いいね",
+      "avgEngagement": "平均エンゲージメント",
+      "thisWeek": "今週",
+      "views": "閲覧",
+      "likes": "いいね",
+      "engagement": "エンゲージメント",
+      "media": "メディア",
+      "growthHintsBadge": "新機能：成長ヒント",
+      "growthHintsTitle": "露出を高める週次アクション",
+      "growthHintsDesc": "毎週1つのスマートな提案を実行すると、才能フィードでプロモーションされます。",
+      "growthHintsCta": "ヒントを見る",
+      "actionRequiredTitle": "対応が必要です",
+      "actionRequiredDesc": "管理チームからアカウント警告があります。",
+      "warningFallback": "警告"
     }
   },
   "settings": {
@@ -1216,13 +1265,13 @@
       "secondary": "料金を見る"
     },
     "stats": {
-      "categories": "9",
+      "categories": "20+",
       "categoriesLabel": "タレントカテゴリ",
-      "subcategories": "50",
+      "subcategories": "145+",
       "subcategoriesLabel": "サブカテゴリ",
-      "locales": "10",
+      "locales": "11",
       "localesLabel": "対応言語",
-      "price": "£10",
+      "price": "10ポンド",
       "priceLabel": "6ヶ月"
     },
     "whySection": {
@@ -1244,7 +1293,7 @@
         "desc": "プロフィール閲覧数、ポートフォリオエンゲージメント、検索インプレッションを追跡。"
       },
       "categories": {
-        "title": "9のタレントカテゴリ",
+        "title": "20以上のタレントカテゴリ",
         "desc": "俳優、ミュージシャン、モデル、ダンサー、声優、コメディアン、DJ、カメラマンなど。"
       },
       "simple": {
@@ -1324,142 +1373,144 @@
       "subtitle": "プロフィールを作成し、作品をアップロードして、今日から発見されましょう。",
       "button": "始める",
       "browse": "カテゴリを見る",
-      "talentButton": "Create your profile",
-      "clientButton": "Hire talent"
-    }
+      "talentButton": "プロフィールを作成",
+      "clientButton": "人材を採用"
+    },
+    "title": "なぜ & どうやって",
+    "subtitle": "3YESESがタレントをどのように可視化し、機会を生み出すかをご覧ください。"
   },
   "Meta": {
-    "title": "3YESES",
-    "description": "3YESES is a subscription-based talent marketplace connecting performers with projects and industry opportunities."
+    "title": "3yeses",
+    "description": "3YESESは、サブスクリプションベースのタレントマーケットプレイスで、パフォーマーをプロジェクトや業界の機会と結びつけます。"
   },
   "About": {
-    "badge": "About 3YESES",
+    "badge": "3YESESについて",
     "hero": {
-      "title": "Every talent deserves ",
-      "accent": "a stage.",
-      "description": "3YESES started with a simple idea: talented people everywhere should have the chance to be seen. Not just the ones with connections or big-city access — {everyone}. From diverse communities around the world, we're building a place where creatives can showcase their work, build a name for themselves, and get discovered on their own terms.",
-      "everyone": "everyone"
+      "title": "すべての才能は",
+      "accent": "ステージに値します。",
+      "description": "3YESESはシンプルなアイデアから始まりました：世界中の才能ある人々が見られるチャンスを持つべきだということ。コネや大都市へのアクセスがある人だけでなく—{everyone}。多様なコミュニティから、クリエイターが自分の作品を披露し、自分の名前を築き、自分らしく発見される場所をつくっています。",
+      "everyone": "誰もが"
     },
     "origin": {
-      "title": "Why we built this",
-      "p1": "The creative industry has always had a visibility problem. Talented actors, musicians, models, dancers, voice artists, photographers, and performers of all kinds exist in every corner of the world — but most never get the chance to be seen beyond their local community.",
-      "p2start": "We wanted to change that. 3YESES was born from the belief that ",
-      "p2bold": "talent doesn't have a postcode",
-      "p2end": ". Whether you're a street dancer in Accra, a classical violinist in Mumbai, a voice artist in Manchester, or a model in Buenos Aires — you deserve a professional platform to showcase your work and get noticed.",
-      "p3": "We built 3YESES to be radically simple and affordable. No gatekeeping, no approval process to join, no per-booking fees. One subscription gives you everything: unlimited uploads, a full professional profile, analytics to track your growth, and priority search placement so you actually get discovered.",
-      "p4": "This is your stage. Make it count."
+      "title": "なぜこれを作ったのか",
+      "p1": "クリエイティブ業界は常に可視性の問題を抱えてきました。才能ある俳優、ミュージシャン、モデル、ダンサー、ボイスアーティスト、写真家、あらゆる種類のパフォーマーが世界のあらゆる場所に存在しますが、多くは地元コミュニティを超えて見られる機会を得られていません。",
+      "p2start": "それを変えたかった。3YESESは ",
+      "p2bold": "才能に郵便番号はない",
+      "p2end": "という信念から生まれました。アクラのストリートダンサー、ムンバイのクラシックバイオリニスト、マンチェスターのボイスアーティスト、ブエノスアイレスのモデルであっても、あなたは自分の作品を公開し、注目されるためのプロフェッショナルなプラットフォームに値します。",
+      "p3": "3YESESは徹底的にシンプルで手頃なものにしました。参加のための審査はなく、承認プロセスはなく、予約ごとの手数料もありません。1つのサブスクリプションですべてが手に入ります：無制限アップロード、完全なプロプロフィール、成長を追跡する分析、そして本当に発見されるための優先検索表示。",
+      "p4": "これはあなたのステージです。価値あるものにしましょう。"
     },
     "values": {
-      "title": "What we stand for",
-      "subtitle": "The principles that guide everything we build.",
-      "openTitle": "Open to Everyone",
-      "openDesc": "No gatekeeping. No auditions to join. If you have talent, you belong here — regardless of where you come from, your background, or how much experience you have.",
-      "diversityTitle": "Diversity First",
-      "diversityDesc": "We celebrate every genre, style, and culture. From classical musicians in Tokyo to street dancers in Lagos to voice artists in São Paulo — every creative deserves a stage.",
-      "communityTitle": "Community Driven",
+      "title": "私たちの信念",
+      "subtitle": "私たちが作るすべてを導く原則。",
+      "openTitle": "誰にでも開かれた",
+      "openDesc": "入場制限なし。参加のためのオーディションなし。あなたに才能があれば、出身地や背景、経験に関係なくここに属します。",
+      "diversityTitle": "多様性を最優先",
+      "diversityDesc": "あらゆるジャンル、スタイル、文化を称賛します。東京のクラシックミュージシャンからラゴスのストリートダンサー、サンパウロのボイスアーティストまで—すべてのクリエイティブにはステージが必要です。",
+      "communityTitle": "コミュニティ主導",
       "communityDesc": "閲覧、いいね、コメント、シェア。私たちのハブはパフォーマンスとキュレーションされたメディアを集め、クリエイター同士が刺激し合い、本物のつながりを築けるようにします。",
-      "fairTitle": "Fair & Affordable",
-      "fairDesc": "One simple subscription — £10 for 6 months or £20 for 12 months. No commissions, no hidden fees, no premium tiers. Everyone gets the same full access."
+      "fairTitle": "公正で手頃",
+      "fairDesc": "シンプルなサブスクリプション — 6か月で10ポンド、12か月で20ポンド。手数料なし、隠れた料金なし、プレミアムプランなし。すべての人に同じ完全アクセスが与えられます。"
     },
     "categories": {
-      "title": "All kinds of talent. All over the world.",
-      "subtitle": "Whatever your creative discipline, there's a home for you on 3yeses."
+      "title": "あらゆる種類の才能。世界中に。",
+      "subtitle": "どんなクリエイティブ分野でも、3yesesにはあなたの居場所があります。"
     },
     "features": {
-      "title": "Everything you need to get discovered",
-      "subtitle": "One subscription. Full access. No limits.",
-      "photoTitle": "Photo Portfolio",
-      "photoDesc": "Upload unlimited high-quality images — headshots, action shots, behind-the-scenes.",
-      "videoTitle": "Video Showreels",
-      "videoDesc": "Share showreels, performance clips, and YouTube embeds directly on your profile.",
-      "audioTitle": "Audio Demos",
-      "audioDesc": "Musicians and voice artists can upload audio samples — MP3, WAV, and more.",
-      "analyticsTitle": "Analytics Dashboard",
-      "analyticsDesc": "Track who views your profile, which portfolio items perform best, and how you rank in search.",
-      "rankingTitle": "Priority Ranking",
-      "rankingDesc": "Subscribers appear higher in search results so you get discovered faster.",
-      "customTitle": "Full Customisation",
-      "customDesc": "Bio, skills, languages, work history, physical characteristics, social links — make your profile yours.",
-      "categoriesTitle": "15+ Categories",
-      "categoriesDesc": "Actors, musicians, models, dancers, DJs, voice artists, photographers, comedians, presenters and more.",
-      "verifyTitle": "Verification Badges",
-      "verifyDesc": "Complete your profile fully to earn a verified badge that builds trust and boosts visibility.",
+      "title": "発見されるために必要なすべて",
+      "subtitle": "1つのサブスクリプション。フルアクセス。制限なし。",
+      "photoTitle": "フォトポートフォリオ",
+      "photoDesc": "ヘッドショット、アクションショット、ビハインドザシーンなど、高品質画像を無制限にアップロードできます。",
+      "videoTitle": "ビデオショーリール",
+      "videoDesc": "ショーリール、パフォーマンスクリップ、YouTube埋め込みをプロフィールに直接共有できます。",
+      "audioTitle": "オーディオデモ",
+      "audioDesc": "ミュージシャンやボイスアーティストはMP3、WAVなどのオーディオサンプルをアップロードできます。",
+      "analyticsTitle": "分析ダッシュボード",
+      "analyticsDesc": "誰があなたのプロフィールを見たか、どのポートフォリオ項目が最も反応を得ているか、検索でのランキングを追跡できます。",
+      "rankingTitle": "優先ランキング",
+      "rankingDesc": "購読者は検索結果で上位に表示され、より早く発見されます。",
+      "customTitle": "完全なカスタマイズ",
+      "customDesc": "自己紹介、スキル、言語、職歴、身体的特徴、SNSリンク — 自分だけのプロフィールを作りましょう。",
+      "categoriesTitle": "15以上のカテゴリ",
+      "categoriesDesc": "俳優、ミュージシャン、モデル、ダンサー、DJ、ボイスアーティスト、写真家、コメディアン、プレゼンターなど。",
+      "verifyTitle": "認証バッジ",
+      "verifyDesc": "信頼を築き、可視性を高める認証バッジを獲得するために、プロフィールを完全に仕上げましょう。",
       "hubTitle": "タレントハブ",
       "hubDesc": "プラットフォーム全体で注目のキュレーションメディアを探しましょう。カテゴリ、メディア種別、人気度で絞り込めます。"
     },
     "howItWorks": {
-      "title": "How it works",
-      "step1Title": "Sign up & subscribe",
-      "step1Desc": "Create your account and choose your plan — £10 for 6 months or £20 for 12 months. Payment is handled securely through Stripe.",
-      "step2Title": "Build your profile",
-      "step2Desc": "Choose your category, write your bio, add skills and languages, upload photos, videos, and audio. Our onboarding wizard guides you through every step.",
-      "step3Title": "Get discovered",
-      "step3Desc": "Your profile goes live in search results. Track views and engagement through your analytics dashboard. Share your portfolio link anywhere."
+      "title": "使い方",
+      "step1Title": "登録して購読",
+      "step1Desc": "アカウントを作成し、プランを選択してください — 6か月で10ポンド、12か月で20ポンド。支払いはStripeで安全に処理されます。",
+      "step2Title": "プロフィールを作成",
+      "step2Desc": "カテゴリを選択し、プロフィールを書き、スキルと言語を追加し、写真、ビデオ、オーディオをアップロードします。オンボーディングウィザードが各ステップで案内します。",
+      "step3Title": "見つけられましょう",
+      "step3Desc": "あなたのプロフィールが検索結果に表示されます。分析ダッシュボードで閲覧数とエンゲージメントを追跡します。ポートフォリオのリンクをどこでも共有できます。"
     },
     "cta": {
-      "title": "Ready to showcase your talent?",
-      "description": "Join creatives from around the world. Build your portfolio, track your growth, and get discovered.",
-      "getStarted": "Get Started",
-      "viewPricing": "View Pricing"
+      "title": "才能を披露する準備はできていますか？",
+      "description": "世界中のクリエイターに参加しましょう。ポートフォリオを作成し、成長を追跡し、発見されましょう。",
+      "getStarted": "はじめる",
+      "viewPricing": "料金を見る"
     }
   },
   "Contact": {
-    "title": "Contact Details",
-    "placeholder": "This is a placeholder for contact details."
+    "title": "連絡先",
+    "placeholder": "連絡先の詳細用のプレースホルダーです。"
   },
   "SignupPage": {
-    "title": "Talent Sign Up",
-    "subtitle": "Create your account and start your journey in 3 easy steps.",
-    "step1": "Account",
-    "step2": "Profile",
-    "step3": "Upload",
-    "startSignup": "Start Talent Sign Up",
-    "email": "Email",
-    "password": "Password",
-    "confirmPassword": "Confirm Password",
-    "submit": "Sign Up"
+    "title": "タレント登録",
+    "subtitle": "アカウントを作成して3つの簡単なステップでスタートしましょう。",
+    "step1": "アカウント",
+    "step2": "プロフィール",
+    "step3": "アップロード",
+    "startSignup": "タレント登録を開始",
+    "email": "メール",
+    "password": "パスワード",
+    "confirmPassword": "パスワードを確認",
+    "submit": "登録"
   },
   "LoginPage": {
-    "title": "Login",
-    "subtitle": "Welcome back! Please login to your account.",
-    "email": "Email",
-    "password": "Password",
-    "forgotPassword": "Forgot Password?",
-    "rememberMe": "Remember Me",
-    "submit": "Login",
-    "noAccount": "Don't have an account?",
-    "signUpLink": "Sign up here"
+    "title": "ログイン",
+    "subtitle": "お帰りなさい！アカウントにログインしてください。",
+    "email": "メール",
+    "password": "パスワード",
+    "forgotPassword": "パスワードをお忘れですか？",
+    "rememberMe": "ログイン状態を保持",
+    "submit": "ログイン",
+    "noAccount": "アカウントをお持ちでないですか？",
+    "signUpLink": "こちらから登録"
   },
   "Pages": {
     "terms": {
       "badge": "Terms & Conditions",
       "heroTitle": "Terms of Service",
       "heroAccent": "",
-      "contents": "Contents",
+      "contents": "目次",
       "sections": {
         "overview": {
           "title": "Overview",
           "p1": "These Terms and Conditions (\"Terms\") govern your use of the 3YESES platform (\"Platform\", \"we\", \"us\", \"our\"), a subscription-based talent marketplace operated at 3yeses.online. By creating an account or using any part of the Platform, you agree to be bound by these Terms.",
-          "p2": "3YESES is a platform where creative professionals — actors, musicians, models, dancers, voice artists, photographers, videographers, DJs, presenters, comedians, and other performers — create profiles, upload portfolio media (photos, videos, audio), and get discovered. The Platform includes a searchable talent directory, a media hub, analytics dashboards, and community features such as comments, likes, and content sharing."
+          "p2": "3YESESは、俳優、ミュージシャン、モデル、ダンサー、声優、写真家、ビデオグラファー、DJ、プレゼンター、コメディアンなどのクリエイティブなプロフェッショナルがプロフィールを作成し、ポートフォリオのメディア（写真、ビデオ、オーディオ）をアップロードし、発見されるプラットフォームです。プラットフォームには、検索可能なタレントディレクトリ、メディアハブ、分析ダッシュボード、およびコメント、いいね、コンテンツ共有などのコミュニティ機能が含まれています。"
         },
         "eligibility": {
-          "p1": "You must be at least 13 years old to create an account. Users aged 13–17 require parental or guardian consent. Users under 13 must have a parent-managed account where the parent or guardian registers and manages the account on their behalf.",
-          "p2": "You are responsible for maintaining the confidentiality of your login credentials and for all activity under your account. Notify us immediately if you suspect unauthorised access.",
-          "p3": "Each individual may maintain only one account. Duplicate accounts may be suspended without notice.",
-          "p4": "You must provide accurate, current information during registration and keep your profile information up to date. Fraudulent or misleading profiles may be removed."
+          "p1": "アカウントを作成するには13歳以上である必要があります。13〜17歳のユーザーは、親または保護者の同意が必要です。13歳未満のユーザーは、親または保護者が代わりにアカウントを登録し管理する必要があります。",
+          "p2": "ログイン資格情報の機密性を維持し、アカウントでのすべてのアクティビティについて責任を負う必要があります。不正アクセスの疑いがある場合は、ただちにお知らせください。",
+          "p3": "各個人は1つのアカウントのみ保持できます。重複アカウントは予告なく停止される場合があります。",
+          "p4": "登録時に正確で最新の情報を提供し、プロフィール情報を最新の状態に保つ必要があります。不正なまたは誤解を招くプロフィールは削除される場合があります。"
         },
         "subscription": {
-          "p1": "An active subscription is required to use the Platform. You subscribe during the sign-up process. Without an active subscription, you cannot access the Platform.",
-          "plansIntro": "We offer one plan — Standard Access — with two duration options:",
+          "p1": "プラットフォームを使用するには有効なサブスクリプションが必要です。登録プロセス中にサブスクライブします。有効なサブスクリプションがないと、プラットフォームにアクセスできません。",
+          "plansIntro": "当社は1つのプラン — Standard Access — を、2つの期間オプションで提供しています：",
           "plans": [
             "6 months — £10, billed as a recurring subscription via Stripe.",
             "12 months — £20, billed as a recurring subscription via Stripe."
           ],
-          "p2": "Both plans include identical features: unlimited portfolio uploads, full profile customisation, priority search ranking, and full dashboard analytics."
+          "p2": "両方のプランには同じ機能が含まれます：無制限のポートフォリオアップロード、プロフィールの完全なカスタマイズ、検索の優先ランキング、完全なダッシュボード分析。"
         },
         "content": {
-          "ownership": "You retain full ownership of all content you upload to the Platform. By uploading content, you grant 3YESES a non-exclusive, worldwide, royalty-free licence to display, distribute, and promote your content on the Platform and in marketing materials related to the Platform.",
-          "permitted": "You may upload images (JPEG, PNG, WebP), videos (MP4, MOV), and audio files (MP3, WAV). Individual files must not exceed 50 MB. You may also embed external video links (e.g. YouTube, Vimeo).",
+          "ownership": "プラットフォームにアップロードするすべてのコンテンツの完全な所有権はあなたに帰属します。コンテンツをアップロードすることで、3YESESに対してプラットフォームおよび関連マーケティング資料であなたのコンテンツを表示、配布、プロモーションする非独占的、全世界的、ロイヤリティフリーのライセンスを付与します。",
+          "permitted": "画像（JPEG、PNG、WebP）、動画（MP4、MOV）、オーディオファイル（MP3、WAV）をアップロードできます。個別のファイルは50MBを超えてはなりません。外部の動画リンク（例：YouTube、Vimeo）を埋め込むこともできます。",
           "prohibited": [
             "Is sexually explicit, pornographic, or depicts nudity intended to be sexual in nature.",
             "Contains violence, gore, or content depicting harm to individuals.",
@@ -1471,147 +1522,147 @@
           ]
         }
       },
-      "title": "Terms of Service",
-      "lastUpdated": "Last updated: {date}"
+      "title": "サービス利用規約",
+      "lastUpdated": "最終更新日：{date}"
     },
     "privacy": {
       "badge": "Privacy Policy",
       "heroTitle": "Your privacy matters",
       "heroAccent": "How we handle your data",
-      "contents": "Contents",
-      "introP1": "This Privacy Policy explains how 3YESES (\"Platform\", \"we\", \"us\", \"our\") collects, uses, stores, and protects your personal data when you use our subscription-based talent marketplace at 3yeses.online.",
-      "introP2": "We are committed to protecting your privacy and handling your personal data in compliance with the UK General Data Protection Regulation (UK GDPR), the Data Protection Act 2018, and, where applicable, the EU General Data Protection Regulation (GDPR).",
-      "title": "Privacy Policy",
-      "lastUpdated": "Last updated: {date}"
+      "contents": "目次",
+      "introP1": "このプライバシーポリシーは、3YESES（「プラットフォーム」、「当社」、「私たち」、「当社の」）が、サブスクリプションベースのタレントマーケットプレイス 3yeses.online を利用する際に、どのようにあなたの個人データを収集、使用、保存、保護するかを説明します。",
+      "introP2": "私たちは、お客様のプライバシーを保護し、UK GDPR、2018年データ保護法、および該当する場合はEU GDPRに準拠して個人データを取り扱うことを約束します。",
+      "title": "プライバシーポリシー",
+      "lastUpdated": "最終更新日：{date}"
     },
     "pricing": {
-      "title": "Pricing Plans",
-      "subtitle": "Choose the plan that works best for you"
+      "title": "料金プラン",
+      "subtitle": "あなたに最適なプランを選択してください"
     },
     "about": {
-      "title": "About 3YESES",
-      "subtitle": "Connecting talent with opportunity"
+      "title": "3YESESについて",
+      "subtitle": "タレントと機会をつなぐ"
     },
     "contact": {
-      "title": "Contact Us",
-      "subtitle": "Get in touch with our team"
+      "title": "お問い合わせ",
+      "subtitle": "チームにご連絡ください"
     }
   },
   "notifications": {
-    "title": "Notifications",
-    "markAllRead": "Mark all read",
-    "clearAll": "Clear all",
-    "noNotifications": "No notifications",
-    "allCaughtUp": "You are all caught up!",
-    "systemAlerts": "System alerts",
-    "settings": "Notification Settings",
-    "profileViews": "Profile Views",
-    "profileViewsDesc": "When someone views your profile",
-    "profileSaves": "Profile Saves",
-    "profileSavesDesc": "When someone saves your profile",
-    "comments": "Comments",
-    "commentsDesc": "New comments on your videos",
-    "likesLabel": "Likes",
-    "likesDesc": "When someone likes your content",
-    "sound": "Sound",
-    "soundDesc": "Play sound for notifications",
-    "dismiss": "Dismiss",
-    "justNow": "Just now",
-    "minutesAgo": "{count}m ago",
-    "hoursAgo": "{count}h ago",
-    "daysAgo": "{count}d ago"
+    "title": "通知",
+    "markAllRead": "すべて既読にする",
+    "clearAll": "すべてクリア",
+    "noNotifications": "通知はありません",
+    "allCaughtUp": "最新の状態です！",
+    "systemAlerts": "システムアラート",
+    "settings": "通知設定",
+    "profileViews": "プロフィール閲覧",
+    "profileViewsDesc": "誰かがあなたのプロフィールを見たとき",
+    "profileSaves": "プロフィール保存",
+    "profileSavesDesc": "誰かがあなたのプロフィールを保存したとき",
+    "comments": "コメント",
+    "commentsDesc": "あなたの動画に新しいコメントがあります",
+    "likesLabel": "いいね",
+    "likesDesc": "誰かがあなたのコンテンツをいいねしました",
+    "sound": "サウンド",
+    "soundDesc": "通知のサウンドを再生",
+    "dismiss": "閉じる",
+    "justNow": "たった今",
+    "minutesAgo": "{count}分前",
+    "hoursAgo": "{count}時間前",
+    "daysAgo": "{count}日前"
   },
   "support": {
-    "helpCentre": "Help Centre",
-    "heroTitle": "How can we",
-    "heroAccent": "help you?",
-    "heroDesc": "Browse our help topics, check the FAQ, or submit a support ticket and our team will get back to you.",
-    "searchPlaceholder": "Search help topics, FAQs, and answers…",
-    "clearSearch": "Clear search",
-    "topicsFound": "{topics} topic(s) · {faqs} FAQ(s) found",
-    "matchingFAQs": "Matching FAQs",
-    "viewAllMatching": "View all {count} matching FAQs",
-    "learnMore": "Learn more",
-    "submitTicket": "Submit a Support Ticket",
-    "submitTicketDesc": "Can't find what you need? Our team will get back to you within 48 hours.",
-    "faqHeading": "Frequently Asked Questions",
-    "faqCountLabel": "FAQs",
-    "allCategories": "All Categories",
-    "needHelp": "Need help?",
-    "needHelpDesc": "Can't find what you need? Submit a ticket and our team will respond within 48 hours.",
-    "faqTitle": "Frequently Asked Questions",
-    "secureEncrypted": "Secure & encrypted",
-    "replyTime": "Typical reply within 48h",
-    "trackedDashboard": "Tracked via your dashboard",
-    "backToHelp": "Back to Help Centre",
-    "ticketLabel": "Support Ticket",
-    "submitATicket": "Submit a",
-    "ticketAccent": "Ticket",
-    "ticketFormDesc": "Choose a category, describe your issue, and our support team will get back to you within 48 hours. You must be logged in to submit a ticket.",
-    "newSupportTicket": "New Support Ticket",
-    "trustSecure": "Secure & Encrypted",
-    "trustSecureDesc": "All data is encrypted in transit",
-    "trustTracked": "Tracked Tickets",
-    "trustTrackedDesc": "View status in your dashboard",
-    "trustReply": "48h Response Time",
-    "trustReplyDesc": "Our team responds within 48 hours",
-    "stillNeedHelp": "Still need help?",
-    "submitTicketLink": "Submit a support ticket →",
-    "relatedTopics": "Related Topics",
-    "quickGuide": "Quick Guide",
-    "topicAccount": "Account & Profile",
-    "topicBilling": "Billing & Subscriptions",
-    "topicCategories": "Categories & Discovery",
-    "topicPortfolio": "Portfolio & Media",
-    "topicNotifications": "Notifications & Alerts",
-    "topicSecurity": "Security & Privacy",
-    "accountLabel": "Account & Profile",
-    "accountTitle": "Account &",
-    "accountAccent": "Profile",
-    "accountDesc": "Registration, profile editing, physical characteristics, work history, social links, visibility settings, and account management.",
-    "billingLabel": "Billing & Subscriptions",
-    "billingTitle": "Billing &",
-    "billingAccent": "Subscriptions",
-    "billingDesc": "Pricing, payment methods, invoices, cancellation, and everything related to your subscription.",
-    "categoriesLabel": "Categories & Discovery",
-    "categoriesTitle": "Categories &",
-    "categoriesAccent": "Discovery",
-    "categoriesDesc": "Search filters, talent directory, Media Hub, grid and list views, and tips for getting discovered.",
-    "portfolioLabel": "Portfolio & Media",
-    "portfolioTitle": "Portfolio &",
-    "portfolioAccent": "Media",
-    "portfolioDesc": "Upload wizard, gallery viewer, media overlay, file types, size limits, and tips for a standout portfolio.",
-    "notificationsLabel": "Notifications & Alerts",
-    "notificationsTitle": "Notifications &",
-    "notificationsAccent": "Alerts",
-    "notificationsDesc": "Comment alerts, like notifications, profile view updates, follower activity, and managing your preferences.",
-    "securityLabel": "Security & Privacy",
-    "securityTitle": "Security &",
-    "securityAccent": "Privacy",
-    "securityDesc": "Profile visibility controls, cookie consent, content reporting, GDPR rights, and keeping your account safe.",
-    "formCategory": "Category",
-    "formCategoryAria": "Ticket category",
-    "formSubject": "Subject",
-    "formSubjectPlaceholder": "Brief summary of your issue",
-    "formDescription": "Description",
-    "formDescPlaceholder": "Describe your issue in detail. Include any relevant steps or screenshots.",
-    "formSubmit": "Submit Ticket",
-    "formSubmitting": "Submitting…",
-    "formSuccess": "Ticket Submitted",
-    "formSuccessMsg": "Your ticket ID is {ticketId}. We'll get back to you within 48 hours.",
-    "formSubmitAnother": "Submit another ticket",
-    "formError": "Failed to submit ticket. Please make sure you are logged in.",
-    "formNetworkError": "Network error — please try again.",
-    "catAccount": "Account & Profile",
-    "catBilling": "Billing & Subscriptions",
-    "catPortfolio": "Portfolio & Media",
-    "catCategories": "Categories & Discovery",
-    "catNotifications": "Notifications & Alerts",
-    "catSecurity": "Security & Privacy",
-    "catOther": "Other",
-    "catAnalytics": "Analytics",
-    "catCommunity": "Community",
-    "catSupport": "Support & Tickets",
+    "helpCentre": "ヘルプセンター",
+    "heroTitle": "どのように",
+    "heroAccent": "お手伝いできますか？",
+    "heroDesc": "ヘルプトピックを閲覧し、FAQを確認するか、サポートチケットを送信してください。チームが48時間以内に対応します。",
+    "searchPlaceholder": "ヘルプトピック、FAQ、回答を検索…",
+    "clearSearch": "検索をクリア",
+    "topicsFound": "{topics} 件のトピック · {faqs} 件のFAQ",
+    "matchingFAQs": "一致するFAQ",
+    "viewAllMatching": "{count} 件の一致するFAQを表示",
+    "learnMore": "もっと見る",
+    "submitTicket": "サポートチケットを送信",
+    "submitTicketDesc": "必要な情報が見つからない場合は、チームが48時間以内にご連絡します。",
+    "faqHeading": "よくある質問",
+    "faqCountLabel": "よくある質問",
+    "allCategories": "すべてのカテゴリ",
+    "needHelp": "お困りですか？",
+    "needHelpDesc": "必要な情報が見つからない場合は、チケットを送信してください。チームが48時間以内に対応します。",
+    "faqTitle": "よくある質問",
+    "secureEncrypted": "安全かつ暗号化済み",
+    "replyTime": "通常48時間以内に返信",
+    "trackedDashboard": "ダッシュボードで追跡",
+    "backToHelp": "ヘルプセンターに戻る",
+    "ticketLabel": "サポートチケット",
+    "submitATicket": "チケットを",
+    "ticketAccent": "送信",
+    "ticketFormDesc": "カテゴリを選択し、問題を詳しく説明してください。サポートチームが48時間以内に対応します。ログインが必要です。",
+    "newSupportTicket": "新しいサポートチケット",
+    "trustSecure": "安全かつ暗号化済み",
+    "trustSecureDesc": "すべてのデータは転送中に暗号化されます。",
+    "trustTracked": "追跡されるチケット",
+    "trustTrackedDesc": "ダッシュボードでステータスを確認できます",
+    "trustReply": "48時間以内の返信",
+    "trustReplyDesc": "チームが48時間以内に返信します。",
+    "stillNeedHelp": "まだお困りですか？",
+    "submitTicketLink": "サポートチケットを送信 →",
+    "relatedTopics": "関連トピック",
+    "quickGuide": "クイックガイド",
+    "topicAccount": "アカウントとプロフィール",
+    "topicBilling": "請求とサブスクリプション",
+    "topicCategories": "カテゴリと発見",
+    "topicPortfolio": "ポートフォリオとメディア",
+    "topicNotifications": "通知とアラート",
+    "topicSecurity": "セキュリティとプライバシー",
+    "accountLabel": "アカウントとプロフィール",
+    "accountTitle": "アカウントと",
+    "accountAccent": "プロフィール",
+    "accountDesc": "登録、プロフィール編集、身体的特徴、職歴、ソーシャルリンク、表示設定、アカウント管理。",
+    "billingLabel": "請求とサブスクリプション",
+    "billingTitle": "請求と",
+    "billingAccent": "サブスクリプション",
+    "billingDesc": "料金、支払い方法、請求書、キャンセル、サブスクリプションに関するすべて。",
+    "categoriesLabel": "カテゴリと発見",
+    "categoriesTitle": "カテゴリと",
+    "categoriesAccent": "発見",
+    "categoriesDesc": "検索フィルター、タレントディレクトリ、メディアハブ、グリッドとリスト表示、発見されるためのヒント。",
+    "portfolioLabel": "ポートフォリオとメディア",
+    "portfolioTitle": "ポートフォリオ",
+    "portfolioAccent": "メディア",
+    "portfolioDesc": "アップロードウィザード、ギャラリービュー、メディアオーバーレイ、ファイルタイプ、サイズ制限、優れたポートフォリオのコツ。",
+    "notificationsLabel": "通知とアラート",
+    "notificationsTitle": "通知 &",
+    "notificationsAccent": "アラート",
+    "notificationsDesc": "コメント通知、いいね通知、プロフィール閲覧更新、フォロワーアクティビティ、設定の管理。",
+    "securityLabel": "セキュリティとプライバシー",
+    "securityTitle": "セキュリティと",
+    "securityAccent": "プライバシー",
+    "securityDesc": "プロフィールの表示設定、Cookie 同意、コンテンツ報告、GDPR 権利、アカウント保護。",
+    "formCategory": "カテゴリ",
+    "formCategoryAria": "チケットのカテゴリ",
+    "formSubject": "件名",
+    "formSubjectPlaceholder": "問題の簡単な概要",
+    "formDescription": "説明",
+    "formDescPlaceholder": "問題を詳しく説明してください。関連する手順やスクリーンショットを含めてください。",
+    "formSubmit": "チケットを送信",
+    "formSubmitting": "送信中…",
+    "formSuccess": "チケットが送信されました",
+    "formSuccessMsg": "チケット ID は {ticketId} です。48時間以内にご連絡します。",
+    "formSubmitAnother": "別のチケットを送信",
+    "formError": "チケットの送信に失敗しました。ログインしていることを確認してください。",
+    "formNetworkError": "ネットワークエラー — もう一度お試しください。",
+    "catAccount": "アカウントとプロフィール",
+    "catBilling": "請求とサブスクリプション",
+    "catPortfolio": "ポートフォリオとメディア",
+    "catCategories": "カテゴリと発見",
+    "catNotifications": "通知とアラート",
+    "catSecurity": "セキュリティとプライバシー",
+    "catOther": "その他",
+    "catAnalytics": "分析",
+    "catCommunity": "コミュニティ",
+    "catSupport": "サポート & チケット",
     "faqItems": [
       {
         "category": "Account & Profile",
@@ -1678,175 +1729,274 @@
         "q": "How long does it take to get a response?",
         "a": "Support tickets are answered within 48 hours."
       }
-    ]
+    ],
+    "billingHelp": {
+      "ticketCategory": "請求 & サブスクリプション",
+      "faqCostQ": "3YESES の費用はいくらですか？",
+      "faqCostA": "プラットフォームの利用には有効なサブスクリプションが必要です。登録時にサブスクライブします：6ヶ月でGBP10、または12ヶ月でGBP20（最優良価値）を選択します。両プランは同じ機能を含みます：無制限のポートフォリオアップロード、プロフィールの完全カスタマイズ、検索での優先表示、分析ダッシュボード、コメント、いいね、コミュニティ機能。隠れた料金はありません。",
+      "faqSubscribeQ": "どうやってサブスクライブしますか？",
+      "faqSubscribeA": "サブスクライブは登録プロセスの一部です。アカウントを作成し年齢確認を行ったら、プランの期間（6か月または12か月）を選択し、安全な Stripe チェックアウトを完了します。アカウントはすぐに有効化され、待機期間はありません。",
+      "faqCancelQ": "サブスクリプションをキャンセルできますか？",
+      "faqCancelA": "はい。Dashboard → Subscriptions からいつでもキャンセルできます。現在の請求期間の終了まで完全にアクセスできます。プロフィール、ポートフォリオ、コメント、分析データは保持されます。いつでも再度サブスクライブして、途中から再開できます。キャンセル手数料はありません。",
+      "faqExpireQ": "サブスクリプションが期限切れになるとどうなりますか？",
+      "faqExpireA": "サブスクリプションが終了すると、プラットフォームへのアクセスは一時停止されます。ログイン、コンテンツのアップロード、コミュニティとのやり取りはできません。ただし、プロフィール、ポートフォリオアイテム、すべてのデータは保持され、再度サブスクライブすると完全に復元されます。",
+      "faqInvoiceQ": "請求書はどうやって取得しますか？",
+      "faqInvoiceA": "Dashboard → Subscriptions に移動して請求履歴を表示します。すべての請求書は Stripe によって生成・管理されます。過去の支払いについて PDF 請求書をこのページから直接ダウンロードできます。",
+      "faqSwitchPlanQ": "6か月プランと12か月プランを切り替えられますか？",
+      "faqSwitchPlanA": "現在のサブスクリプション期間が終了したら、更新時に別の期間を選択できます。変更は次の請求サイクルの開始時に有効になります。両プランは同じ機能を含みます。",
+      "guideSubscriptionTitle": "サブスクリプションについて",
+      "guideSubscriptionContent": "3YESES の利用にはサブスクリプションが必須です。登録時にプランを選択します：6か月でGBP10、または12か月でGBP20（最優良価値）。両プランは同じ機能を含み、違いは請求期間の長さのみです。",
+      "guideSecurityTitle": "支払いの安全性",
+      "guideSecurityContent": "すべての支払いは Stripe を通じて安全に処理されます。カード情報をサーバーに保存することはありません。Stripe は PCI DSS レベル 1 認定を受けており、支払い業界で最も高いセキュリティレベルです。",
+      "guideRefundTitle": "返金ポリシー",
+      "guideRefundContent": "プラットフォームの利用を妨げる技術的な問題が発生した場合は、支払い後14日以内にサポートに連絡して審査を受けてください。返金はケースバイケースで判断されます。"
+    }
   },
   "PricingPage": {
     "hero": {
-      "eyebrow": "Your spotlight starts here",
-      "titlePrefix": "Ready for your",
-      "titleAccent": "three yeses?",
-      "description": "Put your work out there. Your photos, videos, and reels - all in one place, seen by the people who matter."
+      "eyebrow": "あなたのスポットライトはここから始まる",
+      "titlePrefix": "あなたの",
+      "titleAccent": "三つのイエス？",
+      "description": "あなたの作品を見せましょう。写真、動画、リールをひとまとめにして、適切な人々に届けます。"
     },
     "plans": {
       "sixMonths": {
-        "label": "6 months",
-        "price": "£10",
-        "period": "6 months",
-        "subtext": "Less than a coffee a month",
-        "description": "Dip your toe in. No long-term commitment."
+        "price": "10 £",
+        "label": "6か月",
+        "period": "6か月",
+        "subtext": "月にコーヒー1杯以下",
+        "description": "まずは試してみる。長期契約なし。"
       },
       "twelveMonths": {
-        "label": "12 months",
-        "price": "£20",
-        "period": "year",
-        "subtext": "Same price. Twice the runway.",
-        "description": "Go all in. A full year to get your break.",
-        "badge": "Best Value"
+        "price": "20 £",
+        "label": "12か月",
+        "period": "年",
+        "subtext": "同じ価格。2倍の期間。",
+        "description": "全力投球。チャンスをつかむための1年間。",
+        "badge": "ベストバリュー"
       }
     },
     "features": {
-      "profile": "A profile built to turn heads",
-      "uploads": "Upload everything - no limits, ever",
-      "search": "Jump the queue in every search"
+      "profile": "目を引くプロフィール",
+      "uploads": "すべてアップロード — 限界なし、ずっと",
+      "search": "すべての検索で優先される"
     },
     "trust": {
-      "noLockIn": "No lock-in - quit whenever",
-      "secureCheckout": "Stripe-secure checkout",
-      "liveImmediately": "Live the second you pay"
+      "noLockIn": "契約不要 — いつでも解約可能",
+      "secureCheckout": "Stripeによる安全な決済",
+      "liveImmediately": "支払い後すぐに公開"
     },
     "activeSubscription": {
-      "banner": "✓ You already have an active Standard Access subscription.",
-      "manage": "Manage your subscription ->"
+      "banner": "✓ 既にStandard Accessの有効なサブスクリプションがあります。",
+      "manage": "サブスクリプションを管理 →"
     },
-    "planName": "Standard Access",
+    "planName": "スタンダードアクセス",
     "aria": {
-      "price": "Price: {price} {period}",
-      "subscribePlan": "Subscribe to Standard Access - {plan}"
+      "price": "料金: {price} {period}",
+      "subscribePlan": "Standard Accessに登録 — {plan}",
+      "percentOff": "{percent}%オフ",
+      "waitingForYou": "あなたを待っているもの"
     },
-    "saveAmount": "Save {amount}",
+    "saveAmount": "{amount}を節約",
     "buttons": {
-      "redirecting": "Redirecting to Stripe...",
-      "alreadySubscribed": "Already subscribed",
-      "subscribe": "Subscribe with Stripe"
+      "redirecting": "Stripeにリダイレクトしています…",
+      "alreadySubscribed": "すでに登録済み",
+      "subscribe": "Stripeで登録"
     },
     "unlock": {
-      "stage": "Your Stage",
-      "showEverything": "Show Everything",
-      "cutQueue": "Cut the Queue",
-      "description": "No fluff. No fake features. Just the tools to get you seen."
+      "stage": "あなたのステージ",
+      "showEverything": "すべて表示",
+      "cutQueue": "待ち行列をスキップ",
+      "description": "余計なものはなし。偽の機能はなし。あなたを見せるためのツールだけ。"
     },
     "footer": {
-      "secureNote": "Secured via Stripe. Ditch it any time from your dashboard.",
-      "accountPrompt": "Already have an account?",
-      "login": "Log in"
+      "secureNote": "Stripe経由で保護されています。ダッシュボードからいつでもキャンセルできます。",
+      "accountPrompt": "すでにアカウントをお持ちですか？",
+      "login": "ログイン"
     },
     "errors": {
-      "checkoutFailed": "Failed to create checkout session",
-      "missingCheckoutUrl": "No checkout URL received",
-      "generic": "Something went wrong. Please try again."
+      "checkoutFailed": "チェックアウトセッションの作成に失敗しました",
+      "missingCheckoutUrl": "チェックアウトURLが受信されませんでした",
+      "generic": "問題が発生しました。もう一度お試しください。"
     }
   },
   "DashboardMessagesPage": {
-    "title": "Messages",
-    "searchPlaceholder": "Search conversations...",
-    "messagePlaceholder": "Type your message...",
-    "send": "Send message",
+    "title": "メッセージ",
+    "searchPlaceholder": "会話を検索...",
+    "messagePlaceholder": "メッセージを入力...",
+    "send": "メッセージを送信",
     "labels": {
-      "you": "You"
+      "you": "あなた"
     },
     "sample": {
-      "castingDirector": "Casting Director",
-      "director": "Director",
-      "producer": "Producer",
-      "message1": "Hi! I reviewed your portfolio and would love to discuss an upcoming project...",
-      "message2": "Thank you for your interest. When would you be available for a video call?",
-      "message3": "The audition went great! We'll be in touch soon with next steps.",
-      "message4": "Hi! I reviewed your portfolio and would love to discuss an upcoming project.",
-      "message5": "Thank you for reaching out! I'd love to hear more about the project.",
-      "message6": "It's a commercial for a major brand. Are you available for a call tomorrow?",
-      "time2h": "2h ago",
-      "time1d": "1d ago",
-      "time2d": "2d ago"
+      "castingDirector": "キャスティングディレクター",
+      "director": "ディレクター",
+      "producer": "プロデューサー",
+      "message1": "こんにちは！あなたのポートフォリオを拝見し、今後のプロジェクトについて話したいと思いました...",
+      "message2": "ご興味ありがとうございます。ビデオ通話はいつご都合がよろしいですか？",
+      "message3": "オーディションはとても良く進みました！次のステップについてすぐに連絡します。",
+      "message4": "こんにちは！あなたのポートフォリオを拝見し、今後のプロジェクトについて話したいと思いました。",
+      "message5": "ご連絡ありがとうございます！プロジェクトについてもっと聞きたいです。",
+      "message6": "これは大手ブランドのCMです。明日お電話できますか？",
+      "time2h": "2時間前",
+      "time1d": "1日前",
+      "time2d": "2日前"
     }
   },
   "DashboardSubscriptionPage": {
-    "title": "Choose the plan that's right for you.",
-    "activeBanner": "You're currently subscribed to Standard Access",
-    "validUntil": "Valid until",
-    "cancelSubscription": "Cancel Subscription",
-    "forTalents": "For Talents",
-    "processing": "Processing...",
-    "currentPlan": "Current Plan",
-    "subscribe": "Subscribe with Stripe",
-    "securePayment": "Secure payment processing by Stripe",
-    "questions": "Questions? Contact us at",
-    "confirmCancel": "Are you sure you want to cancel your subscription?",
-    "cancelSuccess": "Subscription canceled successfully",
+    "title": "サブスクリプション",
+    "activeBanner": "現在、Standard Access にご加入中です",
+    "validUntil": "有効期限",
+    "cancelSubscription": "サブスクリプションをキャンセル",
+    "forTalents": "タレント向け",
+    "processing": "処理中...",
+    "currentPlan": "現在のプラン",
+    "subscribe": "Stripe で申し込む",
+    "securePayment": "Stripe による安全な支払い",
+    "questions": "ご質問は？お問い合わせ先",
+    "confirmCancel": "本当にサブスクリプションをキャンセルしますか？",
+    "cancelSuccess": "サブスクリプションのキャンセルに成功しました",
     "errors": {
-      "missingCheckoutUrl": "No checkout URL received",
-      "createSubscription": "Failed to create subscription. Please try again.",
-      "cancelSubscription": "Failed to cancel subscription. Please try again."
-    }
+      "missingCheckoutUrl": "チェックアウトURLが受信されませんでした",
+      "createSubscription": "サブスクリプションの作成に失敗しました。再試行してください。",
+      "cancelSubscription": "サブスクリプションのキャンセルに失敗しました。再試行してください。"
+    },
+    "subtitle": "Standard Access プランと支払い設定を管理する"
   },
   "HubMediaPage": {
-    "searchPlaceholder": "Search media...",
-    "viewFullProfile": "View Full Profile",
-    "filterMedia": "Filter Media",
+    "searchPlaceholder": "メディアを検索…",
+    "viewFullProfile": "プロフィール全体を見る",
+    "filterMedia": "メディアを絞り込む",
     "filters": {
-      "all": "All",
-      "video": "Video",
-      "audio": "Audio",
-      "image": "Image"
+      "all": "すべて",
+      "video": "ビデオ",
+      "audio": "オーディオ",
+      "image": "画像"
     },
-    "portfolioTitle": "{name}'s Portfolio",
-    "views": "{count} views"
+    "portfolioTitle": "{name}のポートフォリオ",
+    "views": "{count} 回覧"
   },
   "TalentPage": {
-    "selectCategory": "Select category",
-    "searchCategories": "Search categories...",
-    "rolePlaceholder": "Your role / title",
-    "bioPlaceholder": "Tell us about yourself, your experience, and what makes you unique...",
-    "skillsPlaceholder": "Add or search skills...",
-    "selectGender": "Select gender",
-    "selectEthnicity": "Select ethnicity",
-    "selectEyeColor": "Select eye color",
-    "selectHairColor": "Select hair color",
-    "selectBodyType": "Select body type",
-    "selectLanguages": "Select languages"
+    "selectCategory": "カテゴリを選択",
+    "searchCategories": "カテゴリを検索...",
+    "rolePlaceholder": "あなたの役割 / 職種",
+    "bioPlaceholder": "あなた自身、経験、あなたをユニークにするものについて教えてください...",
+    "skillsPlaceholder": "スキルを追加または検索...",
+    "selectGender": "性別を選択",
+    "selectEthnicity": "民族を選択",
+    "selectEyeColor": "目の色を選択",
+    "selectHairColor": "髪の色を選択",
+    "selectBodyType": "体型を選択",
+    "selectLanguages": "言語を選択"
   },
   "AuthRequiredModal": {
-    "title": "Sign in required",
-    "subtitle": "Your account unlocks talent likes and favorites.",
-    "message": "You need an account to perform {action}. Continue to sign in or create an account.",
+    "title": "サインインが必要です",
+    "subtitle": "あなたのアカウントはタレントのいいねとお気に入りを解除します。",
+    "message": "{action} を実行するにはアカウントが必要です。サインインするかアカウントを作成してください。",
     "buttons": {
-      "notNow": "Not now",
-      "signIn": "Sign in",
-      "createAccount": "Create an account"
+      "notNow": "今はしない",
+      "signIn": "サインイン",
+      "createAccount": "アカウントを作成"
     }
   },
   "Comments": {
-    "addCommentPlaceholder": "Add a comment...",
-    "writeReplyPlaceholder": "Write a reply...",
-    "cancel": "Cancel",
-    "posting": "Posting...",
-    "reply": "Reply",
-    "post": "Post",
-    "delete": "Delete",
-    "confirmDelete": "Are you sure you want to delete this comment?",
-    "hideReplies": "Hide replies",
-    "viewReplies": "View {count, plural, one {# reply} other {# replies}}",
+    "addCommentPlaceholder": "コメントを追加...",
+    "writeReplyPlaceholder": "返信を入力...",
+    "cancel": "キャンセル",
+    "posting": "投稿中...",
+    "reply": "返信",
+    "post": "投稿",
+    "delete": "削除",
+    "confirmDelete": "このコメントを削除してもよろしいですか？",
+    "hideReplies": "返信を非表示",
+    "viewReplies": "{count, plural, one {# 件の返信を表示} other {# 件の返信を表示}}",
     "errors": {
-      "postFailed": "Failed to post comment",
-      "postRetry": "Failed to post comment. Please try again."
+      "postFailed": "コメントの投稿に失敗しました",
+      "postRetry": "コメントの投稿に失敗しました。もう一度お試しください。"
     }
   },
   "SaveButton": {
-    "save": "Save talent",
-    "remove": "Remove from saved",
+    "save": "タレントを保存",
+    "remove": "保存から削除",
     "authModal": {
-      "title": "Sign in to save",
-      "message": "You need an account to save and bookmark {talentName} profiles. Continue to sign in or create an account.",
-      "action": "save profiles"
+      "title": "保存するにはサインインしてください",
+      "message": "{talentName} のプロフィールを保存およびブックマークするにはアカウントが必要です。サインインするかアカウントを作成してください。",
+      "action": "プロフィールを保存"
+    }
+  },
+  "ContactPage": {
+    "hero": {
+      "titlePrefix": "お問い合わせ",
+      "titleAccent": "ください",
+      "description": "3YESESについてご質問がありますか？機会やタレントとつながるお手伝いをします。"
+    },
+    "cards": {
+      "email": {
+        "title": "メールを送る",
+        "subtitle": "一般的なお問い合わせはこちら"
+      },
+      "call": {
+        "title": "お電話ください",
+        "subtitle": "月〜金 9時〜18時 GMT"
+      },
+      "visit": {
+        "title": "お越しください",
+        "subtitle": "オフィスの場所"
+      }
+    },
+    "form": {
+      "successTitle": "メッセージ送信完了！",
+      "successDescription": "お問い合わせありがとうございます。24時間以内に返信いたします。",
+      "sendAnother": "別のメッセージを送る",
+      "title": "メッセージを送る",
+      "description": "以下のフォームに記入してください。できるだけ早く返信いたします。",
+      "fullName": "氏名",
+      "emailAddress": "メールアドレス",
+      "subject": "件名",
+      "message": "メッセージ",
+      "placeholders": {
+        "name": "山田 太郎",
+        "email": "taro@example.com",
+        "subject": "どのようにお手伝いできますか？",
+        "message": "お問い合わせ内容を詳しくお書きください..."
+      },
+      "sending": "送信中…",
+      "sendButton": "メッセージを送信"
+    }
+  },
+  "SearchResultsPage": {
+    "title": "タレント検索",
+    "resultsFor": "「{searchTerm}」の検索結果",
+    "resultsCount": "{count, plural, one {# 人のタレントが見つかりました} other {# 人のタレントが見つかりました}}",
+    "gridViewTitle": "グリッド表示：コンパクトカード",
+    "listViewTitle": "リスト表示：拡張行",
+    "searchPlaceholder": "タレント、スキル、キーワードを検索...",
+    "toggleFilters": "詳細フィルターを切り替え",
+    "filters": "フィルター",
+    "browsing": "閲覧中：",
+    "suggestions": {
+      "skill": "スキルフィルターとして追加",
+      "category": "カテゴリ",
+      "inCategory": "{name}内"
+    }
+  },
+  "SuccessStories": {
+    "breadcrumb": "成功事例",
+    "title": "成功事例",
+    "subtitle": "3YESESを通じて仕事と可視性を得た才能あるクリエイターの感動的な旅を発見してください。",
+    "stories": {
+      "0": {
+        "title": "エマ・トンプソン — ミュージシャン",
+        "body": "注目のギタリストとして、市場が飽和する中でエマは目立つのに苦労していました。当社プラットフォームの高度な検索機能を活用して、彼女のユニークなサウンドを気に入ったプロデューサーとつながりました。これにより2つのヒットシングルでのコラボレーションと完売ツアーにつながりました。"
+      },
+      "1": {
+        "title": "リアム・ガルシア — 俳優",
+        "body": "インディペンデント映画に情熱を持つ多才な俳優リアムは、当社プラットフォームを通じて大きなチャンスをつかみました。監督はターゲットを絞ったプロフィールから彼の才能を見いだし、批評家に称賛された3本の映画での役と助演男優賞へのノミネートにつながりました。"
+      },
+      "2": {
+        "title": "ソフィア・パテル — ダンサー",
+        "body": "ソフィアのコンテンポラリーダンススタイルは当社プラットフォームの振付師の目に留まりました。それ以来、ブロードウェイ公演や国際フェスティバルに出演し、主要なポップアーティストのワールドツアーの振付も手がけました。"
+      }
     }
   }
 }

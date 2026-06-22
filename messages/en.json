@@ -199,7 +199,8 @@
           "Global accessibility"
         ]
       }
-    }
+    },
+    "useMyLocation": "Use my location"
   },
   "About": {
     "badge": "About 3YESES",
@@ -431,7 +432,9 @@
       },
       "success": {
         "loginSuccess": "Successfully signed in! Redirecting..."
-      }
+      },
+      "showPassword": "Show password",
+      "hidePassword": "Hide password"
     },
     "signup": {
       "title": "Create Your Account",
@@ -543,7 +546,13 @@
         "bioRequired": "Please tell us about yourself",
         "locationRequired": "Location is required",
         "experienceRequired": "Please select your experience level",
-        "serverError": "Something went wrong. Please try again"
+        "serverError": "Something went wrong. Please try again",
+        "parentGuardianNameRequired": "Parent/Guardian name is required",
+        "parentGuardianEmailRequired": "Parent/Guardian email is required",
+        "parentGuardianEmailInvalid": "Please enter a valid email address",
+        "parentGuardianEmailMustDiffer": "Parent email must be different from your email",
+        "profilePhotoRequired": "Profile photo is required",
+        "mediaConsentRequired": "You must confirm that you have permission to upload your child's photos and media"
       },
       "genderMale": "Male",
       "genderFemale": "Female",
@@ -603,7 +612,28 @@
       "success": {
         "accountCreated": "Account created successfully!",
         "redirecting": "Redirecting to verification..."
-      }
+      },
+      "under13ParentManagedDescription": "For children under 13, a parent or guardian must create and manage the account. Please have your parent/guardian complete this form.",
+      "selfManagedWithConsentTitle": "Self-Managed Account (with Parental Consent)",
+      "selfManagedWithConsentDescription": "You'll manage your own profile, but we'll need your parent/guardian's email to send a consent confirmation.",
+      "parentManagedOptionTitle": "Parent-Managed Account",
+      "parentManagedOptionDescription": "Your parent/guardian will create and manage the account on your behalf. They'll have full control.",
+      "parentalConsentRequiredTitle": "Parental Consent Required",
+      "parentalConsentRequiredDescription": "After you complete registration, we'll send a consent email to your parent/guardian. Your account will be pending until they confirm.",
+      "parentGuardianContactInformation": "Parent/Guardian Contact Information",
+      "parentGuardianContactDescription": "We need to contact your parent or guardian to confirm they consent to you having an account.",
+      "parentGuardianFullName": "Parent/Guardian Full Name",
+      "parentGuardianFullNamePlaceholder": "e.g., Jane Smith",
+      "parentGuardianEmail": "Parent/Guardian Email",
+      "parentGuardianEmailPlaceholder": "parent@example.com",
+      "parentGuardianConsentEmailHint": "We'll send a consent verification email to this address",
+      "parentGuardianPhonePlaceholder": "Enter parent/guardian phone number",
+      "parentManagedStep3Description": "Upload photos and media showcasing your child's talent",
+      "noteLabel": "Note",
+      "mediaNote": "Media uploads are optional but highly recommended. You can always add them later from your profile.",
+      "parentalConsentRequiredLabel": "Parental Consent Required",
+      "parentalConsentMediaText": "I confirm that I am the parent/legal guardian of {childName}, and I have the right to upload and share these photos and media. I understand that these images will be publicly visible on their talent profile.",
+      "creatingAccount": "Creating Account..."
     },
     "forgotPassword": {
       "title": "Forgot Password?",
@@ -626,7 +656,10 @@
         "checkSpam": "If you don't see the email, please check your spam folder."
       },
       "orContactSupport": "Or contact support",
-      "contactSupport": "Contact Support"
+      "contactSupport": "Contact Support",
+      "backToSignIn": "← Back to Sign In",
+      "backToSignInButton": "Back to Sign In",
+      "rememberPasswordPrompt": "Remember your password?"
     },
     "resetPassword": {
       "title": "Reset Password",
@@ -637,13 +670,21 @@
       "confirmPasswordPlaceholder": "Re-enter new password",
       "resetButton": "Reset Password",
       "resetting": "Resetting...",
-      "success": "Password reset successful! Redirecting...",
+      "success": {
+        "redirecting": "Redirecting to sign in..."
+      },
       "errors": {
         "required": "This field is required",
         "passwordMismatch": "Passwords do not match",
         "weakPassword": "Password is too weak",
         "invalidToken": "Invalid or expired reset link",
         "serverError": "Something went wrong. Please try again"
+      },
+      "signIn": "Sign In",
+      "invalid": {
+        "title": "Invalid Reset Link",
+        "description": "This password reset link is invalid or has expired.",
+        "requestNewLink": "Request New Link"
       }
     },
     "verifyEmail": {
@@ -940,7 +981,10 @@
     "portfolioDesc": "Showcase your work and achievements",
     "analytics": "Analytics",
     "analyticsDesc": "View detailed insights and statistics",
-    "gallery": "Gallery",
+    "gallery": {
+      "mediaUrlPlaceholder": "https://example.com/media.jpg",
+      "thumbnailUrlPlaceholder": "https://example.com/thumbnail.jpg"
+    },
     "galleryDesc": "Browse and manage your media gallery",
     "subscription": "Subscription",
     "subscriptionDesc": "Manage your subscription and billing",
@@ -1045,7 +1089,14 @@
       "views": "views",
       "likes": "likes",
       "engagement": "engagement",
-      "media": "Media"
+      "media": "Media",
+      "growthHintsBadge": "New: Growth Hints",
+      "growthHintsTitle": "Weekly actions to boost profile visibility",
+      "growthHintsDesc": "Complete one smart suggestion per week and we will promote you in the talent feed.",
+      "growthHintsCta": "Explore hints",
+      "actionRequiredTitle": "Action Required",
+      "actionRequiredDesc": "You have active account warnings from your admin team.",
+      "warningFallback": "Warning"
     }
   },
   "notifications": {
@@ -1229,7 +1280,28 @@
         "q": "How long does it take to get a response?",
         "a": "Support tickets are answered within 48 hours."
       }
-    ]
+    ],
+    "billingHelp": {
+      "ticketCategory": "Billing & Subscriptions",
+      "faqCostQ": "How much does 3YESES cost?",
+      "faqCostA": "An active subscription is required to use the platform. You subscribe during sign-up - choose between GBP10 for 6 months or GBP20 for 12 months (best value). Both plans include identical features: unlimited portfolio uploads, full profile customisation, priority search ranking, analytics dashboard, comments, likes, and community features. No hidden fees.",
+      "faqSubscribeQ": "How do I subscribe?",
+      "faqSubscribeA": "Subscription happens as part of the sign-up process. After creating your account and confirming your age, choose your plan duration (6 or 12 months), then complete the secure Stripe checkout. Your account activates instantly - no waiting period.",
+      "faqCancelQ": "Can I cancel my subscription?",
+      "faqCancelA": "Yes - cancel any time from Dashboard -> Subscription. You keep full access until the end of your current billing period. Your profile, portfolio, comments, and analytics data are all preserved - resubscribe any time to pick up where you left off. There are no cancellation fees.",
+      "faqExpireQ": "What happens when my subscription expires?",
+      "faqExpireA": "When your subscription ends, your platform access is paused. You cannot log in, upload content, or interact with the community. However, your profile, portfolio items, and all data are preserved and will be fully restored when you resubscribe.",
+      "faqInvoiceQ": "How do I get an invoice?",
+      "faqInvoiceA": "Go to Dashboard -> Subscription to view your billing history. All invoices are generated and managed by Stripe. You can download PDF invoices for any past payment directly from this page.",
+      "faqSwitchPlanQ": "Can I switch between 6-month and 12-month plans?",
+      "faqSwitchPlanA": "When your current subscription period ends, you can choose a different duration at renewal. The change takes effect at the start of your next billing cycle. Both plans include identical features.",
+      "guideSubscriptionTitle": "Understanding your subscription",
+      "guideSubscriptionContent": "Subscription is mandatory to use 3YESES. You choose your plan during sign-up: GBP10 for 6 months or GBP20 for 12 months (best value). Both plans include identical features - the only difference is billing duration.",
+      "guideSecurityTitle": "Payment security",
+      "guideSecurityContent": "All payments are processed securely through Stripe. We never store your card details on our servers. Stripe is PCI DSS Level 1 certified - the highest level of security in the payments industry.",
+      "guideRefundTitle": "Refund policy",
+      "guideRefundContent": "If you experience a technical issue that prevents you from using the platform, contact support within 14 days of payment for a review. Refunds are assessed on a case-by-case basis."
+    }
   },
   "settings": {
     "emailNotifications": "Email Notifications",
@@ -1409,7 +1481,9 @@
     "planName": "Standard Access",
     "aria": {
       "price": "Price: {price} {period}",
-      "subscribePlan": "Subscribe to Standard Access - {plan}"
+      "subscribePlan": "Subscribe to Standard Access - {plan}",
+      "percentOff": "{percent}% Off",
+      "waitingForYou": "What's waiting for you"
     },
     "saveAmount": "Save {amount}",
     "buttons": {
@@ -1535,6 +1609,81 @@
       "title": "Sign in to save",
       "message": "You need an account to save and bookmark {talentName} profiles. Continue to sign in or create an account.",
       "action": "save profiles"
+    }
+  },
+  "ContactPage": {
+    "hero": {
+      "titlePrefix": "Get in",
+      "titleAccent": "Touch",
+      "description": "Have questions about 3YESES? We're here to help you connect with opportunities and talent."
+    },
+    "cards": {
+      "email": {
+        "title": "Email Us",
+        "subtitle": "For general inquiries"
+      },
+      "call": {
+        "title": "Call Us",
+        "subtitle": "Mon-Fri 9am-6pm GMT"
+      },
+      "visit": {
+        "title": "Visit Us",
+        "subtitle": "Our Office Location"
+      }
+    },
+    "form": {
+      "successTitle": "Message Sent!",
+      "successDescription": "Thank you for reaching out. We'll get back to you within 24 hours.",
+      "sendAnother": "Send another message",
+      "title": "Send us a Message",
+      "description": "Fill out the form below and we'll respond as soon as possible.",
+      "fullName": "Full Name",
+      "emailAddress": "Email Address",
+      "subject": "Subject",
+      "message": "Message",
+      "placeholders": {
+        "name": "John Doe",
+        "email": "john@example.com",
+        "subject": "How can we help you?",
+        "message": "Tell us more about your inquiry..."
+      },
+      "sending": "Sending...",
+      "sendButton": "Send Message"
+    }
+  },
+  "SearchResultsPage": {
+    "title": "Talent Search",
+    "resultsFor": "Results for \"{searchTerm}\"",
+    "resultsCount": "{count, plural, one {# talent found} other {# talents found}}",
+    "gridViewTitle": "Grid view: compact cards",
+    "listViewTitle": "List view: expanded lines",
+    "searchPlaceholder": "Search talents, skills, or keywords...",
+    "toggleFilters": "Toggle advanced filters",
+    "filters": "Filters",
+    "browsing": "Browsing:",
+    "suggestions": {
+      "skill": "Add as skill filter",
+      "category": "Category",
+      "inCategory": "in {name}"
+    }
+  },
+  "SuccessStories": {
+    "breadcrumb": "Success Stories",
+    "title": "Success Stories",
+    "subtitle": "Discover the inspiring journeys of talented creatives who found work and visibility through 3YESES.",
+    "stories": {
+      "0": {
+        "title": "Emma Thompson — Musician",
+        "body": "As a rising guitarist, Emma struggled to get noticed in a crowded market. Using our platform's advanced search features, she connected with producers who loved her unique sound. This led to collaborations on two hit singles and a sold-out tour."
+      },
+      "1": {
+        "title": "Liam Garcia — Actor",
+        "body": "Liam, a versatile actor with a passion for indie films, found his big break through our platform. Directors discovered his talent via targeted profiles, resulting in roles in three critically acclaimed movies and a nomination for Best Supporting Actor."
+      },
+      "2": {
+        "title": "Sophia Patel — Dancer",
+        "body": "Sophia's contemporary dance style caught the eye of choreographers on our platform. She has since performed in Broadway productions, international festivals, and even choreographed for a major pop artist's world tour."
+      }
     }
   }
 }

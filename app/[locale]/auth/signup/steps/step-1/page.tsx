@@ -175,16 +175,16 @@ export default function SignupStep1() {
       // Additional validation for teens with consent
       if (teenAccountChoice === 'SELF_WITH_CONSENT') {
         if (!formData.parentName.trim()) {
-          newErrors.parentName = 'Parent/Guardian name is required';
+          newErrors.parentName = t('errors.parentGuardianNameRequired');
         }
         if (!formData.parentContactEmail.trim()) {
-          newErrors.parentContactEmail = 'Parent/Guardian email is required';
+          newErrors.parentContactEmail = t('errors.parentGuardianEmailRequired');
         } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.parentContactEmail)) {
-          newErrors.parentContactEmail = 'Please enter a valid email address';
+          newErrors.parentContactEmail = t('errors.parentGuardianEmailInvalid');
         }
         // Ensure parent email is different from teen's email
         if (formData.parentContactEmail.toLowerCase() === formData.email.toLowerCase()) {
-          newErrors.parentContactEmail = 'Parent email must be different from your email';
+          newErrors.parentContactEmail = t('errors.parentGuardianEmailMustDiffer');
         }
       }
       
@@ -341,7 +341,7 @@ export default function SignupStep1() {
                         Parent-Managed Account Required
                       </h3>
                       <p className="text-amber-700 dark:text-amber-400 text-sm">
-                        For children under 13, a parent or guardian must create and manage the account. Please have your parent/guardian complete this form.
+                        {t('under13ParentManagedDescription')}
                       </p>
                     </div>
                   </div>
@@ -387,10 +387,10 @@ export default function SignupStep1() {
                       </div>
                       <div className="ml-3 flex-1">
                         <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">
-                          Self-Managed Account (with Parental Consent)
+                          {t('selfManagedWithConsentTitle')}
                         </h4>
                         <p className="text-sm text-gray-600 dark:text-gray-400">
-                          You'll manage your own profile, but we'll need your parent/guardian's email to send a consent confirmation.
+                          {t('selfManagedWithConsentDescription')}
                         </p>
                       </div>
                     </div>
@@ -424,10 +424,10 @@ export default function SignupStep1() {
                       </div>
                       <div className="ml-3 flex-1">
                         <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">
-                          Parent-Managed Account
+                          {t('parentManagedOptionTitle')}
                         </h4>
                         <p className="text-sm text-gray-600 dark:text-gray-400">
-                          Your parent/guardian will create and manage the account on your behalf. They'll have full control.
+                          {t('parentManagedOptionDescription')}
                         </p>
                       </div>
                     </div>
@@ -463,10 +463,10 @@ export default function SignupStep1() {
                       <MdWarning className="text-amber-500 mt-0.5 mr-3 flex-shrink-0" size={24} />
                       <div>
                         <h3 className="text-amber-800 dark:text-amber-300 font-semibold mb-1">
-                          Parental Consent Required
+                          {t('parentalConsentRequiredTitle')}
                         </h3>
                         <p className="text-amber-700 dark:text-amber-400 text-sm">
-                          After you complete registration, we'll send a consent email to your parent/guardian. Your account will be pending until they confirm.
+                          {t('parentalConsentRequiredDescription')}
                         </p>
                       </div>
                     </div>
@@ -536,22 +536,22 @@ export default function SignupStep1() {
                     <div className="flex items-center gap-2 mb-2">
                       <MdPerson className="text-primary-blue dark:text-accent-red" size={24} />
                       <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                        Parent/Guardian Contact Information
+                        {t('parentGuardianContactInformation')}
                       </h3>
                     </div>
                     <p className="text-sm text-gray-700 dark:text-gray-300 mb-4">
-                      We need to contact your parent or guardian to confirm they consent to you having an account.
+                      {t('parentGuardianContactDescription')}
                     </p>
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                        Parent/Guardian Full Name <span className="text-red-500">*</span>
+                        {t('parentGuardianFullName')} <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="text"
                         value={formData.parentName}
                         onChange={(e) => handleChange('parentName', e.target.value)}
-                        placeholder="e.g., Jane Smith"
+                        placeholder={t('parentGuardianFullNamePlaceholder')}
                         className={`w-full px-4 py-3 rounded-lg border ${errors.parentName ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red transition-all`}
                       />
                       {errors.parentName && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.parentName}</p>}
@@ -559,18 +559,18 @@ export default function SignupStep1() {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                        Parent/Guardian Email <span className="text-red-500">*</span>
+                        {t('parentGuardianEmail')} <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="email"
                         value={formData.parentContactEmail}
                         onChange={(e) => handleChange('parentContactEmail', e.target.value)}
-                        placeholder="parent@example.com"
+                        placeholder={t('parentGuardianEmailPlaceholder')}
                         className={`w-full px-4 py-3 rounded-lg border ${errors.parentContactEmail ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red transition-all`}
                       />
                       {errors.parentContactEmail && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.parentContactEmail}</p>}
                       <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                        We'll send a consent verification email to this address
+                        {t('parentGuardianConsentEmailHint')}
                       </p>
                     </div>
                   </div>
@@ -641,7 +641,7 @@ export default function SignupStep1() {
                         value={formData.parentPhone}
                         onChange={(value) => handleChange('parentPhone', value)}
                         error={!!errors.parentPhone}
-                        placeholder="Enter parent/guardian phone number"
+                        placeholder={t('parentGuardianPhonePlaceholder')}
                       />
                       {errors.parentPhone && <p className="mt-1 text-sm text-red-600">{errors.parentPhone}</p>}
                     </div>

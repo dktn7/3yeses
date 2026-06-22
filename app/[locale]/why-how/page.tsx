@@ -287,6 +287,7 @@ export default async function WhyHowPage({
   const resolvedParams = await params;
   const locale = resolvedParams?.locale ?? "en-gb";
   const t = await getTranslations("WhyHow");
+  const tNav = await getTranslations("Navigation");
 
   const features = [
     {
@@ -368,7 +369,7 @@ export default async function WhyHowPage({
         <div className="relative z-10 max-w-6xl mx-auto px-6">
           <Breadcrumbs
             items={[
-              { label: "Home", href: `/${locale}` },
+              { label: tNav('home'), href: `/${locale}` },
               { label: t("breadcrumb") },
             ]}
           />

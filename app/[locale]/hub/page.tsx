@@ -304,11 +304,13 @@ export default function HubPage() {
     if (activeType !== 'all') params.set('type', activeType);
     if (sortBy !== 'trending') params.set('sort', sortBy);
     if (searchQuery) params.set('search', searchQuery);
-    if (selectedMediaItem) params.set('mediaId', selectedMediaItem.id);
+    const urlMediaId = searchParams.get('mediaId');
+    if (urlMediaId) params.set('mediaId', urlMediaId);
+    else if (selectedMediaItem) params.set('mediaId', selectedMediaItem.id);
 
     const url = params.toString() ? `${pathname}?${params.toString()}` : pathname;
     router.replace(url, { scroll: false });
-  }, [activeCategory, activeType, sortBy, searchQuery, selectedMediaItem, pathname, router]);
+  }, [activeCategory, activeType, sortBy, searchQuery, selectedMediaItem, pathname, router, searchParams]);
 
   useEffect(() => {
     const mediaId = searchParams.get('mediaId');
@@ -604,7 +606,6 @@ export default function HubPage() {
     return (
       <div className="hub-root min-h-screen bg-gradient-to-b from-blue-50 via-white to-blue-50/40 text-light-surface dark:from-zinc-950 dark:via-[#111111] dark:to-zinc-950 dark:text-dark-surface">
         <MediaOverlay
-          mode="embedded"
           media={selectedMediaItem}
           allMedia={allItems}
           talents={featuredTalents}
