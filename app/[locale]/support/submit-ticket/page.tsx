@@ -1,11 +1,12 @@
 'use client';
 
 import React from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { LifeBuoy, ArrowLeft, Shield, MessageSquare, Clock } from 'lucide-react';
 import Link from 'next/link';
 import SupportForm from '@/components/SupportForm';
 import SwoopingTick from '@/components/SwoopingTick';
+import { buildLocalizedPath } from '@/lib/locale-path';
 
 /* ── Background decoration (matches support hub styling) ─ */
 function SupportBgDecoration() {
@@ -39,6 +40,7 @@ function SupportBgDecoration() {
 
 export default function SubmitTicketPage() {
   const t = useTranslations('support');
+  const locale = useLocale();
   return (
     <div className="relative min-h-screen overflow-hidden landing-bg brand-true-red isolate">
       <SupportBgDecoration />
@@ -47,7 +49,7 @@ export default function SubmitTicketPage() {
 
         {/* Back link */}
         <Link
-          href="/support"
+          href={buildLocalizedPath(locale, '/support')}
           className="inline-flex items-center gap-2 text-sm font-medium text-gray-500 dark:text-gray-300 hover:text-[var(--marketing-accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-ring)] rounded-sm transition-colors mb-8"
         >
           <ArrowLeft className="w-4 h-4" />
@@ -57,7 +59,7 @@ export default function SubmitTicketPage() {
         {/* ── Hero ── */}
         <div className="text-center mb-10">
           <div className="flex justify-center mb-5">
-            <span className="marketing-pill inline-flex items-center gap-3 rounded-full px-5 py-2.5 marketing-pill border border-gray-200/60 dark:border-[var(--marketing-pill-border)] shadow-sm">
+            <span className="marketing-pill inline-flex items-center gap-3 rounded-full border border-[var(--marketing-pill-border)] px-5 py-2.5 shadow-sm">
               <SwoopingTick className="w-9 h-9 shrink-0 marketing-accent-text" />
               <span className="text-xs font-bold uppercase tracking-[0.25em] marketing-accent-text">
                 {t('ticketLabel')}
@@ -83,7 +85,7 @@ export default function SubmitTicketPage() {
         </div>
 
         {/* ── Ticket Form Card ── */}
-        <div className="rounded-[2rem] marketing-panel border border-gray-200/50 dark:border-red-400/20 shadow-lg p-8 md:p-10">
+        <div className="rounded-[2rem] border border-[var(--marketing-border)] bg-[var(--marketing-surface)] shadow-lg p-8 md:p-10">
           <div className="flex items-center gap-3 mb-6">
             <LifeBuoy className="w-6 h-6 marketing-accent-text" />
             <h2 className="text-xl font-bold text-gray-900 dark:text-white">{t('newSupportTicket')}</h2>
@@ -101,7 +103,7 @@ export default function SubmitTicketPage() {
           ].map(({ icon, label }) => (
             <div
               key={label}
-              className="marketing-pill flex items-center gap-2.5 text-sm text-gray-700 dark:text-gray-200 marketing-pill px-4 py-2.5 rounded-full border border-gray-200/50 dark:border-[var(--marketing-pill-border)] shadow-sm"
+              className="marketing-pill flex items-center gap-2.5 rounded-full border border-[var(--marketing-pill-border)] px-4 py-2.5 text-sm text-gray-700 shadow-sm dark:text-gray-200"
             >
               <span className="marketing-accent-text">{icon}</span>
               <span className="font-medium">{label}</span>

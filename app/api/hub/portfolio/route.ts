@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
 import { getPrisma } from '@/lib/prisma';
+import { resolveHubAvatarUrl, resolveHubMediaUrl, resolveHubThumbnailUrl } from '@/lib/media-fallback';
 
 // Cache portfolio items for 2 minutes
 let cachedResponse: any = null;
@@ -327,21 +328,21 @@ export async function GET(req: NextRequest) {
 
     // Calculate views and likes from relationships
     const formattedItems = items.map((item) => {
-      return {
-        id: item.id,
-        title: item.title,
-        mediaUrl: item.mediaUrl,
-        type: item.type,
-        thumbnail: item.thumbnail || undefined,
-        talentProfile: {
-          id: (item.talentProfile as any).userId ?? (item.talentProfile as any).id,
-          user: {
-            name: (item.talentProfile as any).user?.name || 'Unknown',
-          },
-          avatarUrl: item.talentProfile.avatarUrl,
-          bio: includeBio ? item.talentProfile.bio : undefined,
-          category: item.talentProfile.category,
-          subcategory: item.talentProfile.subcategory,
+        return {
+          id: item.id,
+          title: item.title,
+          mediaUrl: resolveHubMediaUrl(item.mediaUrl, item.type),
+          type: item.type,
+          thumbnail: resolveHubThumbnailUrl(item.thumbnail || undefined, item.mediaUrl, item.type),
+          talentProfile: {
+            id: (item.talentProfile as any).userId ?? (item.talentProfile as any).id,
+            user: {
+              name: (item.talentProfile as any).user?.name || 'Unknown',
+            },
+            avatarUrl: resolveHubAvatarUrl(item.talentProfile.avatarUrl),
+            bio: includeBio ? item.talentProfile.bio : undefined,
+            category: item.talentProfile.category,
+            subcategory: item.talentProfile.subcategory,
         },
         views: (item._count as any)?.views ?? (item._count as any)?.profileViews ?? 0,
         likeCount: (item.talentProfile as any)?._count?.likes ?? (item.talentProfile as any)?._count?.profileLikes ?? 0,

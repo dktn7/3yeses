@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Check, Loader2 } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
+import { DashboardWorkspace, DashboardHeader, DashboardButton, DashboardLoadError } from '@/components/dashboard/DashboardPrimitives';
 
 interface PricingPlan {
   id: string;
@@ -21,15 +22,21 @@ export default function SubscriptionPage() {
   const [currentSubscription, setCurrentSubscription] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [subscribing, setSubscribing] = useState<string | null>(null);
+  const [notice, setNotice] = useState('');
+  const [confirmCancel, setConfirmCancel] = useState(false);
+  const [canceling, setCanceling] = useState(false);
+  const [loadError, setLoadError] = useState(false);
 
   useEffect(() => {
     fetchData();
   }, []);
 
   const fetchData = async () => {
+    setLoadError(false);
     try {
       // Fetch plans
       const plansRes = await fetch('/api/subscription/plans');
+      if (!plansRes.ok) throw new Error('Plans unavailable');
       const plansData = await plansRes.json();
       setPlans(plansData.plans || []);
 
@@ -38,8 +45,10 @@ export default function SubscriptionPage() {
         credentials: 'include',
       });
       const subData = await subRes.json();
+      if (!subRes.ok) throw new Error('Subscription unavailable');
       setCurrentSubscription(subData);
     } catch (error) {
+      setLoadError(true);
       console.error('Error fetching subscription data:', error);
     } finally {
       setLoading(false);
@@ -60,7 +69,7 @@ export default function SubscriptionPage() {
 
       const data = await response.json();
       
-      if (data.url) {
+      if (response.ok && data.url) {
         // Redirect to Stripe checkout
         window.location.href = data.url;
       } else {
@@ -68,16 +77,13 @@ export default function SubscriptionPage() {
       }
     } catch (error) {
       console.error('Error creating subscription:', error);
-      alert(t('errors.createSubscription'));
+      setNotice(t('errors.createSubscription'));
       setSubscribing(null);
     }
   };
 
   const handleCancel = async () => {
-    if (!confirm(t('confirmCancel'))) {
-      return;
-    }
-
+    setCanceling(true);
     try {
       const response = await fetch('/api/subscription/cancel', {
         method: 'POST',
@@ -85,14 +91,17 @@ export default function SubscriptionPage() {
       });
 
       if (response.ok) {
-        alert(t('cancelSuccess'));
+        setNotice(t('cancelSuccess'));
+        setConfirmCancel(false);
         fetchData();
       } else {
         throw new Error(t('errors.cancelSubscription'));
       }
     } catch (error) {
       console.error('Error canceling subscription:', error);
-      alert(t('errors.cancelSubscription'));
+      setNotice(t('errors.cancelSubscription'));
+    } finally {
+      setCanceling(false);
     }
   };
 
@@ -108,26 +117,27 @@ export default function SubscriptionPage() {
                        currentSubscription?.status === 'ACTIVE';
 
   return (
-    <div className="min-h-screen py-12 px-4">
+    <DashboardWorkspace>
+      <DashboardHeader title={t('title')} description="Choose your plan and manage your membership." />
+      {loadError && <DashboardLoadError onRetry={fetchData} />}
+      {notice && <p role="status" className="rounded-xl border border-slate-300 p-4 text-sm dark:border-slate-700">{notice}</p>}
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-            {t('title')}
-          </h1>
           {isSubscribed && (
             <div className="bg-green-500/20 border border-green-500 rounded-lg p-4 max-w-md mx-auto">
               <p className="text-green-400 font-medium">
                 {t('activeBanner')}
               </p>
               <p className="text-gray-600 dark:text-gray-300 text-sm mt-1">
-                {t('validUntil')}: {new Date(currentSubscription.endDate).toLocaleDateString(locale)}
+                {t('validUntil')}: {currentSubscription.currentPeriodEnd || currentSubscription.endDate ? new Date(currentSubscription.currentPeriodEnd || currentSubscription.endDate).toLocaleDateString(locale) : '—'}
               </p>
               <button
-                onClick={handleCancel}
+                onClick={() => setConfirmCancel(true)}
                 className="mt-3 text-red-400 hover:text-red-300 text-sm underline"
               >
                 {t('cancelSubscription')}
               </button>
+              {confirmCancel && <div className="mt-4 space-y-3 text-sm"><p>{t('confirmCancel')}</p><div className="flex flex-wrap justify-center gap-2"><DashboardButton variant="danger" onClick={handleCancel} disabled={canceling}>{canceling ? t('processing') : t('cancelSubscription')}</DashboardButton><DashboardButton variant="secondary" onClick={() => setConfirmCancel(false)} disabled={canceling}>Keep subscription</DashboardButton></div></div>}
             </div>
           )}
         </div>
@@ -142,7 +152,7 @@ export default function SubscriptionPage() {
           {plans.map((plan) => (
             <div
               key={plan.id}
-              className="bg-white/80 dark:bg-dark-surface border border-blue-300 dark:border-red-500/40 rounded-xl p-8 backdrop-blur-sm"
+              className="dashboard-surface flex flex-col p-6"
             >
               <div className="text-center mb-6">
                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
@@ -170,7 +180,7 @@ export default function SubscriptionPage() {
               <button
                 onClick={() => handleSubscribe(plan.duration)}
                 disabled={subscribing !== null || isSubscribed}
-                className="w-full bg-primary-blue dark:bg-accent-red hover:bg-primary-blueHover dark:hover:bg-accent-red/80 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-semibold py-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+                className="mt-auto w-full bg-primary-blue dark:bg-accent-red hover:bg-primary-blueHover dark:hover:bg-accent-red/80 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-4 rounded-lg transition-colors flex items-center justify-center gap-2"
               >
                 {subscribing === plan.duration ? (
                   <>
@@ -194,6 +204,6 @@ export default function SubscriptionPage() {
           </p>
         </div>
       </div>
-    </div>
+    </DashboardWorkspace>
   );
 }

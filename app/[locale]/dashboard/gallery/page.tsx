@@ -4,12 +4,20 @@ import { useState, useEffect } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import Image from 'next/image';
 import LoadingSpinner from '@/components/LoadingSpinner';
+import { DashboardLoading } from '@/components/dashboard/DashboardPrimitives';
 import MediaThumbnailFallback from '@/components/MediaThumbnailFallback';
 import VideoPlayer from '@/components/VideoPlayer';
 import GalleryViewer from '@/components/GalleryViewer';
-import { Play, ImageIcon, Music, Eye, Heart, Trash2, Layers } from 'lucide-react';
+import { Play, ImageIcon, Music, Eye, Heart, Trash2, Layers, Upload, FolderOpen, X, Link as LinkIcon, Palette, Lightbulb, CheckCircle2, Edit3, Rocket, Camera } from 'lucide-react';
 import { validateUrl } from '@/lib/url-validator';
 import { logBlockedUrl } from '@/lib/config/security';
+import {
+  DashboardButton,
+  DashboardHeader,
+  DashboardPage,
+  EmptyState,
+  SegmentedControl,
+} from '@/components/dashboard/DashboardPrimitives';
 
 interface Media {
   id: string;
@@ -58,29 +66,35 @@ export default function GalleryPage() {
   const [editThumbnail, setEditThumbnail] = useState('');
   const [notification, setNotification] = useState<{ show: boolean; type: 'success' | 'error'; message: string; action?: 'upload' | 'extract' | 'update' | 'delete' | 'edit' }>({ show: false, type: 'success', message: '' });
   const [deleteConfirm, setDeleteConfirm] = useState<{ show: boolean; mediaId: string | null }>({ show: false, mediaId: null });
+  const [mediaFilter, setMediaFilter] = useState<'all' | 'image' | 'video' | 'audio'>('all');
+  const [loadError, setLoadError] = useState(false);
+  const [loadAttempt, setLoadAttempt] = useState(0);
 
   // Load gallery data on mount
   useEffect(() => {
     const loadGallery = async () => {
       try {
         setLoading(true);
+        setLoadError(false);
         const response = await fetch('/api/talent/media');
         if (response.ok) {
           const data = await response.json();
           setMedia(data.media || []);
         } else {
           console.error('Failed to load gallery');
+          setLoadError(true);
           setMedia([]);
         }
       } catch (error) {
         console.error('Error loading gallery:', error);
+        setLoadError(true);
         setMedia([]);
       } finally {
         setLoading(false);
       }
     };
     loadGallery();
-  }, []);
+  }, [loadAttempt]);
 
   // Auto-dismiss notifications after 10 seconds
   useEffect(() => {
@@ -372,44 +386,39 @@ export default function GalleryPage() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <LoadingSpinner />
-      </div>
-    );
-  }
+  const filteredMedia = mediaFilter === 'all'
+    ? media
+    : media.filter((item) => item.type?.toLowerCase() === mediaFilter);
+
+  if (loading) return <DashboardLoading />;
 
   return (
-    <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 space-y-8">
-      {/* Header Section */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{t('title')}</h1>
-          <p className="mt-1 text-gray-600 dark:text-gray-400">
-            {t('subtitle')}
-          </p>
-        </div>
-        
-        {/* Upload Button */}
-        <button
-          onClick={() => { setShowUploadModal(true); setUploadStep('select'); }}
-          disabled={uploading}
-          className="inline-flex items-center gap-2 px-6 py-2.5 bg-primary-blue dark:bg-accent-red text-white rounded-xl font-medium shadow-lg hover:shadow-xl hover:scale-105 transition-all disabled:opacity-50 cursor-pointer"
-        >
-          {uploading ? (
-            <>
-              <LoadingSpinner size="small" inline className="" />
-              <span>{t('uploading')}</span>
-            </>
-          ) : (
-            <>
-              <span>📤</span>
-              <span>{t('uploadMedia')}</span>
-            </>
-          )}
-        </button>
-      </div>
+    <DashboardPage className="space-y-8">
+      <DashboardHeader
+        icon={Layers}
+        title={t('title')}
+        description={t('subtitle')}
+        actions={
+          <DashboardButton onClick={() => { setShowUploadModal(true); setUploadStep('select'); }} disabled={uploading}>
+            {uploading ? <LoadingSpinner size="small" inline className="" /> : <Upload className="h-4 w-4" />}
+            <span>{uploading ? t('uploading') : t('uploadMedia')}</span>
+          </DashboardButton>
+        }
+        meta={
+          <SegmentedControl
+            value={mediaFilter}
+            onChange={setMediaFilter}
+            options={[
+              { value: 'all', label: 'All', count: media.length },
+              { value: 'image', label: t('image'), count: media.filter((item) => item.type?.toLowerCase() === 'image').length },
+              { value: 'video', label: t('video'), count: media.filter((item) => item.type?.toLowerCase() === 'video').length },
+              { value: 'audio', label: t('audio'), count: media.filter((item) => item.type?.toLowerCase() === 'audio').length },
+            ]}
+          />
+        }
+      />
+
+      {loadError && <div role="alert" className="mb-6 rounded-xl border border-red-200 p-4 text-sm dark:border-red-900"><p>We couldn’t load your gallery. Your media has not been changed.</p><button type="button" onClick={() => setLoadAttempt(value => value + 1)} className="mt-2 min-h-10 font-semibold underline">Try again</button></div>}
 
       {/* Upload Modal - Multi-step Form */}
       {showUploadModal && (
@@ -420,7 +429,9 @@ export default function GalleryPage() {
               <div className="flex items-center justify-between mb-6">
                 <div>
                   <h3 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
-                    <span className="w-10 h-10 bg-gradient-to-br from-primary-blue to-blue-600 dark:from-accent-red dark:to-red-600 rounded-xl flex items-center justify-center text-white text-lg shadow-lg">📤</span>
+                    <span className="w-10 h-10 bg-[color:var(--brand-primary)] rounded-xl flex items-center justify-center text-white shadow-lg">
+                      <Upload className="h-5 w-5" />
+                    </span>
                     {t('uploadMedia')}
                   </h3>
                   <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{t('shareWork')}</p>
@@ -437,7 +448,7 @@ export default function GalleryPage() {
                   }} 
                   aria-label={t('cancel')}
                 >
-                  ✕
+                  <X className="h-5 w-5" />
                 </button>
               </div>
 
@@ -466,7 +477,7 @@ export default function GalleryPage() {
                       }}
                       className="flex flex-col items-center gap-3 p-4 bg-light-surface dark:bg-dark-surface border-2 border-gray-300 dark:border-gray-600 rounded-xl hover:border-primary-blue dark:hover:border-accent-red transition-all hover:shadow-lg"
                     >
-                      <div className="text-3xl">📁</div>
+                      <FolderOpen className="h-8 w-8 text-[color:var(--brand-primary)]" />
                       <div className="text-center">
                         <p className="font-semibold text-gray-900 dark:text-white">{t('fromDevice')}</p>
                         <p className="text-xs text-gray-600 dark:text-gray-400">{t('chooseFile')}</p>
@@ -482,7 +493,7 @@ export default function GalleryPage() {
                       }}
                       className="flex flex-col items-center gap-3 p-4 bg-light-surface dark:bg-dark-surface border-2 border-gray-300 dark:border-gray-600 rounded-xl hover:border-primary-blue dark:hover:border-accent-red transition-all hover:shadow-lg"
                     >
-                      <div className="text-3xl">🔗</div>
+                      <Upload className="h-8 w-8 text-[color:var(--brand-primary)]" />
                       <div className="text-center">
                         <p className="font-semibold text-gray-900 dark:text-white">{t('fromUrl')}</p>
                         <p className="text-xs text-gray-600 dark:text-gray-400">{t('pasteLink')}</p>
@@ -496,7 +507,7 @@ export default function GalleryPage() {
               {uploadStep === 'url-input' && !pendingFile && (
                 <div className="space-y-5">
                   <div className="p-5 bg-blue-50 dark:bg-red-900/20 rounded-2xl border border-blue-200 dark:border-red-800">
-                    <p className="text-sm font-medium text-blue-900 dark:text-red-300 mb-3">🔗 {t('enterMediaUrl')}</p>
+                    <p className="flex items-center gap-2 text-sm font-medium text-blue-900 dark:text-red-300 mb-3"><LinkIcon className="h-4 w-4" /> {t('enterMediaUrl')}</p>
                     <p className="text-xs text-blue-800 dark:text-red-300 mb-4">{t('supportedFormats')}</p>
                     
                     <div className="space-y-4">
@@ -515,7 +526,7 @@ export default function GalleryPage() {
                                   : 'bg-light-surface dark:bg-dark-surface text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600'
                               }`}
                             >
-                              {type === 'image' ? '🖼️' : type === 'video' ? '🎬' : '🎵'} {t(type)}
+                              {type === 'image' ? <ImageIcon className="h-4 w-4" /> : type === 'video' ? <Play className="h-4 w-4" /> : <Music className="h-4 w-4" />} {t(type)}
                             </button>
                           ))}
                         </div>
@@ -537,7 +548,7 @@ export default function GalleryPage() {
                       {/* Safety Info */}
                       <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
                         <p className="text-xs font-medium text-green-900 dark:text-green-300 flex items-center gap-2">
-                          🛡️ {t('safetyCheck')}
+                          <CheckCircle2 className="h-3.5 w-3.5" /> {t('safetyCheck')}
                         </p>
                         <p className="text-xs text-green-800 dark:text-green-400 mt-1">
                           {t('safetyCheckDesc')}
@@ -553,7 +564,7 @@ export default function GalleryPage() {
                   {/* File Info Badge */}
                   <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-gray-900 dark:to-gray-800 rounded-xl border border-blue-200 dark:border-gray-700">
                     <div className="w-12 h-12 bg-primary-blue dark:bg-accent-red rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
-                      {pendingType === 'video' ? '🎬' : pendingType === 'audio' ? '🎵' : '🖼️'}
+                      {pendingType === 'video' ? <Play className="h-6 w-6" /> : pendingType === 'audio' ? <Music className="h-6 w-6" /> : <ImageIcon className="h-6 w-6" />}
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold text-gray-900 dark:text-white capitalize">{t(pendingType)}</p>
@@ -568,7 +579,7 @@ export default function GalleryPage() {
                   {(pendingType === 'video' || pendingType === 'audio') && (
                     <div className="p-5 bg-gray-50 dark:bg-gray-900/50 rounded-2xl border border-gray-200 dark:border-gray-700">
                       <label className="flex text-base font-semibold text-gray-900 dark:text-white mb-4 items-center gap-2">
-                        🎨 {t('thumbnail')}
+                        <Palette className="h-4 w-4" /> {t('thumbnail')}
                         <span className="text-xs font-normal text-gray-500 dark:text-gray-400">({t('optional')})</span>
                       </label>
                       
@@ -580,7 +591,7 @@ export default function GalleryPage() {
                               onClick={() => setPendingThumbnailMethod(pendingThumbnailMethod === 'video' ? 'none' : 'video')}
                               className={`px-4 py-3 rounded-xl font-semibold text-sm transition-all ${pendingThumbnailMethod === 'video' ? 'bg-gradient-to-r from-primary-blue to-blue-600 dark:from-accent-red dark:to-red-600 text-white shadow-lg scale-105' : 'bg-light-surface dark:bg-dark-surface text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:border-primary-blue dark:hover:border-accent-red'}`}
                             >
-                              🎬 {t('fromVideo')}
+                              <Play className="h-4 w-4" /> {t('fromVideo')}
                             </button>
                           )}
                           <button
@@ -588,14 +599,14 @@ export default function GalleryPage() {
                             onClick={() => setPendingThumbnailMethod(pendingThumbnailMethod === 'url' ? 'none' : 'url')}
                             className={`px-4 py-3 rounded-xl font-semibold text-sm transition-all ${pendingThumbnailMethod === 'url' ? 'bg-gradient-to-r from-primary-blue to-blue-600 dark:from-accent-red dark:to-red-600 text-white shadow-lg scale-105' : 'bg-light-surface dark:bg-dark-surface text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:border-primary-blue dark:hover:border-accent-red'}`}
                           >
-                            🔗 {t('url')}
+                            <LinkIcon className="h-4 w-4" /> {t('url')}
                           </button>
                           <button
                             type="button"
                             onClick={() => setPendingThumbnailMethod(pendingThumbnailMethod === 'file' ? 'none' : 'file')}
                             className={`px-4 py-3 rounded-xl font-semibold text-sm transition-all ${pendingThumbnailMethod === 'file' ? 'bg-gradient-to-r from-primary-blue to-blue-600 dark:from-accent-red dark:to-red-600 text-white shadow-lg scale-105' : 'bg-light-surface dark:bg-dark-surface text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:border-primary-blue dark:hover:border-accent-red'}`}
                           >
-                            📁 {t('upload')}
+                            <FolderOpen className="h-4 w-4" /> {t('upload')}
                           </button>
                         </div>
 
@@ -619,13 +630,13 @@ export default function GalleryPage() {
                               onClick={() => extractVideoThumbnail(videoTimestamp)}
                               className="w-full px-4 py-2.5 bg-gradient-to-r from-primary-blue to-blue-600 dark:from-accent-red dark:to-red-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all hover:scale-[1.02]"
                             >
-                              ⚡ {t('extractFrame')}
+                              <Camera className="h-4 w-4" /> {t('extractFrame')}
                             </button>
                             {extractedThumbnail && (
                               <div className="relative aspect-video rounded-xl overflow-hidden border-2 border-green-500 shadow-xl">
                                 <Image src={extractedThumbnail} alt={t('thumbnail')} fill sizes="100vw" className="object-cover" />
                                 <div className="absolute top-2 right-2 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg flex items-center gap-1">
-                                  ✓ {t('ready')}
+                                  <CheckCircle2 className="mr-1 inline h-3 w-3" /> {t('ready')}
                                 </div>
                               </div>
                             )}
@@ -652,7 +663,7 @@ export default function GalleryPage() {
                             />
                             {pendingThumbnailFile && (
                               <p className="text-xs text-green-600 dark:text-green-400 mt-2 font-medium flex items-center gap-1">
-                                <span>✓</span> {pendingThumbnailFile.name}
+                                <CheckCircle2 className="h-3.5 w-3.5" /> {pendingThumbnailFile.name}
                               </p>
                             )}
                           </div>
@@ -701,7 +712,7 @@ export default function GalleryPage() {
                   {/* Type-specific Tips */}
                   {pendingType === 'image' && (
                     <div className="p-4 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-red-900/20 dark:to-red-950/20 rounded-xl border border-blue-200 dark:border-red-800/50">
-                      <p className="text-sm text-blue-700 dark:text-red-300 font-medium">💡 {t('imageBestPractices')}</p>
+                      <p className="flex items-center gap-2 text-sm text-blue-700 dark:text-red-300 font-medium"><Lightbulb className="h-4 w-4" /> {t('imageBestPractices')}</p>
                       <ul className="text-xs text-blue-600 dark:text-red-300 mt-2 space-y-1">
                         <li>• {t('imageFormat')}</li>
                         <li>• {t('imageMaxSize')}</li>
@@ -712,7 +723,7 @@ export default function GalleryPage() {
 
                   {pendingType === 'video' && (
                     <div className="p-4 bg-gradient-to-r from-red-50 to-red-50 dark:from-red-900/20 dark:to-red-900/20 rounded-xl border border-red-200 dark:border-red-800/50">
-                      <p className="text-sm text-red-700 dark:text-red-300 font-medium">💡 {t('videoBestPractices')}</p>
+                      <p className="flex items-center gap-2 text-sm text-red-700 dark:text-red-300 font-medium"><Lightbulb className="h-4 w-4" /> {t('videoBestPractices')}</p>
                       <ul className="text-xs text-red-600 dark:text-red-400 mt-2 space-y-1">
                         <li>• {t('videoFormat')}</li>
                         <li>• {t('videoMaxSize')}</li>
@@ -723,7 +734,7 @@ export default function GalleryPage() {
 
                   {pendingType === 'audio' && (
                     <div className="p-4 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-red-900/20 dark:to-red-950/20 rounded-xl border border-blue-200 dark:border-red-800/50">
-                      <p className="text-sm text-blue-700 dark:text-red-300 font-medium">💡 {t('audioBestPractices')}</p>
+                      <p className="flex items-center gap-2 text-sm text-blue-700 dark:text-red-300 font-medium"><Lightbulb className="h-4 w-4" /> {t('audioBestPractices')}</p>
                       <ul className="text-xs text-blue-600 dark:text-red-300 mt-2 space-y-1">
                         <li>• {t('audioFormat')}</li>
                         <li>• {t('audioMaxSize')}</li>
@@ -740,7 +751,7 @@ export default function GalleryPage() {
                   {/* URL Info Badge */}
                   <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-gray-900 dark:to-gray-800 rounded-xl border border-blue-200 dark:border-gray-700">
                     <div className="w-12 h-12 bg-primary-blue dark:bg-accent-red rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
-                      {pendingType === 'video' ? '🎬' : pendingType === 'audio' ? '🎵' : '🖼️'}
+                      {pendingType === 'video' ? <Play className="h-6 w-6" /> : pendingType === 'audio' ? <Music className="h-6 w-6" /> : <ImageIcon className="h-6 w-6" />}
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold text-gray-900 dark:text-white capitalize">{t('fromUrl')}</p>
@@ -789,7 +800,7 @@ export default function GalleryPage() {
                   {(pendingType === 'video' || pendingType === 'audio') && (
                     <div className="p-5 bg-gray-50 dark:bg-gray-900/50 rounded-2xl border border-gray-200 dark:border-gray-700">
                       <label className="flex text-base font-semibold text-gray-900 dark:text-white mb-4 items-center gap-2">
-                        🎨 {t('thumbnail')}
+                        <Palette className="h-4 w-4" /> {t('thumbnail')}
                         <span className="text-xs font-normal text-gray-500 dark:text-gray-400">({t('optional')})</span>
                       </label>
                       <input
@@ -805,7 +816,7 @@ export default function GalleryPage() {
                   {/* Type-specific Tips */}
                   {pendingType === 'image' && (
                     <div className="p-4 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-red-900/20 dark:to-red-950/20 rounded-xl border border-blue-200 dark:border-red-800/50">
-                      <p className="text-sm text-blue-700 dark:text-red-300 font-medium">💡 {t('imageTips')}</p>
+                      <p className="flex items-center gap-2 text-sm text-blue-700 dark:text-red-300 font-medium"><Lightbulb className="h-4 w-4" /> {t('imageTips')}</p>
                       <ul className="text-xs text-blue-600 dark:text-red-300 mt-2 space-y-1">
                         <li>• {t('imageDirectUrl')}</li>
                         <li>• {t('imageSupportedFormats')}</li>
@@ -815,7 +826,7 @@ export default function GalleryPage() {
 
                   {pendingType === 'video' && (
                     <div className="p-4 bg-gradient-to-r from-red-50 to-red-50 dark:from-red-900/20 dark:to-red-900/20 rounded-xl border border-red-200 dark:border-red-800/50">
-                      <p className="text-sm text-red-700 dark:text-red-300 font-medium">💡 {t('videoTips')}</p>
+                      <p className="flex items-center gap-2 text-sm text-red-700 dark:text-red-300 font-medium"><Lightbulb className="h-4 w-4" /> {t('videoTips')}</p>
                       <ul className="text-xs text-red-600 dark:text-red-400 mt-2 space-y-1">
                         <li>• {t('videoDirectUrl')}</li>
                         <li>• {t('videoSupportedFormats')}</li>
@@ -825,7 +836,7 @@ export default function GalleryPage() {
 
                   {pendingType === 'audio' && (
                     <div className="p-4 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-red-900/20 dark:to-red-950/20 rounded-xl border border-blue-200 dark:border-red-800/50">
-                      <p className="text-sm text-blue-700 dark:text-red-300 font-medium">💡 {t('audioTips')}</p>
+                      <p className="flex items-center gap-2 text-sm text-blue-700 dark:text-red-300 font-medium"><Lightbulb className="h-4 w-4" /> {t('audioTips')}</p>
                       <ul className="text-xs text-blue-600 dark:text-red-300 mt-2 space-y-1">
                         <li>• {t('audioDirectUrl')}</li>
                         <li>• {t('audioSupportedFormats')}</li>
@@ -878,7 +889,7 @@ export default function GalleryPage() {
                   ) : (
                     <>
                       <span>{uploadStep === 'url-input' ? t('addFromUrl') : t('uploadToGallery')}</span>
-                      <span>{uploadStep === 'url-input' ? '🔗' : '🚀'}</span>
+                      {uploadStep === 'url-input' ? <LinkIcon className="h-4 w-4" /> : <Rocket className="h-4 w-4" />}
                     </>
                   )}
                 </button>
@@ -889,8 +900,8 @@ export default function GalleryPage() {
       )}
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-light-surface dark:bg-dark-surface rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-gray-700/50">
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+        <div className="dashboard-surface p-5">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{t('total')}</p>
@@ -902,7 +913,7 @@ export default function GalleryPage() {
           </div>
         </div>
 
-        <div className="bg-light-surface dark:bg-dark-surface rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-gray-700/50">
+        <div className="dashboard-surface p-5">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{t('photos')}</p>
@@ -916,7 +927,7 @@ export default function GalleryPage() {
           </div>
         </div>
 
-        <div className="bg-light-surface dark:bg-dark-surface rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-gray-700/50">
+        <div className="dashboard-surface p-5">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{t('videos')}</p>
@@ -930,7 +941,7 @@ export default function GalleryPage() {
           </div>
         </div>
 
-        <div className="bg-light-surface dark:bg-dark-surface rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-gray-700/50">
+        <div className="dashboard-surface p-5">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{t('audio')}</p>
@@ -946,22 +957,19 @@ export default function GalleryPage() {
       </div>
 
       {/* Gallery Grid */}
-      <div className="bg-light-surface dark:bg-dark-surface rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-gray-700/50">
+      <div className="dashboard-surface p-5 sm:p-6">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white">{t('yourMedia')}</h2>
         </div>
 
-        {media.length === 0 ? (
-          <div className="text-center py-16">
-            <div className="text-7xl mb-4">🎨</div>
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-              {t('emptyGallery')}
-            </h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-8 max-w-md mx-auto">
-              {t('emptyGalleryDesc')}
-            </p>
-            <label className="cursor-pointer inline-flex items-center gap-2 px-8 py-4 bg-primary-blue dark:bg-accent-red text-white rounded-xl font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all">
-              <span>📤</span>
+        {filteredMedia.length === 0 ? (
+          <EmptyState
+            icon={Upload}
+            title={media.length === 0 ? t('emptyGallery') : 'No media in this view'}
+            description={media.length === 0 ? t('emptyGalleryDesc') : 'No media matches the selected filter.'}
+            action={
+              <label className="inline-flex min-h-10 cursor-pointer items-center justify-center gap-2 rounded-full bg-[color:var(--brand-primary)] px-4 py-2 text-sm font-semibold text-white shadow-[0_18px_36px_-24px_rgba(var(--brand-primary-rgb),0.95)] transition-all duration-300 ease-spring hover:-translate-y-0.5 active:scale-[0.98]">
+              <Upload className="h-4 w-4" />
               <span>{t('uploadFirst')}</span>
               <input
                 type="file"
@@ -970,10 +978,11 @@ export default function GalleryPage() {
                 className="hidden"
               />
             </label>
-          </div>
+            }
+          />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-            {media.map((item, index) => {
+            {filteredMedia.map((item, index) => {
               const TypeIcon = getTypeIcon(item.type);
               return (
                 <div
@@ -1079,7 +1088,7 @@ export default function GalleryPage() {
                       }}
                       className="mt-2 w-full flex items-center justify-center gap-2 px-3 py-2 bg-blue-50 dark:bg-red-900/20 text-blue-700 dark:text-red-300 rounded-lg font-medium hover:bg-blue-100 dark:hover:bg-red-900/30 transition-colors text-sm"
                     >
-                      ✏️ {t('edit')}
+                      <Edit3 className="h-3.5 w-3.5" /> {t('edit')}
                     </button>
                   </div>
                 </div>
@@ -1116,7 +1125,7 @@ export default function GalleryPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
-                    <span className="w-10 h-10 bg-gradient-to-br from-primary-blue to-blue-600 dark:from-accent-red dark:to-red-600 rounded-xl flex items-center justify-center text-white text-lg shadow-lg">✏️</span>
+                    <span className="w-10 h-10 bg-[color:var(--brand-primary)] rounded-xl flex items-center justify-center text-white shadow-lg"><Edit3 className="h-5 w-5" /></span>
                     {t('editMedia')}
                   </h3>
                   <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400 mt-1">{t('previewAndUpdate')} {editingItem.type.toLowerCase()}</p>
@@ -1126,7 +1135,7 @@ export default function GalleryPage() {
                   onClick={() => setEditingItem(null)} 
                   aria-label={t('cancel')}
                 >
-                  ✕
+                  <X className="h-5 w-5" />
                 </button>
               </div>
             </div>
@@ -1214,7 +1223,7 @@ export default function GalleryPage() {
                           onClick={() => setThumbnailMethod(thumbnailMethod === 'video' ? 'none' : 'video')}
                           className={`px-3 py-2 rounded-lg font-medium text-sm transition-all ${thumbnailMethod === 'video' ? 'bg-primary-blue dark:bg-accent-red text-white shadow-lg' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'}`}
                         >
-                          🎬 {t('video')}
+                          <Play className="h-4 w-4" /> {t('video')}
                         </button>
                       )}
                       <button
@@ -1222,14 +1231,14 @@ export default function GalleryPage() {
                         onClick={() => setThumbnailMethod(thumbnailMethod === 'url' ? 'none' : 'url')}
                         className={`px-3 py-2 rounded-lg font-medium text-sm transition-all ${thumbnailMethod === 'url' ? 'bg-primary-blue dark:bg-accent-red text-white shadow-lg' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'}`}
                       >
-                        🔗 {t('url')}
+                        <LinkIcon className="h-4 w-4" /> {t('url')}
                       </button>
                       <button
                         type="button"
                         onClick={() => setThumbnailMethod(thumbnailMethod === 'file' ? 'none' : 'file')}
                         className={`px-3 py-2 rounded-lg font-medium text-sm transition-all ${thumbnailMethod === 'file' ? 'bg-primary-blue dark:bg-accent-red text-white shadow-lg' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'}`}
                       >
-                        📁 {t('file')}
+                        <FolderOpen className="h-4 w-4" /> {t('file')}
                       </button>
                     </div>
                     {thumbnailMethod === 'video' && editingItem.type === 'video' && (
@@ -1277,7 +1286,7 @@ export default function GalleryPage() {
                         {extractedThumbnail && (
                           <div className="relative aspect-video rounded-lg overflow-hidden border-2 border-green-500">
                             <Image src={extractedThumbnail} alt={t('thumbnail')} fill sizes="100vw" className="object-cover" />
-                            <div className="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full font-medium">✓ {t('ready')}</div>
+                            <div className="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full font-medium"><CheckCircle2 className="mr-1 inline h-3 w-3" /> {t('ready')}</div>
                           </div>
                         )}
                       </div>
@@ -1313,7 +1322,7 @@ export default function GalleryPage() {
                           className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white"
                         />
                         {pendingThumbnailFile && (
-                          <p className="text-xs text-green-600 dark:text-green-400 mt-1">✓ {pendingThumbnailFile.name}</p>
+                          <p className="mt-1 flex items-center gap-1 text-xs text-green-600 dark:text-green-400"><CheckCircle2 className="h-3.5 w-3.5" /> {pendingThumbnailFile.name}</p>
                         )}
                       </div>
                     )}
@@ -1345,7 +1354,7 @@ export default function GalleryPage() {
                 ) : (
                   <>
                     <span>{t('saveChanges')}</span>
-                    <span>✓</span>
+                    <CheckCircle2 className="h-4 w-4" />
                   </>
                 )}
               </button>
@@ -1410,13 +1419,13 @@ export default function GalleryPage() {
                 }`}>
                   {notification.type === 'success' 
                     ? notification.action === 'upload'
-                      ? `🚀 ${t('toastUploaded')}`
+                      ? t('toastUploaded')
                       : notification.action === 'extract'
-                      ? `📸 ${t('toastExtracted')}`
+                      ? t('toastExtracted')
                       : notification.action === 'edit'
-                      ? `✏️ ${t('toastUpdated')}`
+                      ? t('toastUpdated')
                       : notification.action === 'delete'
-                      ? `🗑️ ${t('toastDeleted')}`
+                      ? t('toastDeleted')
                       : t('toastSuccess')
                     : t('toastError')
                   }
@@ -1493,6 +1502,8 @@ export default function GalleryPage() {
           </div>
         </div>
       )}
-    </div>
+    </DashboardPage>
   );
 }
+
+

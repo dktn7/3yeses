@@ -2,9 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { Ticket, Plus, Clock, CheckCircle2, AlertCircle, XCircle, Loader2, LifeBuoy, ArrowRight } from 'lucide-react';
 import LoadingSpinner from '@/components/LoadingSpinner';
+import { DashboardLoading } from '@/components/dashboard/DashboardPrimitives';
+import { DashboardHeader, DashboardButton } from '@/components/dashboard/DashboardPrimitives';
+import { buildLocalizedPath } from '@/lib/locale-path';
 
 interface SupportTicket {
   id: string;
@@ -79,6 +82,7 @@ function formatTime(dateStr: string) {
 
 export default function TicketsPage() {
   const t = useTranslations('dashboard.tickets');
+  const locale = useLocale();
   const [tickets, setTickets] = useState<SupportTicket[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -89,6 +93,7 @@ export default function TicketsPage() {
   }, []);
 
   const fetchTickets = async () => {
+    setError('');
     try {
       const res = await fetch('/api/support/tickets', { credentials: 'include' });
       if (res.ok) {
@@ -115,37 +120,12 @@ export default function TicketsPage() {
     return acc;
   }, {} as Record<string, number>);
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <LoadingSpinner />
-      </div>
-    );
-  }
+  if (loading) return <DashboardLoading />;
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+    <div className="max-w-[1420px] mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-9 space-y-6">
 
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
-            <Ticket className="w-8 h-8 text-primary-blue dark:text-accent-red" />
-            {t('title')}
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-1">
-            {t('description')}
-          </p>
-        </div>
-        <Link
-          href="/support/submit-ticket"
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-primary-blue to-accent-blue dark:from-accent-red dark:to-primary-red text-white font-semibold text-sm shadow-lg shadow-primary-blue/20 dark:shadow-accent-red/20 hover:opacity-90 transition-opacity"
-        >
-          <Plus className="w-4 h-4" />
-          {t('newTicket')}
-        </Link>
-      </div>
-
+      <DashboardHeader icon={Ticket} title={t('title')} description={t('description')} actions={<DashboardButton href={buildLocalizedPath(locale, '/support/submit-ticket')}><Plus className="h-4 w-4" />{t('newTicket')}</DashboardButton>} />
       {error && (
         <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
           <p className="text-red-700 dark:text-red-300 text-sm font-medium flex items-center gap-2">
@@ -199,7 +179,7 @@ export default function TicketsPage() {
             {t('noTicketsDesc')}
           </p>
           <Link
-            href="/support/submit-ticket"
+            href={buildLocalizedPath(locale, '/support/submit-ticket')}
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-primary-blue to-accent-blue dark:from-accent-red dark:to-primary-red text-white font-semibold shadow-lg shadow-primary-blue/20 dark:shadow-accent-red/20 hover:opacity-90 transition-opacity"
           >
             <Plus className="w-4 h-4" />
@@ -252,7 +232,7 @@ export default function TicketsPage() {
       {/* Help Centre link */}
       <div className="pt-4">
         <Link
-          href="/support"
+          href={buildLocalizedPath(locale, '/support')}
           className="group inline-flex items-center gap-2 text-sm font-medium text-primary-blue dark:text-accent-red hover:underline"
         >
           <LifeBuoy className="w-4 h-4" />
@@ -263,3 +243,5 @@ export default function TicketsPage() {
     </div>
   );
 }
+
+

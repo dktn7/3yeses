@@ -26,6 +26,16 @@ import {
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import LoadingSpinner from '@/components/LoadingSpinner';
+import {
+  DashboardHeader,
+  DashboardLoadError,
+  DashboardLoading,
+  DashboardPage,
+  DashboardPanel,
+  EmptyState,
+  MetricTile,
+  SegmentedControl,
+} from '@/components/dashboard/DashboardPrimitives';
 
 interface DailyStats {
   date: Date;
@@ -77,19 +87,22 @@ export default function AnalyticsPage() {
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [timeRange, setTimeRange] = useState<number>(30);
+  const [loadError, setLoadError] = useState(false);
   const t = useTranslations('dashboard.analytics');
 
   const fetchAnalytics = useCallback(async () => {
     try {
       setLoading(true);
+      setLoadError(false);
       const response = await fetch(`/api/analytics/dashboard?days=${timeRange}`);
       const data = await response.json();
 
+      if (!response.ok || !data.success) throw new Error('Analytics unavailable');
       if (data.success) {
         setAnalytics(data.analytics);
       }
     } catch (error) {
-      console.error('Failed to fetch analytics:', error);
+      setLoadError(true);
     } finally {
       setLoading(false);
     }
@@ -99,24 +112,15 @@ export default function AnalyticsPage() {
     fetchAnalytics();
   }, [timeRange, fetchAnalytics]);
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen bg-light-surface dark:bg-dark-surface">
-        <LoadingSpinner />
-      </div>
-    );
-  }
+  if (loading) return <DashboardLoading />;
+  if (loadError) return <DashboardPage><DashboardHeader title={t('dashboard')} /><DashboardLoadError onRetry={fetchAnalytics} /></DashboardPage>;
 
   if (!analytics) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">{t('title')}</h1>
-          <p className="text-gray-600 dark:text-gray-400">
-            {t('noData')}
-          </p>
-        </div>
-      </div>
+      <DashboardPage>
+        <DashboardHeader title={t('dashboard')} />
+        <EmptyState icon={TrendingUp} title={t('title')} description={t('noData')} />
+      </DashboardPage>
     );
   }
 
@@ -141,87 +145,31 @@ export default function AnalyticsPage() {
   }));
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">{t('dashboard')}</h1>
-        <div className="flex gap-2">
-          <button
-            onClick={() => setTimeRange(7)}
-            className={`px-4 py-2 rounded-lg ${
-              timeRange === 7
-                ? 'bg-primary-blue dark:bg-accent-red text-white'
-                : 'bg-gray-100 dark:bg-gray-800'
-            }`}
-          >
-            {t('days7')}
-          </button>
-          <button
-            onClick={() => setTimeRange(30)}
-            className={`px-4 py-2 rounded-lg ${
-              timeRange === 30
-                ? 'bg-primary-blue dark:bg-accent-red text-white'
-                : 'bg-gray-100 dark:bg-gray-800'
-            }`}
-          >
-            {t('days30')}
-          </button>
-          <button
-            onClick={() => setTimeRange(90)}
-            className={`px-4 py-2 rounded-lg ${
-              timeRange === 90
-                ? 'bg-primary-blue dark:bg-accent-red text-white'
-                : 'bg-gray-100 dark:bg-gray-800'
-            }`}
-          >
-            {t('days90')}
-          </button>
-        </div>
-      </div>
+    <DashboardPage>
+      <DashboardHeader
+        icon={TrendingUp}
+        title={t('dashboard')}
+        description="Understand how people discover, open, and engage with your profile and portfolio."
+        actions={
+          <SegmentedControl
+            value={String(timeRange)}
+            onChange={(value) => setTimeRange(Number(value))}
+            options={[
+              { value: '7', label: t('days7') },
+              { value: '30', label: t('days30') },
+              { value: '90', label: t('days90') },
+            ]}
+          />
+        }
+      />
 
       {/* Overview Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div className="bg-light-surface dark:bg-dark-surface rounded-lg p-6 shadow-md">
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400">
-              {t('totalViews')}
-            </h3>
-            <Eye className="w-5 h-5 text-blue-600" />
-          </div>
-          <p className="text-3xl font-bold">{overview.totalViews.toLocaleString()}</p>
-          <p className="text-sm text-gray-500 mt-1">
-            {t('uniqueViewers', { count: overview.uniqueViewers })}
-          </p>
-        </div>
+        <MetricTile label={t('totalViews')} value={overview.totalViews.toLocaleString()} detail={t('uniqueViewers', { count: overview.uniqueViewers })} icon={Eye} />
 
-        <div className="bg-light-surface dark:bg-dark-surface rounded-lg p-6 shadow-md">
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400">
-              {t('portfolioViews')}
-            </h3>
-            <ImageIcon className="w-5 h-5 text-green-600" />
-          </div>
-          <p className="text-3xl font-bold">
-            {overview.totalPortfolioViews.toLocaleString()}
-          </p>
-          <p className="text-sm text-gray-500 mt-1">
-            {t('engagementRate', { rate: overview.engagementRate })}
-          </p>
-        </div>
+        <MetricTile label={t('portfolioViews')} value={overview.totalPortfolioViews.toLocaleString()} detail={t('engagementRate', { rate: overview.engagementRate })} icon={ImageIcon} />
 
-        <div className="bg-light-surface dark:bg-dark-surface rounded-lg p-6 shadow-md">
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400">
-              {t('searchPerformance')}
-            </h3>
-            <Search className="w-5 h-5 text-purple-600" />
-          </div>
-          <p className="text-3xl font-bold">
-            {overview.searchImpressions.toLocaleString()}
-          </p>
-          <p className="text-sm text-gray-500 mt-1">
-            {t('ctr', { rate: overview.searchCTR.toFixed(1), clicks: overview.searchClicks })}
-          </p>
-        </div>
+        <MetricTile label={t('searchPerformance')} value={overview.searchImpressions.toLocaleString()} detail={t('ctr', { rate: overview.searchCTR.toFixed(1), clicks: overview.searchClicks })} icon={Search} />
 
         {/* Rating removed — platform no longer tracks average rating */}
       </div>
@@ -229,7 +177,7 @@ export default function AnalyticsPage() {
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         {/* Profile Views Trend */}
-        <div className="bg-light-surface dark:bg-dark-surface rounded-lg p-6 shadow-md">
+        <DashboardPanel>
           <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
             <TrendingUp className="w-5 h-5" />
             {t('profileViewsTrend')}
@@ -255,10 +203,10 @@ export default function AnalyticsPage() {
               />
             </LineChart>
           </ResponsiveContainer>
-        </div>
+        </DashboardPanel>
 
         {/* Portfolio Engagement */}
-        <div className="bg-light-surface dark:bg-dark-surface rounded-lg p-6 shadow-md">
+        <DashboardPanel>
           <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
             <ImageIcon className="w-5 h-5" />
             {t('portfolioEngagement')}
@@ -273,10 +221,10 @@ export default function AnalyticsPage() {
               <Bar dataKey={t('chartPortfolioViews')} fill="#10b981" />
             </BarChart>
           </ResponsiveContainer>
-        </div>
+        </DashboardPanel>
 
         {/* Search Performance */}
-        <div className="bg-light-surface dark:bg-dark-surface rounded-lg p-6 shadow-md">
+        <DashboardPanel>
           <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
             <Search className="w-5 h-5" />
             {t('searchPerformance')}
@@ -302,10 +250,10 @@ export default function AnalyticsPage() {
               />
             </LineChart>
           </ResponsiveContainer>
-        </div>
+        </DashboardPanel>
 
         {/* Top Portfolio Items */}
-        <div className="bg-light-surface dark:bg-dark-surface rounded-lg p-6 shadow-md">
+        <DashboardPanel>
           <h3 className="text-lg font-semibold mb-4">{t('topPortfolioItems')}</h3>
           <div className="space-y-3">
             {topPortfolioItems.map((item, index) => (
@@ -336,11 +284,11 @@ export default function AnalyticsPage() {
               </p>
             )}
           </div>
-        </div>
+        </DashboardPanel>
       </div>
 
       {/* Recent Views */}
-      <div className="bg-light-surface dark:bg-dark-surface rounded-lg p-6 shadow-md">
+      <DashboardPanel>
         <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
           <Users className="w-5 h-5" />
           {t('recentProfileViews')}
@@ -394,7 +342,8 @@ export default function AnalyticsPage() {
             </tbody>
           </table>
         </div>
-      </div>
-    </div>
+      </DashboardPanel>
+    </DashboardPage>
   );
 }
+

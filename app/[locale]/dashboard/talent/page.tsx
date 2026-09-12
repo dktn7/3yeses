@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLocale } from 'next-intl';
 import LoadingSpinner from '@/components/LoadingSpinner';
+import { DashboardHeader, DashboardStatRow } from '@/components/dashboard/DashboardPrimitives';
 import { buildLocalizedPath, normalizeLocale } from '@/lib/locale-path';
 import {
   Bell,
@@ -126,76 +127,15 @@ export default function TalentDashboard() {
   const hasWarnings = warningNotifications.length > 0;
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(37,99,235,0.10),transparent_34%),radial-gradient(circle_at_top_right,rgba(185,28,28,0.08),transparent_30%),linear-gradient(180deg,var(--background),color-mix(in_srgb,var(--background)_86%,#f8fafc))]">
+    <div className="min-h-screen">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <section className="relative overflow-hidden rounded-[2rem] border border-slate-200/75 bg-light-surface/95 p-6 shadow-[0_24px_60px_-38px_rgba(15,23,42,0.42)] dark:border-slate-800/70 dark:bg-dark-surface/94 md:p-8">
-          <div className="absolute inset-y-0 right-0 hidden w-1/2 bg-[radial-gradient(circle_at_top_right,rgba(37,99,235,0.14),transparent_58%)] lg:block" />
-          <div className="relative grid gap-8 lg:grid-cols-[1.5fr_0.95fr]">
-            <div className="space-y-5">
-              <div className="inline-flex items-center gap-2 rounded-full border border-slate-200/80 bg-white/75 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.24em] text-slate-600 dark:border-slate-800/70 dark:bg-slate-900/40 dark:text-slate-300">
-                <Sparkles size={14} className="text-[color:var(--brand-primary)]" />
-                Talent dashboard
-              </div>
-              <div className="space-y-3">
-                <h1 className="text-3xl font-semibold tracking-tight text-slate-950 text-balance dark:text-white sm:text-4xl md:text-5xl">
-                  Welcome back, {user.name || 'Talent'}.
-                </h1>
-                <p className="max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-300 sm:text-base">
-                  Keep your profile sharp, monitor engagement, and act on anything that needs attention without digging through clutter.
-                </p>
-              </div>
-
-              <div className="flex flex-wrap items-center gap-3">
-                <div className="rounded-full bg-[color:var(--brand-primary)] px-4 py-2 text-sm font-semibold text-white shadow-[0_14px_30px_-18px_rgba(37,99,235,0.9)]">
-                  {stats.subscriptionPlan.toUpperCase()} plan
-                </div>
-                <div className="rounded-full border border-slate-200/70 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-600 dark:border-slate-800/70 dark:bg-slate-900/50 dark:text-slate-300">
-                  {stats.responseRate.toLocaleString(locale, { maximumFractionDigits: 1 })}% response rate
-                </div>
-              </div>
-            </div>
-
-            <div className="grid gap-4">
-              <div className="rounded-[1.75rem] border border-slate-200/70 bg-[linear-gradient(135deg,rgba(37,99,235,0.08),rgba(37,99,235,0.02))] p-5 dark:border-slate-800/70 dark:bg-[linear-gradient(135deg,rgba(185,28,28,0.16),rgba(24,24,27,0.72))]">
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">
-                      Profile reach
-                    </p>
-                    <p className="mt-2 text-3xl font-semibold tracking-tight text-slate-950 dark:text-white">
-                      {stats.totalViews.toLocaleString()}
-                    </p>
-                  </div>
-                  <div className="rounded-2xl bg-white/85 p-3 text-[color:var(--brand-primary)] shadow-sm dark:bg-slate-950/60">
-                    <TrendingUp size={22} />
-                  </div>
-                </div>
-                <p className="mt-3 text-sm text-slate-600 dark:text-slate-300">
-                  Views picked up {stats.activeOpportunities} active opportunities this cycle.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="rounded-[1.5rem] border border-slate-200/70 bg-light-surface/95 p-4 dark:border-slate-800/70 dark:bg-dark-surface/95">
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
-                    Earnings
-                  </p>
-                  <p className="mt-2 text-2xl font-semibold text-slate-950 dark:text-white">
-                    ${stats.totalEarnings.toLocaleString()}
-                  </p>
-                </div>
-                <div className="rounded-[1.5rem] border border-slate-200/70 bg-light-surface/95 p-4 dark:border-slate-800/70 dark:bg-dark-surface/95">
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
-                    Opportunities
-                  </p>
-                  <p className="mt-2 text-2xl font-semibold text-slate-950 dark:text-white">
-                    {stats.activeOpportunities}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        <DashboardHeader title={`Welcome back, ${user.name || 'Talent'}`} description="Your profile, progress, and account updates in one place." />
+        <DashboardStatRow items={[
+          { label: 'Profile views', value: stats.totalViews.toLocaleString(locale) },
+          { label: 'Plan', value: stats.subscriptionPlan },
+          { label: 'Opportunities', value: stats.activeOpportunities },
+          { label: 'Response rate', value: `${stats.responseRate}%` },
+        ]} />
 
         <div className="mt-8 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
           <section className="rounded-[2rem] border border-slate-200/70 bg-light-surface/95 p-6 shadow-[0_18px_44px_-30px_rgba(15,23,42,0.4)] dark:border-slate-800/70 dark:bg-dark-surface/94">
@@ -397,3 +337,5 @@ export default function TalentDashboard() {
     </div>
   );
 }
+
+

@@ -117,7 +117,7 @@ export default function ProfileSection({ className = "", showSignInModal = false
               </div>
               
               <p className="text-sm text-gray-600 dark:text-gray-400 text-center mt-6">
-                Join thousands of talented professionals and discover your next opportunity.
+                Join creative professionals using 3YESES to showcase their work and get discovered.
               </p>
             </div>
           </div>

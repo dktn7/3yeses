@@ -69,6 +69,7 @@ model User {
   subscriptions Subscription[]
   payments      Payment[]
   profileLikes  ProfileLike[]
+  portfolioItemLikes PortfolioItemLike[]
   comments      Comment[]
   commentLikes  CommentLike[]
 
@@ -368,6 +369,7 @@ model PortfolioItem {
   comments Comment[]
   reports  ContentReport[]
   views    PortfolioView[]
+  likes    PortfolioItemLike[]
 
   featuredItems FeaturedItem[]
 
@@ -592,6 +594,21 @@ model CommentLike {
   @@unique([userId, commentId])
   @@index([userId])
   @@index([commentId])
+}
+
+model PortfolioItemLike {
+  id              String        @id @default(cuid())
+  createdAt       DateTime      @default(now())
+
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId          String
+
+  portfolioItem   PortfolioItem @relation(fields: [portfolioItemId], references: [id], onDelete: Cascade)
+  portfolioItemId String
+
+  @@unique([userId, portfolioItemId])
+  @@index([userId])
+  @@index([portfolioItemId])
 }
 
 model ContentReport {

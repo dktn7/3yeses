@@ -107,13 +107,13 @@ export default function SupportFAQ({ faqItems }: { faqItems?: { category: string
         return (
           <div
             key={idx}
-            className="rounded-xl border border-gray-200/60 dark:border-red-400/15 overflow-hidden backdrop-blur-sm bg-white/40 dark:bg-dark-surface/72 transition-shadow hover:shadow-sm"
+            className="rounded-xl border border-gray-200/60 overflow-hidden backdrop-blur-sm bg-light-surface/80 dark:border-[var(--marketing-border)] dark:bg-[var(--marketing-surface)] transition-shadow hover:shadow-sm"
           >
             <button
               type="button"
               aria-expanded={isOpen}
               onClick={() => setOpenIndex(isOpen ? null : idx)}
-              className="w-full text-left px-5 py-4 flex items-center justify-between gap-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-ring)]"
+              className="w-full text-left px-5 py-4 flex items-center justify-between gap-4 hover:bg-black/[0.02] dark:hover:bg-white/[0.04] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-ring)]"
             >
               <div className="flex-1 min-w-0">
                 <span className="block text-[0.65rem] font-bold uppercase tracking-widest marketing-accent-text opacity-70 mb-0.5">

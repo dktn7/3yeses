@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getPrisma } from '@/lib/prisma';
+import { resolveHubAvatarUrl, resolveHubMediaUrl, resolveHubThumbnailUrl } from '@/lib/media-fallback';
 
 export async function GET(
   req: NextRequest,
@@ -52,13 +53,13 @@ export async function GET(
     const formattedItem = {
       id: item.id,
       title: item.title,
-      mediaUrl: item.mediaUrl,
+      mediaUrl: resolveHubMediaUrl(item.mediaUrl, item.type),
       type: item.type,
-      thumbnail: item.thumbnail || undefined,
+      thumbnail: resolveHubThumbnailUrl(item.thumbnail || undefined, item.mediaUrl, item.type),
       talentProfile: {
         id: (item.talentProfile as any).userId ?? (item.talentProfile as any).id,
         user: { name: (item.talentProfile as any).user?.name || 'Unknown' },
-        avatarUrl: item.talentProfile.avatarUrl,
+        avatarUrl: resolveHubAvatarUrl(item.talentProfile.avatarUrl),
         category: item.talentProfile.category,
       },
       views: viewCount,

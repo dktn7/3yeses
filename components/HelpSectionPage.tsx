@@ -1,10 +1,11 @@
 'use client';
 
 import React from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { ArrowLeft, LifeBuoy, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
 import SwoopingTick from '@/components/SwoopingTick';
+import { buildLocalizedPath } from '@/lib/locale-path';
 
 /* ── Background decoration ─ */
 function HelpBgDecoration() {
@@ -113,6 +114,7 @@ export default function HelpSectionPage({
   ticketCategory,
 }: HelpSectionPageProps) {
   const t = useTranslations('support');
+  const locale = useLocale();
   return (
     <div className="relative min-h-screen overflow-hidden landing-bg brand-true-red isolate">
       <HelpBgDecoration />
@@ -121,7 +123,7 @@ export default function HelpSectionPage({
 
         {/* Back link */}
         <Link
-          href="/support"
+          href={buildLocalizedPath(locale, '/support')}
           className="inline-flex items-center gap-2 text-sm font-medium text-gray-500 dark:text-gray-300 hover:text-primary-blue dark:hover:text-accent-red focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/30 dark:focus-visible:ring-accent-red/35 rounded-sm transition-colors mb-8"
         >
           <ArrowLeft className="w-4 h-4" />
@@ -130,7 +132,7 @@ export default function HelpSectionPage({
 
         {/* Hero */}
         <div className="text-center mb-12">
-            <div className="marketing-pill mb-5 inline-flex items-center justify-center gap-3 rounded-full border border-primary-blue/20 bg-light-surface px-5 py-2.5 shadow-sm backdrop-blur-md dark:border-[var(--marketing-pill-border)] dark:bg-dark-surface">
+          <div className="marketing-pill mb-5 inline-flex items-center justify-center gap-3 rounded-full border border-primary-blue/20 bg-light-surface px-5 py-2.5 shadow-sm backdrop-blur-md dark:border-[var(--marketing-pill-border)] dark:bg-[var(--marketing-surface)]">
             <SwoopingTick className="h-8 w-8 shrink-0 text-primary-blue dark:text-accent-red" />
             <span className="text-xs font-bold uppercase tracking-[0.25em] text-primary-blue dark:text-accent-red">
               {label}
@@ -159,7 +161,7 @@ export default function HelpSectionPage({
           <div className="lg:col-span-3 space-y-8">
             {/* Guides */}
             {guides.length > 0 && (
-              <div className="marketing-panel rounded-[2rem] border border-[var(--marketing-border)] shadow-lg p-8">
+              <div className="rounded-[2rem] border border-[var(--marketing-border)] bg-[var(--marketing-surface)] shadow-lg p-8">
                 <div className="flex items-center gap-3 mb-6">
                   {icon}
                   <h2 className="text-xl font-bold text-gray-900 dark:text-white">{t('quickGuide')}</h2>
@@ -170,7 +172,7 @@ export default function HelpSectionPage({
 
             {/* FAQ */}
             {faqs.length > 0 && (
-              <div className="marketing-panel rounded-[2rem] border border-[var(--marketing-border)] shadow-lg p-8">
+              <div className="rounded-[2rem] border border-[var(--marketing-border)] bg-[var(--marketing-surface)] shadow-lg p-8">
                 <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">
                   {t('faqTitle')}
                 </h2>
@@ -182,10 +184,10 @@ export default function HelpSectionPage({
           {/* Sidebar */}
           <aside className="lg:col-span-2 space-y-5">
             <Link
-              href={`/support/submit-ticket`}
-              className="marketing-panel group flex items-center gap-3 rounded-[1.5rem] border border-[var(--marketing-border)] p-6 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary-blue/30 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/30 dark:hover:border-red-300/35 dark:focus-visible:ring-accent-red/35"
+              href={buildLocalizedPath(locale, '/support/submit-ticket')}
+              className="group flex items-center gap-3 rounded-[1.5rem] border border-[var(--marketing-border)] bg-[var(--marketing-surface)] p-6 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary-blue/30 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/30 dark:hover:border-[var(--marketing-ring)] dark:focus-visible:ring-accent-red/35"
             >
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-blue/10 to-accent-blue/10 dark:from-accent-red/10 dark:to-primary-red/10 flex items-center justify-center flex-shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-blue/10 to-accent-blue/10 dark:from-white/5 dark:to-white/10 flex items-center justify-center flex-shrink-0">
                 <LifeBuoy className="w-5 h-5 text-primary-blue dark:text-accent-red" />
               </div>
               <div>
@@ -198,7 +200,7 @@ export default function HelpSectionPage({
               </div>
             </Link>
 
-            <div className="marketing-panel rounded-[1.5rem] border border-[var(--marketing-border)] p-6 shadow-sm">
+            <div className="rounded-[1.5rem] border border-[var(--marketing-border)] bg-[var(--marketing-surface)] p-6 shadow-sm">
               <h3 className="font-bold text-gray-900 dark:text-white text-sm mb-3">{t('relatedTopics')}</h3>
               <div className="space-y-2">
                 {[
@@ -211,10 +213,10 @@ export default function HelpSectionPage({
                 ]
                   .filter((t) => t.label.toLowerCase() !== ticketCategory.toLowerCase())
                   .slice(0, 4)
-                  .map((topic) => (
+                .map((topic) => (
                     <Link
                       key={topic.href}
-                      href={topic.href}
+                      href={buildLocalizedPath(locale, topic.href)}
                       className="block rounded-xl border border-transparent px-3 py-2 text-sm text-gray-600 transition-colors hover:border-[var(--marketing-border)] hover:bg-[var(--marketing-surface-strong)] hover:text-primary-blue focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/30 dark:text-gray-300 dark:hover:text-accent-red dark:focus-visible:ring-accent-red/35"
                     >
                       {topic.label}

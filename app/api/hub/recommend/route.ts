@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
 import { getPrisma } from '@/lib/prisma';
+import { resolveHubAvatarUrl, resolveHubMediaUrl, resolveHubThumbnailUrl } from '@/lib/media-fallback';
 
 // Recommendations endpoint
 // Scoring: 50% views, 30% recency (newer boosted), 20% creator engagement (profile viewCount/likeCount)
@@ -69,8 +70,8 @@ export async function GET(req: NextRequest) {
       return {
         id: item.id,
         title: item.title,
-        mediaUrl: item.mediaUrl,
-        thumbnail: item.thumbnail || null,
+        mediaUrl: resolveHubMediaUrl(item.mediaUrl, item.type),
+        thumbnail: resolveHubThumbnailUrl(item.thumbnail || null, item.mediaUrl, item.type),
         type: item.type,
         createdAt: item.createdAt,
         score: Number(s.score.toFixed(6)),
@@ -79,7 +80,7 @@ export async function GET(req: NextRequest) {
         talentProfile: {
           id: tp?.userId ?? tp?.id,
           name: tp?.user?.name || null,
-          avatarUrl: tp?.avatarUrl || null,
+          avatarUrl: resolveHubAvatarUrl(tp?.avatarUrl || null),
           likeCount: tp?.likeCount ?? 0,
           viewCount: tp?.viewCount ?? 0,
         },

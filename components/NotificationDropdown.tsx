@@ -45,6 +45,8 @@ const defaultSettings: NotificationSettings = {
   soundEnabled: true,
 };
 
+const NOTIFICATIONS_REFRESH_INTERVAL = 2 * 60 * 1000; // 2 minutes
+
 export default function NotificationDropdown() {
   const t = useTranslations('notifications');
   const [isOpen, setIsOpen] = useState(false);
@@ -96,7 +98,7 @@ export default function NotificationDropdown() {
     const interval = setInterval(() => {
       fetchNotifications();
       fetchSystemAlerts();
-    }, 30000);
+    }, NOTIFICATIONS_REFRESH_INTERVAL);
     return () => clearInterval(interval);
   }, []);
 

@@ -12,6 +12,8 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   // Check for homepage - handle root and locale routes
   const isHomePage = !pathname || pathname === '/' || pathname === '/en-gb' || pathname === '/en-gb/';
 
+  if (pathname?.split('/')[2] === 'dashboard') return <>{children}</>;
+
   return (
     <div className="flex min-w-0">
       {/* Fixed Sidebar component */}

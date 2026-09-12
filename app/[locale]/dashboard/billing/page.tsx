@@ -2,9 +2,20 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import LoadingSpinner from '@/components/LoadingSpinner';
+import { DashboardLoading } from '@/components/dashboard/DashboardPrimitives';
 import { CreditCard, Calendar, CheckCircle, XCircle, Clock, Receipt } from 'lucide-react';
+import {
+  DashboardButton,
+  DashboardHeader,
+  DashboardPage,
+  DashboardPanel,
+  EmptyState,
+  PanelHeading,
+  StatusPill,
+} from '@/components/dashboard/DashboardPrimitives';
+import { buildLocalizedPath } from '@/lib/locale-path';
 
 interface Payment {
   id: string;
@@ -37,12 +48,15 @@ interface BillingData {
 
 export default function BillingPage() {
   const router = useRouter();
+  const locale = useLocale();
   const t = useTranslations('dashboard.billing');
   const [loading, setLoading] = useState(true);
   const [billingData, setBillingData] = useState<BillingData | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const fetchBillingData = useCallback(async () => {
+    setError(null);
+    setLoading(true);
     try {
       const response = await fetch('/api/payments/history', {
         credentials: 'include',
@@ -52,7 +66,7 @@ export default function BillingPage() {
         const data = await response.json();
         setBillingData(data);
       } else if (response.status === 401) {
-        window.location.href = '/auth/signin';
+        window.location.href = buildLocalizedPath(locale, '/auth/signin');
       } else {
         setError(t('failedToLoad'));
       }
@@ -62,7 +76,7 @@ export default function BillingPage() {
     } finally {
       setLoading(false);
     }
-  }, [t]);
+  }, [locale, t]);
 
   useEffect(() => {
     fetchBillingData();
@@ -113,56 +127,56 @@ export default function BillingPage() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <LoadingSpinner />
-      </div>
-    );
-  }
+  if (loading) return <DashboardLoading />;
 
   if (error) {
     return (
-      <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
-        <p className="text-red-800 dark:text-red-300">{error}</p>
-      </div>
+      <DashboardPage>
+        <DashboardHeader icon={CreditCard} title={t('title')} />
+        <DashboardPanel>
+          <p role="alert" className="text-sm font-semibold text-red-700 dark:text-red-300">{error}</p>
+          <DashboardButton onClick={fetchBillingData} variant="secondary" className="mt-4">Try again</DashboardButton>
+        </DashboardPanel>
+      </DashboardPage>
     );
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="bg-light-surface dark:bg-dark-surface rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{t('title')}</h1>
-        <p className="mt-2 text-gray-600 dark:text-gray-400">
-          {t('subtitle')}
-        </p>
-      </div>
+    <DashboardPage>
+      <DashboardHeader
+        icon={CreditCard}
+        title={t('title')}
+        description={t('subtitle')}
+        actions={
+          <DashboardButton onClick={() => router.push(buildLocalizedPath(locale, '/dashboard/subscription'))}>
+            {t('manageSubscription')}
+          </DashboardButton>
+        }
+      />
 
       {/* Current Subscription */}
       {billingData?.subscription && (
-        <div className="bg-light-surface dark:bg-dark-surface rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-            <CreditCard className="w-5 h-5" />
-            {t('currentSubscription')}
-          </h2>
+        <DashboardPanel className="mb-6">
+          <PanelHeading title={t('currentSubscription')} description="Your plan status, renewal window, and account access at a glance." />
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400">{t('plan')}</p>
-              <p className="font-semibold text-gray-900 dark:text-white capitalize">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            <div className="rounded-2xl bg-slate-50/80 p-4 dark:bg-slate-900/35">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">{t('plan')}</p>
+              <p className="mt-2 text-lg font-semibold capitalize text-slate-950 dark:text-white">
                 {billingData.subscription.plan.toLowerCase()}
               </p>
             </div>
-            <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400">{t('status')}</p>
-              <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(billingData.subscription.status)}`}>
+            <div className="rounded-2xl bg-slate-50/80 p-4 dark:bg-slate-900/35">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">{t('status')}</p>
+              <div className="mt-2">
+                <StatusPill tone={billingData.subscription.status === 'ACTIVE' ? 'success' : 'brand'}>
                 {billingData.subscription.status.toLowerCase()}
-              </span>
+                </StatusPill>
+              </div>
             </div>
-            <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400">{t('currentPeriod')}</p>
-              <p className="font-semibold text-gray-900 dark:text-white">
+            <div className="rounded-2xl bg-slate-50/80 p-4 dark:bg-slate-900/35">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">{t('currentPeriod')}</p>
+              <p className="mt-2 text-sm font-semibold leading-6 text-slate-950 dark:text-white">
                 {billingData.subscription.currentPeriodStart && billingData.subscription.currentPeriodEnd
                   ? `${formatDate(billingData.subscription.currentPeriodStart.toString())} - ${formatDate(billingData.subscription.currentPeriodEnd.toString())}`
                   : t('na')
@@ -171,42 +185,33 @@ export default function BillingPage() {
             </div>
           </div>
 
-          <div className="mt-4">
-            <button
-              onClick={() => router.push('/dashboard/subscription')}
-              className="px-4 py-2 bg-primary-blue dark:bg-accent-red text-white rounded-lg hover:opacity-90 transition-opacity"
-            >
-              {t('manageSubscription')}
-            </button>
-          </div>
-        </div>
+        </DashboardPanel>
       )}
 
       {/* Payment History */}
-      <div className="bg-light-surface dark:bg-dark-surface rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-          <Receipt className="w-5 h-5" />
-          {t('paymentHistory')}
-        </h2>
+      <DashboardPanel>
+        <PanelHeading title={t('paymentHistory')} description="Receipts and payment attempts listed from newest to oldest." />
 
         {billingData?.payments && billingData.payments.length > 0 ? (
-          <div className="space-y-4">
+          <div className="divide-y divide-slate-200/70 dark:divide-slate-800/70">
             {billingData.payments.map((payment) => (
-              <div key={payment.id} className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+              <div key={payment.id} className="flex flex-col gap-4 py-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-4">
-                  {getStatusIcon(payment.status)}
+                  <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-100 dark:bg-slate-900">
+                    {getStatusIcon(payment.status)}
+                  </span>
                   <div>
-                    <p className="font-semibold text-gray-900 dark:text-white">
+                    <p className="font-mono text-lg font-semibold text-slate-950 dark:text-white">
                       {formatCurrency(payment.amount, payment.currency)}
                     </p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2">
+                    <p className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
                       <Calendar className="w-4 h-4" />
                       {formatDate(payment.createdAt)}
                     </p>
                   </div>
                 </div>
                 <div className="text-right">
-                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(payment.status)}`}>
+                  <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${getStatusColor(payment.status)}`}>
                     {payment.status.toLowerCase()}
                   </span>
                   {payment.stripeInvoiceId && (
@@ -227,12 +232,11 @@ export default function BillingPage() {
             )}
           </div>
         ) : (
-          <div className="text-center py-8">
-            <Receipt className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-500 dark:text-gray-400">{t('noPaymentHistory')}</p>
-          </div>
+          <EmptyState icon={Receipt} title={t('noPaymentHistory')} />
         )}
-      </div>
-    </div>
+      </DashboardPanel>
+    </DashboardPage>
   );
 }
+
+

@@ -61,6 +61,7 @@
   "exclude": [
     "node_modules",
     "diffs_feb1_2026",
-    ".next"
+    ".next",
+    ".next-dashboard-review"
   ]
 }

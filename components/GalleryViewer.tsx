@@ -43,6 +43,8 @@ export default function GalleryViewer({ items, initialIndex, isOpen, onClose, me
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [isLiked, setIsLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(0);
+  const [commentsCount, setCommentsCount] = useState(0);
+  const [isLiking, setIsLiking] = useState(false);
   const [showCopiedToast, setShowCopiedToast] = useState(false);
   const viewerRef = useRef<HTMLDivElement>(null);
 
@@ -146,6 +148,7 @@ export default function GalleryViewer({ items, initialIndex, isOpen, onClose, me
     let cancelled = false;
     setIsLiked(false);
     setLikesCount(currentItem.likeCount || 0);
+    setCommentsCount(0);
 
     fetch(`/api/portfolio/${currentItem.id}/like`)
       .then((res) => (res.ok ? res.json() : null))
@@ -153,6 +156,15 @@ export default function GalleryViewer({ items, initialIndex, isOpen, onClose, me
         if (cancelled || !data) return;
         if (typeof data.isLiked === 'boolean') setIsLiked(data.isLiked);
         if (typeof data.likeCount === 'number') setLikesCount(data.likeCount);
+      })
+      .catch(() => {});
+
+    fetch(`/api/comments?portfolioItemId=${currentItem.id}&limit=1`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (cancelled || !data) return;
+        const total = data.pagination?.totalCount;
+        if (typeof total === 'number') setCommentsCount(total);
       })
       .catch(() => {});
 
@@ -165,12 +177,14 @@ export default function GalleryViewer({ items, initialIndex, isOpen, onClose, me
 
   const handleLike = async () => {
     if (!currentItem?.id) return;
+    if (isLiking) return;
     if (!user) {
       openAuthModal();
       return;
     }
 
     const nextLiked = !isLiked;
+    setIsLiking(true);
     setIsLiked(nextLiked);
     setLikesCount((prev) => (nextLiked ? prev + 1 : Math.max(0, prev - 1)));
 
@@ -189,6 +203,8 @@ export default function GalleryViewer({ items, initialIndex, isOpen, onClose, me
       console.error('Failed to like portfolio item:', error);
       setIsLiked(!nextLiked);
       setLikesCount((prev) => (nextLiked ? Math.max(0, prev - 1) : prev + 1));
+    } finally {
+      setIsLiking(false);
     }
   };
 
@@ -196,7 +212,12 @@ export default function GalleryViewer({ items, initialIndex, isOpen, onClose, me
     try {
       const shareUrl = new URL(window.location.href);
       shareUrl.searchParams.set('mediaId', currentItem.id);
-      await navigator.clipboard.writeText(shareUrl.toString());
+      const url = shareUrl.toString();
+      if (navigator.share) {
+        await navigator.share({ title: currentItem.title, url });
+      } else {
+        await navigator.clipboard.writeText(url);
+      }
       setShowCopiedToast(true);
       setTimeout(() => setShowCopiedToast(false), 2000);
     } catch (error) {
@@ -404,6 +425,7 @@ export default function GalleryViewer({ items, initialIndex, isOpen, onClose, me
             <div className="mt-4 flex flex-wrap items-center gap-2">
               <button
                 onClick={handleLike}
+                disabled={isLiking}
                 className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-all ${
                   isLiked
                     ? 'bg-rose-500/15 text-rose-300 ring-1 ring-rose-400/30'
@@ -424,7 +446,7 @@ export default function GalleryViewer({ items, initialIndex, isOpen, onClose, me
 
               <div className="inline-flex items-center gap-2 rounded-full bg-white/8 px-4 py-2 text-sm text-white/60">
                 <MessageCircle size={16} />
-                Comments
+                {commentsCount > 0 ? `${commentsCount} comments` : 'Comments'}
               </div>
             </div>
 

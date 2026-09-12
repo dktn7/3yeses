@@ -1,15 +1,25 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { CheckCircle, Loader2 } from 'lucide-react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import Link from 'next/link';
+import { useLocale } from 'next-intl';
+import { useSearchParams } from 'next/navigation';
+import { CheckCircle, Loader2, ReceiptText, ShieldAlert } from 'lucide-react';
+import {
+  DashboardActionCard,
+  DashboardButton,
+  DashboardHeader,
+  DashboardPanel,
+  DashboardStatRow,
+  DashboardWorkspace,
+  EmptyState,
+} from '@/components/dashboard/DashboardPrimitives';
+import { buildLocalizedPath } from '@/lib/locale-path';
 
 export default function SubscriptionSuccessPage() {
+  const locale = useLocale();
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const router = useRouter();
-  const searchParams = useSearchParams();
   const sessionId = searchParams.get('session_id');
 
   useEffect(() => {
@@ -19,88 +29,85 @@ export default function SubscriptionSuccessPage() {
       return;
     }
 
-    // Give webhook time to process
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 2000);
-
-    return () => clearTimeout(timer);
+    const controller = new AbortController();
+    setLoading(true);
+    setError(false);
+    fetch('/api/subscription/current', { credentials: 'include', signal: controller.signal })
+      .then(async response => {
+        if (!response.ok) throw new Error('Could not check subscription');
+        const subscription = await response.json();
+        setError(subscription.status !== 'ACTIVE' && subscription.status !== 'TRIALING');
+      })
+      .catch(() => { if (!controller.signal.aborted) setError(true); })
+      .finally(() => { if (!controller.signal.aborted) setLoading(false); });
+    return () => controller.abort();
   }, [sessionId]);
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <Loader2 className="w-12 h-12 animate-spin text-primary-blue dark:text-accent-red mx-auto mb-4" />
-          <p className="text-gray-600 dark:text-gray-300">Processing your subscription...</p>
-        </div>
-      </div>
+      <DashboardWorkspace>
+        <DashboardPanel>
+          <div className="flex min-h-[20rem] flex-col items-center justify-center text-center">
+            <Loader2 className="mb-4 h-10 w-10 animate-spin text-[color:var(--brand-primary)]" />
+            <h1 className="text-xl font-semibold text-slate-950 dark:text-white">Processing your subscription</h1>
+            <p className="mt-2 max-w-md text-sm leading-6 text-slate-600 dark:text-slate-300">We are confirming the checkout session and updating your account access.</p>
+          </div>
+        </DashboardPanel>
+      </DashboardWorkspace>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center max-w-md">
-          <div className="text-red-400 text-6xl mb-4">⚠️</div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            Something went wrong
-          </h1>
-          <p className="text-gray-600 dark:text-gray-300 mb-6">
-            We couldn't verify your subscription. Please contact support if you were charged.
-          </p>
-          <Link
-            href="/dashboard/subscription"
-            className="inline-block bg-primary-blue dark:bg-accent-red hover:bg-primary-blueHover dark:hover:bg-accent-red/80 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
-          >
-            Back to Subscription
-          </Link>
-        </div>
-      </div>
+      <DashboardWorkspace>
+        <DashboardHeader
+          icon={ShieldAlert}
+          title="Subscription needs review"
+          description="We could not verify this checkout session. If you were charged, contact support and include your account email."
+          actions={<DashboardButton href={buildLocalizedPath(locale, '/dashboard/subscription')}>Back to subscription</DashboardButton>}
+        />
+        <EmptyState
+          icon={ReceiptText}
+          title="Your subscription isn’t confirmed yet"
+          description="Payment updates can take a moment. Check your subscription status before trying another payment."
+          action={<DashboardButton href={buildLocalizedPath(locale, '/support/submit-ticket')} variant="secondary">Contact support</DashboardButton>}
+        />
+      </DashboardWorkspace>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4">
-      <div className="text-center max-w-md">
-        <CheckCircle className="w-20 h-20 text-green-400 mx-auto mb-6" />
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-          Welcome to Standard Access!
-        </h1>
-        <p className="text-gray-600 dark:text-gray-300 mb-8">
-          Your subscription has been activated successfully. You now have access to all premium features:
-        </p>
-        <div className="bg-white/80 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-lg p-6 mb-8 text-left">
-          <ul className="space-y-3 text-gray-700 dark:text-gray-300">
-            <li className="flex items-center gap-2">
-              <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
-              Full Profile Customization
-            </li>
-            <li className="flex items-center gap-2">
-              <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
-              Unlimited Portfolio Uploads
-            </li>
-            <li className="flex items-center gap-2">
-              <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
-              Priority Search Ranking
-            </li>
-          </ul>
-        </div>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/dashboard"
-              className="bg-primary-blue hover:bg-primary-blue/90 dark:bg-accent-red dark:hover:bg-accent-red/90 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
-            >
-            Go to Dashboard
-          </Link>
-          <Link
-            href="/dashboard/talent"
-            className="bg-gray-700 hover:bg-gray-600 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
-          >
-            Update Profile
-          </Link>
-        </div>
-      </div>
-    </div>
+    <DashboardWorkspace>
+      <DashboardHeader
+        icon={CheckCircle}
+        title="Standard Access is active"
+        description="Your subscription has been activated. Use the dashboard to finish your profile, publish media, and track discovery."
+        actions={
+          <>
+            <DashboardButton href={buildLocalizedPath(locale, '/dashboard/overview')}>Go to dashboard</DashboardButton>
+            <DashboardButton href={buildLocalizedPath(locale, '/dashboard/profile')} variant="secondary">Update profile</DashboardButton>
+          </>
+        }
+      />
+
+      <DashboardPanel>
+        <DashboardStatRow
+          items={[
+            { label: 'Profile', value: 'Full', detail: 'Customization enabled' },
+            { label: 'Portfolio', value: 'Open', detail: 'Media uploads available' },
+            { label: 'Discovery', value: 'Priority', detail: 'Search ranking benefits' },
+            { label: 'Billing', value: 'Active', detail: 'Ledger updated by Stripe' },
+          ]}
+        />
+      </DashboardPanel>
+
+      <DashboardActionCard
+        icon={ReceiptText}
+        title="Review your billing ledger"
+        description="Payment history and subscription status live in the billing workspace, with receipts listed from newest to oldest."
+        tone="accent"
+        action={<DashboardButton href={buildLocalizedPath(locale, '/dashboard/billing')} variant="secondary">Open billing</DashboardButton>}
+      />
+    </DashboardWorkspace>
   );
 }

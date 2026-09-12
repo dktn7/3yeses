@@ -1,0 +1,14 @@
+{
+  "posts": [
+    {
+      "ticketId": "ticket-1",
+      "message": "The invoice number is INV-1042."
+    },
+    {
+      "subject": "Profile help",
+      "message": "Please check whether my profile is ready for review.",
+      "category": "OTHER"
+    }
+  ],
+  "failures": []
+}

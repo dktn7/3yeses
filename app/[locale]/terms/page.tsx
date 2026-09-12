@@ -1,10 +1,11 @@
 'use client';
 
 import React from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { FileText, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import SwoopingTick from '@/components/SwoopingTick';
+import { buildLocalizedPath } from '@/lib/locale-path';
 
 /* ── Background decoration ─────────────────────────────────────────── */
 function TermsBgDecoration() {
@@ -57,6 +58,7 @@ const LAST_UPDATED = '9 March 2026';
 export default function TermsPage() {
   const t = useTranslations('Pages.terms');
   const heroAccent = t('heroAccent');
+  const locale = useLocale();
   return (
     <div className="relative min-h-screen overflow-hidden landing-bg brand-true-red">
       <TermsBgDecoration />
@@ -329,7 +331,7 @@ export default function TermsPage() {
           <Section id="contact" number="12" title="Contact">
             <p>
               If you have questions about these Terms, please contact us through our{' '}
-              <Link href="/support/submit-ticket" className="rounded-sm marketing-accent-text hover:underline font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-ring)]">
+              <Link href={buildLocalizedPath(locale, '/support/submit-ticket')} className="rounded-sm marketing-accent-text hover:underline font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-ring)]">
                 Support Centre
               </Link>.
             </p>

@@ -14,7 +14,8 @@ import MediaThumbnailFallback from './MediaThumbnailFallback';
 interface MediaItem {
   id: string;
   title: string;
-  mediaUrl: string;
+  mediaUrl?: string;
+  url?: string;
   type: 'IMAGE' | 'VIDEO' | 'AUDIO';
   thumbnail?: string;
 }
@@ -63,6 +64,8 @@ export default function FeaturedTalentCard({ talent, mediaItems, onMediaClick, o
     if (h > 0) return `${h}:${m}:${s}`;
     return `${m}:${s}`;
   };
+
+  const getMediaUrl = (item: MediaItem) => item.mediaUrl || item.url || '';
 
   const startPreview = (id: string) => {
     const v = previewRefs.current[id];
@@ -202,22 +205,25 @@ export default function FeaturedTalentCard({ talent, mediaItems, onMediaClick, o
 
   const getThumbnail = (item: MediaItem) => {
     // For audio items, return undefined (use fallback instead)
-    if (item.type.toUpperCase() === 'AUDIO') return undefined;
+    const mediaUrl = getMediaUrl(item);
+    const type = (item.type || 'IMAGE').toUpperCase();
+    if (type === 'AUDIO') return undefined;
     
     // Safety check: if thumbnail looks like a video URL, ignore it and try to extract from URL
     if (item.thumbnail && !item.thumbnail.includes('youtube.com/watch') && !item.thumbnail.includes('youtu.be/') && !isAudioUrl(item.thumbnail)) {
         return item.thumbnail;
     }
     
-    const type = item.type.toUpperCase();
     if (type === 'VIDEO') {
-      const embedMatch = item.mediaUrl.match(/youtube\.com\/embed\/([a-zA-Z0-9_-]+)/);
+      if (!mediaUrl) return undefined;
+
+      const embedMatch = mediaUrl.match(/youtube\.com\/embed\/([a-zA-Z0-9_-]+)/);
       if (embedMatch && embedMatch[1]) return `https://img.youtube.com/vi/${embedMatch[1]}/hqdefault.jpg`;
       
-      const watchMatch = item.mediaUrl.match(/youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/);
+      const watchMatch = mediaUrl.match(/youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/);
       if (watchMatch && watchMatch[1]) return `https://img.youtube.com/vi/${watchMatch[1]}/hqdefault.jpg`;
 
-      const shortMatch = item.mediaUrl.match(/youtu\.be\/([a-zA-Z0-9_-]+)/);
+      const shortMatch = mediaUrl.match(/youtu\.be\/([a-zA-Z0-9_-]+)/);
       if (shortMatch && shortMatch[1]) return `https://img.youtube.com/vi/${shortMatch[1]}/hqdefault.jpg`;
 
       // Return undefined if we can't extract a thumbnail from the video URL
@@ -225,9 +231,9 @@ export default function FeaturedTalentCard({ talent, mediaItems, onMediaClick, o
     }
     
     // Don't return audio URLs as thumbnails
-    if (isAudioUrl(item.mediaUrl)) return undefined;
+    if (mediaUrl && isAudioUrl(mediaUrl)) return undefined;
     
-    return item.mediaUrl;
+    return mediaUrl || undefined;
   };
 
   const categoryName = talent.category?.name?.trim() || 'Talent';
@@ -252,9 +258,11 @@ export default function FeaturedTalentCard({ talent, mediaItems, onMediaClick, o
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {mediaItems.map((item, index) => {
-            const TypeIcon = getTypeIcon(item.type);
-            const isVideo = item.type.toUpperCase() === 'VIDEO';
-            const isYouTube = isVideo && (item.mediaUrl.includes('youtube.com') || item.mediaUrl.includes('youtu.be'));
+            const mediaUrl = getMediaUrl(item);
+            const itemType = (item.type || 'IMAGE').toUpperCase();
+            const TypeIcon = getTypeIcon(itemType);
+            const isVideo = itemType === 'VIDEO' && Boolean(mediaUrl);
+            const isYouTube = isVideo && (mediaUrl.includes('youtube.com') || mediaUrl.includes('youtu.be'));
             const thumbnail = getThumbnail(item);
 
             const itemWidthClass = index === 0 ? 'min-w-[62%]' : 'min-w-[28%]';
@@ -272,7 +280,7 @@ export default function FeaturedTalentCard({ talent, mediaItems, onMediaClick, o
                 {isVideo && !isYouTube ? (
                   <video
                     ref={(el) => { previewRefs.current[item.id] = el; }}
-                    src={item.mediaUrl}
+                    src={mediaUrl}
                     poster={item.thumbnail}
                     className="w-full h-full object-cover transition-transform duration-300"
                     muted

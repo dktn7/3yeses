@@ -20,7 +20,7 @@ interface AdminNotificationsPanelProps {
   onCountChange?: (count: number) => void;
 }
 
-const POLL_INTERVAL = 30_000; // 30 seconds
+const POLL_INTERVAL = 2 * 60 * 1000; // 2 minutes
 
 export default function AdminNotificationsPanel({ isOpen, onClose, onCountChange }: AdminNotificationsPanelProps) {
   const [notifications, setNotifications] = useState<Notification[]>([]);

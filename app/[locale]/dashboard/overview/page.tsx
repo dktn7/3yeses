@@ -1,31 +1,46 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
-import NextImage from 'next/image';
-import { useTranslations } from 'next-intl';
-import LoadingSpinner from '@/components/LoadingSpinner';
-import TalentCard from '@/components/TalentCard';
-import FeaturedTalentCard from '@/components/FeaturedTalentCard';
-import MiniSparkline from '@/components/dashboard/MiniSparkline';
-import { ToastContainer, useToast } from '@/components/dashboard/ToastNotification';
-import DashboardHero from '@/components/DashboardHero';
-import SwoopingTick from '@/components/SwoopingTick';
-import GalleryViewer from '@/components/GalleryViewer';
-import MediaOverlay from '@/components/MediaOverlay';
-import { normalizeLocale } from '@/lib/locale-path';
-import { buildLocalizedPath } from '@/lib/locale-path';
-import { Eye, TrendingUp, TrendingDown, Users, User as UserIcon, Image, BarChart3, CreditCard, Calendar, Settings, Star, Briefcase, Bell, MessageSquare, Clock, Trophy, Target } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useLocale } from 'next-intl';
+import {
+  Activity,
+  ArrowUpRight,
+  BarChart3,
+  CheckCircle2,
+  Eye,
+  Images,
+  LayoutDashboard,
+  LineChart,
+  Save,
+  Sparkles,
+  UserRound,
+} from 'lucide-react';
+import LoadingSpinner from '@/components/LoadingSpinner';
+import { DashboardLoading } from '@/components/dashboard/DashboardPrimitives';
+import MiniSparkline from '@/components/dashboard/MiniSparkline';
+import {
+  DashboardActionCard,
+  DashboardButton,
+  DashboardHeader,
+  DashboardPanel,
+  DashboardStatRow,
+  DashboardSurface,
+  DashboardWorkspace,
+  EmptyState,
+  MetricTile,
+  PanelHeading,
+  StatusPill,
+} from '@/components/dashboard/DashboardPrimitives';
+import { buildLocalizedPath } from '@/lib/locale-path';
 
 interface User {
   id: string;
   email: string;
-  role: string;
-  firstName: string;
-  lastName: string;
-  emailVerified: boolean;
+  firstName?: string;
+  lastName?: string;
+  name?: string;
 }
 
 interface DashboardStats {
@@ -34,954 +49,404 @@ interface DashboardStats {
   savedTalents: number;
   viewTrend: number;
   likeTrend: number;
-  savedTrend: number;
 }
 
-interface RecentActivity {
-  id: string;
-  type: 'view' | 'like' | 'comment';
-  content: string;
-  thumbnail?: string;
-  timestamp: string;
-  talent?: {
-    name: string;
-    avatar?: string;
-  };
-}
-
-interface Notification {
-  id: string;
-  type: string;
-  title: string;
-  message: string;
-  timestamp: string;
-  read: boolean;
-}
+const defaultStats: DashboardStats = {
+  totalViews: 0,
+  totalLikes: 0,
+  savedTalents: 0,
+  viewTrend: 0,
+  likeTrend: 0,
+};
 
 export default function DashboardOverview() {
-  const router = useRouter();
-  const pathname = usePathname();
-  const routeLocale = useLocale();
-  const locale = normalizeLocale(routeLocale || (typeof pathname === 'string' ? pathname.split('/')[1] || 'en-gb' : 'en-gb'));
-  const t = useTranslations('dashboard');
-  const today = new Date();
-  const formattedDay = today.toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'short' });
-  const [user, setUser] = useState<User | null>(null);
+  const locale = useLocale();
   const [loading, setLoading] = useState(true);
-  const [stats, setStats] = useState<DashboardStats>({
-    totalViews: 0,
-    totalLikes: 0,
-    savedTalents: 0,
-    viewTrend: 0,
-    likeTrend: 0,
-    savedTrend: 0
-  });
+  const [user, setUser] = useState<User | null>(null);
+  const [stats, setStats] = useState(defaultStats);
+  const [talentProfile, setTalentProfile] = useState<any>(null);
+  const [profileCompletion, setProfileCompletion] = useState(0);
+  const [missingFields, setMissingFields] = useState<string[]>([]);
   const [savedTalents, setSavedTalents] = useState<any[]>([]);
   const [viewedTalents, setViewedTalents] = useState<any[]>([]);
-  const [recentActivities, setRecentActivities] = useState<RecentActivity[]>([]);
-  const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [profileCompletion, setProfileCompletion] = useState(0);
-  const [newCommentsCount, setNewCommentsCount] = useState(0);
-  const [talentProfile, setTalentProfile] = useState<any>(null);
-  const displayFirstName = talentProfile
-    ? (talentProfile.firstName || (typeof talentProfile.name === 'string' ? talentProfile.name.split(' ')[0] : '') || user?.firstName || user?.email)
-    : (user?.firstName || user?.email);
+  const [activities, setActivities] = useState<any[]>([]);
   const [portfolioItems, setPortfolioItems] = useState<any[]>([]);
-  const [achievements, setAchievements] = useState<any[]>([]);
   const [portfolioPerformance, setPortfolioPerformance] = useState<any>(null);
   const [viewsHistory, setViewsHistory] = useState<number[]>([]);
   const [likesHistory, setLikesHistory] = useState<number[]>([]);
-  const { toasts, removeToast } = useToast();
-  const hideContent = false;
-  const [galleryOpen, setGalleryOpen] = useState(false);
-  const [galleryIndex, setGalleryIndex] = useState(0);
-  const [talentOverlay, setTalentOverlay] = useState<any>(null);
-  const [showTalentOverlay, setShowTalentOverlay] = useState(false);
-
-  const warningNotifications = notifications.filter((n) =>
-    ['system', 'warning', 'critical', 'media_flag'].includes(n.type?.toLowerCase())
-  );
-
-  // Helper to generate simple mock trend data for sparklines
-  const generateTrendData = (baseValue: number, trend: number) => {
-    const data: number[] = [];
-    let current = baseValue * 0.85;
-    for (let i = 0; i < 7; i++) {
-      const variation = (Math.random() - 0.4) * (baseValue * 0.05);
-      current += variation + (trend / 100) * (baseValue / 7);
-      data.push(Math.max(0, Math.round(current)));
-    }
-    return data;
-  };
-
-  // Fetch real activity data
-  useEffect(() => {
-    const fetchActivities = async () => {
-      try {
-        const res = await fetch('/api/dashboard/activity', { credentials: 'include' });
-        if (res.ok) {
-          const data = await res.json();
-          const activities = (data.activities || []).map((a: any) => ({
-            id: a.id,
-            type: a.type || 'view',
-            content: a.text || a.content || '',
-            timestamp: a.time || a.createdAt,
-            talent: { name: a.actorName || a.talent?.user?.name || 'User' }
-          }));
-          setRecentActivities(activities);
-        }
-      } catch (error) {
-        console.error('Failed to fetch activities:', error);
-      }
-    };
-    fetchActivities();
-  }, []);
+  const [loadError, setLoadError] = useState(false);
+  const [loadAttempt, setLoadAttempt] = useState(0);
 
   useEffect(() => {
     const loadDashboard = async () => {
+      setLoadError(false);
+      setLoading(true);
       try {
-        const response = await fetch('/api/auth/verify', {
-          credentials: 'include',
-        });
+        const verify = await fetch('/api/auth/verify', { credentials: 'include' });
+        if (!verify.ok) {
+          window.location.href = buildLocalizedPath(locale, '/auth/signin');
+          return;
+        }
+        const verifyData = await verify.json();
+        if (!verifyData.success) {
+          window.location.href = buildLocalizedPath(locale, '/auth/signin');
+          return;
+        }
 
-        if (response.ok) {
-          const data = await response.json();
-          if (data.success) {
-            setUser(data.user);
-            // Load dashboard data (stats, saved talents, viewed talents)
-            await loadDashboardData(data.user);
-          } else {
-            router.push('/auth/signin');
-          }
-        } else {
-          router.push('/auth/signin');
+        setUser(verifyData.user);
+        const currentUser = verifyData.user;
+
+        const [
+          completionRes,
+          talentRes,
+          statsRes,
+          savedRes,
+          viewedRes,
+          activityRes,
+          portfolioRes,
+          performanceRes,
+          analyticsRes,
+        ] = await Promise.allSettled([
+          fetch('/api/user/profile-completion', { credentials: 'include' }),
+          fetch(`/api/talent/${currentUser.id}`, { credentials: 'include' }),
+          fetch('/api/dashboard/stats', { credentials: 'include' }),
+          fetch('/api/dashboard/saved-talents', { credentials: 'include' }),
+          fetch('/api/dashboard/view-history', { credentials: 'include' }),
+          fetch('/api/dashboard/activity', { credentials: 'include' }),
+          fetch('/api/dashboard/portfolio-items', { credentials: 'include' }),
+          fetch('/api/dashboard/portfolio-performance', { credentials: 'include' }),
+          fetch('/api/analytics/dashboard?days=7', { credentials: 'include' }),
+        ]);
+
+        setLoadError([completionRes, statsRes, savedRes, viewedRes, activityRes, portfolioRes, performanceRes, analyticsRes].some(result => result.status === 'rejected' || !result.value.ok));
+
+        if (completionRes.status === 'fulfilled' && completionRes.value.ok) {
+          const data = await completionRes.value.json();
+          setProfileCompletion(data.percentage ?? data.completionPercentage ?? 0);
+          setMissingFields(data.missingFields || []);
+        }
+        if (talentRes.status === 'fulfilled' && talentRes.value.ok) {
+          const data = await talentRes.value.json();
+          setTalentProfile(data.talent || data);
+        }
+        if (statsRes.status === 'fulfilled' && statsRes.value.ok) {
+          const data = await statsRes.value.json();
+          setStats((current) => ({
+            ...current,
+            totalViews: data.profileViews || 0,
+            totalLikes: data.likes || 0,
+            viewTrend: data.profileViewsChange || 0,
+            likeTrend: data.likesChange || 0,
+          }));
+        }
+        if (savedRes.status === 'fulfilled' && savedRes.value.ok) {
+          const data = await savedRes.value.json();
+          setSavedTalents(data.talents || []);
+          setStats((current) => ({ ...current, savedTalents: (data.talents || []).length }));
+        }
+        if (viewedRes.status === 'fulfilled' && viewedRes.value.ok) {
+          const data = await viewedRes.value.json();
+          setViewedTalents(data.talents || []);
+        }
+        if (activityRes.status === 'fulfilled' && activityRes.value.ok) {
+          const data = await activityRes.value.json();
+          setActivities(data.activities || []);
+        }
+        if (portfolioRes.status === 'fulfilled' && portfolioRes.value.ok) {
+          const data = await portfolioRes.value.json();
+          setPortfolioItems(data.items || []);
+        }
+        if (performanceRes.status === 'fulfilled' && performanceRes.value.ok) {
+          setPortfolioPerformance(await performanceRes.value.json());
+        }
+        if (analyticsRes.status === 'fulfilled' && analyticsRes.value.ok) {
+          const data = await analyticsRes.value.json();
+          const daily = data.analytics?.dailyStats || [];
+          setViewsHistory(daily.map((item: any) => item.views || 0));
+          setLikesHistory(daily.map((item: any) => item.portfolioViews || 0));
         }
       } catch (error) {
+        setLoadError(true);
         console.error('Failed to load dashboard:', error);
-        router.push('/auth/signin');
       } finally {
         setLoading(false);
       }
     };
 
-    const loadDashboardData = async (user: any) => {
-      try {
-        // Fetch profile completion
-        const profileRes = await fetch('/api/user/profile-completion', {
-          credentials: 'include',
-        });
-        if (profileRes.ok) {
-          const profileData = await profileRes.json();
-          setProfileCompletion(profileData.percentage ?? profileData.completionPercentage ?? 0);
-
-          // Fetch the user's talent profile (endpoint supports userId fallback)
-          try {
-            const talentResp = await fetch(`/api/talent/${user.id}`, { credentials: 'include' });
-            if (talentResp.ok) {
-              const talentData = await talentResp.json();
-              // API returns { talent, suggestions }
-              setTalentProfile(talentData.talent || talentData);
-            } else {
-              setTalentProfile(null);
-            }
-          } catch (err) {
-            console.error('Failed to fetch user talent profile:', err);
-            setTalentProfile(null);
-          }
-        }
-
-        // Fetch notifications
-        const notifRes = await fetch('/api/notifications', {
-          credentials: 'include',
-        });
-        if (notifRes.ok) {
-          const notifData = await notifRes.json();
-          setNotifications(notifData.notifications || []);
-          setNewCommentsCount(notifData.unreadCount || 0);
-        }
-
-        // Fetch actual dashboard stats
-        try {
-          const statsRes = await fetch('/api/dashboard/stats', { credentials: 'include' });
-          if (statsRes.ok) {
-            const statsData = await statsRes.json();
-            setStats(prev => ({
-              ...prev,
-              totalViews: statsData.profileViews || 0,
-              totalLikes: statsData.likes || 0,
-              viewTrend: statsData.profileViewsChange || 0,
-              likeTrend: statsData.likesChange || 0,
-            }));
-
-            // Use statsData to seed sparklines immediately
-            setViewsHistory(generateTrendData(statsData.profileViews || 0, statsData.profileViewsChange || 0));
-            setLikesHistory(generateTrendData(statsData.likes || 0, statsData.likesChange || 0));
-          }
-        } catch (err) {
-          console.error('Failed to fetch dashboard stats:', err);
-        }
-
-        // Fetch saved and viewed talents from API
-        const savedRes = await fetch('/api/dashboard/saved-talents', {
-          credentials: 'include',
-        });
-        if (savedRes.ok) {
-          const savedData = await savedRes.json();
-          setSavedTalents(savedData.talents || []);
-          // reflect saved talents count in stats
-          setStats(prev => ({ ...prev, savedTalents: (savedData.talents || []).length }));
-        }
-
-        const viewedRes = await fetch('/api/dashboard/view-history', {
-          credentials: 'include',
-        });
-        if (viewedRes.ok) {
-          const viewedData = await viewedRes.json();
-          setViewedTalents(viewedData.talents || []);
-        }
-
-        // Fetch portfolio items
-        const portfolioRes = await fetch('/api/dashboard/portfolio-items', {
-          credentials: 'include',
-        });
-        if (portfolioRes.ok) {
-          const portfolioData = await portfolioRes.json();
-          setPortfolioItems(portfolioData.items || []);
-        }
-
-        // Achievements removed per configuration; skipping fetch
-
-        // Fetch portfolio (media) performance
-        const performanceRes = await fetch('/api/dashboard/portfolio-performance', {
-          credentials: 'include',
-        });
-        if (performanceRes.ok) {
-          const performanceData = await performanceRes.json();
-          setPortfolioPerformance(performanceData);
-        }
-
-        // Fetch analytics daily stats for real sparklines (last 7 days)
-        try {
-          const analyticsRes = await fetch('/api/analytics/dashboard?days=7', { credentials: 'include' });
-          if (analyticsRes.ok) {
-            const analyticsData = await analyticsRes.json();
-            const daily = analyticsData.analytics?.dailyStats || [];
-            // Map to arrays for sparklines
-            const viewsSeries = daily.map((d: any) => d.views || 0);
-            const mediaSeries = daily.map((d: any) => d.portfolioViews || 0);
-            setViewsHistory(viewsSeries);
-            setLikesHistory(mediaSeries);
-          }
-        } catch (err) {
-          console.error('Failed to fetch analytics for sparklines:', err);
-        }
-      } catch (error) {
-        console.error('Failed to load dashboard data:', error);
-      }
-    };
-
     loadDashboard();
-  }, [router]);
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <LoadingSpinner />
-      </div>
-    );
-  }
+  }, [locale, loadAttempt]);
 
-  if (!user) {
-    return null;
-  }
+  const displayName = talentProfile?.name || [user?.firstName, user?.lastName].filter(Boolean).join(' ') || user?.name || user?.email || 'Talent';
+  const firstName = displayName.split(' ')[0];
+  const nextActions = useMemo(() => {
+    const actions = [];
+    if (profileCompletion < 100) {
+      actions.push({
+        icon: Sparkles,
+        title: 'Complete your profile',
+        description: missingFields.length ? `Missing: ${missingFields.slice(0, 3).join(', ')}` : 'Add profile details that improve discovery.',
+        href: buildLocalizedPath(locale, '/dashboard/profile'),
+      });
+    }
+    if (!talentProfile?.avatarUrl || !talentProfile?.bannerUrl) {
+      actions.push({
+        icon: UserRound,
+        title: 'Add your profile photos',
+        description: 'Help people recognise you with a profile photo and cover image.',
+        href: buildLocalizedPath(locale, '/dashboard/profile'),
+      });
+    }
+    if (portfolioItems.length < 3) {
+      actions.push({
+        icon: Images,
+        title: 'Share your work',
+        description: 'Add at least three strong images, videos, or audio pieces to help visitors inspect your work.',
+        href: buildLocalizedPath(locale, '/dashboard/gallery'),
+      });
+    }
+    actions.push({
+      icon: BarChart3,
+      title: 'See how your work is doing',
+      description: 'See what people open, save, and return to.',
+      href: buildLocalizedPath(locale, '/dashboard/analytics'),
+    });
+    return actions.slice(0, 4);
+  }, [locale, missingFields, portfolioItems.length, profileCompletion, talentProfile]);
+
+  if (loading) return <DashboardLoading />;
+
+  if (!user) return null;
+
+  const talentRails = [
+    { title: 'Saved talent', href: buildLocalizedPath(locale, '/dashboard/saved'), items: savedTalents },
+    { title: 'Recently viewed', href: buildLocalizedPath(locale, '/dashboard/history'), items: viewedTalents },
+  ];
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(37,99,235,0.08),transparent_34%),radial-gradient(circle_at_top_right,rgba(185,28,28,0.08),transparent_28%),linear-gradient(180deg,var(--background),color-mix(in_srgb,var(--background)_86%,#f8fafc))]">
-      {/* Toast Notifications */}
-      <ToastContainer toasts={toasts} onClose={removeToast} />
-      
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Enhanced Hero Bar */}
-        <div
-          className="relative mb-8 overflow-hidden rounded-[2rem] border border-slate-200/75 bg-light-surface/95 p-6 shadow-[0_24px_60px_-38px_rgba(15,23,42,0.42)] dark:border-slate-800/70 dark:bg-dark-surface/94 md:p-8"
-          style={{ backgroundImage: 'linear-gradient(90deg, rgba(37,99,235,0.08), rgba(185,28,28,0.08))' }}
-        >
-          <div className="absolute right-8 top-8 h-44 w-44 rounded-full bg-gradient-to-tr from-[color:var(--brand-primary)]/15 to-transparent blur-3xl pointer-events-none" />
-          {user && (
-            <DashboardHero
-              displayName={displayFirstName}
-              formattedDay={formattedDay}
-              profileCompletion={profileCompletion}
-              talentProfile={talentProfile}
-              stats={stats}
-              savedCount={savedTalents.length}
-              locale={locale}
-              userId={user.id}
-            />
-          )}
+    <DashboardWorkspace>
+      <DashboardHeader
+        icon={LayoutDashboard}
+        title={`Welcome back, ${firstName}`}
+        description="Your work, your progress, and the people worth coming back to."
+        actions={
+          <>
+            <DashboardButton href={buildLocalizedPath(locale, '/dashboard/profile')}>
+              <UserRound className="h-4 w-4" />
+              Edit profile
+            </DashboardButton>
+            <DashboardButton href={buildLocalizedPath(locale, '/dashboard/gallery')} variant="secondary">
+              <Images className="h-4 w-4" />
+              Add media
+            </DashboardButton>
+          </>
+        }
+        meta={<StatusPill tone={profileCompletion >= 80 ? 'success' : 'warning'}>{profileCompletion}% profile complete</StatusPill>}
+      />
+
+      {loadError && (
+        <div role="status" className="dashboard-surface-muted flex flex-col gap-3 rounded-2xl p-4 text-sm text-slate-700 dark:text-slate-200 sm:flex-row sm:items-center sm:justify-between">
+          <p>Some dashboard details are taking longer to load.</p>
+          <button type="button" onClick={() => setLoadAttempt(value => value + 1)} className="min-h-10 text-left font-semibold text-[color:var(--brand-primary)] underline-offset-4 hover:underline sm:text-right">
+            Try again
+          </button>
         </div>
-
-        {/* Growth Hints Campaign (non-blocking) */}
-        <section className="mb-6 rounded-[1.75rem] border border-slate-200/75 bg-white/85 p-5 shadow-[0_18px_44px_-32px_rgba(15,23,42,0.35)] dark:border-slate-800/70 dark:bg-slate-950/40">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <p className="text-sm font-bold text-[color:var(--brand-primary)]">{t('overview.growthHintsBadge')}</p>
-              <h3 className="text-lg font-semibold text-slate-950 dark:text-white">{t('overview.growthHintsTitle')}</h3>
-              <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{t('overview.growthHintsDesc')}</p>
-            </div>
-            <Link
-              href={buildLocalizedPath(locale, '/dashboard/profile#growth-hints')}
-              className="inline-flex items-center gap-2 rounded-full bg-[color:var(--brand-primary)] px-4 py-2 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:shadow-[0_14px_30px_-18px_rgba(37,99,235,0.9)]"
-            >
-              {t('overview.growthHintsCta')}
-            </Link>
-          </div>
-        </section>
-
-        {warningNotifications.length > 0 && (
-          <section className="mb-6 rounded-[1.75rem] border border-amber-200/75 bg-amber-50/75 p-5 shadow-[0_18px_44px_-32px_rgba(180,83,9,0.35)] dark:border-amber-500/30 dark:bg-amber-950/20">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-lg font-bold text-amber-950 dark:text-amber-100">{t('overview.actionRequiredTitle')}</h2>
-                <p className="text-sm text-amber-700 dark:text-amber-200">{t('overview.actionRequiredDesc')}</p>
-              </div>
-              <Link
-                href={buildLocalizedPath(locale, '/dashboard/notifications')}
-                className="text-xs font-semibold text-amber-800 dark:text-amber-200 hover:underline"
-              >
-                {t('viewAll')}
-              </Link>
-            </div>
-            <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
-              {warningNotifications.slice(0, 3).map((n) => (
-                <div key={n.id} className="rounded-[1.25rem] border border-amber-200/80 bg-light-surface/95 p-3 dark:border-amber-500/30 dark:bg-dark-surface/95">
-                  <p className="text-sm font-semibold text-amber-800 dark:text-amber-100">{n.title || t('overview.warningFallback')}</p>
-                  <p className="mt-1 text-sm text-amber-700/90 dark:text-amber-200">{n.message}</p>
-                  <p className="mt-2 text-xs text-amber-600 dark:text-amber-300">{new Date(n.timestamp).toLocaleString(locale)}</p>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {!hideContent && (
-        <>
-        {/* Stats Cards */}
-          <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-3">
-          {/* Profile Views */}
-          <div className="rounded-[1.75rem] border border-slate-200/70 bg-light-surface/95 p-6 shadow-[0_18px_44px_-30px_rgba(15,23,42,0.35)] dark:border-slate-800/70 dark:bg-dark-surface/94">
-            <div className="flex justify-between items-start">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">
-                  {t('overview.profileViews')}
-                </p>
-                <h3 className="mt-2 text-3xl font-semibold tracking-tight text-slate-950 dark:text-white">
-                  {stats.totalViews.toLocaleString()}
-                </h3>
-                <div className="flex items-center mt-2">
-                  {stats.viewTrend >= 0 ? (
-                    <>
-                      <TrendingUp className="h-4 w-4 text-green-500 mr-1" />
-                      <span className="text-sm font-medium text-green-600 dark:text-green-400">
-                        +{stats.viewTrend}%
-                      </span>
-                    </>
-                  ) : (
-                    <>
-                      <TrendingDown className="h-4 w-4 text-red-500 mr-1" />
-                      <span className="text-sm font-medium text-red-600 dark:text-red-400">
-                        {stats.viewTrend}%
-                      </span>
-                    </>
-                  )}
-                </div>
-              </div>
-              <div className="rounded-2xl bg-[color:var(--brand-primary)]/10 p-3 text-[color:var(--brand-primary)]">
-                <Eye className="h-6 w-6 text-[var(--marketing-pill-icon)] dark:text-[var(--marketing-pill-icon)]" />
-              </div>
-            </div>
-            {viewsHistory.length > 0 && (
-              <div className="mt-4 border-t border-slate-200/70 pt-4 dark:border-slate-800/70">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs text-slate-500 dark:text-slate-400">{t('overview.lastSevenDays')}</span>
-                  <MiniSparkline 
-                    data={viewsHistory} 
-                    color={stats.viewTrend >= 0 ? '#10b981' : '#B91C1C'}
-                    height={32}
-                    width={100}
-                  />
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Profile Likes */}
-          <div className="rounded-[1.75rem] border border-slate-200/70 bg-light-surface/95 p-6 shadow-[0_18px_44px_-30px_rgba(15,23,42,0.35)] dark:border-slate-800/70 dark:bg-dark-surface/94">
-            <div className="flex justify-between items-start">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">
-                  {t('overview.profileLikes')}
-                </p>
-                <h3 className="mt-2 text-3xl font-semibold tracking-tight text-slate-950 dark:text-white">
-                  {stats.totalLikes.toLocaleString()}
-                </h3>
-                <div className="flex items-center mt-2">
-                  {stats.likeTrend >= 0 ? (
-                    <>
-                      <TrendingUp className="h-4 w-4 text-green-500 mr-1" />
-                      <span className="text-sm font-medium text-green-600 dark:text-green-400">
-                        +{stats.likeTrend}%
-                      </span>
-                    </>
-                  ) : (
-                    <>
-                      <TrendingDown className="h-4 w-4 text-red-500 mr-1" />
-                      <span className="text-sm font-medium text-red-600 dark:text-red-400">
-                        {stats.likeTrend}%
-                      </span>
-                    </>
-                  )}
-                </div>
-              </div>
-              <div className="rounded-2xl bg-[color:var(--brand-primary)]/10 p-3 text-[color:var(--brand-primary)]">
-                <SwoopingTick size={24} />
-              </div>
-            </div>
-            {likesHistory.length > 0 && (
-              <div className="mt-4 border-t border-slate-200/70 pt-4 dark:border-slate-800/70">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs text-slate-500 dark:text-slate-400">{t('overview.lastSevenDays')}</span>
-                  <MiniSparkline 
-                    data={likesHistory} 
-                    color={stats.likeTrend >= 0 ? '#10b981' : '#B91C1C'}
-                    height={32}
-                    width={100}
-                  />
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Saved Talents */}
-          <div className="rounded-[1.75rem] border border-slate-200/70 bg-light-surface/95 p-6 shadow-[0_18px_44px_-30px_rgba(15,23,42,0.35)] dark:border-slate-800/70 dark:bg-dark-surface/94">
-            <div className="flex justify-between items-start">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">
-                  {t('overview.savedTalents')}
-                </p>
-                <h3 className="mt-2 text-3xl font-semibold tracking-tight text-slate-950 dark:text-white">
-                  {savedTalents.length.toLocaleString()}
-                </h3>
-                <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
-                  {t('overview.talentsYouSaved')}
-                </p>
-              </div>
-              <div className="rounded-2xl bg-[color:var(--brand-primary)]/10 p-3 text-[color:var(--brand-primary)]">
-                <SwoopingTick size={24} />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Achievements removed */}
-
-        {/* Media Performance Analytics */}
-        {talentProfile && portfolioPerformance && portfolioPerformance.topPerformers?.length > 0 && (
-          <div className="bg-light-surface dark:bg-dark-surface rounded-xl shadow-lg p-6 mb-8">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white flex items-center">
-                <Target className="h-6 w-6 mr-2 text-red-500" />
-                {t('overview.topPerformingMedia')}
-              </h2>
-              <Link href={buildLocalizedPath(locale, '/dashboard/insights')} className="text-sm text-blue-600 dark:text-red-400 hover:underline font-medium">
-                {t('overview.viewFullAnalytics')}
-              </Link>
-            </div>
-            
-            {/* Summary Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-              <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4">
-                <p className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-1">{t('overview.totalViews')}</p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                  {portfolioPerformance.analytics.totalViews.toLocaleString()}
-                </p>
-              </div>
-              <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4">
-                <p className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-1">{t('overview.totalLikes')}</p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                  {portfolioPerformance.analytics.totalLikes.toLocaleString()}
-                </p>
-              </div>
-              <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4">
-                <p className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-1">{t('overview.avgEngagement')}</p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                  {portfolioPerformance.analytics.avgEngagementRate}%
-                </p>
-              </div>
-              <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4">
-                <p className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-1">{t('overview.thisWeek')}</p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                  {portfolioPerformance.analytics.recentViews.toLocaleString()}
-                </p>
-              </div>
-            </div>
-
-            {/* Top Performers List */}
-            <div className="space-y-3">
-              {portfolioPerformance.topPerformers.map((item: any, index: number) => (
-                <div key={item.id} className="flex items-center space-x-4 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-yellow-400 to-red-500 flex items-center justify-center text-white font-bold text-sm">
-                    #{index + 1}
-                  </div>
-                  <div className="flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-600 relative">
-                    {item.type === 'IMAGE' ? (
-                      <NextImage src={item.mediaUrl} alt={item.title} fill className="w-full h-full object-cover" unoptimized />
-                    ) : item.type === 'VIDEO' && item.thumbnailUrl ? (
-                      <NextImage src={item.thumbnailUrl} alt={item.title} fill className="w-full h-full object-cover" unoptimized />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center">
-                        <BarChart3 className="h-6 w-6 text-gray-400" />
-                      </div>
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{item.title}</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">{item.type}</p>
-                  </div>
-                  <div className="flex items-center space-x-4 text-sm">
-                    <div className="text-center">
-                      <p className="font-semibold text-gray-900 dark:text-white">{item.views}</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">{t('overview.views')}</p>
-                    </div>
-                    <div className="text-center">
-                      <p className="font-semibold text-gray-900 dark:text-white">{item.likeCount}</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">{t('overview.likes')}</p>
-                    </div>
-                    <div className="text-center">
-                      <p className="font-semibold text-green-600 dark:text-green-400">{item.engagementRate}%</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">{t('overview.engagement')}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Media Section */}
-        {talentProfile && portfolioItems.length > 0 && (
-          <div className="bg-light-surface dark:bg-dark-surface rounded-xl shadow-lg p-6 mb-8">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white flex items-center">
-                <BarChart3 className="h-6 w-6 mr-2 text-blue-600 dark:text-red-400" />
-                {t('overview.media')}
-              </h2>
-              <Link href={buildLocalizedPath(locale, '/dashboard/gallery')} className="text-sm text-blue-600 dark:text-red-400 hover:underline font-medium">
-                {t('viewAll')} →
-              </Link>
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-              {portfolioItems.slice(0, 10).map((item, index) => (
-                <div 
-                  key={item.id} 
-                  className="group relative aspect-square rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-700 hover:ring-2 hover:ring-blue-500 dark:hover:ring-red-500 transition-all cursor-pointer"
-                  onClick={() => {
-                    setGalleryIndex(index);
-                    setGalleryOpen(true);
-                  }}
-                >
-                  {item.type === 'IMAGE' && (
-                    <NextImage 
-                      src={item.mediaUrl} 
-                      alt={item.title} 
-                      fill
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                      unoptimized
-                    />
-                  )}
-                  {item.type === 'VIDEO' && (
-                    <div className="relative w-full h-full">
-                      {item.thumbnailUrl ? (
-                        <NextImage 
-                          src={item.thumbnailUrl} 
-                          alt={item.title} 
-                          fill
-                          className="w-full h-full object-cover"
-                          unoptimized
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-600 dark:to-gray-700" />
-                      )}
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-                        <div className="w-12 h-12 rounded-full bg-white/90 flex items-center justify-center">
-                          <div className="w-0 h-0 border-t-6 border-t-transparent border-l-10 border-l-gray-800 border-b-6 border-b-transparent ml-1" />
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                  {item.type === 'AUDIO' && (
-                    <div className="w-full h-full bg-gradient-to-br from-purple-500 to-red-500 dark:from-purple-700 dark:to-red-700 flex items-center justify-center">
-                      <MessageSquare className="h-12 w-12 text-white" />
-                    </div>
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
-                    <div className="absolute bottom-0 left-0 right-0 p-3">
-                      <p className="text-white text-xs font-medium truncate">{item.title}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            {portfolioItems.length === 0 && (
-              <div className="text-center py-12">
-                <BarChart3 className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-                  {t('noPortfolioItems')}
-                </h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-                  {t('noPortfolioItemsDesc')}
-                </p>
-                <Link href={buildLocalizedPath(locale, '/dashboard/gallery')} className="inline-flex items-center px-4 py-2 bg-blue-600 dark:bg-red-600 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-red-700 transition-colors">
-                  {t('uploadNow')}
-                </Link>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Recent Activity & Comments */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          {/* Recent Activity */}
-          <div className="bg-light-surface dark:bg-dark-surface rounded-xl shadow-lg p-6 relative overflow-hidden">
-            {/* Background Icon */}
-            <div className="absolute top-0 right-0 opacity-5 dark:opacity-10">
-              <Clock className="h-48 w-48 text-blue-600 dark:text-red-300 transform rotate-12" />
-            </div>
-            <div className="relative z-10">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
-                  <Clock className="h-5 w-5 mr-2 text-blue-600 dark:text-red-300" />
-                  {t('recentActivity')}
-                </h2>
-                <Link href={buildLocalizedPath(locale, '/dashboard/activity')} className="text-sm text-blue-600 dark:text-red-300 hover:underline">
-                  {t('viewAll')}
-                </Link>
-              </div>
-              <div className="space-y-4">
-                {recentActivities.length > 0 ? (
-                  recentActivities.map((activity, idx) => (
-                    <div key={`${activity.id}-${idx}`} className="flex items-start space-x-4 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                      <div className={`p-2 rounded-lg ${
-                        activity.type === 'comment' ? 'bg-green-100 dark:bg-green-900/30' :
-                        activity.type === 'like' ? 'bg-red-100 dark:bg-red-900/30' :
-                        'bg-[var(--marketing-surface)] dark:bg-[var(--marketing-surface)]'
-                      }`}>
-                        {activity.type === 'comment' && <MessageSquare className="h-4 w-4 text-green-600 dark:text-green-400" />}
-                        {activity.type === 'like' && <SwoopingTick size={16} />}
-                        {activity.type === 'view' && <Eye className="h-4 w-4 text-[var(--marketing-pill-icon)] dark:text-[var(--marketing-pill-icon)]" />}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm text-gray-900 dark:text-white font-medium">{activity.talent?.name}</p>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 truncate">{activity.content}</p>
-                        <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">{activity.timestamp}</p>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-                    {t('noRecentActivity')}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Recent Notifications */}
-          <div className="bg-light-surface dark:bg-dark-surface rounded-xl shadow-lg p-6 relative overflow-hidden">
-            {/* Background Icon */}
-            <div className="absolute top-0 right-0 opacity-5 dark:opacity-10">
-              <Bell className="h-48 w-48 text-purple-600 dark:text-purple-400 transform -rotate-12" />
-            </div>
-            <div className="relative z-10">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
-                  <Bell className="h-5 w-5 mr-2 text-purple-600 dark:text-purple-400" />
-                  {t('recentNotifications')}
-                </h2>
-                <Link href={buildLocalizedPath(locale, '/dashboard/notifications')} className="text-sm text-blue-600 dark:text-red-300 hover:underline">
-                  {t('viewAll')}
-                </Link>
-              </div>
-              <div className="space-y-3">
-                {notifications.length > 0 ? (
-                  notifications.slice(0, 5).map((notification) => (
-                    <div key={notification.id} className={`flex items-start space-x-3 p-3 rounded-lg transition-colors ${
-                      !notification.read 
-                        ? 'bg-[var(--marketing-surface)] dark:bg-[var(--marketing-surface)] border border-[var(--marketing-pill-border)]' 
-                        : 'bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700'
-                    }`}>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm text-gray-900 dark:text-white">{notification.message}</p>
-                        <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">{notification.timestamp}</p>
-                      </div>
-                      {!notification.read && (
-                        <div className="h-2 w-2 bg-[var(--marketing-pill-icon)] rounded-full"></div>
-                      )}
-                    </div>
-                  ))
-                ) : (
-                  <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-                    {t('noNotifications')}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Saved & Viewed Talents - Scrollable Grids */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Saved Talents */}
-          <div className="bg-light-surface dark:bg-dark-surface rounded-xl shadow-lg p-6 relative overflow-hidden">
-            {/* Background Icon */}
-            <div className="absolute bottom-0 right-0 opacity-5 dark:opacity-10">
-              <SwoopingTick size={256} />
-            </div>
-            <div className="relative z-10">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
-                  <SwoopingTick size={20} />
-                  <span className="ml-2">{t('savedTalents')}</span>
-                </h2>
-                <Link href={buildLocalizedPath(locale, '/dashboard/saved')} className="text-sm text-blue-600 dark:text-red-300 hover:underline">
-                  {t('viewAll')}
-                </Link>
-              </div>
-              {savedTalents.length > 0 ? (
-                <div className="overflow-x-auto">
-                  <div className="flex space-x-4 pb-4">
-                    {savedTalents.slice(0, 6).map((talent) => {
-                      const ftTalent = {
-                        id: talent.id,
-                        user: { name: talent.name },
-                        avatarUrl: talent.imageUrl || talent.avatarUrl,
-                        category: { name: talent.role || talent.category || 'Talent' },
-                        skills: talent.skills || [],
-                        featuredSkills: talent.featuredSkills || []
-                      };
-                      const mediaItems = (talent.mediaItems || talent.media || talent.portfolio || []).map((m: any) => ({
-                        id: m.id || m.url || m.thumbnail || m.thumbnailUrl,
-                        title: m.title || m.id || '',
-                        url: m.url || m.videoUrl || m.thumbnail || m.thumbnailUrl || '',
-                        type: (m.type || m.mediaType || m.kind || 'IMAGE').toString().toUpperCase(),
-                        thumbnail: m.thumbnail || m.thumbnailUrl || undefined
-                      }));
-
-                      return (
-                        <div 
-                          key={talent.id}
-                          className="flex-shrink-0 w-64"
-                        >
-                          <FeaturedTalentCard
-                            talent={ftTalent}
-                            mediaItems={mediaItems}
-                            onMediaClick={(item) => {
-                              setTalentOverlay(talent);
-                              setShowTalentOverlay(true);
-                            }}
-                            onProfileClick={() => router.push(`/talent/${(talent as any).userId ?? talent.id}`)}
-                            onSkillClick={(s) => router.push(buildLocalizedPath(locale, `/hub?q=${encodeURIComponent(s)}`))}
-                          />
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              ) : (
-                <div className="text-center py-12">
-                  <SwoopingTick size={48} />
-                  <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-2 mt-4">
-                    {t('noSavedTalents')}
-                  </h3>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
-                    {t('noSavedTalentsDesc')}
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Viewed Talents */}
-          <div className="bg-light-surface dark:bg-dark-surface rounded-xl shadow-lg p-6 relative overflow-hidden">
-            {/* Background Icon */}
-            <div className="absolute bottom-0 right-0 opacity-5 dark:opacity-10">
-              <Eye className="h-64 w-64 text-blue-600 dark:text-red-300" />
-            </div>
-            <div className="relative z-10">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
-                  <Eye className="h-5 w-5 mr-2 text-blue-600 dark:text-red-300" />
-                  {t('viewedHistory')}
-                </h2>
-                <Link href={buildLocalizedPath(locale, '/dashboard/history')} className="text-sm text-blue-600 dark:text-red-300 hover:underline">
-                  {t('viewAll')}
-                </Link>
-              </div>
-              {viewedTalents.length > 0 ? (
-                <div className="overflow-x-auto">
-                  <div className="flex space-x-4 pb-4">
-                    {viewedTalents.slice(0, 6).map((talent, idx) => {
-                      const ftTalent = {
-                        id: talent.id,
-                        user: { name: talent.name },
-                        avatarUrl: talent.imageUrl || talent.avatarUrl,
-                        category: { name: talent.role || talent.category || 'Talent' },
-                        skills: talent.skills || [],
-                        featuredSkills: talent.featuredSkills || []
-                      };
-                      const mediaItems = (talent.mediaItems || talent.media || talent.portfolio || []).map((m: any) => ({
-                        id: m.id || m.url || m.thumbnail || m.thumbnailUrl,
-                        title: m.title || m.id || '',
-                        url: m.url || m.videoUrl || m.thumbnail || m.thumbnailUrl || '',
-                        type: (m.type || m.mediaType || m.kind || 'IMAGE').toString().toUpperCase(),
-                        thumbnail: m.thumbnail || m.thumbnailUrl || undefined
-                      }));
-
-                      return (
-                        <div
-                          key={`${talent.id}-${idx}`}
-                          className="flex-shrink-0 w-64"
-                        >
-                          <FeaturedTalentCard
-                            talent={ftTalent}
-                            mediaItems={mediaItems}
-                            onMediaClick={(item) => {
-                              setTalentOverlay(talent);
-                              setShowTalentOverlay(true);
-                            }}
-                            onProfileClick={() => router.push(`/talent/${(talent as any).userId ?? talent.id}`)}
-                            onSkillClick={(s) => router.push(buildLocalizedPath(locale, `/hub?q=${encodeURIComponent(s)}`))}
-                            priority={idx < 2}
-                          />
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              ) : (
-                <div className="text-center py-12">
-                  <Eye className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-2">
-                    {t('noViewedTalents')}
-                  </h3>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
-                    {t('noViewedTalentsDesc')}
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-        </>
-        )}
-      </div>
-
-      {/* Gallery Viewer */}
-      {galleryOpen && portfolioItems.length > 0 && (
-        <GalleryViewer
-          isOpen={galleryOpen}
-          onClose={() => setGalleryOpen(false)}
-          items={portfolioItems.map(item => ({
-            id: item.id,
-            mediaUrl: item.mediaUrl,
-            title: item.title || 'Untitled',
-            type: item.type?.toLowerCase() === 'video' ? 'video' : item.type?.toLowerCase() === 'audio' ? 'audio' : 'image',
-            thumbnail: item.thumbnailUrl || item.mediaUrl,
-            likeCount: item.likeCount || 0
-          }))}
-          initialIndex={galleryIndex}
-        />
       )}
 
-      {/* Talent Media Overlay */}
-      {showTalentOverlay && talentOverlay && (() => {
-        const hasMedia = talentOverlay.mediaItems && talentOverlay.mediaItems.length > 0;
-        const firstMedia = hasMedia ? talentOverlay.mediaItems[0] : null;
-        const overlayMedia = firstMedia ? {
-          id: firstMedia.id || talentOverlay.id,
-          title: firstMedia.title || talentOverlay.name || 'Untitled',
-          mediaUrl: firstMedia.mediaUrl || '',
-          type: (firstMedia.type || 'IMAGE')?.toUpperCase() as 'IMAGE' | 'VIDEO' | 'AUDIO',
-          thumbnail: firstMedia.thumbnail || firstMedia.mediaUrl,
-        } : {
-          id: `profile-${talentOverlay.id}`,
-          title: `${talentOverlay.name || 'Talent'}'s Profile`,
-          mediaUrl: talentOverlay.imageUrl || talentOverlay.avatarUrl || '',
-          type: 'IMAGE' as const,
-          thumbnail: talentOverlay.imageUrl || talentOverlay.avatarUrl || '',
-        };
+      <div className="grid gap-7 xl:grid-cols-[minmax(240px,0.7fr)_minmax(0,1.5fr)]">
+        <aside className="order-2 space-y-6 xl:order-1 xl:self-start">
+          <DashboardSurface innerClassName="overflow-hidden p-0">
+            <div className="h-28 bg-[color:var(--brand-primary)]/15" style={talentProfile?.bannerUrl?.startsWith('#') ? { backgroundColor: talentProfile.bannerUrl } : undefined}>
+              {talentProfile?.bannerUrl && !talentProfile.bannerUrl.startsWith('#') ? (
+                <Image src={talentProfile.bannerUrl} alt="Profile banner" width={640} height={220} unoptimized className="h-full w-full object-cover" />
+              ) : null}
+            </div>
+            <div className="p-5">
+              <div className="-mt-16 flex items-end gap-4">
+                <div className="rounded-[2rem] bg-white/80 p-1 shadow-[0_22px_42px_-28px_rgba(15,23,42,0.75)] dark:bg-slate-950/70">
+                  {talentProfile?.avatarUrl ? (
+                    <Image src={talentProfile.avatarUrl} alt={displayName} width={112} height={112} unoptimized className="h-28 w-28 rounded-[1.65rem] object-cover" />
+                  ) : (
+                    <div className="flex h-28 w-28 items-center justify-center rounded-[1.65rem] bg-[color:var(--brand-primary)]/10 text-[color:var(--brand-primary)]">
+                      <UserRound className="h-9 w-9" />
+                    </div>
+                  )}
+                </div>
+                <StatusPill tone="brand">{talentProfile?.category?.name || 'Talent profile'}</StatusPill>
+              </div>
+              <h2 className="mt-5 text-2xl font-semibold tracking-tight text-slate-950 dark:text-white">{displayName}</h2>
+              <p className="mt-1 text-sm font-medium text-slate-600 dark:text-slate-300">{talentProfile?.performerTitle || talentProfile?.location || 'Profile preview'}</p>
+              <p className="mt-4 line-clamp-4 text-sm leading-6 text-slate-700 dark:text-slate-200">
+                {talentProfile?.bio || 'Add a bio, headshot, banner, skills, and media so visitors understand your talent quickly.'}
+              </p>
+              <div className="mt-5 flex flex-wrap gap-3">
+                <DashboardButton href={buildLocalizedPath(locale, `/talent/${user.id}`)} variant="secondary">
+                  <Eye className="h-4 w-4" />
+                  Public view
+                </DashboardButton>
+                <DashboardButton href={buildLocalizedPath(locale, '/dashboard/profile')} variant="ghost">
+                  Edit profile
+                </DashboardButton>
+              </div>
+            </div>
+          </DashboardSurface>
 
-        const allOverlayMedia = hasMedia
-          ? talentOverlay.mediaItems.map((m: any) => ({
-              id: m.id || m.mediaUrl,
-              title: m.title || 'Untitled',
-              mediaUrl: m.mediaUrl || '',
-              type: (m.type || 'IMAGE')?.toUpperCase() as 'IMAGE' | 'VIDEO' | 'AUDIO',
-              thumbnail: m.thumbnail || m.mediaUrl,
-              description: '',
-              talentProfile: {
-                id: talentOverlay.id,
-                user: { name: talentOverlay.name || 'Talent' },
-                avatarUrl: talentOverlay.imageUrl || talentOverlay.avatarUrl,
-                category: talentOverlay.category ? { name: talentOverlay.category } : undefined,
-                location: talentOverlay.location
-              },
-              views: 0,
-              likes: 0,
-              createdAt: new Date().toISOString()
-            }))
-          : [{
-              ...overlayMedia,
-              description: '',
-              talentProfile: {
-                id: talentOverlay.id,
-                user: { name: talentOverlay.name || 'Talent' },
-                avatarUrl: talentOverlay.imageUrl || talentOverlay.avatarUrl,
-                category: talentOverlay.category ? { name: talentOverlay.category } : undefined,
-                location: talentOverlay.location
-              },
-              views: 0,
-              likes: 0,
-              createdAt: new Date().toISOString()
-            }];
+          <DashboardPanel>
+            <PanelHeading title="Make it yours" description="A few small steps to help people discover your talent." />
+            <div className="space-y-3">
+              {nextActions.map((action) => (
+                <DashboardActionCard
+                  key={action.title}
+                  icon={action.icon}
+                  title={action.title}
+                  description={action.description}
+                  tone="accent"
+                  action={
+                    <DashboardButton href={action.href} variant="secondary">
+                      Open
+                      <ArrowUpRight className="h-4 w-4" />
+                    </DashboardButton>
+                  }
+                />
+              ))}
+            </div>
+          </DashboardPanel>
+        </aside>
 
-        return (
-          <MediaOverlay
-            media={{
-              ...overlayMedia,
-              description: '',
-              talentProfile: {
-                id: talentOverlay.id,
-                user: { name: talentOverlay.name || 'Talent' },
-                avatarUrl: talentOverlay.imageUrl || talentOverlay.avatarUrl,
-                category: talentOverlay.category ? { name: talentOverlay.category } : undefined,
-                location: talentOverlay.location
-              },
-              views: 0,
-              likeCount: 0,
-              createdAt: new Date().toISOString()
-            }}
-            allMedia={allOverlayMedia}
-            talents={[]}
-            onClose={() => {
-              setShowTalentOverlay(false);
-              setTalentOverlay(null);
-            }}
-            onMediaSelect={(item) => {
-              setTalentOverlay((prev: any) => prev ? { ...prev, mediaItems: [...(prev.mediaItems || [])].sort((a: any, b: any) => a.id === item.id ? -1 : 1) } : null);
-            }}
-          />
-        );
-      })()}
-    </div>
+        <div className="order-1 min-w-0 space-y-7 xl:order-2">
+          <div className="grid gap-4 sm:grid-cols-3">
+            <MetricTile
+              label="Profile views"
+              value={stats.totalViews.toLocaleString()}
+              detail={`${stats.viewTrend >= 0 ? '+' : ''}${stats.viewTrend}% over previous period`}
+              icon={Eye}
+              trend={viewsHistory.length > 1 ? <MiniSparkline data={viewsHistory} color={stats.viewTrend >= 0 ? '#059669' : '#B91C1C'} height={34} width={120} /> : null}
+            />
+            <MetricTile
+              label="Profile likes"
+              value={stats.totalLikes.toLocaleString()}
+              detail={`${stats.likeTrend >= 0 ? '+' : ''}${stats.likeTrend}% movement`}
+              icon={CheckCircle2}
+              trend={likesHistory.length > 1 ? <MiniSparkline data={likesHistory} color={stats.likeTrend >= 0 ? '#059669' : '#B91C1C'} height={34} width={120} /> : null}
+            />
+            <MetricTile
+              label="Saved talent"
+              value={stats.savedTalents.toLocaleString()}
+              detail="People you can revisit quickly"
+              icon={Save}
+            />
+          </div>
+
+          <DashboardPanel>
+            <PanelHeading
+              title="Portfolio performance"
+              description="See which pieces of work people engage with."
+              actions={<DashboardButton href={buildLocalizedPath(locale, '/dashboard/gallery')} variant="secondary">Manage media</DashboardButton>}
+            />
+            {portfolioPerformance?.topPerformers?.length ? (
+              <div className="space-y-3">
+                <DashboardStatRow
+                  items={[
+                    { label: 'Media views', value: portfolioPerformance.analytics?.totalViews?.toLocaleString?.() || 0, detail: 'Total portfolio opens' },
+                    { label: 'Media likes', value: portfolioPerformance.analytics?.totalLikes?.toLocaleString?.() || 0, detail: 'Saved reactions' },
+                    { label: 'Engagement', value: `${portfolioPerformance.analytics?.avgEngagementRate || 0}%`, detail: 'Average media rate' },
+                    { label: 'This week', value: portfolioPerformance.analytics?.recentViews?.toLocaleString?.() || 0, detail: 'Recent views' },
+                  ]}
+                />
+                <div className="mt-4 grid gap-3">
+                  {portfolioPerformance.topPerformers.slice(0, 4).map((item: any, index: number) => (
+                    <div key={item.id} className="grid grid-cols-[auto_1fr_auto] items-center gap-4 rounded-[1.5rem] bg-slate-50/80 p-3 dark:bg-slate-950/35">
+                      <span className="font-mono text-sm font-semibold text-slate-500">#{index + 1}</span>
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-semibold text-slate-950 dark:text-white">{item.title || item.type}</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">{item.views || 0} views · {item.likeCount || 0} likes</p>
+                      </div>
+                      <StatusPill tone="brand">{item.engagementRate || 0}%</StatusPill>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <EmptyState
+                icon={Images}
+                title="Your portfolio starts here"
+                description="Upload a few strong pieces, then this area can show which work people open and return to."
+                action={<DashboardButton href={buildLocalizedPath(locale, '/dashboard/gallery')}>Add media</DashboardButton>}
+              />
+            )}
+          </DashboardPanel>
+
+          <div className="grid gap-7 xl:grid-cols-2">
+            <DashboardPanel>
+              <PanelHeading title="Recent activity" actions={<DashboardButton href={buildLocalizedPath(locale, '/dashboard/activity')} variant="ghost">View all</DashboardButton>} />
+              {activities.length ? (
+                <div className="space-y-3">
+                  {activities.slice(0, 5).map((item, index) => (
+                    <div key={`${item.id || item.time}-${index}`} className="flex items-start gap-3 rounded-[1.5rem] bg-slate-50/80 p-3 dark:bg-slate-950/35">
+                      <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-[color:var(--brand-primary)]/10 text-[color:var(--brand-primary)]">
+                        <Activity className="h-4 w-4" />
+                      </span>
+                      <div className="min-w-0">
+                        <p className="text-sm font-semibold text-slate-950 dark:text-white">{item.actorName || item.talent?.user?.name || item.type || 'Activity'}</p>
+                        <p className="truncate text-sm text-slate-600 dark:text-slate-300">{item.text || item.content || 'Dashboard activity'}</p>
+                        <p className="mt-1 text-xs text-slate-500">{item.time || item.createdAt}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <EmptyState icon={Activity} title="No recent activity" description="Views, likes, and comments will appear here once people interact with your profile." />
+              )}
+            </DashboardPanel>
+
+            <DashboardPanel>
+              <PanelHeading title="Keep growing" description="What the data suggests right now." />
+              <DashboardActionCard
+                icon={LineChart}
+                title={portfolioItems.length < 3 ? 'Add to your portfolio' : 'Keep your best work visible'}
+                description={portfolioItems.length < 3 ? 'Share images, video, or audio that show what you do best.' : 'You have enough media to start reading performance. Check analytics weekly and keep the strongest pieces near the top.'}
+                tone="accent"
+                action={<DashboardButton href={buildLocalizedPath(locale, portfolioItems.length < 3 ? '/dashboard/gallery' : '/dashboard/analytics')} variant="secondary">Review</DashboardButton>}
+              />
+            </DashboardPanel>
+          </div>
+
+          <div className="grid gap-7 xl:grid-cols-2">
+            {talentRails.map((rail) => (
+              <DashboardPanel key={rail.title}>
+                <PanelHeading title={rail.title} actions={<DashboardButton href={rail.href} variant="ghost">View all</DashboardButton>} />
+                {rail.items.length ? (
+                  <div className="grid gap-3">
+                    {rail.items.slice(0, 4).map((talent: any) => (
+                      <Link
+                        key={talent.id}
+                        href={buildLocalizedPath(locale, `/talent/${talent.id}`)}
+                        className="group grid grid-cols-[3.5rem_1fr_auto] items-center gap-3 rounded-[1.5rem] bg-slate-50/80 p-3 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-1 dark:bg-slate-950/35"
+                      >
+                        <div className="relative h-14 w-14 overflow-hidden rounded-2xl bg-slate-200 dark:bg-slate-800">
+                          {talent.imageUrl || talent.avatarUrl ? (
+                            <Image src={talent.imageUrl || talent.avatarUrl} alt={talent.name || 'Talent'} fill sizes="56px" unoptimized className="object-cover" />
+                          ) : (
+                            <UserRound className="m-4 h-6 w-6 text-slate-500" />
+                          )}
+                        </div>
+                        <div className="min-w-0">
+                          <p className="truncate text-sm font-semibold text-slate-950 dark:text-white">{talent.name || talent.user?.name || 'Talent'}</p>
+                          <p className="truncate text-xs text-slate-500 dark:text-slate-400">{talent.role || (typeof talent.category === 'string' ? talent.category : talent.category?.name) || 'Talent profile'}</p>
+                        </div>
+                        <ArrowUpRight className="h-4 w-4 text-slate-400 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                      </Link>
+                    ))}
+                  </div>
+                ) : (
+                  <EmptyState icon={UserRound} title={`No ${rail.title.toLowerCase()} yet`} description="Once you browse talent, useful shortcuts will appear here." />
+                )}
+              </DashboardPanel>
+            ))}
+          </div>
+        </div>
+      </div>
+    </DashboardWorkspace>
   );
 }
+
+

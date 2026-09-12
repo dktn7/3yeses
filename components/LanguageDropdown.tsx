@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { usePathname, useSearchParams, useRouter } from 'next/navigation'
 import Image from 'next/image';
 import DropdownPanel from './DropdownPanel';
@@ -27,6 +27,7 @@ export default function LanguageDropdown() {
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const router = useRouter()
+  const buttonRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
     setIsClient(true)
@@ -53,8 +54,9 @@ export default function LanguageDropdown() {
   return (
     <div className="relative">
       <button
+        ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
-        className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200/80 dark:border-red-500/20 bg-[var(--marketing-surface)] dark:bg-[rgba(17,24,39,0.95)] text-gray-700 dark:text-red-100 shadow-sm transition-all hover:bg-slate-100/90 dark:hover:bg-[rgba(185,28,28,0.16)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+        className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200/80 bg-[var(--marketing-surface)] text-gray-700 shadow-sm transition-all hover:bg-slate-100/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent dark:border-[var(--chrome-border)] dark:bg-[var(--chrome-panel)] dark:text-red-100 dark:hover:bg-[var(--chrome-hover)]"
       >
         {currentLanguage && (
           <Image
@@ -63,14 +65,16 @@ export default function LanguageDropdown() {
             width={24}
             height={24}
             unoptimized
-            style={{ width: 'auto', height: 'auto' }}
+            className="h-4 w-4 shrink-0 object-contain"
           />
         )}
       </button>
 
       {isOpen && (
         <DropdownPanel
-          className="absolute top-full right-0 mt-2 w-52 p-2 bg-[var(--marketing-surface)] dark:bg-[rgba(17,24,39,0.98)] backdrop-blur-xl"
+          portal
+          anchorRef={buttonRef}
+          className="w-52 overflow-hidden border border-[var(--chrome-border)] bg-[var(--chrome-panel)] p-2 shadow-[0_8px_32px_rgba(0,0,0,0.12)] backdrop-blur-md dark:shadow-[0_8px_32px_rgba(0,0,0,0.4)] !z-[160]"
         >
           <div className="grid grid-cols-1 gap-1">
             {locales.map((locale) => (
@@ -80,10 +84,10 @@ export default function LanguageDropdown() {
                   if (!isCurrentLanguage(locale.code)) handleLanguageChange(locale.code);
                   else setIsOpen(false);
                 }}
-                className={`flex items-center justify-start p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 ${
+                className={`flex items-center justify-start gap-2 rounded-md p-2 text-left transition-colors duration-200 hover:bg-[var(--chrome-hover)] ${
                   isCurrentLanguage(locale.code)
-                    ? 'bg-[var(--brand-primary)]/15 dark:bg-[rgba(185,28,28,0.22)] text-[var(--brand-primary)] dark:text-red-100 cursor-default ring-1 ring-blue-300/80 ring-offset-1 ring-offset-white dark:ring-red-500/20 dark:ring-offset-transparent'
-                    : ''
+                    ? 'cursor-default bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] ring-1 ring-[var(--brand-primary)]/15 dark:bg-[rgba(185,28,28,0.22)] dark:text-red-100 dark:ring-red-500/40'
+                    : 'text-gray-700 dark:text-red-100'
                 }`}
                 aria-current={isCurrentLanguage(locale.code) ? 'true' : undefined}
               >
@@ -93,9 +97,9 @@ export default function LanguageDropdown() {
                   width={24}
                   height={24}
                   unoptimized
-                  style={{ width: 'auto', height: 'auto' }}
+                  className="h-4 w-4 shrink-0 object-contain"
                 />
-                <span className="ml-2 text-sm text-gray-800 dark:text-gray-100">{locale.name}</span>
+                <span className="text-sm text-inherit">{locale.name}</span>
               </button>
             ))}
           </div>

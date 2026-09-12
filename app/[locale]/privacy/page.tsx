@@ -1,9 +1,10 @@
 'use client';
 
 import React from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import Link from 'next/link';
 import SwoopingTick from '@/components/SwoopingTick';
+import { buildLocalizedPath } from '@/lib/locale-path';
 
 /* ── Background decoration ─────────────────────────────────────────── */
 function PrivacyBgDecoration() {
@@ -71,6 +72,7 @@ const TOC = [
 
 export default function PrivacyPolicyPage() {
   const t = useTranslations('Pages.privacy');
+  const locale = useLocale();
   return (
     <div className="relative min-h-screen landing-bg transition-colors duration-300 overflow-hidden brand-true-red">
       <PrivacyBgDecoration />
@@ -128,7 +130,7 @@ export default function PrivacyPolicyPage() {
             <p>
               3YESES is the data controller for the personal data processed through the Platform.
               If you have any questions about how we handle your data, you can reach us through our{' '}
-              <Link href="/support/submit-ticket" className="rounded-sm marketing-accent-text hover:underline font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-ring)]">
+              <Link href={buildLocalizedPath(locale, '/support/submit-ticket')} className="rounded-sm marketing-accent-text hover:underline font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-ring)]">
                 Support Centre
               </Link>.
             </p>
@@ -257,7 +259,7 @@ export default function PrivacyPolicyPage() {
             </ul>
             <p>
               To exercise any of these rights, submit a request through our{' '}
-              <Link href="/support/submit-ticket" className="rounded-sm marketing-accent-text hover:underline font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-ring)]">
+              <Link href={buildLocalizedPath(locale, '/support/submit-ticket')} className="rounded-sm marketing-accent-text hover:underline font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-ring)]">
                 Support Centre
               </Link>{' '}
               or use the self-service options in Dashboard → Settings → Account. We will respond within 30 days.
@@ -339,7 +341,7 @@ export default function PrivacyPolicyPage() {
           <Section id="contact" number="13" title="Contact Us">
             <p>
               If you have questions about this Privacy Policy or how we handle your data, please contact us through our{' '}
-              <Link href="/support/submit-ticket" className="rounded-sm marketing-accent-text hover:underline font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-ring)]">
+              <Link href={buildLocalizedPath(locale, '/support/submit-ticket')} className="rounded-sm marketing-accent-text hover:underline font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-ring)]">
                 Support Centre
               </Link>.
             </p>

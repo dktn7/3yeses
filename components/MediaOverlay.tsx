@@ -1,11 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { createPortal } from 'react-dom';
 import useFocusTrap from '@/hooks/useFocusTrap';
 import { useRouter } from 'next/navigation';
-import { useLocale } from 'next-intl';
-import Link from 'next/link';
 import Image from 'next/image';
 import {
   X,
@@ -27,7 +24,7 @@ import FlagButton from './FlagButton';
 import AuthRequiredModal from './AuthRequiredModal';
 import { useAuthRequired } from '@/hooks/useAuthRequired';
 import { ModeToggle } from './ThemeToggle';
-import LanguageSwitcherModal from './LanguageSwitcherModal';
+import LanguageDropdown from './LanguageDropdown';
 import { useAuth } from '@/contexts/AuthContext';
 
 interface MediaItem {
@@ -66,7 +63,6 @@ interface MediaOverlayProps {
 
 export default function MediaOverlay({ media, allMedia, talents = [], onClose, onMediaSelect, mode = 'overlay', onBackToHub }: MediaOverlayProps) {
   const router = useRouter();
-  const locale = useLocale();
   const { user } = useAuth();
   const { showAuthModal, openAuthModal, closeAuthModal } = useAuthRequired();
   
@@ -268,7 +264,7 @@ export default function MediaOverlay({ media, allMedia, talents = [], onClose, o
   }, [isEmbedded]);
 
   return (
-    <div
+      <div
       ref={overlayRef}
       role={isEmbedded ? undefined : 'dialog'}
       aria-modal={isEmbedded ? undefined : 'true'}
@@ -295,7 +291,7 @@ export default function MediaOverlay({ media, allMedia, talents = [], onClose, o
               </button>
             )}
             <ModeToggle />
-            <LanguageSwitcherModal />
+            <LanguageDropdown />
             <button
               onClick={onClose}
               className="w-8 h-8 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-full flex items-center justify-center transition-colors flex-shrink-0"
@@ -413,6 +409,7 @@ export default function MediaOverlay({ media, allMedia, talents = [], onClose, o
                               src={m.thumbnail}
                               alt={m.title}
                               fill
+                              sizes="80px"
                               className="object-cover"
                             />
                           ) : (
@@ -475,7 +472,7 @@ export default function MediaOverlay({ media, allMedia, talents = [], onClose, o
               </button>
             )}
             <ModeToggle />
-            <LanguageSwitcherModal />
+            <LanguageDropdown />
             <button
               onClick={onClose}
               className="w-7 h-7 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-full flex items-center justify-center transition-colors"
@@ -672,6 +669,7 @@ export default function MediaOverlay({ media, allMedia, talents = [], onClose, o
                         src={m.thumbnail || (m.type === 'IMAGE' ? m.mediaUrl : '')}
                         alt={m.title}
                         fill
+                        sizes="128px"
                         className="object-cover"
                       />
                     ) : (

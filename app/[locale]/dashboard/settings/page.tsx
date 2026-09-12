@@ -1,9 +1,36 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
-import { useTranslations } from 'next-intl';
+import {
+  Bell,
+  CheckCircle2,
+  Eye,
+  Fingerprint,
+  KeyRound,
+  Mail,
+  Settings as SettingsIcon,
+  ShieldCheck,
+  Trash2,
+  UserRound,
+} from 'lucide-react';
 import LoadingSpinner from '@/components/LoadingSpinner';
+import {
+  DashboardActionCard,
+  DashboardButton,
+  DashboardField,
+  DashboardHeader,
+  DashboardPanel,
+  DashboardStatRow,
+  DashboardToggle,
+  DashboardWorkspace,
+  PanelHeading,
+  SegmentedControl,
+  StatusPill,
+  inputClass,
+} from '@/components/dashboard/DashboardPrimitives';
+import { buildLocalizedPath } from '@/lib/locale-path';
 
 interface User {
   id: string;
@@ -26,23 +53,22 @@ interface Settings {
 
 export default function SettingsPage() {
   const router = useRouter();
+  const locale = useLocale();
   const t = useTranslations('dashboard.settings');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [settings, setSettings] = useState<Settings>({
-    notifications: {
-      email: true,
-      marketing: false,
-    },
-    privacy: {
-      profileVisibility: 'public',
-      showEmail: false,
-      showLocation: true,
-    },
+    notifications: { email: true, marketing: false },
+    privacy: { profileVisibility: 'public', showEmail: false, showLocation: true },
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [success, setSuccess] = useState('');
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [deleteAcknowledged, setDeleteAcknowledged] = useState(false);
+  const [passwordForm, setPasswordForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
+  const [passwordSaving, setPasswordSaving] = useState(false);
+  const [resetSending, setResetSending] = useState(false);
 
   useEffect(() => {
     fetchUserAndSettings();
@@ -62,9 +88,7 @@ export default function SettingsPage() {
 
       if (settingsResponse.ok) {
         const settingsData = await settingsResponse.json();
-        if (settingsData.settings) {
-          setSettings(settingsData.settings);
-        }
+        if (settingsData.settings) setSettings(settingsData.settings);
       }
     } catch (error) {
       console.error('Failed to fetch data:', error);
@@ -73,20 +97,38 @@ export default function SettingsPage() {
     }
   };
 
+  const passwordChecks = useMemo(() => {
+    const value = passwordForm.newPassword;
+    return {
+      length: value.length >= 8,
+      upper: /[A-Z]/.test(value),
+      lower: /[a-z]/.test(value),
+      number: /\d/.test(value),
+      matches: value.length > 0 && value === passwordForm.confirmPassword,
+    };
+  }, [passwordForm]);
+
+  const passwordScore = Object.values(passwordChecks).filter(Boolean).length;
+
   const handleSettingsChange = (section: 'notifications' | 'privacy', field: string, value: any) => {
-    setSettings({
-      ...settings,
+    setSettings((current) => ({
+      ...current,
       [section]: {
-        ...settings[section],
+        ...current[section],
         [field]: value,
       },
-    });
+    }));
+  };
+
+  const flashSuccess = (message: string) => {
+    setSuccess(message);
+    setTimeout(() => setSuccess(''), 3500);
   };
 
   const handleSaveSettings = async () => {
     setSaving(true);
-    setSuccess('');
     setErrors({});
+    setSuccess('');
 
     try {
       const response = await fetch('/api/user/settings', {
@@ -97,8 +139,7 @@ export default function SettingsPage() {
       });
 
       if (response.ok) {
-        setSuccess(t('savedSuccess'));
-        setTimeout(() => setSuccess(''), 3000);
+        flashSuccess(t('savedSuccess'));
       } else {
         setErrors({ settings: t('saveFailed') });
       }
@@ -109,12 +150,73 @@ export default function SettingsPage() {
     }
   };
 
-  const handleDeleteAccount = async () => {
-    if (!confirm(t('confirmDelete'))) {
+  const handlePasswordChange = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setErrors({});
+    setSuccess('');
+
+    if (!passwordForm.currentPassword) {
+      setErrors({ password: 'Enter your current password.' });
+      return;
+    }
+    if (passwordScore < 5) {
+      setErrors({ password: 'New password must meet every requirement and match confirmation.' });
       return;
     }
 
-    if (!confirm(t('confirmDeleteFinal'))) {
+    setPasswordSaving(true);
+    try {
+      const response = await fetch('/api/user/change-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          currentPassword: passwordForm.currentPassword,
+          newPassword: passwordForm.newPassword,
+        }),
+      });
+      const data = await response.json().catch(() => ({}));
+
+      if (response.ok) {
+        setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+        flashSuccess('Password updated securely.');
+      } else {
+        setErrors({ password: data.error || 'We could not change your password.' });
+      }
+    } catch (error) {
+      setErrors({ password: 'We could not change your password. Please try again.' });
+    } finally {
+      setPasswordSaving(false);
+    }
+  };
+
+  const handleResetEmail = async () => {
+    if (!user?.email) return;
+    setResetSending(true);
+    setErrors({});
+    setSuccess('');
+    try {
+      const response = await fetch('/api/auth/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: user.email, locale }),
+      });
+      if (response.ok) {
+        flashSuccess('Password reset link sent to your account email.');
+      } else {
+        const data = await response.json().catch(() => ({}));
+        setErrors({ reset: data.error || 'We could not send the reset link.' });
+      }
+    } catch (error) {
+      setErrors({ reset: 'We could not send the reset link. Please try again.' });
+    } finally {
+      setResetSending(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    if (!deleteAcknowledged) {
+      setErrors({ delete: t('confirmDeleteFinal') });
       return;
     }
 
@@ -125,181 +227,226 @@ export default function SettingsPage() {
       });
 
       if (response.ok) {
-        router.push('/');
+        router.push(buildLocalizedPath(locale, '/'));
       } else {
-        alert(t('deleteFailed'));
+        setErrors({ delete: t('deleteFailed') });
       }
     } catch (error) {
-      alert(t('deleteError'));
+      setErrors({ delete: t('deleteError') });
     }
   };
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-12">
+      <div className="flex items-center justify-center py-16">
         <LoadingSpinner />
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="bg-light-surface dark:bg-dark-surface rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{t('title')}</h1>
-        <p className="mt-2 text-gray-600 dark:text-gray-400">
-          {t('subtitle')}
-        </p>
-      </div>
+    <DashboardWorkspace>
+      <DashboardHeader
+        icon={SettingsIcon}
+        title="Account settings"
+        description="Choose your privacy preferences, manage notifications, and keep your account secure."
+        actions={
+          <DashboardButton onClick={handleSaveSettings} disabled={saving}>
+            <ShieldCheck className="h-4 w-4" />
+            {saving ? t('saving') : t('saveSettings')}
+          </DashboardButton>
+        }
+      />
 
-      {/* Success Message */}
       {success && (
-        <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
-          <div className="flex items-center">
-            <span className="text-green-600 dark:text-green-400 text-xl mr-3">✓</span>
-            <p className="text-green-800 dark:text-green-300 font-medium">{success}</p>
+        <DashboardPanel compact className="bg-emerald-500/10 ring-emerald-500/20">
+          <div className="flex items-center gap-3">
+            <CheckCircle2 className="h-5 w-5 text-emerald-600 dark:text-emerald-300" />
+            <p className="text-sm font-semibold text-emerald-800 dark:text-emerald-200">{success}</p>
           </div>
-        </div>
+        </DashboardPanel>
       )}
 
-      {/* Account Information */}
-      <div className="bg-light-surface dark:bg-dark-surface rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{t('accountInfo')}</h2>
-        
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              {t('emailAddress')}
-            </label>
-            <div className="flex items-center justify-between">
-              <p className="text-gray-900 dark:text-white">{user?.email}</p>
-              {user?.emailVerified ? (
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
-                  {t('verified')}
-                </span>
-              ) : (
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400">
-                  {t('notVerified')}
-                </span>
-              )}
+      <div className="grid gap-7 lg:grid-cols-[0.72fr_1.28fr]">
+        <aside className="space-y-6 lg:sticky lg:top-28 lg:self-start">
+          <DashboardPanel>
+            <PanelHeading title={t('accountInfo')} description="The account identity used across billing, profile ownership, and support tickets." />
+            <div className="flex items-center gap-4">
+              <div className="flex h-16 w-16 items-center justify-center rounded-[1.5rem] bg-[color:var(--brand-primary)] text-xl font-semibold text-white">
+                {(user?.name || user?.email || 'A').slice(0, 1).toUpperCase()}
+              </div>
+              <div className="min-w-0">
+                <p className="truncate text-lg font-semibold text-slate-950 dark:text-white">{user?.name}</p>
+                <p className="truncate text-sm text-slate-600 dark:text-slate-300">{user?.email}</p>
+                <div className="mt-2">
+                  {user?.emailVerified ? <StatusPill tone="success">{t('verified')}</StatusPill> : <StatusPill tone="warning">{t('notVerified')}</StatusPill>}
+                </div>
+              </div>
             </div>
-          </div>
+            <div className="mt-5">
+              <DashboardStatRow
+                items={[
+                  { label: 'Email', value: user?.emailVerified ? 'Verified' : 'Review', detail: 'Sign-in identity' },
+                  { label: 'Privacy', value: settings.privacy.profileVisibility, detail: 'Profile visibility' },
+                  { label: 'Notices', value: settings.notifications.email ? 'On' : 'Off', detail: 'Email notifications' },
+                  { label: 'Security', value: passwordScore ? `${passwordScore}/5` : 'Ready', detail: 'Password strength' },
+                ]}
+              />
+            </div>
+          </DashboardPanel>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              {t('name')}
-            </label>
-            <p className="text-gray-900 dark:text-white">{user?.name}</p>
-          </div>
-        </div>
-      </div>
+          <DashboardActionCard
+            icon={Fingerprint}
+            title="Security reminder"
+            description="Use a unique password for 3YESES. Reset links are sent only to your verified account email."
+            tone="accent"
+          />
+        </aside>
 
-      {/* Password Change Notice */}
-      <div className="bg-light-surface dark:bg-dark-surface rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{t('password')}</h2>
-        <div className="bg-blue-50 dark:bg-red-900/20 border border-blue-200 dark:border-red-800 rounded-lg p-4">
-          <p className="text-blue-800 dark:text-red-200">
-            {t('passwordChangeNotice')}
-          </p>
-        </div>
-      </div>
+        <div className="space-y-6">
+          <DashboardPanel>
+            <PanelHeading title="Password and recovery" description="Change your password directly or send yourself the secure reset flow." />
+            <form onSubmit={handlePasswordChange} className="grid gap-5 xl:grid-cols-3">
+              <DashboardField label="Current password">
+                <input
+                  type="password"
+                  autoComplete="current-password"
+                  value={passwordForm.currentPassword}
+                  onChange={(event) => setPasswordForm((current) => ({ ...current, currentPassword: event.target.value }))}
+                  className={inputClass(Boolean(errors.password))}
+                />
+              </DashboardField>
+              <DashboardField label="New password">
+                <input
+                  type="password"
+                  autoComplete="new-password"
+                  value={passwordForm.newPassword}
+                  onChange={(event) => setPasswordForm((current) => ({ ...current, newPassword: event.target.value }))}
+                  className={inputClass(Boolean(errors.password))}
+                />
+              </DashboardField>
+              <DashboardField label="Confirm password">
+                <input
+                  type="password"
+                  autoComplete="new-password"
+                  value={passwordForm.confirmPassword}
+                  onChange={(event) => setPasswordForm((current) => ({ ...current, confirmPassword: event.target.value }))}
+                  className={inputClass(Boolean(errors.password))}
+                />
+              </DashboardField>
 
-      {/* Notifications */}
-      <div className="bg-light-surface dark:bg-dark-surface rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{t('notificationPrefs')}</h2>
-        
-        <div className="space-y-4">
-          <label className="flex items-center justify-between">
-            <span className="text-gray-900 dark:text-white">{t('emailNotifications')}</span>
-            <input
-              type="checkbox"
-              checked={settings.notifications.email}
-              onChange={(e) => handleSettingsChange('notifications', 'email', e.target.checked)}
-              className="h-5 w-5 text-primary-blue dark:text-accent-red rounded focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red"
-            />
-          </label>
+              <div className="xl:col-span-3">
+                <div className="grid gap-2 sm:grid-cols-5">
+                  {[
+                    ['8 characters', passwordChecks.length],
+                    ['Uppercase', passwordChecks.upper],
+                    ['Lowercase', passwordChecks.lower],
+                    ['Number', passwordChecks.number],
+                    ['Matches', passwordChecks.matches],
+                  ].map(([label, done]) => (
+                    <div key={label as string} className={`rounded-2xl px-3 py-2 text-xs font-semibold ${done ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300' : 'bg-slate-100 text-slate-500 dark:bg-slate-900/60 dark:text-slate-400'}`}>
+                      {label as string}
+                    </div>
+                  ))}
+                </div>
+                {errors.password && <p className="mt-3 text-sm font-semibold text-red-600 dark:text-red-300">{errors.password}</p>}
+                {errors.reset && <p className="mt-3 text-sm font-semibold text-red-600 dark:text-red-300">{errors.reset}</p>}
+              </div>
 
-          <label className="flex items-center justify-between">
-            <span className="text-gray-900 dark:text-white">{t('marketingEmails')}</span>
-            <input
-              type="checkbox"
-              checked={settings.notifications.marketing}
-              onChange={(e) => handleSettingsChange('notifications', 'marketing', e.target.checked)}
-              className="h-5 w-5 text-primary-blue dark:text-accent-red rounded focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red"
-            />
-          </label>
-        </div>
-      </div>
+              <div className="flex flex-wrap gap-3 xl:col-span-3">
+                <DashboardButton type="submit" disabled={passwordSaving}>
+                  <KeyRound className="h-4 w-4" />
+                  {passwordSaving ? 'Changing password' : 'Change password'}
+                </DashboardButton>
+                <DashboardButton type="button" variant="secondary" onClick={handleResetEmail} disabled={resetSending || !user?.email}>
+                  <Mail className="h-4 w-4" />
+                  {resetSending ? 'Sending reset link' : 'Email reset link'}
+                </DashboardButton>
+              </div>
+            </form>
+          </DashboardPanel>
 
-      {/* Privacy Settings */}
-      <div className="bg-light-surface dark:bg-dark-surface rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{t('privacySettings')}</h2>
-        
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              {t('profileVisibility')}
-            </label>
-            <select
-              value={settings.privacy.profileVisibility}
-              onChange={(e) => handleSettingsChange('privacy', 'profileVisibility', e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red"
-            >
-              <option value="public">{t('visibilityPublic')}</option>
-              <option value="members-only">{t('visibilityMembers')}</option>
-              <option value="private">{t('visibilityPrivate')}</option>
-            </select>
-          </div>
+          <DashboardPanel>
+            <PanelHeading title={t('notificationPrefs')} description="Choose which updates should reach your inbox." />
+            <div className="space-y-3">
+              <DashboardToggle
+                checked={settings.notifications.email}
+                onChange={(checked) => handleSettingsChange('notifications', 'email', checked)}
+                label={t('emailNotifications')}
+                description="Profile, account, billing, and support notices."
+              />
+              <DashboardToggle
+                checked={settings.notifications.marketing}
+                onChange={(checked) => handleSettingsChange('notifications', 'marketing', checked)}
+                label={t('marketingEmails')}
+                description="Product updates and talent growth tips."
+              />
+            </div>
+          </DashboardPanel>
 
-          <label className="flex items-center justify-between">
-            <span className="text-gray-900 dark:text-white">{t('showEmail')}</span>
-            <input
-              type="checkbox"
-              checked={settings.privacy.showEmail}
-              onChange={(e) => handleSettingsChange('privacy', 'showEmail', e.target.checked)}
-              className="h-5 w-5 text-primary-blue dark:text-accent-red rounded focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red"
-            />
-          </label>
+          <DashboardPanel>
+            <PanelHeading title={t('privacySettings')} description="Control how discoverable your showcase is to visitors and members." />
+            <div className="space-y-5">
+              <DashboardField label={t('profileVisibility')}>
+                <SegmentedControl
+                  value={settings.privacy.profileVisibility}
+                  onChange={(value) => handleSettingsChange('privacy', 'profileVisibility', value)}
+                  options={[
+                    { value: 'public', label: t('visibilityPublic') },
+                    { value: 'members-only', label: t('visibilityMembers') },
+                    { value: 'private', label: t('visibilityPrivate') },
+                  ]}
+                />
+              </DashboardField>
+              <DashboardToggle checked={settings.privacy.showEmail} onChange={(checked) => handleSettingsChange('privacy', 'showEmail', checked)} label={t('showEmail')} description="Show your email on your visible profile." />
+              <DashboardToggle checked={settings.privacy.showLocation} onChange={(checked) => handleSettingsChange('privacy', 'showLocation', checked)} label={t('showLocation')} description="Show your location to support relevant casting discovery." />
+              {errors.settings && <p className="text-sm font-semibold text-red-600 dark:text-red-300">{errors.settings}</p>}
+            </div>
+          </DashboardPanel>
 
-          <label className="flex items-center justify-between">
-            <span className="text-gray-900 dark:text-white">{t('showLocation')}</span>
-            <input
-              type="checkbox"
-              checked={settings.privacy.showLocation}
-              onChange={(e) => handleSettingsChange('privacy', 'showLocation', e.target.checked)}
-              className="h-5 w-5 text-primary-blue dark:text-accent-red rounded focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red"
-            />
-          </label>
-        </div>
-
-        <button
-          onClick={handleSaveSettings}
-          disabled={saving}
-          className="mt-6 px-6 py-2 bg-primary-blue dark:bg-accent-red text-white rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50"
-        >
-          {saving ? t('saving') : t('saveSettings')}
-        </button>
-      </div>
-
-      {/* Danger Zone */}
-      <div className="bg-light-surface dark:bg-dark-surface rounded-lg shadow-sm p-6 border border-red-200 dark:border-red-800">
-        <h2 className="text-xl font-semibold text-red-600 dark:text-red-400 mb-4">{t('dangerZone')}</h2>
-        
-        <div className="space-y-4">
-          <div>
-            <h3 className="font-medium text-gray-900 dark:text-white mb-2">{t('deleteAccount')}</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-              {t('deleteAccountDesc')}
-            </p>
-            <button
-              onClick={handleDeleteAccount}
-              className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
-            >
+          <DashboardPanel className="bg-red-500/8 ring-red-500/15">
+            <PanelHeading title={<span className="text-red-700 dark:text-red-300">{t('dangerZone')}</span>} description={t('deleteAccountDesc')} />
+            <DashboardButton variant="danger" onClick={() => { setDeleteConfirmOpen(true); setErrors({}); }}>
+              <Trash2 className="h-4 w-4" />
               {t('deleteMyAccount')}
-            </button>
-          </div>
+            </DashboardButton>
+          </DashboardPanel>
         </div>
       </div>
-    </div>
+
+      {deleteConfirmOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/55 p-4 backdrop-blur-sm">
+          <DashboardPanel className="w-full max-w-lg bg-red-500/8 ring-red-500/20">
+            <div className="mb-5 flex items-start gap-4">
+              <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-red-100 text-red-700 dark:bg-red-950/45 dark:text-red-300">
+                <Eye className="h-6 w-6" />
+              </span>
+              <div>
+                <h2 className="text-xl font-semibold tracking-tight text-slate-950 dark:text-white">{t('deleteAccount')}</h2>
+                <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">{t('confirmDelete')}</p>
+              </div>
+            </div>
+            <DashboardToggle
+              checked={deleteAcknowledged}
+              onChange={(checked) => {
+                setDeleteAcknowledged(checked);
+                setErrors({});
+              }}
+              label={t('confirmDeleteFinal')}
+            />
+            {errors.delete && <p className="mt-3 text-sm font-semibold text-red-600 dark:text-red-300">{errors.delete}</p>}
+            <div className="mt-6 flex flex-wrap justify-end gap-3">
+              <DashboardButton variant="secondary" onClick={() => setDeleteConfirmOpen(false)}>
+                {t('cancel')}
+              </DashboardButton>
+              <DashboardButton variant="danger" onClick={handleDeleteAccount}>
+                {t('deleteMyAccount')}
+              </DashboardButton>
+            </div>
+          </DashboardPanel>
+        </div>
+      )}
+    </DashboardWorkspace>
   );
 }
+

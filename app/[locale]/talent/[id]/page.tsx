@@ -20,6 +20,7 @@ import LanguageMultiSelect from '@/components/LanguageMultiSelect';
 import CharacteristicSelect from '@/components/CharacteristicSelect';
 import ProfileOnboardingGuide from '@/components/ProfileOnboardingGuide';
 import ProfileSurfaceCustomizer, { type BackgroundPattern } from '@/components/ProfileSurfaceCustomizer';
+import WorkHistoryManager, { type WorkHistoryItem } from '@/components/WorkHistoryManager';
 import { buildLocalizedPath } from '@/lib/locale-path';
 import {
   genderOptions,
@@ -72,6 +73,7 @@ type EditData = {
   categoryId?: string | null;
   subcategoryId?: string | null;
   contentBackground?: string | null;
+  workHistory: WorkHistoryItem[];
 };
 
 const DEFAULT_BANNER_COLOR = '#2563eb';
@@ -185,6 +187,25 @@ function serializeBackgroundSurface(color: string, pattern: BackgroundPattern) {
   return `pattern:${pattern}|${color}`;
 }
 
+function normalizeWorkHistoryForEdit(items?: Talent['workHistory'] | WorkHistoryItem[] | null): WorkHistoryItem[] {
+  if (!Array.isArray(items)) return [];
+
+  return items.map((item) => {
+    const startDate = item.startDate ? new Date(item.startDate) : null;
+    const endDate = item.endDate ? new Date(item.endDate) : null;
+
+    return {
+      id: item.id,
+      title: item.title || '',
+      company: item.company || '',
+      startDate: startDate && !Number.isNaN(startDate.getTime()) ? startDate.toISOString().split('T')[0] : '',
+      endDate: endDate && !Number.isNaN(endDate.getTime()) ? endDate.toISOString().split('T')[0] : null,
+      isCurrent: Boolean(item.isCurrent),
+      description: item.description || '',
+    };
+  });
+}
+
 function resolveContentBgStyle(value?: string | null) {
   const resolved = parseBackgroundSurface(value);
   const overlay = isLightColor(resolved.color)
@@ -254,7 +275,8 @@ export default function TalentProfilePage() {
     hairColor: '',
     bodyType: 'average'
     , categoryId: null,
-    subcategoryId: null
+    subcategoryId: null,
+    workHistory: [],
   });
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
@@ -307,6 +329,8 @@ export default function TalentProfilePage() {
             hairColor: result.talent.hairColor,
             bodyType: result.talent.bodyType,
             languages: result.talent.languages || [],
+            contentBackground: (result.talent as any).contentBackground || null,
+            workHistory: normalizeWorkHistoryForEdit(result.talent.workHistory),
           });
           setBannerColorDraft(resolveBannerColor(result.talent.bannerUrl));
           const initialBackground = parseBackgroundSurface((result.talent as any).contentBackground || null);
@@ -404,6 +428,7 @@ export default function TalentProfilePage() {
         bodyType: data.talent.bodyType,
         languages: data.talent.languages || [],
         contentBackground: (data.talent as any).contentBackground || null,
+        workHistory: normalizeWorkHistoryForEdit(data.talent.workHistory),
       });
       setBannerColorDraft(resolveBannerColor(data.talent.bannerUrl));
       setBackgroundColorDraft(backgroundSurface.color);
@@ -496,6 +521,15 @@ export default function TalentProfilePage() {
       const sanitizedLanguages = Array.isArray(editData.languages)
         ? Array.from(new Set(editData.languages.map(l => (l || '').toString().trim()).filter(Boolean)))
         : [];
+      const sanitizedWorkHistory = normalizeWorkHistoryForEdit(editData.workHistory)
+        .filter((item) => item.title.trim() && item.company.trim() && item.startDate)
+        .map((item) => ({
+          ...item,
+          title: item.title.trim(),
+          company: item.company.trim(),
+          description: item.description.trim(),
+          endDate: item.isCurrent ? null : item.endDate,
+        }));
 
       const res = await fetch('/api/talent/profile', {
         method: 'PUT',
@@ -519,6 +553,7 @@ export default function TalentProfilePage() {
           bodyType: editData.bodyType,
           languages: sanitizedLanguages,
           contentBackground: editData.contentBackground,
+          workHistory: sanitizedWorkHistory,
         }),
       });
 
@@ -573,6 +608,7 @@ export default function TalentProfilePage() {
         bodyType: result.talent.bodyType,
         languages: result.talent.languages || [],
         contentBackground: result.talent.contentBackground || null,
+        workHistory: normalizeWorkHistoryForEdit(result.talent.workHistory),
       });
       setBannerColorDraft(resolveBannerColor(result.talent.bannerUrl));
       const savedBackground = parseBackgroundSurface(result.talent.contentBackground || null);
@@ -702,6 +738,38 @@ export default function TalentProfilePage() {
     }
   };
 
+  const currentTalent = data?.talent;
+
+  useEffect(() => {
+    if (!currentTalent?.portfolio?.length) return;
+
+    const mediaId = searchParams.get('mediaId');
+    if (!mediaId) return;
+
+    const mediaIndex = currentTalent.portfolio.findIndex((item: any) => item.id === mediaId);
+    if (mediaIndex >= 0) {
+      setGalleryIndex(mediaIndex);
+      setGalleryOpen(true);
+    }
+  }, [currentTalent?.portfolio, searchParams]);
+
+  useEffect(() => {
+    if (!currentTalent?.portfolio?.length) return;
+
+    const nextParams = new URLSearchParams(searchParams.toString());
+    const currentMediaId = galleryOpen ? currentTalent.portfolio[galleryIndex]?.id : null;
+
+    if (currentMediaId) nextParams.set('mediaId', currentMediaId);
+    else nextParams.delete('mediaId');
+
+    const nextQuery = nextParams.toString();
+    const currentQuery = searchParams.toString();
+    if (nextQuery === currentQuery) return;
+
+    const url = nextQuery ? `${pathname}?${nextQuery}` : pathname;
+    router.replace(url, { scroll: false });
+  }, [currentTalent?.portfolio, galleryOpen, galleryIndex, pathname, router, searchParams]);
+
   if (loading) return <div className="flex justify-center items-center h-screen bg-gray-50 dark:bg-gray-900"><LoadingSpinner /></div>;
   if (error) return <div className="flex justify-center items-center h-screen bg-gray-50 dark:bg-gray-900"><ErrorMessage message={error} /></div>;
   if (!data) return null;
@@ -805,36 +873,6 @@ export default function TalentProfilePage() {
     setGalleryOpen(true);
   };
 
-  useEffect(() => {
-    if (!talent.portfolio?.length) return;
-
-    const mediaId = searchParams.get('mediaId');
-    if (!mediaId) return;
-
-    const mediaIndex = talent.portfolio.findIndex((item: any) => item.id === mediaId);
-    if (mediaIndex >= 0) {
-      setGalleryIndex(mediaIndex);
-      setGalleryOpen(true);
-    }
-  }, [searchParams, talent.portfolio]);
-
-  useEffect(() => {
-    if (!talent.portfolio?.length) return;
-
-    const nextParams = new URLSearchParams(searchParams.toString());
-    const currentMediaId = galleryOpen ? talent.portfolio[galleryIndex]?.id : null;
-
-    if (currentMediaId) nextParams.set('mediaId', currentMediaId);
-    else nextParams.delete('mediaId');
-
-    const nextQuery = nextParams.toString();
-    const currentQuery = searchParams.toString();
-    if (nextQuery === currentQuery) return;
-
-    const url = nextQuery ? `${pathname}?${nextQuery}` : pathname;
-    router.replace(buildLocalizedPath(locale, url), { scroll: false });
-  }, [galleryOpen, galleryIndex, locale, pathname, router, searchParams, talent.portfolio]);
-
   const getPeriod = (start: string | Date, end?: string | Date | null, isCurrent?: boolean) => {
     const startYear = new Date(start).getFullYear();
     if (isCurrent || !end) return `${startYear} - Present`;
@@ -902,6 +940,7 @@ export default function TalentProfilePage() {
                         bodyType: data.talent.bodyType,
                         languages: data.talent.languages || [],
                         contentBackground: (data.talent as any).contentBackground || null,
+                        workHistory: normalizeWorkHistoryForEdit(data.talent.workHistory),
                       });
                       setBannerColorDraft(resolveBannerColor(data.talent.bannerUrl));
                       const cancelledBackground = parseBackgroundSurface((data.talent as any).contentBackground || null);
@@ -1342,6 +1381,12 @@ export default function TalentProfilePage() {
 
                   <div className="bg-light-surface dark:bg-dark-surface rounded-2xl p-8 shadow-sm border border-gray-100 dark:border-gray-700">
                     <h3 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Work History</h3>
+                    {editMode && isOwnProfile ? (
+                      <WorkHistoryManager
+                        items={editData.workHistory || []}
+                        onUpdate={(items) => setEditData((prev) => ({ ...prev, workHistory: normalizeWorkHistoryForEdit(items) }))}
+                      />
+                    ) : (
                     <div className="space-y-8">
                       {talent.workHistory && talent.workHistory.length > 0 ? (
                         talent.workHistory.map((work, index) => (
@@ -1374,6 +1419,7 @@ export default function TalentProfilePage() {
                         <p className="text-gray-500 dark:text-gray-400 italic">No work history added yet.</p>
                       )}
                     </div>
+                    )}
                   </div>
                 </div>
               )}

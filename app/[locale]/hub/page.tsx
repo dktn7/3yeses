@@ -97,6 +97,7 @@ export default function HubPage() {
   const pathname = usePathname();
   const locale = (router && (router as any).locale) || 'en-gb';
   const t = useTranslations('Hub');
+  const urlMediaId = searchParams.get('mediaId');
 
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState('all');
@@ -132,7 +133,6 @@ export default function HubPage() {
     const urlType = searchParams.get('type');
     const urlSort = searchParams.get('sort');
     const urlSearch = searchParams.get('search');
-    const urlMediaId = searchParams.get('mediaId');
 
     if (urlCategory) setActiveCategory(urlCategory);
     if (urlType) setActiveType(urlType);
@@ -240,8 +240,11 @@ export default function HubPage() {
           ...firstPageItems,
           ...remainingPages.flatMap((pageData) => (Array.isArray(pageData) ? pageData : pageData.items || [])),
         ];
+        const uniqueFetchedItems = Array.from(
+          new Map(fetchedItems.map((item: PortfolioItem) => [item.id, item])).values()
+        );
 
-        setAllItems(fetchedItems);
+        setAllItems(uniqueFetchedItems);
         setTotalFiltered(totalCount);
 
         if (data.facets?.types) setTypeCounts(data.facets.types);
@@ -250,7 +253,7 @@ export default function HubPage() {
         }
 
         const counts: Record<string, number> = {};
-        fetchedItems.forEach((item: PortfolioItem) => {
+        uniqueFetchedItems.forEach((item: PortfolioItem) => {
           const categoryId = item.talentProfile.category?.id;
           const categoryName = item.talentProfile.category?.name?.toLowerCase();
           const subcategoryId = item.talentProfile.subcategory?.id;
@@ -278,7 +281,7 @@ export default function HubPage() {
 
         const uniqueTalents = Array.from(
           new Map(
-            fetchedItems.map((item: PortfolioItem) => [
+            uniqueFetchedItems.map((item: PortfolioItem) => [
               (item.talentProfile as any).userId ?? item.talentProfile.id,
               item.talentProfile,
             ])
@@ -304,25 +307,29 @@ export default function HubPage() {
     if (activeType !== 'all') params.set('type', activeType);
     if (sortBy !== 'trending') params.set('sort', sortBy);
     if (searchQuery) params.set('search', searchQuery);
-    const urlMediaId = searchParams.get('mediaId');
     if (urlMediaId) params.set('mediaId', urlMediaId);
     else if (selectedMediaItem) params.set('mediaId', selectedMediaItem.id);
 
     const url = params.toString() ? `${pathname}?${params.toString()}` : pathname;
     router.replace(url, { scroll: false });
-  }, [activeCategory, activeType, sortBy, searchQuery, selectedMediaItem, pathname, router, searchParams]);
+  }, [activeCategory, activeType, sortBy, searchQuery, selectedMediaItem, pathname, router, urlMediaId]);
 
   useEffect(() => {
-    const mediaId = searchParams.get('mediaId');
-    if (mediaId) {
-      const item = allItems.find((item) => item.id === mediaId);
+    if (urlMediaId) {
+      const item = allItems.find((item) => item.id === urlMediaId);
       if (item) {
         setSelectedMediaItem(item);
+      } else if (!loading && allItems.length > 0) {
+        setSelectedMediaItem(null);
+        const params = new URLSearchParams(searchParams.toString());
+        params.delete('mediaId');
+        const qs = params.toString();
+        router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
       }
     } else {
       setSelectedMediaItem(null);
     }
-  }, [searchParams, allItems]);
+  }, [allItems, loading, pathname, router, searchParams, urlMediaId]);
 
   const flatCategoryIndex = useMemo(() => {
     const items: Array<{ id: string; type: 'category' | 'subcategory'; name: string; parentName: string; parentId?: string }> = [];
@@ -530,6 +537,8 @@ export default function HubPage() {
     handleBackToBrowse();
   };
 
+  const isMediaRouteLoading = Boolean(urlMediaId) && loading && !selectedMediaItem;
+
   const handleSearchSubmit = (query?: string) => {
     const searchValue = (query ?? searchInputValue)
       .trim()
@@ -602,10 +611,19 @@ export default function HubPage() {
     setPage(1);
   };
 
+  if (isMediaRouteLoading) {
+    return (
+      <div className="hub-root fixed inset-0 z-[100] flex items-center justify-center bg-gradient-to-b from-blue-50 via-white to-blue-50/40 text-light-surface dark:from-zinc-950 dark:via-[#111111] dark:to-zinc-950 dark:text-dark-surface">
+        <LoadingSpinner size={56} inline />
+      </div>
+    );
+  }
+
   if (selectedMediaItem) {
     return (
       <div className="hub-root min-h-screen bg-gradient-to-b from-blue-50 via-white to-blue-50/40 text-light-surface dark:from-zinc-950 dark:via-[#111111] dark:to-zinc-950 dark:text-dark-surface">
         <MediaOverlay
+          mode="overlay"
           media={selectedMediaItem}
           allMedia={allItems}
           talents={featuredTalents}
@@ -649,6 +667,7 @@ export default function HubPage() {
               src={thumbnail}
               alt={item.title}
               fill
+              sizes="(max-width: 640px) 90vw, (max-width: 1024px) 40vw, 280px"
               className="object-cover transition-transform duration-500 group-hover:scale-[1.06]"
               loading={idx < 2 ? 'eager' : 'lazy'}
               quality={75}
@@ -915,7 +934,8 @@ export default function HubPage() {
                     src={getThumbnail(topMedia) || ''}
                     alt={topMedia.title}
                     fill
-                    sizes="100vw"
+                    sizes="(max-width: 1024px) 100vw, 66vw"
+                    loading="eager"
                     className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
                     priority
                     quality={75}
