@@ -1,0 +1,26 @@
+---
+description: Use a dedicated feature branch and clean worktree for site changes
+alwaysApply: true
+---
+
+# Feature worktrees
+
+When a task changes the site or a specific site area, work in a dedicated clean
+Git worktree and feature branch.
+
+1. Inspect `git status --short --branch` and `git worktree list` first.
+2. Preserve unrelated changes in the current worktree; never reset, clean, or
+   move them without explicit authorization.
+3. Create the new worktree beside the repository, under
+   `../3yeses-worktrees/<slug>`, with a branch named
+   `feature/<area>-<slug>` based on the current `HEAD`:
+
+   ```powershell
+   git worktree add -b feature/<area>-<slug> ../3yeses-worktrees/<slug> HEAD
+   ```
+
+4. Verify the new worktree is clean before editing, then perform all feature
+   work and tests there.
+5. Report the branch and worktree path in progress updates and the final handoff.
+6. Do not merge, delete the branch, or remove the worktree unless explicitly
+   requested.

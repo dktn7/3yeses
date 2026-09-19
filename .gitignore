@@ -34,6 +34,11 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
+# Graphify generated maps and temporary extraction files
+graphify-out/
+.graphify_*.json
+.graphify_*.txt
+
 # vercel
 .vercel
 
