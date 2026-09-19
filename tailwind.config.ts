@@ -23,6 +23,22 @@ export default {
         'hover:bg-light-primary', 'hover:bg-dark-primary', 'focus:ring-light-primary', 'focus:ring-dark-primary',
       ],
       colors: {
+        // Explicit single-mode roles. These utilities are used throughout the
+        // application (`bg-light-surface`, `dark:bg-dark-surface`, including
+        // opacity modifiers) and must be real theme colours, not just safelist
+        // entries.
+        light: {
+          primary: '#2563eb',
+          surface: 'rgb(255 255 255 / <alpha-value>)',
+          foreground: '#0f172a',
+          muted: '#475569',
+        },
+        dark: {
+          primary: '#b91c1c',
+          surface: 'rgb(24 24 27 / <alpha-value>)',
+          foreground: '#f8fafc',
+          muted: '#cbd5e1',
+        },
         // Link utility color names to runtime CSS variables so Tailwind classes
         // like `from-primary-blue` and `to-accent-blue` reflect the current
         // `:root` palette (light/dark modes will switch via the .dark class).

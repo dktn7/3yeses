@@ -70,7 +70,7 @@ export default function AdvancedSearchPanel({
   return (
     <div
       ref={panelRef}
-      className="absolute left-0 mt-2 z-40 w-full max-w-lg bg-light-surface dark:bg-dark-surface rounded-2xl shadow-2xl p-6 border border-gray-200 dark:border-gray-700 animate-fadeIn"
+      className="ui-popover absolute left-0 mt-2 w-full max-w-lg animate-fadeIn p-6"
       style={{ minWidth: 320 }}
       tabIndex={-1}
     >
@@ -124,7 +124,7 @@ export default function AdvancedSearchPanel({
             value={ethnicity}
             onChange={(e) => setEthnicity(e.target.value)}
             placeholder="Ethnicity (comma separated)"
-            className="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-700 bg-light-surface dark:bg-dark-surface text-light-surface dark:text-dark-surface"
+            className="w-full rounded-xl border border-gray-300 bg-light-surface px-4 py-2 text-slate-900 dark:border-gray-700 dark:bg-dark-surface dark:text-white"
           />
         </div>
         {/* Age */}
@@ -175,7 +175,7 @@ export default function AdvancedSearchPanel({
             value={languages}
             onChange={(e) => setLanguages(e.target.value)}
             placeholder="Languages (comma separated)"
-            className="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-700 bg-light-surface dark:bg-dark-surface text-light-surface dark:text-dark-surface"
+            className="w-full rounded-xl border border-gray-300 bg-light-surface px-4 py-2 text-slate-900 dark:border-gray-700 dark:bg-dark-surface dark:text-white"
           />
         </div>
       </div>

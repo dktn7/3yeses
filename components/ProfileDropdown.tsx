@@ -248,7 +248,7 @@ export default function ProfileDropdown({ user, onLogout }: Readonly<ProfileDrop
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-72 bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50">
+        <div className="ui-popover absolute right-0 mt-2 w-72 overflow-hidden">
           {/* User Info Header */}
           <div className="p-4 border-b border-gray-200 dark:border-gray-700">
             <div className="flex items-center space-x-3">
@@ -296,7 +296,7 @@ export default function ProfileDropdown({ user, onLogout }: Readonly<ProfileDrop
                 )}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-light-surface dark:text-dark-surface truncate">
+                <p className="truncate text-sm font-medium text-slate-950 dark:text-white">
                   {user.name}
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
@@ -353,7 +353,7 @@ export default function ProfileDropdown({ user, onLogout }: Readonly<ProfileDrop
               <div key={item.label}>
                 <button
                   onClick={item.action || (() => item.href && handleNavigation(item.href))}
-                  className="w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center space-x-3 text-sm"
+                  className="ui-popover-item flex w-full items-center space-x-3 px-4 py-3 text-left text-sm"
                 >
                   <item.icon size={16} className="text-gray-600 dark:text-gray-400" />
                   <span className="text-gray-900 dark:text-white">{item.label}</span>

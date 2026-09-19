@@ -140,7 +140,7 @@ export default function AdminProfileDropdown() {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-64 bg-[var(--admin-surface)] border border-[var(--admin-border)] rounded-xl shadow-xl overflow-hidden z-[100]">
+        <div className="admin-popover absolute right-0 mt-2 w-64 overflow-hidden">
           <div className="p-4 bg-[var(--admin-bg)] border-b border-[var(--admin-border)]">
             <p className="text-sm font-bold text-[var(--admin-text)]">{admin.name}</p>
             <p className="text-xs text-[var(--admin-muted)] truncate">{admin.email}</p>

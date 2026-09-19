@@ -34,7 +34,7 @@ export default function TalentCard({ talent }: { talent: Talent }) {
                         )}
                     </div>
                     <div className="flex-1 min-w-0">
-                        <h3 className="font-bold text-lg text-light-surface dark:text-dark-surface group-hover:text-white dark:group-hover:text-white">{talent.name}</h3>
+                        <h3 className="text-lg font-bold text-slate-950 group-hover:text-white dark:text-white dark:group-hover:text-white">{talent.name}</h3>
                         <p className="text-sm text-gray-600 dark:text-gray-400 group-hover:text-white/90 dark:group-hover:text-white/90">{talent.role}</p>
                         <div className="mt-2">
                                                 <Link

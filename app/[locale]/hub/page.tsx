@@ -613,7 +613,7 @@ export default function HubPage() {
 
   if (isMediaRouteLoading) {
     return (
-      <div className="hub-root fixed inset-0 z-[100] flex items-center justify-center bg-gradient-to-b from-blue-50 via-white to-blue-50/40 text-light-surface dark:from-zinc-950 dark:via-[#111111] dark:to-zinc-950 dark:text-dark-surface">
+      <div className="hub-root fixed inset-0 z-[100] flex items-center justify-center bg-gradient-to-b from-blue-50 via-white to-blue-50/40 text-slate-950 dark:from-zinc-950 dark:via-[#111111] dark:to-zinc-950 dark:text-slate-100">
         <LoadingSpinner size={56} inline />
       </div>
     );
@@ -621,7 +621,7 @@ export default function HubPage() {
 
   if (selectedMediaItem) {
     return (
-      <div className="hub-root min-h-screen bg-gradient-to-b from-blue-50 via-white to-blue-50/40 text-light-surface dark:from-zinc-950 dark:via-[#111111] dark:to-zinc-950 dark:text-dark-surface">
+      <div className="hub-root min-h-screen bg-gradient-to-b from-blue-50 via-white to-blue-50/40 text-slate-950 dark:from-zinc-950 dark:via-[#111111] dark:to-zinc-950 dark:text-slate-100">
         <MediaOverlay
           mode="overlay"
           media={selectedMediaItem}
@@ -696,7 +696,7 @@ export default function HubPage() {
   };
 
   return (
-    <div className="hub-root min-h-screen bg-gradient-to-b from-blue-50 via-white to-blue-50/40 text-light-surface dark:from-zinc-950 dark:via-[#111111] dark:to-zinc-950 dark:text-dark-surface">
+    <div className="hub-root min-h-screen bg-gradient-to-b from-blue-50 via-white to-blue-50/40 text-slate-950 dark:from-zinc-950 dark:via-[#111111] dark:to-zinc-950 dark:text-slate-100">
       <div className="sticky top-0 z-40 border-b border-blue-100/80 bg-white/90 backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-950/85">
         <div className="mx-auto flex max-w-[1600px] items-center gap-3 px-4 py-3 md:gap-4 md:px-6">
           <div className="shrink-0 flex items-center gap-2">
@@ -744,7 +744,7 @@ export default function HubPage() {
             )}
 
             {showSuggestions && (
-              <div className="absolute left-0 right-0 z-50 mt-1 overflow-hidden rounded-xl border border-blue-100 bg-white shadow-xl dark:border-zinc-800 dark:bg-zinc-900">
+              <div className="ui-popover absolute left-0 right-0 mt-1 overflow-hidden">
                 {hubSuggestions.length > 0 ? (
                   hubSuggestions.map((suggestion, idx) => {
                     const SuggestionIcon = getSuggestionIcon(suggestion.type);

@@ -277,7 +277,7 @@ export default function NotificationDropdown() {
         )}
       </button>
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-80 bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50">
+        <div className="ui-popover absolute right-0 mt-2 w-80 overflow-hidden">
           {!showSettings ? (
             <>
               <div className="p-4 border-b border-gray-200 dark:border-gray-700">

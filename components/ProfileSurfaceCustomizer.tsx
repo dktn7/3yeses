@@ -2,6 +2,7 @@
 
 import type { CSSProperties } from 'react';
 import { Palette, RotateCcw, Upload, Sparkles } from 'lucide-react';
+import { getSurfaceContrast } from '@/lib/color-contrast';
 
 export type BackgroundPattern = 'none' | 'dots' | 'hatch' | 'grid' | 'noise';
 
@@ -125,6 +126,7 @@ export default function ProfileSurfaceCustomizer({
   const backgroundPreview = backgroundPreviewStyle || {
     backgroundColor: backgroundColor,
   };
+  const backgroundUsesDarkText = getSurfaceContrast(backgroundColor).foreground === '#000000';
 
   return (
     <section className="mt-6 rounded-[1.75rem] border border-gray-200 bg-white/90 p-4 shadow-[0_18px_44px_rgba(15,23,42,0.08)] backdrop-blur-sm dark:border-gray-800 dark:bg-zinc-950/75">
@@ -217,14 +219,14 @@ export default function ProfileSurfaceCustomizer({
             <div className="absolute inset-0 bg-black/5 dark:bg-black/30" />
             <div className="relative flex min-h-[7rem] items-end justify-between gap-3 p-4">
               <div>
-                <p className="text-xs font-bold uppercase tracking-[0.18em] text-gray-700 dark:text-gray-200">
+                <p className={`text-xs font-bold uppercase tracking-[0.18em] ${backgroundUsesDarkText ? 'text-slate-700' : 'text-white'}`}>
                   Background
                 </p>
-                <p className="mt-1 text-sm font-semibold text-gray-900 dark:text-white">
+                <p className={`mt-1 text-sm font-semibold ${backgroundUsesDarkText ? 'text-slate-950' : 'text-white'}`}>
                   Color plus optional texture
                 </p>
               </div>
-              <div className="rounded-full border border-white/20 bg-white/70 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-700 backdrop-blur-sm dark:bg-black/35 dark:text-gray-100">
+              <div className={`rounded-full border border-white/30 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] backdrop-blur-sm ${backgroundUsesDarkText ? 'bg-white/75 text-slate-700' : 'bg-black/45 text-white'}`}>
                 {backgroundPattern === 'none' ? 'Solid' : backgroundPattern}
               </div>
             </div>

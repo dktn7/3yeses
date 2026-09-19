@@ -1,12 +1,24 @@
 import { RefObject, useEffect } from 'react';
 
-export default function useFocusTrap(containerRef: RefObject<HTMLElement | null>) {
+export default function useFocusTrap(
+  containerRef: RefObject<HTMLElement | null>,
+  enabled = true,
+) {
   useEffect(() => {
+    if (!enabled) return;
     const containerEl = containerRef.current;
     if (!containerEl) return;
     const container = containerEl;
 
     const prevActive = document.activeElement as HTMLElement | null;
+    const modalRoot = Array.from(document.body.children).find((child) => child.contains(container));
+    const inertSiblings = Array.from(document.body.children)
+      .filter((child): child is HTMLElement => child instanceof HTMLElement && child !== modalRoot)
+      .map((element) => ({ element, wasInert: element.inert }));
+
+    inertSiblings.forEach(({ element }) => {
+      element.inert = true;
+    });
 
     const focusableSelector = 'a[href], area[href], input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex]:not([tabindex="-1"])';
     const focusable = Array.from(container.querySelectorAll<HTMLElement>(focusableSelector));
@@ -27,6 +39,13 @@ export default function useFocusTrap(containerRef: RefObject<HTMLElement | null>
       }
       const first = nodes[0];
       const last = nodes[nodes.length - 1];
+      const activeElement = document.activeElement;
+
+      if (!activeElement || !container.contains(activeElement)) {
+        e.preventDefault();
+        (e.shiftKey ? last : first).focus();
+        return;
+      }
 
       if (e.shiftKey) {
         if (document.activeElement === first) {
@@ -45,9 +64,12 @@ export default function useFocusTrap(containerRef: RefObject<HTMLElement | null>
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
+      inertSiblings.forEach(({ element, wasInert }) => {
+        element.inert = wasInert;
+      });
       try {
         if (prevActive && typeof prevActive.focus === 'function') prevActive.focus();
       } catch {}
     };
-  }, [containerRef]);
+  }, [containerRef, enabled]);
 }

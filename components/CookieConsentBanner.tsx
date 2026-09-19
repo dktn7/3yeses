@@ -1,10 +1,14 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
+import { X } from 'lucide-react';
+import useFocusTrap from '@/hooks/useFocusTrap';
 
 const CookieConsentBanner = () => {
   const [showBanner, setShowBanner] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const modalRef = useRef<HTMLDivElement>(null);
   const [activeTab, setActiveTab] = useState('consent');
   const [preferences, setPreferences] = useState({
     necessary: true,
@@ -12,6 +16,8 @@ const CookieConsentBanner = () => {
     statistics: false,
     marketing: false,
   });
+
+  useFocusTrap(modalRef, showModal);
 
   useEffect(() => {
     const consent = localStorage.getItem('cookie-consent');
@@ -31,6 +37,15 @@ const CookieConsentBanner = () => {
     window.addEventListener('open-cookie-settings', handleReopenCookies);
     return () => window.removeEventListener('open-cookie-settings', handleReopenCookies);
   }, []);
+
+  useEffect(() => {
+    if (!showModal) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setShowModal(false);
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [showModal]);
 
   const handleToggle = (key: keyof typeof preferences) => {
     if (key === 'necessary') return;
@@ -77,11 +92,22 @@ const CookieConsentBanner = () => {
 
   return (
     <>
-      {!showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-xl shadow-2xl p-6 border border-gray-200 dark:border-gray-700">
+      {showBanner && (
+        <div
+          aria-hidden={showModal || undefined}
+          className={`ui-consent-layer pointer-events-none fixed inset-x-0 bottom-0 flex justify-center p-4 sm:justify-end sm:p-6 ${showModal ? 'hidden' : ''}`}
+        >
+          <section aria-labelledby="cookie-consent-title" className="pointer-events-auto relative w-full max-w-md rounded-2xl border border-gray-200 bg-light-surface p-6 shadow-2xl dark:border-gray-700 dark:bg-dark-surface">
+            <button
+              type="button"
+              onClick={handleDeny}
+              className="absolute right-3 top-3 rounded-full p-2 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-ring)] dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white"
+              aria-label="Close cookie notice and continue with necessary cookies"
+            >
+              <X size={18} />
+            </button>
             {/* Logo and Title */}
-            <div className="flex items-center gap-3 mb-4">
+            <div className="mb-4 flex items-center gap-3 pr-8">
               <div className="w-10 h-10 bg-primary-blue dark:bg-accent-red rounded-lg flex items-center justify-center flex-shrink-0 p-1.5">
                 <svg width="28" height="28" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <circle cx="24" cy="24" r="22" stroke="white" strokeWidth="4" fill="transparent" />
@@ -89,7 +115,7 @@ const CookieConsentBanner = () => {
                 </svg>
               </div>
               <div>
-                <h3 className="text-lg font-bold text-gray-900 dark:text-white">We care about your privacy</h3>
+                <h3 id="cookie-consent-title" className="text-lg font-bold text-gray-900 dark:text-white">We care about your privacy</h3>
               </div>
             </div>
             
@@ -117,12 +143,21 @@ const CookieConsentBanner = () => {
                 Manage preferences
               </button>
             </div>
-          </div>
+          </section>
         </div>
       )}
-      {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <div className="w-full max-w-2xl rounded-xl shadow-2xl p-8 bg-white dark:bg-gray-800">
+      {showModal && createPortal((
+        <div className="ui-consent-layer fixed inset-0 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+          <button type="button" className="absolute inset-0 cursor-default" onClick={() => setShowModal(false)} aria-label="Close cookie preferences" />
+          <div ref={modalRef} role="dialog" aria-modal="true" aria-labelledby="cookie-preferences-title" className="relative max-h-[90dvh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-light-surface p-6 shadow-2xl dark:bg-dark-surface sm:p-8">
+            <button
+              type="button"
+              onClick={() => setShowModal(false)}
+              className="absolute right-3 top-3 rounded-full p-2 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-ring)] dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+              aria-label="Close cookie preferences"
+            >
+              <X size={20} />
+            </button>
             {/* Modal Header with Logo */}
             <div className="flex items-center gap-3 mb-6">
               <div className="w-12 h-12 bg-primary-blue dark:bg-accent-red rounded-lg flex items-center justify-center flex-shrink-0 p-2">
@@ -132,7 +167,7 @@ const CookieConsentBanner = () => {
                 </svg>
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Cookie Preferences</h2>
+                <h2 id="cookie-preferences-title" className="text-2xl font-bold text-gray-900 dark:text-white">Cookie Preferences</h2>
                 <p className="text-sm text-gray-600 dark:text-gray-400">3YESES Talent Platform</p>
               </div>
             </div>
@@ -246,7 +281,7 @@ const CookieConsentBanner = () => {
             </div>
           </div>
         </div>
-      )}
+      ), document.body)}
     </>
   );
 };

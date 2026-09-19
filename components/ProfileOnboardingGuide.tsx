@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Check, ChevronRight, ChevronLeft, Sparkles, User, Briefcase, MapPin, FileText, Image as ImageIcon, Award } from 'lucide-react';
+import useFocusTrap from '@/hooks/useFocusTrap';
 
 interface OnboardingStep {
   id: string;
@@ -31,6 +33,21 @@ interface Props {
 
 export default function ProfileOnboardingGuide({ isOpen, onClose, onStartEdit, profileData }: Props) {
   const [currentStep, setCurrentStep] = useState(0);
+  const [mounted, setMounted] = useState(false);
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  useFocusTrap(dialogRef, isOpen && mounted);
+
+  useEffect(() => setMounted(true), []);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose();
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   const steps: OnboardingStep[] = [
     {
@@ -97,11 +114,12 @@ export default function ProfileOnboardingGuide({ isOpen, onClose, onStartEdit, p
     (steps.reduce((sum, step) => sum + getStepCompletion(step), 0) / steps.length)
   );
 
-  if (!isOpen) return null;
+  if (!isOpen || !mounted) return null;
 
-  return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-light-surface dark:bg-dark-surface rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden border-2 border-blue-500/20 dark:border-red-500/20">
+  return createPortal(
+    <div className="ui-modal-layer fixed inset-0 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+      <button type="button" className="absolute inset-0 cursor-default" onClick={onClose} aria-label="Close setup guide" />
+      <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="profile-setup-title" className="relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl border-2 border-blue-500/20 bg-light-surface shadow-2xl dark:border-red-500/20 dark:bg-dark-surface">
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-500 to-red-500 dark:from-red-600 dark:to-blue-600 p-6 text-white relative">
           <button
@@ -119,7 +137,7 @@ export default function ProfileOnboardingGuide({ isOpen, onClose, onStartEdit, p
               <div className="text-sm font-medium opacity-90 mb-1">
                 Step {currentStep + 1} of {steps.length}
               </div>
-              <h2 className="text-2xl font-bold">{currentStepData.title}</h2>
+              <h2 id="profile-setup-title" className="text-2xl font-bold">{currentStepData.title}</h2>
             </div>
           </div>
           <div className="w-full bg-light-surface/20 dark:bg-dark-surface/20 rounded-full h-2 overflow-hidden">
@@ -132,7 +150,7 @@ export default function ProfileOnboardingGuide({ isOpen, onClose, onStartEdit, p
 
         {/* Content */}
         <div className="p-8">
-          <p className="text-lg text-light-surface dark:text-dark-surface mb-6 leading-relaxed">
+          <p className="mb-6 text-lg leading-relaxed text-slate-700 dark:text-slate-200">
             {currentStepData.description}
           </p>
 
@@ -158,7 +176,7 @@ export default function ProfileOnboardingGuide({ isOpen, onClose, onStartEdit, p
                     >
                       {isComplete ? <Check size={16} /> : ''}
                     </div>
-                    <span className="font-medium text-light-surface dark:text-dark-surface capitalize">
+                    <span className="font-medium capitalize text-slate-900 dark:text-white">
                       {field === 'categoryId' ? 'Category' : field}
                     </span>
                     {isComplete && (
@@ -207,7 +225,7 @@ export default function ProfileOnboardingGuide({ isOpen, onClose, onStartEdit, p
           <button
             onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
             disabled={currentStep === 0}
-            className="px-6 py-3 rounded-lg font-semibold transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-2 border-2 border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-red-500 text-light-surface dark:text-dark-surface"
+            className="flex items-center gap-2 rounded-lg border-2 border-gray-300 px-6 py-3 font-semibold text-slate-900 transition-all hover:border-blue-500 disabled:cursor-not-allowed disabled:opacity-40 dark:border-gray-600 dark:text-white dark:hover:border-red-500"
           >
             <ChevronLeft size={20} />
             Back
@@ -216,7 +234,7 @@ export default function ProfileOnboardingGuide({ isOpen, onClose, onStartEdit, p
           <div className="flex gap-3">
             <button
               onClick={onClose}
-              className="px-6 py-3 rounded-lg font-semibold transition-all text-light-surface/70 dark:text-dark-surface/80 hover:text-light-surface dark:hover:text-dark-surface"
+              className="rounded-lg px-6 py-3 font-semibold text-slate-600 transition-all hover:text-slate-950 dark:text-slate-300 dark:hover:text-white"
             >
               Skip for now
             </button>
@@ -243,6 +261,7 @@ export default function ProfileOnboardingGuide({ isOpen, onClose, onStartEdit, p
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

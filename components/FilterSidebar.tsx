@@ -88,7 +88,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
         <div className="flex flex-col h-full">
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
-            <h2 className="text-xl font-semibold text-light-surface dark:text-dark-surface flex items-center gap-2">
+            <h2 className="flex items-center gap-2 text-xl font-semibold text-slate-950 dark:text-white">
               <SlidersHorizontal size={20} />
               Filters
             </h2>
@@ -111,7 +111,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
                 <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-light-surface dark:bg-dark-surface text-light-surface dark:text-dark-surface focus:ring-primary-blue focus:border-primary-blue"
+                  className="w-full rounded-lg border border-gray-300 bg-light-surface px-3 py-2 text-slate-900 focus:border-primary-blue focus:ring-primary-blue dark:border-gray-600 dark:bg-dark-surface dark:text-white"
                 >
                   <option value="">All Categories</option>
                   {categories.map((group) => (
@@ -139,7 +139,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
                       className={`px-4 py-2 rounded-full text-sm font-medium border transition-colors ${
                         filters.gender?.includes(gender)
                           ? 'bg-primary-blue text-white border-primary-blue'
-                          : 'bg-light-surface dark:bg-dark-surface text-light-surface dark:text-dark-surface border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600'
+                          : 'bg-light-surface text-slate-900 border-gray-300 hover:bg-gray-50 dark:bg-dark-surface dark:text-white dark:border-gray-600 dark:hover:bg-gray-600'
                       }`}
                     >
                       {gender}
@@ -161,7 +161,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
                       className={`px-4 py-2 rounded-full text-sm font-medium border transition-colors capitalize ${
                         filters.bodyType?.includes(type)
                           ? 'bg-primary-blue text-white border-primary-blue'
-                          : 'bg-light-surface dark:bg-dark-surface text-light-surface dark:text-dark-surface border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600'
+                          : 'bg-light-surface text-slate-900 border-gray-300 hover:bg-gray-50 dark:bg-dark-surface dark:text-white dark:border-gray-600 dark:hover:bg-gray-600'
                       }`}
                     >
                       {type}

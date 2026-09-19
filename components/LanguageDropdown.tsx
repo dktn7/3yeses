@@ -74,7 +74,7 @@ export default function LanguageDropdown() {
         <DropdownPanel
           portal
           anchorRef={buttonRef}
-          className="w-52 overflow-hidden border border-[var(--chrome-border)] bg-[var(--chrome-panel)] p-2 shadow-[0_8px_32px_rgba(0,0,0,0.12)] backdrop-blur-md dark:shadow-[0_8px_32px_rgba(0,0,0,0.4)] !z-[160]"
+          className="!z-[160] w-52 overflow-hidden p-2"
         >
           <div className="grid grid-cols-1 gap-1">
             {locales.map((locale) => (
@@ -84,7 +84,7 @@ export default function LanguageDropdown() {
                   if (!isCurrentLanguage(locale.code)) handleLanguageChange(locale.code);
                   else setIsOpen(false);
                 }}
-                className={`flex items-center justify-start gap-2 rounded-md p-2 text-left transition-colors duration-200 hover:bg-[var(--chrome-hover)] ${
+                className={`ui-popover-item flex items-center justify-start gap-2 rounded-md p-2 text-left ${
                   isCurrentLanguage(locale.code)
                     ? 'cursor-default bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] ring-1 ring-[var(--brand-primary)]/15 dark:bg-[rgba(185,28,28,0.22)] dark:text-red-100 dark:ring-red-500/40'
                     : 'text-gray-700 dark:text-red-100'

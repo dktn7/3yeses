@@ -108,7 +108,7 @@ export default function SkillsManager({
 
           {/* Suggestions Dropdown */}
           {showSuggestions && filteredSuggestions.length > 0 && (
-            <div className="absolute z-10 w-full mt-1 bg-light-surface dark:bg-dark-surface border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg max-h-48 overflow-y-auto">
+            <div className="ui-popover absolute mt-1 max-h-48 w-full overflow-y-auto">
               {filteredSuggestions.map((suggestion) => (
                 <button
                   key={suggestion}

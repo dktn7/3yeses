@@ -16,15 +16,30 @@ type Props<T extends string> = {
 export default function Dropdown<T extends string>({ options, value, onChange, ariaLabel, className }: Props<T>) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement | null>(null);
+  const panelRef = useRef<HTMLUListElement | null>(null);
+  const listboxId = React.useId();
 
   useEffect(() => {
     function onDoc(e: MouseEvent) {
-      if (!ref.current) return;
-      if (!ref.current.contains(e.target as Node)) setOpen(false);
+      const target = e.target as Node;
+      if (!ref.current?.contains(target) && !panelRef.current?.contains(target)) setOpen(false);
     }
     document.addEventListener('mousedown', onDoc);
     return () => document.removeEventListener('mousedown', onDoc);
   }, []);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        setOpen(false);
+        ref.current?.querySelector<HTMLButtonElement>('button')?.focus();
+      }
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [open]);
 
   const selected = options.find((o) => o.value === value)?.label ?? '';
   // present options sorted by label so they are easier to scan
@@ -84,6 +99,7 @@ export default function Dropdown<T extends string>({ options, value, onChange, a
         type="button"
         aria-haspopup="listbox"
         aria-expanded={open}
+        aria-controls={listboxId}
         aria-label={ariaLabel}
         onClick={() => setOpen((s) => !s)}
         className="w-full flex items-center justify-between gap-2 bg-[var(--chrome-panel)] border border-[var(--chrome-border)] text-sm text-gray-900 dark:text-white px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--brand-glow)]"
@@ -98,10 +114,12 @@ export default function Dropdown<T extends string>({ options, value, onChange, a
         // render options in a portal so they're not clipped by parent containers
         portalStyle && createPortal(
           <ul
+            ref={panelRef}
+            id={listboxId}
             role="listbox"
             tabIndex={-1}
             style={portalStyle}
-            className="z-50 bg-[var(--chrome-panel)] border border-[var(--chrome-border)] rounded-lg shadow-lg overflow-auto py-1 focus:outline-none"
+            className="ui-popover overflow-auto py-1 focus:outline-none"
           >
             {sortedOptions.map((opt) => (
               <li
@@ -109,7 +127,7 @@ export default function Dropdown<T extends string>({ options, value, onChange, a
                 role="option"
                 aria-selected={opt.value === value}
                 onClick={() => { onChange(opt.value); setOpen(false); }}
-                className={`px-3 py-2 text-sm cursor-pointer hover:bg-[var(--brand-primary)]/8 hover:text-[var(--brand-primary)] ${opt.value === value ? 'bg-[var(--brand-primary)]/8 text-[var(--brand-primary)] font-semibold' : 'text-gray-900 dark:text-gray-100'}`}
+                className={`ui-popover-item cursor-pointer px-3 py-2 text-sm ${opt.value === value ? 'bg-[var(--brand-primary)]/8 text-[var(--brand-primary)] font-semibold' : ''}`}
               >
                 {opt.label}
               </li>

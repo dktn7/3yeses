@@ -170,7 +170,7 @@ export default function DashboardHero({ displayName, formattedDay, profileComple
         <div className="flex items-center gap-3 flex-shrink-0">
           <Link
             href={buildLocalizedPath(locale, `/talent/${userId}`)}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold shadow-sm hover:shadow-md hover:scale-[1.02] transition-all bg-light-surface/90 dark:bg-dark-surface text-light-surface dark:text-dark-surface whitespace-nowrap"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold shadow-sm hover:shadow-md hover:scale-[1.02] transition-all bg-light-surface/90 text-slate-900 dark:bg-dark-surface dark:text-white whitespace-nowrap"
             aria-label="View public profile"
           >
             View Profile

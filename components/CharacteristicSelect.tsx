@@ -76,7 +76,7 @@ export default function CharacteristicSelect({ options, value, onChange, placeho
           className="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded bg-light-surface dark:bg-dark-surface text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-red-500"
         />
         {isOpen && filtered.length > 0 && (
-          <div className="absolute z-40 left-0 right-0 mt-1 bg-light-surface dark:bg-dark-surface border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg max-h-40 overflow-auto">
+          <div className="ui-popover absolute left-0 right-0 mt-1 max-h-40 overflow-auto">
             {filtered.map(opt => (
               <button
                 key={opt}

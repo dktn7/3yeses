@@ -610,7 +610,7 @@ export default function SearchResultsClient({ locale }: SearchResultsClientProps
 
               {/* Search Suggestions Dropdown */}
               {showSearchSuggestions && searchSuggestions.length > 0 && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-900 border border-blue-100 dark:border-red-400/20 rounded-xl shadow-lg z-50 overflow-hidden">
+                <div className="ui-popover absolute left-0 right-0 top-full mt-2 overflow-hidden">
                   {searchSuggestions.map((suggestion, index) => (
                     <button
                       key={`${suggestion.type}-${suggestion.name}-${index}`}

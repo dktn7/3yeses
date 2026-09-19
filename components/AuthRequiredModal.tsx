@@ -67,7 +67,7 @@ export default function AuthRequiredModal({
               <SwoopingTick size={30} className="text-primary-blue dark:text-accent-red" />
             </div>
             <div className="grow">
-              <h4 className="text-lg font-bold text-light-surface dark:text-dark-surface">{titleText}</h4>
+              <h4 className="text-lg font-bold text-slate-950 dark:text-white">{titleText}</h4>
               <p className="mt-1 text-sm font-medium text-primary-blue dark:text-accent-red">{t('subtitle')}</p>
             </div>
           </div>

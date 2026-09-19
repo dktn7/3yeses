@@ -66,7 +66,7 @@ export default function DatePicker({ value, onChange, maxDate, placeholder = 'Se
       <button
         type="button"
         onClick={() => setOpen(o => !o)}
-        className="w-full text-left flex items-center justify-between px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-light-surface dark:bg-dark-surface text-light-surface dark:text-dark-surface focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+        className="w-full text-left flex items-center justify-between px-4 py-3 rounded-lg border border-gray-300 bg-light-surface text-slate-900 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-dark-surface dark:text-white"
       >
         <span className={parsedValue ? 'text-gray-900 dark:text-gray-100' : 'text-gray-400 dark:text-gray-500'}>
           {parsedValue ? format(parsedValue, 'd MMMM yyyy') : placeholder}
@@ -77,7 +77,7 @@ export default function DatePicker({ value, onChange, maxDate, placeholder = 'Se
       </button>
 
       {open && (
-        <div className="absolute z-[60] mt-1 left-0 right-0 bg-light-surface dark:bg-dark-surface rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 p-4 select-none">
+        <div className="ui-popover absolute left-0 right-0 mt-1 select-none p-4">
           {/* Nav header */}
           <div className="flex items-center justify-between mb-3">
             <button
@@ -87,7 +87,7 @@ export default function DatePicker({ value, onChange, maxDate, placeholder = 'Se
                 else if (viewMode === 'months') setDisplayMonth(new Date(displayMonth.getFullYear() - 1, displayMonth.getMonth(), 1));
                 else setDisplayMonth(subMonths(displayMonth, 1));
               }}
-              className="p-1.5 rounded-md hover:bg-light-surface/90 dark:hover:bg-dark-surface/90 text-light-surface dark:text-dark-surface text-xl leading-none font-bold"
+              className="p-1.5 rounded-md text-xl font-bold leading-none text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-zinc-800"
             >‹</button>
 
             <div className="flex items-center gap-1 text-sm font-semibold">
@@ -98,7 +98,7 @@ export default function DatePicker({ value, onChange, maxDate, placeholder = 'Se
               ) : (
                 <>
                   <button type="button" onClick={() => setViewMode('months')}
-                    className="px-2 py-1 rounded hover:bg-light-surface/90 dark:hover:bg-dark-surface/90 text-light-surface dark:text-dark-surface">
+                    className="rounded px-2 py-1 text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-zinc-800">
                     {format(displayMonth, 'MMMM')}
                   </button>
                   <button type="button" onClick={() => setViewMode('years')}
@@ -116,7 +116,7 @@ export default function DatePicker({ value, onChange, maxDate, placeholder = 'Se
                 else if (viewMode === 'months') setDisplayMonth(new Date(displayMonth.getFullYear() + 1, displayMonth.getMonth(), 1));
                 else setDisplayMonth(addMonths(displayMonth, 1));
               }}
-              className="p-1.5 rounded-md hover:bg-light-surface/90 dark:hover:bg-dark-surface/90 text-light-surface dark:text-dark-surface text-xl leading-none font-bold"
+              className="p-1.5 rounded-md text-xl font-bold leading-none text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-zinc-800"
             >›</button>
           </div>
 

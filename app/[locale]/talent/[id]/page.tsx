@@ -22,6 +22,7 @@ import ProfileOnboardingGuide from '@/components/ProfileOnboardingGuide';
 import ProfileSurfaceCustomizer, { type BackgroundPattern } from '@/components/ProfileSurfaceCustomizer';
 import WorkHistoryManager, { type WorkHistoryItem } from '@/components/WorkHistoryManager';
 import { buildLocalizedPath } from '@/lib/locale-path';
+import { getSurfaceContrast } from '@/lib/color-contrast';
 import {
   genderOptions,
   ethnicityOptions,
@@ -208,12 +209,16 @@ function normalizeWorkHistoryForEdit(items?: Talent['workHistory'] | WorkHistory
 
 function resolveContentBgStyle(value?: string | null) {
   const resolved = parseBackgroundSurface(value);
+  const contrast = getSurfaceContrast(resolved.color);
   const overlay = isLightColor(resolved.color)
     ? 'rgba(15, 23, 42, 0.08)'
     : 'rgba(255, 255, 255, 0.12)';
 
   const style: Record<string, string> = {
     backgroundColor: resolved.color,
+    '--profile-surface-fg': contrast.foreground,
+    '--profile-surface-muted': contrast.muted,
+    '--profile-surface-border': contrast.border,
   };
 
   if (resolved.pattern === 'dots') {
@@ -1039,7 +1044,7 @@ export default function TalentProfilePage() {
                             <ChevronDown size={12} className={`transition-transform ${categoryOpen ? 'rotate-180' : ''}`} />
                           </button>
                           {categoryOpen && (
-                            <div className="absolute z-50 mt-2 w-72 bg-light-surface dark:bg-dark-surface border border-gray-200 dark:border-gray-700 rounded-xl shadow-xl overflow-hidden">
+                            <div className="ui-popover absolute mt-2 w-72 overflow-hidden">
                               <div className="p-2 border-b border-gray-100 dark:border-gray-800">
                                 <input
                                   value={categorySearch}
@@ -1253,7 +1258,7 @@ export default function TalentProfilePage() {
 
       {/* Main Content Grid */}
       <div
-        className="relative transition-all duration-300"
+        className="relative text-[color:var(--profile-surface-fg)] transition-all duration-300"
         style={resolveContentBgStyle(editMode ? editData.contentBackground : (data?.talent as any)?.contentBackground)}
       >
       <div className="container mx-auto px-4 py-12">
@@ -1265,7 +1270,7 @@ export default function TalentProfilePage() {
           <div className="lg:col-span-8 space-y-8">
             
             {/* Tabs Navigation */}
-            <div className="flex items-center gap-8 border-b border-gray-200 dark:border-gray-800 mb-8 overflow-x-auto">
+            <div className="mb-8 flex items-center gap-8 overflow-x-auto rounded-2xl border border-[color:var(--profile-surface-border)] bg-light-surface/95 px-5 pt-4 shadow-sm backdrop-blur-sm dark:bg-dark-surface/95">
               {['media', 'about'].map((tab) => (
                 <button
                   key={tab}
@@ -1273,7 +1278,7 @@ export default function TalentProfilePage() {
                   className={`pb-3 text-lg font-semibold capitalize whitespace-nowrap transition-all relative ${
                     activeTab === tab 
                       ? 'text-blue-600 dark:text-red-300' 
-                      : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
+                      : 'text-slate-600 hover:text-slate-950 dark:text-slate-300 dark:hover:text-white'
                   }`}
                 >
                   {tab}

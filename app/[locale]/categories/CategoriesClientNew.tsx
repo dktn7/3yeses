@@ -1074,7 +1074,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                   
                   {/* Smart Suggestions Dropdown */}
                   {showPhase3Suggestions && phase3SearchSuggestions.length > 0 && (
-                    <div className="absolute top-full left-0 right-0 mt-1 bg-light-surface dark:bg-dark-surface border border-gray-200 dark:border-gray-700 rounded-xl shadow-[0_8px_32px_rgba(15,23,42,0.10)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.48)] z-50 overflow-hidden">
+                    <div className="ui-popover absolute left-0 right-0 top-full mt-1 overflow-hidden">
                       {phase3SearchSuggestions.map((suggestion, idx) => (
                         <button
                           key={`${suggestion.type}-${suggestion.name}-${idx}`}
@@ -1902,7 +1902,7 @@ export default function CategoriesClient({ categories, params }: Readonly<Catego
                 
                 {/* Smart Suggestions Dropdown */}
                 {showPhase3Suggestions && phase3SearchSuggestions.length > 0 && (
-                  <div className="absolute top-full left-0 right-0 mt-1 bg-light-surface dark:bg-dark-surface border border-gray-200 dark:border-gray-700 rounded-xl shadow-[0_8px_32px_rgba(15,23,42,0.10)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.48)] z-50 overflow-hidden">
+                  <div className="ui-popover absolute left-0 right-0 top-full mt-1 overflow-hidden">
                     {phase3SearchSuggestions.map((suggestion, idx) => (
                       <button
                         key={`${suggestion.type}-${suggestion.name}-${idx}`}

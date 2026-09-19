@@ -139,7 +139,7 @@ export default function VideoTalentCard({
           <div className="p-4 space-y-3">
         <div>
           <div className="flex justify-between items-start mb-1">
-            <h3 className="font-bold text-lg text-light-surface dark:text-dark-surface line-clamp-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+            <h3 className="line-clamp-1 text-lg font-bold text-slate-950 transition-colors group-hover:text-blue-600 dark:text-white dark:group-hover:text-blue-400">
               {displayTitle}
             </h3>
             {/* Rating removed per platform decision */}
@@ -160,7 +160,7 @@ export default function VideoTalentCard({
 
         <div className="pt-3 border-t border-gray-100 dark:border-gray-800 flex items-center justify-between">
           <div className="text-xs font-medium text-gray-500 dark:text-gray-400">
-            <span className="text-light-surface dark:text-dark-surface font-bold text-sm">{displayProjects}</span> projects
+            <span className="text-sm font-bold text-slate-950 dark:text-white">{displayProjects}</span> projects
           </div>
           <div className="flex -space-x-2">
             {[1, 2, 3].map((i) => (

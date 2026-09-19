@@ -10,7 +10,7 @@ export default function WhyReasons({ reasons }: { reasons: Reason[] }) {
           <div className="h-12 w-12 rounded-full bg-[color:var(--brand-primary)]/10 flex items-center justify-center mb-4">
             <span className="text-xl font-bold text-[color:var(--brand-primary)]">{i + 1}</span>
           </div>
-          <h3 className="font-semibold mb-2 text-light-surface dark:text-dark-surface">{r.title}</h3>
+          <h3 className="mb-2 font-semibold text-slate-950 dark:text-white">{r.title}</h3>
           <p className="text-gray-700 dark:text-gray-300">{r.desc}</p>
         </div>
       ))}

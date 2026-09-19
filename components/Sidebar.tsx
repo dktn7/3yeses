@@ -164,7 +164,7 @@ export default function Sidebar({ isCollapsed = false, setIsCollapsed }: { isCol
                             {isCollapsed && popoverOpen === dropdown.label &&
     ReactDOM.createPortal(
         <div
-            className="absolute z-50 w-52 rounded-xl bg-[var(--chrome-panel)] p-2 shadow-[0_8px_32px_rgba(0,0,0,0.12)] ring-1 ring-[var(--chrome-border)] backdrop-blur-md dark:shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
+            className="ui-popover absolute w-52 p-2"
             style={{ top: `${popoverPosition.top}px`, left: `${popoverPosition.left}px` }}
             onMouseEnter={() => handleMouseEnter(dropdown.label)}
             onMouseLeave={handleMouseLeave}

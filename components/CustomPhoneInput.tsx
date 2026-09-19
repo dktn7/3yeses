@@ -127,7 +127,7 @@ export default function CustomPhoneInput({
 
           {/* Dropdown */}
           {dropdownOpen && (
-            <div className="absolute z-[70] top-full left-0 mt-1 w-72 bg-light-surface dark:bg-dark-surface border border-gray-200 dark:border-gray-700 rounded-lg shadow-2xl">
+            <div className="ui-popover absolute left-0 top-full mt-1 w-72">
               {/* Search */}
               <div className="p-2 border-b border-gray-100 dark:border-gray-700">
                 <input

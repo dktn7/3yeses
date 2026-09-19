@@ -30,7 +30,7 @@ export default function AdminThemeSettings() {
             className="fixed inset-0 z-40 bg-black/20" 
             onClick={() => setIsOpen(false)}
           />
-          <div className="absolute right-0 bottom-12 w-72 bg-[var(--admin-surface)] border border-admin-border shadow-xl rounded-lg p-4 z-50">
+          <div className="admin-popover absolute bottom-12 right-0 w-72 p-4">
             <div className="flex justify-between items-center mb-4 border-b border-admin-border pb-2">
               <h3 className="font-semibold text-admin-text">Appearance</h3>
               <button onClick={() => setIsOpen(false)}><X size={16} /></button>

@@ -201,7 +201,7 @@ export default function SmartSearch({ onSearch, placeholder = "Search users, pag
 
       {/* Suggestions Dropdown */}
       {showDropdown && (allSuggestions.length > 0 || isLoading) && (
-        <div className="absolute z-50 w-full mt-2 bg-[var(--admin-surface)] border border-[var(--admin-border)] rounded-xl shadow-lg overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="admin-popover absolute mt-2 w-full overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
           <div className="max-h-[400px] overflow-y-auto">
             {/* Page Results */}
             {matchedPages.length > 0 && (

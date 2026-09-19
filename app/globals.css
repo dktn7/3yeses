@@ -47,6 +47,20 @@
   --foreground: #171717;
   --foreground-muted: #475569;
   --foreground-rgb: 23, 23, 23;
+  --surface: #ffffff;
+  --surface-raised: #ffffff;
+  --surface-subtle: #f8fafc;
+  --surface-foreground: #0f172a;
+  --surface-muted: #64748b;
+  --control-bg: #ffffff;
+  --control-fg: #0f172a;
+  --control-border: #cbd5e1;
+  --control-hover: #f8fafc;
+  --z-dropdown: 60;
+  --z-popover: 70;
+  --z-modal: 90;
+  --z-consent: 100;
+  --z-toast: 110;
   --progress-color: #2563eb;
   /* Brand/theme variables (light mode: deeper blue primary, red accent) */
   --brand-blue-50: #eff6ff;
@@ -169,6 +183,15 @@
   --foreground: #f8fafc;
   --foreground-muted: #cbd5e1;
   --foreground-rgb: 248,250,252;
+  --surface: #18181b;
+  --surface-raised: #202024;
+  --surface-subtle: #27272a;
+  --surface-foreground: #f8fafc;
+  --surface-muted: #cbd5e1;
+  --control-bg: #202024;
+  --control-fg: #f8fafc;
+  --control-border: rgba(255, 255, 255, 0.16);
+  --control-hover: #27272a;
   --progress-color: var(--brand-red);
   /* Dark mode: red theme */
   --brand-from: var(--brand-red); /* use bright brand red */
@@ -263,6 +286,84 @@
     --sidebar-muted: #94a3b8;
     --sidebar-muted-strong: #e2e8f0;
   }
+
+@layer base {
+  /* Every native single-select gets the same resilient baseline. Component
+     utilities can still override it because :where() has zero specificity. */
+  :where(select:not([multiple])) {
+    min-height: 2.75rem;
+    appearance: none;
+    border: 1px solid var(--control-border);
+    border-radius: 0.75rem;
+    background-color: var(--control-bg);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='m6 8 4 4 4-4' stroke='%2364748b' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-position: right 0.8rem center;
+    background-repeat: no-repeat;
+    color: var(--control-fg);
+    padding-right: 2.5rem;
+    transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+  }
+
+  :where(select:not([multiple]):hover:not(:disabled)) {
+    border-color: color-mix(in srgb, var(--brand-primary) 38%, var(--control-border));
+  }
+
+  :where(select:not([multiple]):focus-visible) {
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 3px var(--brand-ring-bg);
+    outline: none;
+  }
+
+  :where(select:not([multiple]):disabled) {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  :where(select option) {
+    background: var(--surface-raised);
+    color: var(--surface-foreground);
+  }
+}
+
+@layer components {
+  .ui-popover {
+    z-index: var(--z-popover);
+    border: 1px solid var(--chrome-border);
+    border-radius: 1rem;
+    background: var(--surface-raised);
+    color: var(--surface-foreground);
+    box-shadow: var(--dropdown-shadow);
+  }
+
+  .ui-popover-item {
+    color: var(--surface-foreground);
+    transition: background-color 160ms ease, color 160ms ease;
+  }
+
+  .ui-popover-item:hover,
+  .ui-popover-item:focus-visible {
+    background: var(--control-hover);
+    color: var(--brand-primary);
+    outline: none;
+  }
+
+  .admin-popover {
+    z-index: var(--z-popover);
+    border: 1px solid var(--admin-border);
+    border-radius: 1rem;
+    background: var(--admin-surface);
+    color: var(--admin-text);
+    box-shadow: var(--dropdown-shadow);
+  }
+
+  .ui-modal-layer {
+    z-index: var(--z-modal);
+  }
+
+  .ui-consent-layer {
+    z-index: var(--z-consent);
+  }
+}
 
 .marketing-wave-tone-showcase {
   --wave-primary: var(--marketing-wave-accent-top);

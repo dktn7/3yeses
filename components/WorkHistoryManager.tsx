@@ -69,7 +69,7 @@ export default function WorkHistoryManager({ items, onUpdate }: WorkHistoryManag
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h3 className="text-lg font-medium text-light-surface dark:text-dark-surface">Work History</h3>
+        <h3 className="text-lg font-medium text-slate-950 dark:text-white">Work History</h3>
         <button
           type="button"
           onClick={() => handleOpenModal()}
@@ -90,7 +90,7 @@ export default function WorkHistoryManager({ items, onUpdate }: WorkHistoryManag
           {items.map((item, index) => (
             <div key={index} className="flex items-start justify-between p-4 bg-light-surface dark:bg-dark-surface/50 rounded-lg border border-gray-200 dark:border-gray-700">
               <div>
-                <h4 className="font-semibold text-light-surface dark:text-dark-surface">{item.title}</h4>
+                <h4 className="font-semibold text-slate-950 dark:text-white">{item.title}</h4>
                 <p className="text-sm text-gray-600 dark:text-gray-400">{item.company}</p>
                 <p className="text-xs text-gray-500 mt-1">
                   {new Date(item.startDate).getFullYear()} - {item.isCurrent ? 'Present' : (item.endDate ? new Date(item.endDate).getFullYear() : '')}
@@ -122,7 +122,7 @@ export default function WorkHistoryManager({ items, onUpdate }: WorkHistoryManag
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
           <div className="bg-light-surface dark:bg-dark-surface rounded-xl shadow-xl w-full max-w-lg overflow-hidden">
             <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
-              <h3 className="text-lg font-bold text-light-surface dark:text-dark-surface">
+              <h3 className="text-lg font-bold text-slate-950 dark:text-white">
                 {editingIndex !== null ? 'Edit Role' : 'Add Role'}
               </h3>
               <button onClick={() => setIsModalOpen(false)} className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
@@ -137,7 +137,7 @@ export default function WorkHistoryManager({ items, onUpdate }: WorkHistoryManag
                   type="text"
                   value={currentItem.title}
                   onChange={e => setCurrentItem({...currentItem, title: e.target.value})}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-light-surface dark:bg-dark-surface text-light-surface dark:text-dark-surface"
+                  className="w-full rounded-lg border border-gray-300 bg-light-surface px-3 py-2 text-slate-900 dark:border-gray-600 dark:bg-dark-surface dark:text-white"
                   placeholder="e.g. Lead Vocalist"
                 />
               </div>
@@ -148,7 +148,7 @@ export default function WorkHistoryManager({ items, onUpdate }: WorkHistoryManag
                   type="text"
                   value={currentItem.company}
                   onChange={e => setCurrentItem({...currentItem, company: e.target.value})}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-light-surface dark:bg-dark-surface text-light-surface dark:text-dark-surface"
+                  className="w-full rounded-lg border border-gray-300 bg-light-surface px-3 py-2 text-slate-900 dark:border-gray-600 dark:bg-dark-surface dark:text-white"
                   placeholder="e.g. Blue Note Jazz Club"
                 />
               </div>
@@ -160,7 +160,7 @@ export default function WorkHistoryManager({ items, onUpdate }: WorkHistoryManag
                     type="date"
                     value={currentItem.startDate ? new Date(currentItem.startDate).toISOString().split('T')[0] : ''}
                     onChange={e => setCurrentItem({...currentItem, startDate: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-light-surface dark:bg-dark-surface text-light-surface dark:text-dark-surface"
+                    className="w-full rounded-lg border border-gray-300 bg-light-surface px-3 py-2 text-slate-900 dark:border-gray-600 dark:bg-dark-surface dark:text-white"
                   />
                 </div>
                 <div>
@@ -170,7 +170,7 @@ export default function WorkHistoryManager({ items, onUpdate }: WorkHistoryManag
                     disabled={currentItem.isCurrent}
                     value={currentItem.endDate ? new Date(currentItem.endDate).toISOString().split('T')[0] : ''}
                     onChange={e => setCurrentItem({...currentItem, endDate: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-light-surface dark:bg-dark-surface text-light-surface dark:text-dark-surface disabled:opacity-50"
+                    className="w-full rounded-lg border border-gray-300 bg-light-surface px-3 py-2 text-slate-900 disabled:opacity-50 dark:border-gray-600 dark:bg-dark-surface dark:text-white"
                   />
                 </div>
               </div>
@@ -183,7 +183,7 @@ export default function WorkHistoryManager({ items, onUpdate }: WorkHistoryManag
                   onChange={e => setCurrentItem({...currentItem, isCurrent: e.target.checked, endDate: e.target.checked ? null : currentItem.endDate})}
                   className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                 />
-                <label htmlFor="isCurrent" className="text-sm text-light-surface dark:text-dark-surface">I currently work here</label>
+                <label htmlFor="isCurrent" className="text-sm text-slate-700 dark:text-slate-200">I currently work here</label>
               </div>
 
               <div>
@@ -192,7 +192,7 @@ export default function WorkHistoryManager({ items, onUpdate }: WorkHistoryManag
                   value={currentItem.description || ''}
                   onChange={e => setCurrentItem({...currentItem, description: e.target.value})}
                   rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-light-surface dark:bg-dark-surface text-light-surface dark:text-dark-surface"
+                  className="w-full rounded-lg border border-gray-300 bg-light-surface px-3 py-2 text-slate-900 dark:border-gray-600 dark:bg-dark-surface dark:text-white"
                   placeholder="Describe your role and achievements..."
                 />
               </div>
@@ -201,7 +201,7 @@ export default function WorkHistoryManager({ items, onUpdate }: WorkHistoryManag
             <div className="p-4 border-t border-gray-200 dark:border-gray-700 flex justify-end gap-3">
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="px-4 py-2 text-light-surface dark:text-dark-surface hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                className="rounded-lg px-4 py-2 text-slate-700 transition-colors hover:bg-gray-100 hover:text-slate-950 dark:text-slate-200 dark:hover:bg-gray-700 dark:hover:text-white"
               >
                 Cancel
               </button>

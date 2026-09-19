@@ -31,7 +31,7 @@ const AdUnit: React.FC<AdUnitProps> = ({ ad }) => {
       {/* Body */}
       <div className="p-3 space-y-1">
         {/* Headline */}
-        <p className="text-sm font-bold leading-snug text-light-surface dark:text-dark-surface group-hover:text-white dark:group-hover:text-white">
+        <p className="text-sm font-bold leading-snug text-slate-900 group-hover:text-white dark:text-white dark:group-hover:text-white">
           {ad.headline}
         </p>
 

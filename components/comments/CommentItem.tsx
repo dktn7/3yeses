@@ -134,7 +134,7 @@ export default function CommentItem({
                 </button>
 
                 {showMenu && (
-                  <div className="absolute right-0 mt-2 w-32 bg-light-surface dark:bg-dark-surface rounded-lg shadow-lg border border-gray-200 dark:border-gray-600 py-1 z-10">
+                  <div className="ui-popover absolute right-0 mt-2 w-32 py-1">
                     <button
                       onClick={() => {
                         handleDelete();

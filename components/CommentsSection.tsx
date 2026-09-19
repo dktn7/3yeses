@@ -143,7 +143,7 @@ function MentionInput({
         onBlur={() => setTimeout(() => setShowMentions(false), 200)}
       />
       {showMentions && (
-        <div className="absolute bottom-full left-0 right-0 mb-1 bg-light-surface dark:bg-dark-surface border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl z-50 overflow-hidden max-h-48 overflow-y-auto">
+        <div className="ui-popover absolute bottom-full left-0 right-0 mb-1 max-h-48 overflow-y-auto">
           {mentionLoading ? (
             <div className="p-3 text-center"><Loader2 className="w-4 h-4 animate-spin mx-auto text-gray-400" /></div>
           ) : (
@@ -778,7 +778,7 @@ export default function CommentsSection({ mediaId, mediaOwnerId }: CommentsSecti
             {sortOrder === 'newest' ? 'Newest First' : 'Top Comments'}
             <ChevronDown className="w-4 h-4" />
           </button>
-          <div className="absolute right-0 top-full mt-1 w-40 bg-light-surface dark:bg-dark-surface rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 py-1 hidden group-hover/sort:block z-10">
+          <div className="ui-popover absolute right-0 top-full mt-1 hidden w-40 py-1 group-hover/sort:block">
             <button
               onClick={() => setSortOrder('newest')}
               className={`w-full text-left px-4 py-2 text-sm ${sortOrder === 'newest' ? 'bg-gray-100 dark:bg-gray-700 text-primary-blue dark:text-accent-red' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'}`}

@@ -64,7 +64,7 @@ function ActionDropdown({ user, onView, onEdit, onWarn, onBan, onDelete }: {
         <MoreVertical size={16} />
       </button>
       {open && (
-        <div className="absolute right-0 top-full mt-1 w-48 bg-[var(--admin-surface)] border border-[var(--admin-border)] rounded-xl shadow-xl z-50 py-1 animate-in fade-in slide-in-from-top-1">
+        <div className="admin-popover absolute right-0 top-full mt-1 w-48 py-1 animate-in fade-in slide-in-from-top-1">
           {items.map((item) => {
             const Icon = item.icon;
             return (
