@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import Image from 'next/image';
+import { upload as imagekitUpload } from '@imagekit/next';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { DashboardLoading } from '@/components/dashboard/DashboardPrimitives';
 import MediaThumbnailFallback from '@/components/MediaThumbnailFallback';
@@ -34,6 +35,32 @@ interface Media {
   };
 }
 
+interface ImageKitAuth {
+  token: string;
+  signature: string;
+  expire: number;
+  publicKey: string;
+}
+
+async function uploadToImageKit(file: File, folder: string) {
+  const authResponse = await fetch('/api/imagekit/auth', { credentials: 'include' });
+  if (!authResponse.ok) throw new Error('Failed to prepare media upload');
+
+  const auth = await authResponse.json() as ImageKitAuth;
+  const result = await imagekitUpload({
+    file,
+    fileName: file.name,
+    token: auth.token,
+    signature: auth.signature,
+    expire: auth.expire,
+    publicKey: auth.publicKey,
+    folder,
+  });
+
+  if (!result.url) throw new Error('ImageKit did not return an uploaded media URL');
+  return { url: result.url, fileId: result.fileId };
+}
+
 export default function GalleryPage() {
   const t = useTranslations('dashboard.gallery');
   const locale = useLocale();
@@ -43,6 +70,8 @@ export default function GalleryPage() {
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploadStep, setUploadStep] = useState<'select' | 'url-input' | 'details' | 'confirm'>('select');
   const [pendingFile, setPendingFile] = useState<File | null>(null);
+  const [filePreviewUrl, setFilePreviewUrl] = useState<string | null>(null);
+  const [imageRotation, setImageRotation] = useState(0);
   const [pendingType, setPendingType] = useState<'image' | 'video' | 'audio'>('image');
   const [pendingMediaUrl, setPendingMediaUrl] = useState<string>('');
   const [uploadMethod, setUploadMethod] = useState<'file' | 'url'>('file');
@@ -131,6 +160,7 @@ export default function GalleryPage() {
     }
     
     setPendingFile(file);
+    setFilePreviewUrl(type === 'image' || type === 'video' ? URL.createObjectURL(file) : null);
     setPendingType(type);
     setUploadMethod('file');
     setShowUploadModal(true);
@@ -158,16 +188,16 @@ export default function GalleryPage() {
     
     try {
       setUploading(true);
-      const formData = new FormData();
-      formData.append('type', type);
-      formData.append('url', safeUrl);
-      formData.append('title', pendingTitle || safeUrl.split('/').pop() || 'Media');
-      formData.append('description', pendingDescription);
-      
       const response = await fetch('/api/talent/media/upload', {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: formData,
+        body: JSON.stringify({
+          type,
+          url: safeUrl,
+          title: pendingTitle || safeUrl.split('/').pop() || 'Media',
+          description: pendingDescription,
+        }),
       });
       
       if (response.ok) {
@@ -277,23 +307,48 @@ export default function GalleryPage() {
     
     try {
       setUploading(true);
-      const formData = new FormData();
-      formData.append('file', pendingFile);
-      formData.append('type', pendingType);
-      formData.append('title', pendingTitle || pendingFile.name);
-      formData.append('description', pendingDescription);
-      
-      if (pendingThumbnail) {
-        formData.append('thumbnail', pendingThumbnail);
+      let fileToUpload = pendingFile;
+      if (pendingType === 'image' && imageRotation % 360 !== 0) {
+        const bitmap = await createImageBitmap(pendingFile);
+        const canvas = document.createElement('canvas');
+        const quarterTurn = Math.abs(imageRotation % 180) === 90;
+        canvas.width = quarterTurn ? bitmap.height : bitmap.width;
+        canvas.height = quarterTurn ? bitmap.width : bitmap.height;
+        const context = canvas.getContext('2d');
+        if (context) {
+          context.translate(canvas.width / 2, canvas.height / 2);
+          context.rotate((imageRotation * Math.PI) / 180);
+          context.drawImage(bitmap, -bitmap.width / 2, -bitmap.height / 2);
+          const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, pendingFile.type || 'image/jpeg', 0.92));
+          if (blob) fileToUpload = new File([blob], pendingFile.name, { type: pendingFile.type });
+        }
+        bitmap.close();
+      }
+      const uploadedMedia = await uploadToImageKit(fileToUpload, `/portfolio/${pendingType}`);
+      let thumbnail = pendingThumbnail;
+
+      if (pendingThumbnailFile) {
+        const uploadedThumbnail = await uploadToImageKit(pendingThumbnailFile, '/portfolio/thumbnails');
+        thumbnail = uploadedThumbnail.url;
       } else if (extractedThumbnail) {
         const blob = await fetch(extractedThumbnail).then(r => r.blob());
-        formData.append('thumbnailFile', blob, 'thumbnail.jpg');
+        const thumbnailFile = new File([blob], `${pendingFile.name}-thumbnail.jpg`, { type: blob.type || 'image/jpeg' });
+        const uploadedThumbnail = await uploadToImageKit(thumbnailFile, '/portfolio/thumbnails');
+        thumbnail = uploadedThumbnail.url;
       }
       
       const response = await fetch('/api/talent/media/upload', {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: formData,
+        body: JSON.stringify({
+          url: uploadedMedia.url,
+          fileId: uploadedMedia.fileId,
+          type: pendingType,
+          title: pendingTitle || pendingFile.name,
+          description: pendingDescription,
+          thumbnail: thumbnail || undefined,
+        }),
       });
       
       if (response.ok) {
@@ -306,6 +361,7 @@ export default function GalleryPage() {
         setPendingDescription('');
         setExtractedThumbnail('');
         setPendingThumbnail('');
+        setPendingThumbnailFile(null);
       } else {
         const error = await response.json();
         setNotification({ show: true, type: 'error', message: error.error || t('uploadFailed'), action: 'upload' });
@@ -393,7 +449,7 @@ export default function GalleryPage() {
   if (loading) return <DashboardLoading />;
 
   return (
-    <DashboardPage className="space-y-8">
+    <DashboardPage className="dashboard-gallery-page space-y-8">
       <DashboardHeader
         icon={Layers}
         title={t('title')}
@@ -422,8 +478,8 @@ export default function GalleryPage() {
 
       {/* Upload Modal - Multi-step Form */}
       {showUploadModal && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-light-surface dark:bg-dark-surface rounded-2xl shadow-2xl w-full max-w-xl max-h-[90vh] flex flex-col border border-gray-200 dark:border-gray-700 animate-in zoom-in duration-200" role="dialog" aria-modal="true">
+        <div className="fixed inset-0 z-50 min-h-dvh overflow-y-auto bg-slate-950/95 p-0 backdrop-blur-md animate-in fade-in duration-200 sm:p-6">
+          <div className="mx-auto flex min-h-dvh w-full max-w-5xl flex-col border border-white/10 bg-light-surface shadow-2xl dark:bg-dark-surface sm:min-h-[calc(100dvh-3rem)] sm:rounded-[2rem]" role="dialog" aria-modal="true">
             {/* Header with step indicator - Fixed */}
             <div className="flex-shrink-0 p-8 pb-4">
               <div className="flex items-center justify-between mb-6">
@@ -439,6 +495,8 @@ export default function GalleryPage() {
                 <button 
                   className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white" 
                   onClick={() => { 
+                    if (filePreviewUrl) URL.revokeObjectURL(filePreviewUrl);
+                    setFilePreviewUrl(null);
                     if (videoPreviewUrl) {
                       URL.revokeObjectURL(videoPreviewUrl);
                       setVideoPreviewUrl(null);
@@ -561,6 +619,13 @@ export default function GalleryPage() {
 
               {pendingFile && (
                 <div className="space-y-5">
+                  {pendingType === 'image' && filePreviewUrl && (
+                    <div className="overflow-hidden rounded-[1.5rem] border border-slate-200 bg-slate-100 p-2 dark:border-slate-800 dark:bg-slate-950">
+                      <Image src={filePreviewUrl} alt="Image preview" width={1200} height={800} unoptimized className="max-h-[42vh] w-full rounded-xl object-contain" style={{ transform: `rotate(${imageRotation}deg)` }} />
+                      <p className="px-2 pb-1 pt-3 text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Preview before adding</p>
+                      <div className="flex gap-2 px-2 pb-2 pt-2"><button type="button" onClick={() => setImageRotation((value) => (value + 90) % 360)} className="rounded-full border border-slate-300 px-3 py-1.5 text-xs font-semibold dark:border-slate-700">Rotate 90°</button><button type="button" onClick={() => setImageRotation(0)} className="rounded-full border border-slate-300 px-3 py-1.5 text-xs font-semibold dark:border-slate-700">Reset</button></div>
+                    </div>
+                  )}
                   {/* File Info Badge */}
                   <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-gray-900 dark:to-gray-800 rounded-xl border border-blue-200 dark:border-gray-700">
                     <div className="w-12 h-12 bg-primary-blue dark:bg-accent-red rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
@@ -748,6 +813,7 @@ export default function GalleryPage() {
               {/* URL Upload Content */}
               {pendingMediaUrl && (
                 <div className="space-y-5">
+                  {pendingType === 'image' && <div className="overflow-hidden rounded-[1.5rem] border border-slate-200 bg-slate-100 p-2 dark:border-slate-800 dark:bg-slate-950"><Image src={pendingMediaUrl} alt="Remote image preview" width={1200} height={800} unoptimized className="max-h-[42vh] w-full rounded-xl object-contain" /></div>}
                   {/* URL Info Badge */}
                   <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-gray-900 dark:to-gray-800 rounded-xl border border-blue-200 dark:border-gray-700">
                     <div className="w-12 h-12 bg-primary-blue dark:bg-accent-red rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
@@ -863,7 +929,10 @@ export default function GalleryPage() {
                       }
                       setShowUploadModal(false); 
                       setUploadStep('select'); 
-                      setPendingFile(null); 
+        setPendingFile(null);
+        setImageRotation(0);
+        if (filePreviewUrl) URL.revokeObjectURL(filePreviewUrl);
+        setFilePreviewUrl(null);
                       setPendingMediaUrl('');
                     }
                   }}
@@ -900,7 +969,7 @@ export default function GalleryPage() {
       )}
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+      <div className="dashboard-signal-strip dashboard-gallery-signals">
         <div className="dashboard-surface p-5">
           <div className="flex items-center justify-between">
             <div>
@@ -957,7 +1026,7 @@ export default function GalleryPage() {
       </div>
 
       {/* Gallery Grid */}
-      <div className="dashboard-surface p-5 sm:p-6">
+      <div className={`dashboard-surface p-5 sm:p-6 ${filteredMedia.length === 0 ? 'dashboard-gallery-workspace' : ''}`}>
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white">{t('yourMedia')}</h2>
         </div>
@@ -981,7 +1050,7 @@ export default function GalleryPage() {
             }
           />
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          <div className="dashboard-media-grid grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {filteredMedia.map((item, index) => {
               const TypeIcon = getTypeIcon(item.type);
               return (
@@ -992,16 +1061,16 @@ export default function GalleryPage() {
                     setViewerIndex(index);
                     setIsViewerOpen(true);
                   }}
-                  className="group block bg-light-surface dark:bg-dark-surface rounded-xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer border border-gray-100 dark:border-gray-700 hover:scale-[1.02]"
+                  className="dashboard-media-card group block cursor-pointer overflow-hidden"
                 >
                   {/* Image/Video Thumbnail */}
-                  <div className="relative aspect-video bg-gray-200 dark:bg-gray-700 overflow-hidden">
+                  <div className="relative aspect-[4/3] overflow-hidden bg-gray-200 dark:bg-neutral-800">
                     {item.type === 'image' ? (
                       <Image
                         src={item.mediaUrl}
                         alt={item.title || t('title')}
                         fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                        className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:scale-[1.035]"
                       />
                     ) : item.type === 'video' ? (
                       item.thumbnail ? (
@@ -1009,7 +1078,7 @@ export default function GalleryPage() {
                           src={item.thumbnail}
                           alt={item.title || t('thumbnail')}
                           fill
-                          className="object-cover group-hover:scale-105 transition-transform duration-300"
+                          className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:scale-[1.035]"
                         />
                       ) : (
                         <MediaThumbnailFallback />
@@ -1020,7 +1089,7 @@ export default function GalleryPage() {
                           src={item.thumbnail}
                           alt={item.title || t('thumbnail')}
                           fill
-                          className="object-cover group-hover:scale-105 transition-transform duration-300"
+                          className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:scale-[1.035]"
                         />
                       ) : (
                         <MediaThumbnailFallback />
@@ -1028,8 +1097,8 @@ export default function GalleryPage() {
                     )}
 
                     {/* Icon Overlay on Hover */}
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/30">
-                      <div className="bg-black/50 rounded-full p-3 backdrop-blur-sm">
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 transition-opacity duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:opacity-100">
+                      <div className="rounded-full bg-black/65 p-3 backdrop-blur-sm">
                         <TypeIcon className="w-6 h-6 text-white" />
                       </div>
                     </div>
@@ -1042,9 +1111,29 @@ export default function GalleryPage() {
 
                   {/* Card Content */}
                   <div className="p-4">
-                    <h3 className="font-semibold text-gray-900 dark:text-white mb-3 line-clamp-2 text-base leading-snug">
-                      {item.title || t('untitled')}
-                    </h3>
+                    <div className="flex items-start justify-between gap-3">
+                      <h3 className="line-clamp-2 text-base font-semibold leading-snug text-gray-900 dark:text-white">
+                        {item.title || t('untitled')}
+                      </h3>
+                      <div className="flex shrink-0 gap-1">
+                        <button
+                          onClick={(e) => { e.stopPropagation(); openEdit(item); }}
+                          className="dashboard-media-action text-blue-700 dark:text-red-300"
+                          aria-label={t('edit')}
+                          title={t('edit')}
+                        >
+                          <Edit3 className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); handleDelete(item.id); }}
+                          className="dashboard-media-action text-red-600 dark:text-red-400"
+                          aria-label={t('delete')}
+                          title={t('delete')}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
 
                     {item.description && (
                       <p className="text-xs text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
@@ -1068,28 +1157,6 @@ export default function GalleryPage() {
                       </span>
                     </div>
 
-                    {/* Delete Button */}
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDelete(item.id);
-                      }}
-                      className="mt-4 w-full flex items-center justify-center gap-2 px-3 py-2 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg font-medium hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors text-sm"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                      {t('delete')}
-                    </button>
-
-                    {/* Edit Button */}
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        openEdit(item);
-                      }}
-                      className="mt-2 w-full flex items-center justify-center gap-2 px-3 py-2 bg-blue-50 dark:bg-red-900/20 text-blue-700 dark:text-red-300 rounded-lg font-medium hover:bg-blue-100 dark:hover:bg-red-900/30 transition-colors text-sm"
-                    >
-                      <Edit3 className="h-3.5 w-3.5" /> {t('edit')}
-                    </button>
                   </div>
                 </div>
               );

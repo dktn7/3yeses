@@ -135,6 +135,9 @@ export async function PUT(req: NextRequest) {
           }];
         })
       : [];
+    const normalizedExperienceLevel = experienceLevel === null || experienceLevel === undefined || experienceLevel === ''
+      ? null
+      : String(experienceLevel);
 
     let profile;
 
@@ -153,7 +156,7 @@ export async function PUT(req: NextRequest) {
           performerTitle,
           bio,
           location,
-          experienceLevel,
+          experienceLevel: normalizedExperienceLevel,
           dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
           gender,
           genderOther,
@@ -208,7 +211,7 @@ export async function PUT(req: NextRequest) {
           performerTitle,
           bio,
           location,
-          experienceLevel,
+          experienceLevel: normalizedExperienceLevel,
           dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
           gender,
           genderOther,

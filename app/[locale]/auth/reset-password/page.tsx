@@ -38,7 +38,7 @@ export default function ResetPasswordPage() {
       newErrors.password = t('errors.passwordRequired');
     } else if (password.length < 8) {
       newErrors.password = t('errors.passwordTooShort');
-    } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)/.test(password)) {
+    } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)) {
       newErrors.password = t('errors.passwordWeak');
     }
 
@@ -169,7 +169,7 @@ export default function ResetPasswordPage() {
                 {/* New Password */}
                 <div>
                   <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    {t('newPassword')}
+                    {t('password')}
                   </label>
                   <div className="relative">
                     <input
@@ -177,7 +177,7 @@ export default function ResetPasswordPage() {
                       id="password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      placeholder={t('newPasswordPlaceholder')}
+                      placeholder={t('passwordPlaceholder')}
                       className={`w-full px-4 py-3 pr-12 rounded-lg border ${
                         errors.password
                           ? 'border-red-500 dark:border-red-500'
@@ -195,9 +195,6 @@ export default function ResetPasswordPage() {
                   {errors.password && (
                     <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.password}</p>
                   )}
-                  <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                    {t('passwordRequirements')}
-                  </p>
                 </div>
 
                 {/* Confirm Password */}
@@ -245,7 +242,7 @@ export default function ResetPasswordPage() {
                       {t('resetting')}
                     </span>
                   ) : (
-                    t('submit')
+                    t('resetButton')
                   )}
                 </button>
               </form>

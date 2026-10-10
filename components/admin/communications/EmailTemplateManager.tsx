@@ -196,12 +196,12 @@ export default function EmailTemplateManager() {
     a { color:#1d4ed8; }
     @media (prefers-color-scheme: dark) {
       .dark-bg   { background-color: #020617 !important; }
-      .dark-card  { background-color: #1e293b !important; }
+      .dark-card  { background-color: #202020 !important; }
             .dark-shell { background-color: #0b1224 !important; }
       .dark-text  { color: #e2e8f0 !important; }
       .dark-heading { color: #ffffff !important; }
       .dark-subtle { color: #94a3b8 !important; }
-      .dark-border { border-color: #1e293b !important; }
+      .dark-border { border-color: #303030 !important; }
       .dark-blob  { opacity: 0.08 !important; }
     }
   </style>

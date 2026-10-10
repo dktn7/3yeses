@@ -81,7 +81,7 @@
       "route": "messages",
       "viewport": "desktop",
       "overflow": false,
-      "title": "Messages"
+      "title": "Inbox"
     },
     {
       "route": "messages",
@@ -114,7 +114,7 @@
       "route": "tickets",
       "viewport": "desktop",
       "overflow": false,
-      "title": "Support Tickets"
+      "title": "Inbox"
     },
     {
       "route": "tickets",
@@ -147,7 +147,7 @@
       "route": "talent",
       "viewport": "desktop",
       "overflow": false,
-      "title": "Welcome back, Test User"
+      "title": "Welcome back, Test"
     },
     {
       "route": "talent",

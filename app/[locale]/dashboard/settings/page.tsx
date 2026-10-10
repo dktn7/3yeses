@@ -7,20 +7,21 @@ import {
   Bell,
   CheckCircle2,
   Eye,
-  Fingerprint,
+  Images,
   KeyRound,
   Mail,
+  Save,
   Settings as SettingsIcon,
   ShieldCheck,
+  Sparkles,
   Trash2,
   UserRound,
 } from 'lucide-react';
-import LoadingSpinner from '@/components/LoadingSpinner';
 import {
-  DashboardActionCard,
   DashboardButton,
   DashboardField,
   DashboardHeader,
+  DashboardLoading,
   DashboardPanel,
   DashboardStatRow,
   DashboardToggle,
@@ -31,6 +32,8 @@ import {
   inputClass,
 } from '@/components/dashboard/DashboardPrimitives';
 import { buildLocalizedPath } from '@/lib/locale-path';
+import { ModeToggle } from '@/components/ThemeToggle';
+import LanguageDropdown from '@/components/LanguageDropdown';
 
 interface User {
   id: string;
@@ -46,7 +49,6 @@ interface Settings {
   };
   privacy: {
     profileVisibility: 'public' | 'private' | 'members-only';
-    showEmail: boolean;
     showLocation: boolean;
   };
 }
@@ -55,18 +57,22 @@ export default function SettingsPage() {
   const router = useRouter();
   const locale = useLocale();
   const t = useTranslations('dashboard.settings');
+  const chrome = useTranslations('dashboard.chrome');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [settings, setSettings] = useState<Settings>({
     notifications: { email: true, marketing: false },
-    privacy: { profileVisibility: 'public', showEmail: false, showLocation: true },
+    privacy: { profileVisibility: 'public', showLocation: true },
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [success, setSuccess] = useState('');
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [deleteAcknowledged, setDeleteAcknowledged] = useState(false);
   const [passwordForm, setPasswordForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
+  const [verificationCode, setVerificationCode] = useState('');
+  const [codeSent, setCodeSent] = useState(false);
+  const [codeSending, setCodeSending] = useState(false);
   const [passwordSaving, setPasswordSaving] = useState(false);
   const [resetSending, setResetSending] = useState(false);
 
@@ -156,11 +162,15 @@ export default function SettingsPage() {
     setSuccess('');
 
     if (!passwordForm.currentPassword) {
-      setErrors({ password: 'Enter your current password.' });
+      setErrors({ password: chrome('enterCurrentPassword') });
       return;
     }
     if (passwordScore < 5) {
-      setErrors({ password: 'New password must meet every requirement and match confirmation.' });
+      setErrors({ password: chrome('passwordRequirements') });
+      return;
+    }
+    if (!/^\d{6}$/.test(verificationCode)) {
+      setErrors({ password: chrome('requestCode') });
       return;
     }
 
@@ -173,20 +183,48 @@ export default function SettingsPage() {
         body: JSON.stringify({
           currentPassword: passwordForm.currentPassword,
           newPassword: passwordForm.newPassword,
+          verificationCode,
         }),
       });
       const data = await response.json().catch(() => ({}));
 
       if (response.ok) {
         setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
-        flashSuccess('Password updated securely.');
+        setVerificationCode('');
+        setCodeSent(false);
+        flashSuccess(chrome('passwordUpdated'));
       } else {
-        setErrors({ password: data.error || 'We could not change your password.' });
+        setErrors({ password: data.error || chrome('errorChangePassword') });
       }
     } catch (error) {
-      setErrors({ password: 'We could not change your password. Please try again.' });
+      setErrors({ password: chrome('errorChangePassword') });
     } finally {
       setPasswordSaving(false);
+    }
+  };
+
+  const handleSendPasswordCode = async () => {
+    if (!passwordForm.currentPassword) {
+      setErrors({ password: chrome('enterCurrentPassword') });
+      return;
+    }
+    if (passwordScore < 5) {
+      setErrors({ password: chrome('passwordRequirements') });
+      return;
+    }
+    setCodeSending(true);
+    setErrors({});
+    try {
+      const response = await fetch(`/api/user/password-change-code?locale=${encodeURIComponent(locale)}`, { method: 'POST', credentials: 'include' });
+      const data = await response.json().catch(() => ({}));
+      if (response.ok) {
+        setCodeSent(true);
+        flashSuccess(chrome('codeSent'));
+      } else setErrors({ password: data.error || chrome('errorSendCode') });
+    } catch (error) {
+      setErrors({ password: chrome('errorSendCode') });
+    } finally {
+      setCodeSending(false);
     }
   };
 
@@ -202,13 +240,13 @@ export default function SettingsPage() {
         body: JSON.stringify({ email: user.email, locale }),
       });
       if (response.ok) {
-        flashSuccess('Password reset link sent to your account email.');
+        flashSuccess(chrome('resetLinkSent'));
       } else {
         const data = await response.json().catch(() => ({}));
-        setErrors({ reset: data.error || 'We could not send the reset link.' });
+        setErrors({ reset: data.error || chrome('errorResetLink') });
       }
     } catch (error) {
-      setErrors({ reset: 'We could not send the reset link. Please try again.' });
+      setErrors({ reset: chrome('errorResetLink') });
     } finally {
       setResetSending(false);
     }
@@ -236,23 +274,17 @@ export default function SettingsPage() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-16">
-        <LoadingSpinner />
-      </div>
-    );
-  }
+  if (loading) return <DashboardLoading />;
 
   return (
-    <DashboardWorkspace>
+    <DashboardWorkspace className="dashboard-settings-page">
       <DashboardHeader
         icon={SettingsIcon}
-        title="Account settings"
-        description="Choose your privacy preferences, manage notifications, and keep your account secure."
+        title={chrome('accountSettingsTitle')}
+        description={chrome('accountSettingsDescription')}
         actions={
           <DashboardButton onClick={handleSaveSettings} disabled={saving}>
-            <ShieldCheck className="h-4 w-4" />
+            <Save className="h-4 w-4" aria-hidden="true" />
             {saving ? t('saving') : t('saveSettings')}
           </DashboardButton>
         }
@@ -269,10 +301,10 @@ export default function SettingsPage() {
 
       <div className="grid gap-7 lg:grid-cols-[0.72fr_1.28fr]">
         <aside className="space-y-6 lg:sticky lg:top-28 lg:self-start">
-          <DashboardPanel>
-            <PanelHeading title={t('accountInfo')} description="The account identity used across billing, profile ownership, and support tickets." />
-            <div className="flex items-center gap-4">
-              <div className="flex h-16 w-16 items-center justify-center rounded-[1.5rem] bg-[color:var(--brand-primary)] text-xl font-semibold text-white">
+          <DashboardPanel className="settings-account-panel">
+            <PanelHeading title={t('accountInfo')} description={chrome('accountIdentityDescription')} />
+            <div className="settings-account-identity">
+              <div className="settings-account-avatar">
                 {(user?.name || user?.email || 'A').slice(0, 1).toUpperCase()}
               </div>
               <div className="min-w-0">
@@ -283,32 +315,36 @@ export default function SettingsPage() {
                 </div>
               </div>
             </div>
-            <div className="mt-5">
+            <div className="settings-account-note"><ShieldCheck className="h-4 w-4" aria-hidden="true" /><span>{chrome('privateEmailNote')}</span></div>
+            <div className="settings-account-stats mt-5">
               <DashboardStatRow
                 items={[
-                  { label: 'Email', value: user?.emailVerified ? 'Verified' : 'Review', detail: 'Sign-in identity' },
-                  { label: 'Privacy', value: settings.privacy.profileVisibility, detail: 'Profile visibility' },
-                  { label: 'Notices', value: settings.notifications.email ? 'On' : 'Off', detail: 'Email notifications' },
-                  { label: 'Security', value: passwordScore ? `${passwordScore}/5` : 'Ready', detail: 'Password strength' },
+                  { label: 'Email', icon: Mail, value: user?.emailVerified ? 'Verified' : 'Review', detail: 'Private sign-in identity' },
+                  { label: 'Privacy', icon: Eye, value: settings.privacy.profileVisibility, detail: 'Profile visibility' },
+                  { label: 'Notices', icon: Bell, value: settings.notifications.email ? 'On' : 'Off', detail: 'Email notifications' },
+                  { label: 'Security', icon: ShieldCheck, value: passwordScore ? `${passwordScore}/5` : 'Ready', detail: 'Password strength' },
                 ]}
               />
             </div>
           </DashboardPanel>
 
-          <DashboardActionCard
-            icon={Fingerprint}
-            title="Security reminder"
-            description="Use a unique password for 3YESES. Reset links are sent only to your verified account email."
-            tone="accent"
-          />
+          <DashboardPanel className="settings-quick-panel">
+            <PanelHeading title={chrome('quickAccess')} description={chrome('quickAccessDescription')} />
+            <div className="settings-quick-links">
+              <DashboardButton className="settings-quick-icon" variant="secondary" href={buildLocalizedPath(locale, '/dashboard/profile')} aria-label="Profile"><UserRound className="h-5 w-5" aria-hidden="true" /></DashboardButton>
+              <DashboardButton className="settings-quick-icon" variant="secondary" href={buildLocalizedPath(locale, '/dashboard/gallery')} aria-label="Gallery"><Images className="h-5 w-5" aria-hidden="true" /></DashboardButton>
+              <DashboardButton className="settings-quick-icon" variant="secondary" href={buildLocalizedPath(locale, '/dashboard/subscription')} aria-label="Subscription"><Sparkles className="h-5 w-5" aria-hidden="true" /></DashboardButton>
+            </div>
+          </DashboardPanel>
         </aside>
 
-        <div className="space-y-6">
-          <DashboardPanel>
-            <PanelHeading title="Password and recovery" description="Change your password directly or send yourself the secure reset flow." />
+        <div className="dashboard-settings-panel space-y-6">
+          <DashboardPanel className="settings-security-panel">
+            <PanelHeading title={chrome('changePasswordTitle')} description={chrome('changePasswordDescription')} />
             <form onSubmit={handlePasswordChange} className="grid gap-5 xl:grid-cols-3">
-              <DashboardField label="Current password">
+              <DashboardField id="current-password" label="Current password">
                 <input
+                  id="current-password"
                   type="password"
                   autoComplete="current-password"
                   value={passwordForm.currentPassword}
@@ -316,8 +352,9 @@ export default function SettingsPage() {
                   className={inputClass(Boolean(errors.password))}
                 />
               </DashboardField>
-              <DashboardField label="New password">
+              <DashboardField id="new-password" label="New password">
                 <input
+                  id="new-password"
                   type="password"
                   autoComplete="new-password"
                   value={passwordForm.newPassword}
@@ -325,8 +362,9 @@ export default function SettingsPage() {
                   className={inputClass(Boolean(errors.password))}
                 />
               </DashboardField>
-              <DashboardField label="Confirm password">
+              <DashboardField id="confirm-password" label="Confirm password">
                 <input
+                  id="confirm-password"
                   type="password"
                   autoComplete="new-password"
                   value={passwordForm.confirmPassword}
@@ -334,6 +372,26 @@ export default function SettingsPage() {
                   className={inputClass(Boolean(errors.password))}
                 />
               </DashboardField>
+              {codeSent && <div className="xl:col-span-3 settings-security-code">
+                <div className="flex flex-col gap-4 rounded-2xl border border-[var(--chrome-border)] bg-[var(--chrome-bg)] p-4 sm:flex-row sm:items-end sm:justify-between">
+                  <DashboardField id="password-verification-code" label="Email verification code" hint={`Code sent to ${user?.email || 'your verified email'}. It expires in 10 minutes.`}>
+                    <input
+                      id="password-verification-code"
+                      inputMode="numeric"
+                      autoComplete="one-time-code"
+                      maxLength={6}
+                      value={verificationCode}
+                      onChange={(event) => setVerificationCode(event.target.value.replace(/\D/g, '').slice(0, 6))}
+                      className={inputClass(Boolean(errors.password))}
+                      placeholder="000000"
+                    />
+                  </DashboardField>
+                  <DashboardButton type="button" variant="secondary" onClick={handleSendPasswordCode} disabled={codeSending || !user?.emailVerified}>
+                    <Mail className="h-4 w-4" />
+                    {codeSending ? 'Sending code' : 'Resend code'}
+                  </DashboardButton>
+                </div>
+              </div>}
 
               <div className="xl:col-span-3">
                 <div className="grid gap-2 sm:grid-cols-5">
@@ -350,23 +408,34 @@ export default function SettingsPage() {
                   ))}
                 </div>
                 {errors.password && <p className="mt-3 text-sm font-semibold text-red-600 dark:text-red-300">{errors.password}</p>}
-                {errors.reset && <p className="mt-3 text-sm font-semibold text-red-600 dark:text-red-300">{errors.reset}</p>}
               </div>
 
               <div className="flex flex-wrap gap-3 xl:col-span-3">
-                <DashboardButton type="submit" disabled={passwordSaving}>
-                  <KeyRound className="h-4 w-4" />
-                  {passwordSaving ? 'Changing password' : 'Change password'}
-                </DashboardButton>
-                <DashboardButton type="button" variant="secondary" onClick={handleResetEmail} disabled={resetSending || !user?.email}>
-                  <Mail className="h-4 w-4" />
-                  {resetSending ? 'Sending reset link' : 'Email reset link'}
-                </DashboardButton>
+                {!codeSent ? (
+                  <DashboardButton type="button" onClick={handleSendPasswordCode} disabled={codeSending || !user?.emailVerified}>
+                    <Mail className="h-4 w-4" />
+                    {codeSending ? 'Sending verification code' : 'Send verification code'}
+                  </DashboardButton>
+                ) : (
+                  <DashboardButton type="submit" disabled={passwordSaving}>
+                    <KeyRound className="h-4 w-4" />
+                    {passwordSaving ? 'Changing password' : 'Change password'}
+                  </DashboardButton>
+                )}
               </div>
             </form>
           </DashboardPanel>
 
-          <DashboardPanel>
+          <DashboardPanel className="settings-recovery-panel">
+            <PanelHeading title="Forgot your current password?" description="You do not need your current password. We’ll send a secure reset link to your verified account email." />
+            <DashboardButton type="button" variant="secondary" onClick={handleResetEmail} disabled={resetSending || !user?.email}>
+              <Mail className="h-4 w-4" />
+              {resetSending ? 'Sending reset link' : 'Send password reset link'}
+            </DashboardButton>
+            {errors.reset && <p className="mt-3 text-sm font-semibold text-red-600 dark:text-red-300">{errors.reset}</p>}
+          </DashboardPanel>
+
+          <DashboardPanel className="settings-notifications-panel">
             <PanelHeading title={t('notificationPrefs')} description="Choose which updates should reach your inbox." />
             <div className="space-y-3">
               <DashboardToggle
@@ -384,22 +453,35 @@ export default function SettingsPage() {
             </div>
           </DashboardPanel>
 
-          <DashboardPanel>
-            <PanelHeading title={t('privacySettings')} description="Control how discoverable your showcase is to visitors and members." />
+          <DashboardPanel className="settings-preferences-panel">
+            <PanelHeading title="Workspace preferences" description="Choose how the studio feels and how you move through it." />
+            <div className="settings-preference-row">
+              <div><p className="text-sm font-semibold text-slate-950 dark:text-white">Appearance</p><p className="mt-1 text-xs text-slate-600 dark:text-slate-300">Switch between the light and dark studio palettes.</p></div>
+              <ModeToggle />
+            </div>
+            <div className="settings-preference-row">
+              <div><p className="text-sm font-semibold text-slate-950 dark:text-white">Language</p><p className="mt-1 text-xs text-slate-600 dark:text-slate-300">Choose the language used across your account.</p></div>
+              <LanguageDropdown />
+            </div>
+          </DashboardPanel>
+
+          <DashboardPanel className="settings-visibility-panel">
+            <PanelHeading title={t('privacySettings')} description="Control who can discover your showcase. These choices affect profile visibility only; your sign-in email and account access always stay private." />
             <div className="space-y-5">
-              <DashboardField label={t('profileVisibility')}>
+              <DashboardField label={t('profileVisibility')} hint="Choose who can discover and open your public profile.">
+                <div className="settings-privacy-visibility">
                 <SegmentedControl
                   value={settings.privacy.profileVisibility}
                   onChange={(value) => handleSettingsChange('privacy', 'profileVisibility', value)}
                   options={[
-                    { value: 'public', label: t('visibilityPublic') },
-                    { value: 'members-only', label: t('visibilityMembers') },
-                    { value: 'private', label: t('visibilityPrivate') },
+                    { value: 'public', label: 'Public' },
+                    { value: 'members-only', label: 'Members only' },
+                    { value: 'private', label: 'Private' },
                   ]}
                 />
+                </div>
               </DashboardField>
-              <DashboardToggle checked={settings.privacy.showEmail} onChange={(checked) => handleSettingsChange('privacy', 'showEmail', checked)} label={t('showEmail')} description="Show your email on your visible profile." />
-              <DashboardToggle checked={settings.privacy.showLocation} onChange={(checked) => handleSettingsChange('privacy', 'showLocation', checked)} label={t('showLocation')} description="Show your location to support relevant casting discovery." />
+              <DashboardToggle checked={settings.privacy.showLocation} onChange={(checked) => handleSettingsChange('privacy', 'showLocation', checked)} label={t('showLocation')} description="Show your location to help people discover your creative presence." />
               {errors.settings && <p className="text-sm font-semibold text-red-600 dark:text-red-300">{errors.settings}</p>}
             </div>
           </DashboardPanel>
@@ -419,7 +501,7 @@ export default function SettingsPage() {
           <DashboardPanel className="w-full max-w-lg bg-red-500/8 ring-red-500/20">
             <div className="mb-5 flex items-start gap-4">
               <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-red-100 text-red-700 dark:bg-red-950/45 dark:text-red-300">
-                <Eye className="h-6 w-6" />
+                <Trash2 className="h-6 w-6" aria-hidden="true" />
               </span>
               <div>
                 <h2 className="text-xl font-semibold tracking-tight text-slate-950 dark:text-white">{t('deleteAccount')}</h2>

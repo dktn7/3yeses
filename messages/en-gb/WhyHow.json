@@ -1,27 +1,27 @@
 {
   "eyebrow": "For Talents",
   "hero": {
-    "title": "Get discovered. Get booked.",
-    "subtitle": "A simple way for talents to showcase work, connect with clients, and grow their careers."
+    "title": "Get discovered. Stay visible.",
+    "subtitle": "A personal stage for creative talent to showcase work, build recognition, and grow a lasting media presence."
   },
   "cta": {
     "text": "Sign up",
     "secondary": "See pricing"
   },
   "reasons": [
-    { "title": "Be seen by the right people", "desc": "Priority placement for subscribed talents and curated discovery tools." },
-    { "title": "Unlimited portfolio uploads", "desc": "Add images, video, and audio to showcase your range without limits." },
+    { "title": "Be seen by the right people", "desc": "Priority placement for subscribed talent and curated discovery tools built around visibility." },
+    { "title": "Unlimited media uploads", "desc": "Add images, video, and audio to build a living picture of your creative range." },
     { "title": "Secure, subscription-based platform", "desc": "One simple subscription gives you full access to features and analytics." }
   ],
   "steps": [
-    { "title": "Create your profile", "desc": "Add your best work and a clear bio to help clients find you." },
-    { "title": "Optimize your portfolio", "desc": "Use tags, categories, and spotlight items to stand out." },
-    { "title": "Get discovered", "desc": "Clients search, filter, and reach out directly for bookings." },
-    { "title": "Book and perform", "desc": "Manage inquiries and deliver — we handle the platform experience." }
+    { "title": "Create your profile", "desc": "Add your story, strengths, and the details that make your presence recognisable." },
+    { "title": "Shape your media", "desc": "Use categories, skills, and featured pieces to make your work easy to understand." },
+    { "title": "Get discovered", "desc": "Your profile and media appear in curated discovery spaces for people exploring creative talent." },
+    { "title": "Build recognition", "desc": "Use visibility signals to understand what people open, revisit, and respond to." }
   ],
   "finalCta": {
     "title": "Ready to be discovered?",
-    "subtitle": "Join today and start showcasing your work to thousands of clients.",
+    "subtitle": "Join today and start showcasing your work to people looking for fresh creative voices.",
     "button": "Create account"
   }
 }

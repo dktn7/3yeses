@@ -1,0 +1,46 @@
+{
+  "3YESES": {
+    "ar": "3YESES",
+    "de-DE": "3YESES",
+    "es-ES": "3YESES",
+    "fr-FR": "3YESES",
+    "it-IT": "3YESES",
+    "ja-JP": "3YESES",
+    "pt-PT": "3YESES",
+    "ru-RU": "3YESES",
+    "zh-CN": "3YESES"
+  },
+  "Talent Studio": {
+    "ar": "Talent Studio",
+    "de-DE": "Talent Studio",
+    "es-ES": "Talent Studio",
+    "fr-FR": "Talent Studio",
+    "it-IT": "Talent Studio",
+    "ja-JP": "Talent Studio",
+    "pt-PT": "Talent Studio",
+    "ru-RU": "Talent Studio",
+    "zh-CN": "Talent Studio"
+  },
+  "Stripe": {
+    "ar": "Stripe",
+    "de-DE": "Stripe",
+    "es-ES": "Stripe",
+    "fr-FR": "Stripe",
+    "it-IT": "Stripe",
+    "ja-JP": "Stripe",
+    "pt-PT": "Stripe",
+    "ru-RU": "Stripe",
+    "zh-CN": "Stripe"
+  },
+  "ImageKit": {
+    "ar": "ImageKit",
+    "de-DE": "ImageKit",
+    "es-ES": "ImageKit",
+    "fr-FR": "ImageKit",
+    "it-IT": "ImageKit",
+    "ja-JP": "ImageKit",
+    "pt-PT": "ImageKit",
+    "ru-RU": "ImageKit",
+    "zh-CN": "ImageKit"
+  }
+}

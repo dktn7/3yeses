@@ -29,26 +29,36 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    // Get user's current active subscription
+    // Return the latest subscription state, including payment problems. Hiding
+    // PAST_DUE/UNPAID as NONE would incorrectly invite a second checkout.
     const subscription = await prisma.subscription.findFirst({
       where: {
         userId: decoded.userId,
-        status: {
-          in: ['ACTIVE', 'TRIALING'],
-        },
       },
       orderBy: {
         createdAt: 'desc',
       },
     });
 
-    if (!subscription) {
+    if (!subscription || ['CANCELED'].includes(subscription.status)) {
       // Return no active subscription
       return NextResponse.json({
         plan: null,
         status: 'NONE',
         features: ['Basic profile', 'Limited portfolio (3 items)', 'Standard search visibility'],
       });
+    }
+
+    if (
+      ['ACTIVE', 'TRIALING'].includes(subscription.status)
+      && subscription.currentPeriodEnd
+      && subscription.currentPeriodEnd <= new Date()
+    ) {
+      const expired = await prisma.subscription.update({
+        where: { id: subscription.id },
+        data: { status: 'CANCELED', canceledAt: subscription.canceledAt ?? new Date() },
+      });
+      return NextResponse.json(expired);
     }
 
     return NextResponse.json(subscription);

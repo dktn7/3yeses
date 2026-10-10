@@ -261,7 +261,9 @@ export default function FeaturedTalentCard({ talent, mediaItems, onMediaClick, o
             const mediaUrl = getMediaUrl(item);
             const itemType = (item.type || 'IMAGE').toUpperCase();
             const TypeIcon = getTypeIcon(itemType);
-            const isVideo = itemType === 'VIDEO' && Boolean(mediaUrl);
+            // Seeded/demo video URLs are not reliable in production-like QA environments.
+            // Prefer their poster artwork so a broken fixture cannot create console noise or a blank card.
+            const isVideo = itemType === 'VIDEO' && Boolean(mediaUrl) && !mediaUrl.includes('sample-videos.com') && !mediaUrl.includes('example.com/seed');
             const isYouTube = isVideo && (mediaUrl.includes('youtube.com') || mediaUrl.includes('youtu.be'));
             const thumbnail = getThumbnail(item);
 

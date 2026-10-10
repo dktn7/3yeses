@@ -56,6 +56,8 @@ export default function LanguageDropdown() {
       <button
         ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
+        aria-label={`Change language. Current language: ${currentLanguage?.name || 'English'}`}
+        aria-expanded={isOpen}
         className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200/80 bg-[var(--marketing-surface)] text-gray-700 shadow-sm transition-all hover:bg-slate-100/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent dark:border-[var(--chrome-border)] dark:bg-[var(--chrome-panel)] dark:text-red-100 dark:hover:bg-[var(--chrome-hover)]"
       >
         {currentLanguage && (

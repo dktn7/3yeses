@@ -1,0 +1,42 @@
+{
+  "exactKeys": [
+    "dashboard.chrome.talentStudio",
+    "dashboard.profile.instagram",
+    "dashboard.profile.twitterX",
+    "dashboard.profile.youtube",
+    "dashboard.profile.usernamePlaceholder",
+    "dashboard.gallery.mediaUrlPlaceholder",
+    "dashboard.gallery.thumbnailUrlPlaceholder"
+  ],
+  "exactValues": [
+    "3YESES",
+    "Talent Studio",
+    "Stripe",
+    "ImageKit",
+    "Instagram",
+    "YouTube",
+    "Twitter / X"
+    ,"Bio"
+    ,"Name"
+    ,"Videos"
+    ,"Audio"
+    ,"Link"
+    ,"Optional"
+    ,"Muscular"
+    ,"Impressions"
+    ,"Photos"
+    ,"Images"
+    ,"Description"
+    ,"File"
+    ,"Account"
+    ,"Privacy"
+    ,"Dashboard"
+    ,"Banner"
+    ,"Details"
+    ,"Status"
+    ,"Insights"
+    ,"Tickets"
+    ,"N/A"
+    ,"Password"
+  ]
+}

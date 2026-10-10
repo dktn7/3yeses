@@ -223,6 +223,8 @@ export default function ProfileDropdown({ user, onLogout }: Readonly<ProfileDrop
       {/* Profile Avatar Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
+        aria-label="Open account menu"
+        aria-expanded={isOpen}
         className="flex items-center space-x-2 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
         <div className="relative">

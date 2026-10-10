@@ -36,12 +36,7 @@ interface EmailOptions {
 async function sendEmail({ to, subject, html, headers }: EmailOptions) {
   try {
     if (!process.env.RESEND_API_KEY) {
-      console.warn('⚠️  RESEND_API_KEY not set. Email would be sent to:', to);
-      console.log('Subject:', subject);
-      console.log('---');
-      console.log(html);
-      console.log('---');
-      return { success: true, messageId: 'dev-mode' };
+      throw new Error('Email provider is not configured');
     }
 
     // Rate limiting: Wait if needed to avoid "Too many requests"
@@ -199,6 +194,24 @@ export async function sendVerificationEmail(email: string, token: string, locale
     preheaderText: `Welcome to ${APP_NAME}! Please verify your email address to get started.`,
   });
 
+  return sendEmail({ to: email, subject, html });
+}
+
+export async function sendPasswordChangeCodeEmail(email: string, code: string, locale: string = 'en') {
+  const dbResult = await renderDbTemplate('password-change-code', { code, email }, email);
+  if (dbResult) return sendEmail({ to: email, subject: dbResult.subject, html: dbResult.html });
+
+  const subject = 'Your 3YESES password change code';
+  const innerHtml = `
+    <div style="margin-bottom:10px;"><span style="display:inline-block;background:#eff6ff;color:#1d4ed8;font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:5px 12px;border-radius:100px;">Account security</span></div>
+    <h2 style="color:#020617;margin:0 0 10px 0;font-size:30px;font-weight:700;line-height:1.15;">Confirm your password change</h2>
+    <p style="color:#475569;margin:0 0 22px 0;font-size:15px;line-height:1.75;">Use this one-time code to confirm the password change requested from your 3YESES account.</p>
+    <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:22px;text-align:center;margin:0 0 22px 0;">
+      <p style="margin:0 0 8px 0;font-size:11px;color:#1d4ed8;letter-spacing:1px;text-transform:uppercase;font-weight:800;">Verification code</p>
+      <p style="margin:0;color:#172554;font-size:34px;letter-spacing:8px;font-weight:800;font-family:'Courier New',monospace;">${code}</p>
+    </div>
+    <p style="color:#64748b;margin:0;font-size:13px;line-height:1.65;">This code expires in 10 minutes and can be used once. If you did not request this, change your password through the account recovery flow and contact support.</p>`;
+  const html = wrapEmailContent(innerHtml, { subject, recipientEmail: email, preheaderText: 'Confirm your 3YESES password change.' });
   return sendEmail({ to: email, subject, html });
 }
 

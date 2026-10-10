@@ -48,7 +48,17 @@ export async function GET(request: NextRequest) {
       },
     };
 
-    return NextResponse.json({ settings });
+    const settingsObject = settings && typeof settings === 'object' && !Array.isArray(settings)
+      ? settings as Record<string, any>
+      : {};
+    const normalizedSettings = {
+      ...settingsObject,
+      privacy: {
+        ...(settingsObject.privacy || {}),
+        showEmail: false,
+      },
+    };
+    return NextResponse.json({ settings: normalizedSettings });
   } catch (error) {
     console.error('Get settings error:', error);
     return NextResponse.json(
@@ -84,7 +94,7 @@ export async function PUT(request: NextRequest) {
       data: {
         settings: {
           notifications,
-          privacy,
+          privacy: { ...privacy, showEmail: false },
         },
       },
     });

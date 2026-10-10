@@ -145,7 +145,7 @@ export default function HubPage() {
     if (!urlMediaId) {
       setSelectedMediaItem(null);
     }
-  }, [searchParams]);
+  }, [searchParams, urlMediaId]);
 
   useEffect(() => {
     if (spinnerTimerRef.current) {

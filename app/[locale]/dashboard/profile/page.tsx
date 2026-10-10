@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState, type CSSProperties } from 'react';
 import Image from 'next/image';
 import { useLocale, useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
@@ -27,7 +27,6 @@ import {
   DashboardField,
   DashboardHeader,
   DashboardPanel,
-  DashboardStatRow,
   DashboardSurface,
   DashboardWorkspace,
   PanelHeading,
@@ -74,8 +73,11 @@ interface TalentProfile {
   contentBackground: string | null;
 }
 
-const DEFAULT_BANNER_COLOR = '#2563eb';
-const DEFAULT_BACKGROUND_COLOR = '#f8fafc';
+const DEFAULT_BANNER_COLOR = '#dbe7f7';
+const DARK_DEFAULT_BANNER_COLOR = '#7f1d2d';
+const DEFAULT_BACKGROUND_COLOR = '#f2eee8';
+const LEGACY_DEFAULT_BANNER_COLOR = '#2563eb';
+const LEGACY_DEFAULT_BACKGROUND_COLOR = '#f8fafc';
 const patterns: BackgroundPattern[] = ['none', 'dots', 'hatch', 'grid', 'noise'];
 
 function isHexColor(value?: string | null) {
@@ -100,7 +102,7 @@ function serializeBackgroundSurface(color: string, pattern: BackgroundPattern) {
 
 function backgroundStyle(value?: string | null) {
   const surface = parseBackgroundSurface(value);
-  const overlay = surface.color.toLowerCase() === '#1e293b' ? 'rgba(255,255,255,0.12)' : 'rgba(15,23,42,0.08)';
+  const overlay = surface.color.toLowerCase() === '#202020' ? 'rgba(255,255,255,0.12)' : 'rgba(15,23,42,0.08)';
   const style: Record<string, string> = { backgroundColor: surface.color };
   if (surface.pattern === 'dots') {
     style.backgroundImage = `radial-gradient(circle at 1px 1px, ${overlay} 1px, transparent 0)`;
@@ -172,6 +174,7 @@ export default function ProfilePage() {
   const router = useRouter();
   const locale = useLocale();
   const t = useTranslations('dashboard.profile');
+  const chrome = useTranslations('dashboard.chrome');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -213,6 +216,8 @@ export default function ProfilePage() {
         const data = await response.json();
         const profileData = { ...getDefaultProfile(), ...(data.profile || {}) };
         profileData.languages = asLanguageNames(profileData.languages);
+        if (profileData.bannerUrl === LEGACY_DEFAULT_BANNER_COLOR || profileData.bannerUrl === '#8f2430') profileData.bannerUrl = DEFAULT_BANNER_COLOR;
+        if (profileData.contentBackground === LEGACY_DEFAULT_BACKGROUND_COLOR) profileData.contentBackground = DEFAULT_BACKGROUND_COLOR;
         profileData.bannerUrl = profileData.bannerUrl || DEFAULT_BANNER_COLOR;
         profileData.contentBackground = profileData.contentBackground || DEFAULT_BACKGROUND_COLOR;
         setProfile(profileData);
@@ -220,15 +225,15 @@ export default function ProfilePage() {
       } else if (response.status === 401) {
         router.push(buildLocalizedPath(locale, '/auth/signin'));
       } else {
-        setErrors({ submit: 'We couldn’t load your profile. Please try again.' });
+        setErrors({ submit: chrome('profileLoadError') });
       }
     } catch (error) {
       console.error('Failed to fetch profile:', error);
-      setErrors({ submit: 'We couldn’t load your profile. Please try again.' });
+      setErrors({ submit: chrome('profileLoadError') });
     } finally {
       setLoading(false);
     }
-  }, [locale, router]);
+  }, [chrome, locale, router]);
 
   useEffect(() => {
     fetchProfile();
@@ -236,28 +241,30 @@ export default function ProfilePage() {
   }, [fetchProfile]);
 
   const updateProfile = (field: keyof TalentProfile, value: any) => {
-    if (!profile) return;
-    setProfile({ ...profile, [field]: value });
+    setProfile((current) => current ? { ...current, [field]: value } : current);
     setErrors((current) => ({ ...current, [field]: '' }));
   };
 
   const completionItems = useMemo(() => {
     if (!profile) return [];
     return [
-      { label: 'Headshot', done: Boolean(profile.avatarUrl) },
-      { label: 'Banner', done: Boolean(profile.bannerUrl) },
+      { label: chrome('headshot'), done: Boolean(profile.avatarUrl) },
+      { label: chrome('banner'), done: Boolean(profile.bannerUrl) },
       { label: 'Bio', done: Boolean(profile.bio && profile.bio.length >= 50) },
-      { label: 'Location', done: Boolean(profile.location) },
-      { label: 'Category', done: Boolean(profile.categoryId && profile.subcategoryId) },
-      { label: 'Skills', done: (profile.skills || []).length >= 3 },
-      { label: 'Languages', done: asLanguageNames(profile.languages).length > 0 },
-      { label: 'Work', done: (profile.workHistory || []).length > 0 },
+      { label: chrome('location'), done: Boolean(profile.location) },
+      { label: chrome('category'), done: Boolean(profile.categoryId && profile.subcategoryId) },
+      { label: chrome('skills'), done: (profile.skills || []).length >= 3 },
+      { label: chrome('languages'), done: asLanguageNames(profile.languages).length > 0 },
+      { label: chrome('work'), done: (profile.workHistory || []).length > 0 },
     ];
-  }, [profile]);
+  }, [chrome, profile]);
 
   const completion = completionItems.length
     ? Math.round((completionItems.filter((item) => item.done).length / completionItems.length) * 100)
     : 0;
+  const completedCount = completionItems.filter((item) => item.done).length;
+  const nextItem = completionItems.find((item) => !item.done);
+  const nextSection = nextItem && [chrome('headshot'), chrome('banner')].includes(nextItem.label) ? 'showcase' : 'details';
 
   const validateForm = () => {
     const nextErrors: Record<string, string> = {};
@@ -309,22 +316,22 @@ export default function ProfilePage() {
 
   if (loading) return <DashboardLoading />;
 
-  if (!profile) return <DashboardWorkspace><DashboardHeader title="Your profile" /><DashboardPanel><p role="alert">{errors.submit || 'Your profile could not be loaded.'}</p><DashboardButton onClick={fetchProfile} className="mt-4">Try again</DashboardButton></DashboardPanel></DashboardWorkspace>;
+  if (!profile) return <DashboardWorkspace><DashboardHeader title={chrome('profileTitle')} /><DashboardPanel><p role="alert">{errors.submit || chrome('profileLoadError')}</p><DashboardButton onClick={fetchProfile} className="mt-4">{chrome('tryAgain')}</DashboardButton></DashboardPanel></DashboardWorkspace>;
 
   const surface = parseBackgroundSurface(profile.contentBackground);
   const publicProfileHref = buildLocalizedPath(locale, `/talent/${profile.userId || profile.id}`);
 
   return (
-    <DashboardWorkspace>
+    <DashboardWorkspace className="dashboard-profile-page">
       <DashboardHeader
         icon={UserRound}
-        title="Your profile"
-        description="Introduce yourself, show your skills, and choose how your profile appears to others."
+        title={chrome('profileTitle')}
+        description={chrome('profileDescription')}
         actions={
           <>
             <DashboardButton variant="secondary" href={publicProfileHref}>
               <Eye className="h-4 w-4" />
-              View public profile
+              {chrome('viewPublicProfile')}
             </DashboardButton>
             <DashboardButton onClick={() => handleSubmit()} disabled={saving}>
               <Save className="h-4 w-4" />
@@ -337,10 +344,10 @@ export default function ProfilePage() {
             value={section}
             onChange={setSection}
             options={[
-              { value: 'showcase', label: 'Showcase' },
-              { value: 'details', label: 'Details' },
-              { value: 'casting', label: 'Casting' },
-              { value: 'media', label: 'Media links' },
+              { value: 'showcase', label: chrome('showcase') },
+              { value: 'details', label: chrome('details') },
+              { value: 'casting', label: chrome('personalDetails') },
+              { value: 'media', label: chrome('mediaLinks') },
             ]}
           />
         }
@@ -364,8 +371,8 @@ export default function ProfilePage() {
       <form onSubmit={handleSubmit} className="grid gap-7 lg:grid-cols-[0.82fr_1.18fr]">
         <aside className="order-2 space-y-6 lg:order-1 lg:sticky lg:top-28 lg:self-start">
           <DashboardSurface innerClassName="overflow-hidden p-0">
-            <div className="h-32" style={bannerStyle(profile.bannerUrl)} />
-            <div className="p-5" style={backgroundStyle(profile.contentBackground)}>
+            <div className={`dashboard-profile-banner h-32${profile.bannerUrl === DEFAULT_BANNER_COLOR ? ' is-default' : ''}`} style={bannerStyle(profile.bannerUrl)} />
+            <div className={`dashboard-profile-preview p-5${surface.color === DEFAULT_BACKGROUND_COLOR ? ' is-default' : ''}`} style={backgroundStyle(profile.contentBackground)}>
               <div className="-mt-16 flex items-end gap-4">
                 <div className="rounded-[2rem] bg-white/80 p-1 shadow-[0_22px_42px_-28px_rgba(15,23,42,0.75)] dark:bg-slate-950/70">
                   {profile.avatarUrl ? (
@@ -380,13 +387,13 @@ export default function ProfilePage() {
               </div>
               <div className="mt-5">
                 <h2 className="text-2xl font-semibold tracking-tight text-slate-950 dark:text-white">
-                  {profile.name || profile.performerTitle || 'Your talent profile'}
+                  {profile.name || profile.performerTitle || chrome('profileFallback')}
                 </h2>
                 <p className="mt-1 text-sm font-medium text-slate-600 dark:text-slate-300">
-                  {profile.performerTitle || 'Add a performer title'} {profile.location ? `in ${profile.location}` : ''}
+                  {profile.performerTitle || chrome('addPerformerTitle')} {profile.location ? `in ${profile.location}` : ''}
                 </p>
                 <p className="mt-4 line-clamp-4 text-sm leading-6 text-slate-700 dark:text-slate-200">
-                  {profile.bio || 'Write a concise, useful biography that tells casting teams what you do best.'}
+                  {profile.bio || 'Write a concise, useful biography that helps people understand what you do best.'}
                 </p>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {(profile.featuredSkills?.length ? profile.featuredSkills : profile.skills || []).slice(0, 4).map((skill) => (
@@ -399,58 +406,98 @@ export default function ProfilePage() {
             </div>
           </DashboardSurface>
 
-          <DashboardPanel>
-            <PanelHeading title="Readiness" description="The profile card gets stronger as these pieces are completed." />
-            <DashboardStatRow
-              items={[
-                { label: 'Score', value: `${completion}%`, detail: `${completionItems.filter((item) => item.done).length}/${completionItems.length} complete` },
-                { label: 'Skills', value: profile.skills?.length || 0, detail: 'Search matching' },
-                { label: 'Featured', value: profile.featuredSkills?.length || 0, detail: 'Shown on cards' },
-                { label: 'Media', value: (profile.portfolioImages?.length || 0) + (profile.videoUrls?.length || 0), detail: 'Linked items' },
-              ]}
-            />
-            <div className="mt-4 grid gap-2">
-              {completionItems.map((item) => (
-                <div key={item.label} className="flex items-center justify-between rounded-2xl bg-slate-50/75 px-3 py-2 dark:bg-slate-950/35">
-                  <span className="text-sm font-medium text-slate-700 dark:text-slate-200">{item.label}</span>
-                  {item.done ? <CheckCircle2 className="h-4 w-4 text-emerald-500" /> : <span className="h-2 w-2 rounded-full bg-amber-400" />}
+          <DashboardPanel className="profile-signal-panel">
+            <PanelHeading title={chrome('profileSignal')} description={chrome('profileSignalDescription')} />
+            <div className="profile-signal-score">
+              <div className="profile-signal-ring" style={{ '--completion': `${completion * 3.6}deg` } as CSSProperties}>
+                <div><strong>{completion}%</strong><span>ready</span></div>
+              </div>
+              <div className="min-w-0">
+                <p className="text-sm font-semibold text-slate-950 dark:text-white">{completion === 100 ? chrome('profileReady') : chrome('profileStrengthen')}</p>
+                <p className="mt-1 text-xs leading-5 text-slate-600 dark:text-slate-300">{chrome('essentialsComplete', { completed: completedCount, total: completionItems.length })}</p>
+              </div>
+            </div>
+            <div className="profile-signal-list">
+              {completionItems.slice(0, 4).map((item, index) => (
+                <div key={item.label} className={`profile-signal-row${!item.done && index === completionItems.findIndex((entry) => !entry.done) ? ' is-next' : ''}`}>
+                  <span>{item.label}</span>
+                  {item.done ? <CheckCircle2 className="h-4 w-4" aria-label="Complete" /> : <span>{index === completionItems.findIndex((entry) => !entry.done) ? 'Next' : 'Missing'}</span>}
                 </div>
               ))}
             </div>
+            {nextItem ? (
+              <DashboardButton className="mt-4 w-full justify-center" onClick={() => setSection(nextSection)}>
+                {nextItem.label === chrome('headshot') ? chrome('addHeadshot') : chrome('completeItem', { item: nextItem.label.toLowerCase() })}
+                <Sparkles className="h-4 w-4" />
+              </DashboardButton>
+            ) : <p className="mt-4 text-center text-xs font-semibold text-emerald-600 dark:text-emerald-300">Everything essential is complete.</p>}
           </DashboardPanel>
         </aside>
 
-        <div className="order-1 min-w-0 space-y-6 lg:order-2">
+        <div className="dashboard-profile-editor order-1 min-w-0 space-y-6 lg:order-2">
           {section === 'showcase' && (
             <>
               <DashboardPanel>
-                <PanelHeading title="Profile appearance" description="Control the exact visual frame used on the public profile." />
-                <div className="grid gap-5 xl:grid-cols-2">
-                  <DashboardField label="Avatar upload" hint="Square images work best for talent cards and profile headers.">
+                <PanelHeading title={chrome('visualIdentity')} description={chrome('visualIdentityDescription')} />
+                <div className="profile-identity-stage" aria-label="Current profile images">
+                  <div className="profile-identity-headshot">
+                    {profile.avatarUrl ? (
+                      <Image src={profile.avatarUrl} alt="Current headshot" fill unoptimized className="object-cover" />
+                    ) : (
+                      <div className="profile-identity-empty"><ImageIcon className="h-10 w-10" /><span>{chrome('addHeadshot')}</span></div>
+                    )}
+                    <span className="profile-identity-caption">Headshot</span>
+                  </div>
+                  <div className={`profile-identity-cover${profile.bannerUrl === DEFAULT_BANNER_COLOR ? ' is-default' : ''}`} style={bannerStyle(profile.bannerUrl)}>
+                    {!profile.bannerUrl || isHexColor(profile.bannerUrl) ? <div className="profile-identity-empty"><ImageIcon className="h-8 w-8" /><span>{chrome('addCoverImage')}</span></div> : <Image src={profile.bannerUrl} alt={chrome('currentCover')} fill unoptimized className="object-cover" />}
+                    <span className="profile-identity-caption">Cover image</span>
+                  </div>
+                </div>
+                <div className="mt-6 grid gap-6 xl:grid-cols-2">
+                  <div id="profile-headshot">
+                    <DashboardField label="Replace headshot" hint="Use a clear, square image. Your preview updates as soon as the upload finishes.">
                     <FileUpload
                       accept="image"
                       maxFiles={1}
+                      maxSizeMB={20}
                       multiple={false}
+                      autoComplete
                       folder="/profiles"
                       onUploadComplete={(urls) => updateProfile('avatarUrl', urls[0] || profile.avatarUrl)}
                     />
-                  </DashboardField>
-                  <DashboardField label="Avatar URL">
-                    <input value={profile.avatarUrl || ''} onChange={(event) => updateProfile('avatarUrl', event.target.value)} className={inputClass()} placeholder="https://..." />
+                    </DashboardField>
+                  </div>
+                  <DashboardField label="Replace cover image" hint="Use a wide image that sets the mood for your public profile.">
+                    <FileUpload
+                      accept="image"
+                      maxFiles={1}
+                      maxSizeMB={20}
+                      multiple={false}
+                      autoComplete
+                      folder="/profiles"
+                      onUploadComplete={(urls) => updateProfile('bannerUrl', urls[0] || profile.bannerUrl)}
+                    />
                   </DashboardField>
                 </div>
-
+                <details className="mt-6 border-t border-[var(--dashboard-line)] pt-5">
+                  <summary className="cursor-pointer text-sm font-semibold text-[color:var(--brand-primary)]">Use an image link instead</summary>
+                  <div className="mt-4 grid gap-5 xl:grid-cols-2">
+                    <DashboardField label="Headshot image URL">
+                      <input value={profile.avatarUrl || ''} onChange={(event) => updateProfile('avatarUrl', event.target.value)} className={inputClass()} placeholder="https://..." />
+                    </DashboardField>
+                    <DashboardField label="Cover image URL">
+                      <input value={!isHexColor(profile.bannerUrl) ? profile.bannerUrl || '' : ''} onChange={(event) => updateProfile('bannerUrl', event.target.value || DEFAULT_BANNER_COLOR)} className={inputClass()} placeholder="https://..." />
+                    </DashboardField>
+                  </div>
+                </details>
                 <div className="mt-6 grid gap-5 xl:grid-cols-2">
-                  <DashboardField label="Banner color">
+                  <DashboardField label="Cover color" hint="A solid color works when you do not have a cover photo yet.">
                     <input
                       type="color"
                       value={isHexColor(profile.bannerUrl) ? profile.bannerUrl || DEFAULT_BANNER_COLOR : DEFAULT_BANNER_COLOR}
                       onChange={(event) => updateProfile('bannerUrl', event.target.value)}
                       className="h-14 w-full cursor-pointer rounded-2xl border border-slate-200 bg-light-surface p-2 dark:border-slate-700 dark:bg-dark-surface"
                     />
-                  </DashboardField>
-                  <DashboardField label="Banner image URL" hint="Paste an image URL to use a photo banner instead of a solid color.">
-                    <input value={!isHexColor(profile.bannerUrl) ? profile.bannerUrl || '' : ''} onChange={(event) => updateProfile('bannerUrl', event.target.value || DEFAULT_BANNER_COLOR)} className={inputClass()} placeholder="https://..." />
                   </DashboardField>
                 </div>
 
@@ -474,7 +521,7 @@ export default function ProfilePage() {
               </DashboardPanel>
 
               <DashboardPanel>
-                <PanelHeading title={t('basicInfo')} description="This is the information casting teams read first." />
+                <PanelHeading title={t('basicInfo')} description="This is the first impression people get when they discover your profile." />
                 <div className="grid gap-5 xl:grid-cols-2">
                   <DashboardField label="Performer title">
                     <input value={profile.performerTitle || ''} onChange={(event) => updateProfile('performerTitle', event.target.value)} className={inputClass()} placeholder="Actor, dancer, voice artist" />
@@ -555,7 +602,7 @@ export default function ProfilePage() {
               </DashboardPanel>
 
               <DashboardPanel>
-                <PanelHeading title="Languages and credits" description="Add spoken languages and recent work so the profile has casting context." />
+                <PanelHeading title="Languages and credits" description="Add spoken languages and recent work so your profile has useful creative context." />
                 <DashboardField label="Languages">
                   <LanguageMultiSelect value={asLanguageNames(profile.languages)} onChange={(languages) => updateProfile('languages', languages)} placeholder="Search or add a language" />
                 </DashboardField>
@@ -568,7 +615,7 @@ export default function ProfilePage() {
 
           {section === 'casting' && (
             <DashboardPanel>
-              <PanelHeading title={t('physicalCharacteristics')} description="Optional details that help casting teams filter responsibly." />
+              <PanelHeading title={t('physicalCharacteristics')} description="Optional personal details that help people understand your profile responsibly." />
               <div className="grid gap-5 md:grid-cols-2">
                 <DashboardField label={t('gender')}>
                   <select value={profile.gender || ''} onChange={(event) => updateProfile('gender', event.target.value)} className={inputClass()}>
@@ -625,7 +672,7 @@ export default function ProfilePage() {
           {section === 'media' && (
             <>
               <DashboardPanel>
-                <PanelHeading title={t('socialMedia')} description="Connect channels that support credibility and casting decisions." />
+                <PanelHeading title={t('socialMedia')} description="Connect channels that add depth and credibility to your creative presence." />
                 <div className="grid gap-5 md:grid-cols-2">
                   {['instagram', 'tiktok', 'youtube', 'twitter', 'spotify', 'website'].map((key) => (
                     <DashboardField key={key} label={key.charAt(0).toUpperCase() + key.slice(1)}>
@@ -641,7 +688,7 @@ export default function ProfilePage() {
               </DashboardPanel>
 
               <DashboardPanel>
-                <PanelHeading title="Media links" description="Connect your existing showreel, audio, or portfolio. Upload new work in your gallery." />
+                <PanelHeading title={chrome('connectedMedia')} description={chrome('connectedMediaDescription')} />
                 <div className="grid gap-4">
                   <DashboardField label="Featured video URL">
                     <input value={profile.videoUrl || ''} onChange={(event) => updateProfile('videoUrl', event.target.value)} className={inputClass()} placeholder="https://..." />
@@ -649,14 +696,14 @@ export default function ProfilePage() {
                   <DashboardActionCard
                     icon={Upload}
                     title="Use the media studio for uploads"
-                    description="Upload, edit thumbnails, delete, and organise portfolio pieces in the gallery workspace."
+                    description="Upload, edit thumbnails, delete, and organise the media people see on your public profile."
                     tone="accent"
                     action={<DashboardButton href={buildLocalizedPath(locale, '/dashboard/gallery')} variant="secondary"><Layers className="h-4 w-4" />Open gallery</DashboardButton>}
                   />
                   <DashboardActionCard
                     icon={LinkIcon}
                     title="Public links stay available"
-                    description="If you already use external reel, audio, or portfolio URLs, keep them connected here alongside your uploaded work."
+                    description="External reel, audio, and website links can sit alongside the work you upload here."
                   />
                 </div>
               </DashboardPanel>
