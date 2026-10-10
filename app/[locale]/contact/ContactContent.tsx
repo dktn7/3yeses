@@ -236,7 +236,7 @@ export default function ContactPage() {
                                     <div>
                                         <h4 className="font-semibold text-gray-900 dark:text-white mb-2">What is 3YESES?</h4>
                                         <p className="text-gray-600 dark:text-gray-300 text-sm">
-                                            3YESES is a premier platform connecting creative talent with opportunities in the entertainment industry.
+                                            3YESES is a personal profile and media platform helping creative talent build visibility and be discovered.
                                         </p>
                                     </div>
                                     <div>

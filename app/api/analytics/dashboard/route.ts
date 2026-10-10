@@ -36,14 +36,20 @@ export async function GET(request: NextRequest) {
     }
 
     const { searchParams } = new URL(request.url);
-    const days = parseInt(searchParams.get('days') || '30');
-    const startDate = new Date();
+    const requestedDays = Number.parseInt(searchParams.get('days') || '30', 10);
+    const days = [7, 30, 90].includes(requestedDays) ? requestedDays : 30;
+    const endDate = new Date();
+    const startDate = new Date(endDate);
     startDate.setDate(startDate.getDate() - days);
+    startDate.setHours(0, 0, 0, 0);
+    const priorStartDate = new Date(startDate);
+    priorStartDate.setDate(priorStartDate.getDate() - days);
+    const profileId = talentProfile.userId;
 
     // Get daily stats
     const dailyStats = await prisma.profileStats.findMany({
       where: {
-        talentProfileId: (talentProfile as any).userId ?? talentProfile.userId,
+        talentProfileId: profileId,
         date: {
           gte: startDate,
         },
@@ -52,40 +58,31 @@ export async function GET(request: NextRequest) {
     });
 
     // Get total stats
-    const totalViews = await prisma.profileView.count({
-      where: { talentProfileId: (talentProfile as any).userId ?? talentProfile.userId },
-    });
+    const totalViews = await prisma.profileView.count({ where: { talentProfileId: profileId } });
+    const periodViews = await prisma.profileView.count({ where: { talentProfileId: profileId, createdAt: { gte: startDate, lte: endDate } } });
+    const priorViews = await prisma.profileView.count({ where: { talentProfileId: profileId, createdAt: { gte: priorStartDate, lt: startDate } } });
 
-    const uniqueViewers = await prisma.profileView.groupBy({
+    const periodUniqueViewers = await prisma.profileView.groupBy({
       by: ['viewerId'],
-      where: {
-        talentProfileId: (talentProfile as any).userId ?? talentProfile.userId,
-        viewerId: { not: null },
-      },
+      where: { talentProfileId: profileId, viewerId: { not: null }, createdAt: { gte: startDate, lte: endDate } },
     });
 
     const totalPortfolioViews = await prisma.portfolioView.count({
       where: {
         portfolioItem: {
-          talentProfileId: (talentProfile as any).userId ?? talentProfile.userId,
+          talentProfileId: profileId,
         },
       },
     });
+    const periodPortfolioViews = await prisma.portfolioView.count({ where: { portfolioItem: { talentProfileId: profileId }, createdAt: { gte: startDate, lte: endDate } } });
+    const priorPortfolioViews = await prisma.portfolioView.count({ where: { portfolioItem: { talentProfileId: profileId }, createdAt: { gte: priorStartDate, lt: startDate } } });
 
-    const totalSearchImpressions = await prisma.searchAppearance.count({
-      where: { talentProfileId: (talentProfile as any).userId ?? talentProfile.userId },
-    });
-
-    const totalSearchClicks = await prisma.searchAppearance.count({
-      where: {
-        talentProfileId: (talentProfile as any).userId ?? talentProfile.userId,
-        clicked: true,
-      },
-    });
+    const periodSearchImpressions = await prisma.searchAppearance.count({ where: { talentProfileId: profileId, createdAt: { gte: startDate, lte: endDate } } });
+    const periodSearchClicks = await prisma.searchAppearance.count({ where: { talentProfileId: profileId, clicked: true, createdAt: { gte: startDate, lte: endDate } } });
 
     // Get top portfolio items by views
     const topPortfolioItems = await prisma.portfolioItem.findMany({
-      where: { talentProfileId: (talentProfile as any).userId ?? talentProfile.userId },
+      where: { talentProfileId: profileId },
       include: {
         _count: {
           select: { views: true },
@@ -101,13 +98,14 @@ export async function GET(request: NextRequest) {
 
     // Get recent views (last 10)
     const recentViews = await prisma.profileView.findMany({
-      where: { talentProfileId: (talentProfile as any).userId ?? talentProfile.userId },
-      include: {
+      where: { talentProfileId: profileId },
+      select: {
+        id: true,
+        createdAt: true,
         viewer: {
           select: {
             id: true,
             name: true,
-            email: true,
             talentProfile: {
               select: {
                 avatarUrl: true,
@@ -121,26 +119,38 @@ export async function GET(request: NextRequest) {
     });
 
     // Calculate engagement rate
-    const engagementRate = totalViews > 0
-      ? ((totalPortfolioViews + talentProfile.likeCount + (await prisma.comment.count({ where: { talentProfileId: (talentProfile as any).userId ?? talentProfile.userId } }))) / totalViews) * 100
+    const engagementRate = periodViews > 0
+      ? ((periodPortfolioViews + talentProfile.likeCount + (await prisma.comment.count({ where: { talentProfileId: profileId } }))) / periodViews) * 100
       : 0;
 
     return NextResponse.json({
       success: true,
       analytics: {
         overview: {
-          totalViews,
-          uniqueViewers: uniqueViewers.length,
-          totalPortfolioViews,
+          totalViews: periodViews,
+          uniqueViewers: periodUniqueViewers.length,
+          totalPortfolioViews: periodPortfolioViews,
           totalLikes: talentProfile.likeCount,
-          searchImpressions: totalSearchImpressions,
-          searchClicks: totalSearchClicks,
-          searchCTR: totalSearchImpressions > 0 ? (totalSearchClicks / totalSearchImpressions) * 100 : 0,
+          searchImpressions: periodSearchImpressions,
+          searchClicks: periodSearchClicks,
+          searchCTR: periodSearchImpressions > 0 ? (periodSearchClicks / periodSearchImpressions) * 100 : 0,
           engagementRate: engagementRate.toFixed(2),
+          lifetime: { totalViews, totalPortfolioViews },
         },
-        dailyStats,
+        dailyStats: dailyStats.filter((stat) => new Date(stat.date) >= startDate),
         topPortfolioItems,
         recentViews,
+        period: {
+          days,
+          start: startDate.toISOString(),
+          end: endDate.toISOString(),
+          comparison: {
+            profileViews: priorViews,
+            portfolioViews: priorPortfolioViews,
+            profileViewsDelta: periodViews - priorViews,
+            portfolioViewsDelta: periodPortfolioViews - priorPortfolioViews,
+          },
+        },
       },
     });
   } catch (error) {

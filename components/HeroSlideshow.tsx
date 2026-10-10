@@ -15,13 +15,13 @@ interface Slide {
 const slides: Slide[] = [
   {
     src: '/images/hero-slideshow/image 1.png',
-    alt: 'Your talent. Your stage. Your opportunity. — 3YESES talent platform',
+    alt: 'Your talent. Your stage. Your visibility. — 3YESES talent platform',
     category: 'Talent Platform',
-    description: 'Your talent. Your stage. Your opportunity.',
+    description: 'Your talent. Your stage. Your visibility.',
   },
   {
     src: '/images/hero-slideshow/image 4.png',
-    alt: 'Acting & Performance — showcase your talent to casting directors worldwide',
+    alt: 'Acting & Performance — showcase your talent to a wider audience',
     category: 'Acting & Performance',
     description: 'Showcase your talent on the world stage',
   },
@@ -29,7 +29,7 @@ const slides: Slide[] = [
     src: '/images/hero-slideshow/image 3.png',
     alt: 'Music & Audio — connect with producers, labels and collaborators',
     category: 'Music & Audio',
-    description: 'Connect with opportunities worldwide',
+    description: 'Share your work with people discovering talent worldwide',
   },
   {
     src: '/images/hero-slideshow/image 2.png',

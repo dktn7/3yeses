@@ -84,7 +84,7 @@ const LEGACY_BANNER_GRADIENTS: Record<string, string> = {
   'preset-1': 'linear-gradient(135deg, #0ea5e9 0%, #1e3a8a 100%)',
   'preset-2': 'linear-gradient(135deg, #f97316 0%, #be123c 100%)',
   'preset-3': 'linear-gradient(135deg, #22c55e 0%, #0f766e 100%)',
-  'preset-4': 'linear-gradient(135deg, #1e293b 0%, #334155 100%)',
+  'preset-4': 'linear-gradient(135deg, #202020 0%, #3f3f46 100%)',
   'preset-5': 'linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%)',
   'preset-6': 'linear-gradient(135deg, #38bdf8 0%, #6366f1 100%)',
   'preset-7': 'linear-gradient(135deg, #16a34a 0%, #166534 100%)',
@@ -115,7 +115,7 @@ const LEGACY_BACKGROUND_SURFACES: Record<string, { color: string; pattern: Backg
   'cbg-lavender': { color: '#f3e8ff', pattern: 'none' },
   'cbg-peach': { color: '#fff7ed', pattern: 'none' },
   'cbg-slate': { color: '#f8fafc', pattern: 'none' },
-  'cbg-dark': { color: '#1e293b', pattern: 'none' },
+  'cbg-dark': { color: '#202020', pattern: 'none' },
   'pattern-dots': { color: '#f8fafc', pattern: 'dots' },
   'pattern-hatch': { color: '#f8fafc', pattern: 'hatch' },
   'pattern-grid': { color: '#f8fafc', pattern: 'grid' },
@@ -1015,7 +1015,7 @@ export default function TalentProfilePage() {
                   </label>
                 </div>
               )}
-              <div className="absolute bottom-2 right-2 bg-green-500 w-6 h-6 rounded-full border-4 border-white dark:border-gray-800 shadow-sm" title="Available for work"></div>
+              <div className="absolute bottom-2 right-2 bg-[var(--brand-primary)] w-6 h-6 rounded-full border-4 border-white dark:border-gray-800 shadow-sm" title="Profile active"></div>
             </div>
 
             {/* Info Section */}

@@ -257,7 +257,7 @@ export default function DirectEmailSender() {
                                     return `<!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="color-scheme" content="light dark">
 <style>body{margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;background:#f3f4f6;}a{color:#1d4ed8;}
-@media(prefers-color-scheme:dark){.dark-bg{background-color:#020617!important;}.dark-card{background-color:#1e293b!important;}.dark-text{color:#e2e8f0!important;}.dark-heading{color:#fff!important;}.dark-subtle{color:#94a3b8!important;}.dark-blob{opacity:.08!important;}}</style></head>
+@media(prefers-color-scheme:dark){.dark-bg{background-color:#0f0f0f!important;}.dark-card{background-color:#202020!important;}.dark-text{color:#e5e7eb!important;}.dark-heading{color:#fff!important;}.dark-subtle{color:#a3a3a3!important;}.dark-blob{opacity:.08!important;}}</style></head>
 <body class="dark-bg"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f3f4f6;" class="dark-bg"><tr><td align="center" style="padding:40px 16px;">
 <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.06);">
 <tr><td style="background:#fff;padding:32px 40px 0 40px;position:relative;" class="dark-card">

@@ -4,6 +4,7 @@ import { getPrisma } from '@/lib/prisma';
 import AuthService from '@/lib/auth/auth-service';
 import { cookies } from 'next/headers';
 import Stripe from 'stripe';
+import { getPlanByDuration } from '@/lib/subscription-config';
 
 const PRICE_IDS: Record<string, string> = {
   '6_months': process.env.STRIPE_PRICE_STANDARD_6M!,
@@ -55,27 +56,95 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-
-    // Create Stripe checkout session (recurring subscription)
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      mode: 'subscription',
-      customer_email: user.email,
-      line_items: [
-        {
-          price: priceId,
-          quantity: 1,
-        },
-      ],
-      success_url: `${baseUrl}/${locale}/dashboard/subscription/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${baseUrl}/${locale}/pricing`,
-      metadata: {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
+      || process.env.NEXT_PUBLIC_APP_URL
+      || 'http://localhost:3000';
+    const activeSubscription = await prisma.subscription.findFirst({
+      where: {
         userId: decoded.userId,
-        duration,
-        plan: 'STANDARD',
+        status: { in: ['ACTIVE', 'TRIALING'] },
       },
+      orderBy: { createdAt: 'desc' },
     });
+
+    const blockedSubscription = await prisma.subscription.findFirst({
+      where: {
+        userId: decoded.userId,
+        status: { in: ['PAST_DUE', 'UNPAID'] },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    if (blockedSubscription) {
+      return NextResponse.json(
+        {
+          error: 'Your existing subscription needs attention before a new checkout can be started.',
+          code: 'SUBSCRIPTION_REQUIRES_ACTION',
+          status: blockedSubscription.status,
+        },
+        { status: 409 },
+      );
+    }
+
+    const plan = getPlanByDuration(duration);
+    const isExtension = Boolean(activeSubscription?.stripeCustomerId && activeSubscription.stripeSubscriptionId);
+    // Protect against double-clicks and concurrent requests before the first
+    // Checkout Session has reached the database/webhook.
+    const idempotencyKey = `checkout-${decoded.userId}-${Math.floor(Date.now() / 300000)}`;
+
+    if (activeSubscription && !isExtension) {
+      return NextResponse.json(
+        {
+          error: 'Your account already has an active subscription. Use the billing portal to update it.',
+          code: 'SUBSCRIPTION_ALREADY_ACTIVE',
+        },
+        { status: 409 },
+      );
+    }
+
+    const session = isExtension
+      ? await stripe.checkout.sessions.create({
+          payment_method_types: ['card'],
+          mode: 'payment',
+          customer: activeSubscription!.stripeCustomerId!,
+          invoice_creation: { enabled: true },
+          line_items: [{
+            price_data: {
+              currency: 'gbp',
+              unit_amount: plan.price,
+              product_data: {
+                name: `3YESES Standard Access extension - ${plan.durationLabel}`,
+              },
+            },
+            quantity: 1,
+          }],
+          success_url: `${baseUrl}/${locale}/dashboard/subscription/success?session_id={CHECKOUT_SESSION_ID}`,
+          cancel_url: `${baseUrl}/${locale}/dashboard/subscription`,
+          metadata: {
+            userId: decoded.userId,
+            duration,
+            plan: 'STANDARD',
+            extension: 'true',
+            subscriptionId: activeSubscription!.id,
+            stripeSubscriptionId: activeSubscription!.stripeSubscriptionId,
+          },
+        }, { idempotencyKey })
+      : await stripe.checkout.sessions.create({
+          payment_method_types: ['card'],
+          mode: 'subscription',
+          customer_email: user.email,
+          line_items: [{
+            price: priceId,
+            quantity: 1,
+          }],
+          success_url: `${baseUrl}/${locale}/dashboard/subscription/success?session_id={CHECKOUT_SESSION_ID}`,
+          cancel_url: `${baseUrl}/${locale}/pricing`,
+          metadata: {
+            userId: decoded.userId,
+            duration,
+            plan: 'STANDARD',
+          },
+        }, { idempotencyKey });
 
     return NextResponse.json({
       sessionId: session.id,

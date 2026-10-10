@@ -18,7 +18,7 @@ export default function CategoriesHelpPage() {
       faqs={[
         {
           q: 'What talent categories are available?',
-          a: 'We support actors, musicians, models, voice artists, dancers, DJs, photographers, videographers, presenters, comedians, and more. Each category has its own page with tailored search filters and portfolio browsing.',
+          a: 'We support actors, musicians, models, voice artists, dancers, DJs, photographers, videographers, presenters, comedians, and more. Each category has its own page with tailored search filters and media browsing.',
         },
         {
           q: 'What search filters are available?',
@@ -26,11 +26,11 @@ export default function CategoriesHelpPage() {
         },
         {
           q: 'What is the Media Hub?',
-          a: 'The Hub is a browsable feed of all portfolio content across the platform. Filter by talent category (with item counts shown), media type (images, videos, audio, links), and sort by trending, newest, or most viewed. Featured items are spotlighted at the top of the page.',
+          a: 'The Hub is a browsable feed of media from across the platform. Filter by talent category (with item counts shown), media type (images, videos, audio, links), and sort by trending, newest, or most viewed. Featured items are spotlighted at the top of the page.',
         },
         {
           q: 'How does search ranking work?',
-          a: 'Results are ranked by profile completeness, portfolio quality, recent activity, and subscriber status. Profiles with a high completion percentage, verified badges, and recent uploads rank higher. All subscribers get priority search placement as a core feature.',
+          a: 'Results are ranked by profile completeness, media quality, recent activity, and subscriber status. Profiles with a high completion percentage, verified badges, and recent uploads rank higher. All subscribers get priority visibility as a core feature.',
         },
         {
           q: 'Can I appear in multiple categories?',
@@ -44,7 +44,7 @@ export default function CategoriesHelpPage() {
       guides={[
         {
           title: 'Getting discovered',
-          content: 'Complete your profile to 100% (check the completion ring on your Dashboard). Upload high-quality portfolio items — your first few pieces are what visitors see first. Add specific skills (e.g. "Classical Piano" rather than "Piano") and keep your location accurate for local search matches.',
+          content: 'Complete your profile to 100% (check the completion ring on your Dashboard). Upload high-quality media — your first few pieces are what visitors see first. Add specific skills (e.g. "Classical Piano" rather than "Piano") and keep your location accurate for local discovery.',
         },
         {
           title: 'Using the Media Hub',

@@ -22,7 +22,7 @@ export function DashboardWorkspace({ children, className }: { children: ReactNod
 }
 
 export function DashboardHeader({
-  eyebrow = 'Your dashboard',
+  eyebrow = 'Talent Studio',
   title,
   description,
   icon: Icon,
@@ -111,6 +111,7 @@ export function DashboardButton({
   variant = 'primary',
   disabled,
   className,
+  'aria-label': ariaLabel,
 }: {
   children: ReactNode;
   href?: string;
@@ -119,6 +120,7 @@ export function DashboardButton({
   variant?: 'primary' | 'secondary' | 'danger' | 'ghost';
   disabled?: boolean;
   className?: string;
+  'aria-label'?: string;
 }) {
   const classes = cx(
     'group inline-flex min-h-10 items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-all duration-200 ease-[cubic-bezier(0.32,0.72,0,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--brand-ring)] active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50',
@@ -137,14 +139,14 @@ export function DashboardButton({
 
   if (href) {
     return (
-      <Link href={href} className={classes}>
+      <Link href={href} aria-label={ariaLabel} className={classes}>
         {children}
       </Link>
     );
   }
 
   return (
-    <button type={type} onClick={onClick} disabled={disabled} className={classes}>
+    <button type={type} onClick={onClick} disabled={disabled} aria-label={ariaLabel} className={classes}>
       {children}
     </button>
   );
@@ -194,7 +196,7 @@ export function EmptyState({
   action?: ReactNode;
 }) {
   return (
-    <div className="rounded-xl bg-slate-50/70 px-5 py-8 text-center dark:bg-slate-900/35">
+    <div className="rounded-xl bg-transparent px-5 py-8 text-center">
       {Icon && (
         <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[color:var(--brand-primary)]/10 text-[color:var(--brand-primary)]">
           <Icon className="h-7 w-7" />
@@ -244,18 +246,20 @@ export function SegmentedControl<T extends string>({
 
 export function DashboardField({
   label,
+  id,
   error,
   hint,
   children,
 }: {
   label: ReactNode;
+  id?: string;
   error?: ReactNode;
   hint?: ReactNode;
   children: ReactNode;
 }) {
   return (
     <div className="space-y-2">
-      <label className="block text-sm font-semibold text-slate-800 dark:text-slate-100">{label}</label>
+      <label htmlFor={id} className="block text-sm font-semibold text-slate-800 dark:text-slate-100">{label}</label>
       {children}
       {error ? (
         <p className="text-sm font-medium text-red-600 dark:text-red-300">{error}</p>
@@ -334,13 +338,16 @@ export function StatusPill({
 export function DashboardStatRow({
   items,
 }: {
-  items: Array<{ label: ReactNode; value: ReactNode; detail?: ReactNode }>;
+  items: Array<{ label: ReactNode; value: ReactNode; detail?: ReactNode; icon?: IconType }>;
 }) {
   return (
     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
       {items.map((item, index) => (
-        <div key={index} className="rounded-[1.5rem] bg-slate-50/80 p-4 dark:bg-slate-950/35">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">{item.label}</p>
+      <div key={index} className="border-l-2 border-[color:var(--brand-primary)]/25 bg-transparent px-4 py-2">
+          <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
+            {item.icon && <item.icon className="h-3.5 w-3.5 text-[color:var(--brand-primary)]" aria-hidden="true" />}
+            <span>{item.label}</span>
+          </div>
           <p className="mt-2 tabular-nums text-2xl font-semibold tracking-tight text-slate-950 dark:text-white">{item.value}</p>
           {item.detail && <p className="mt-1 text-xs leading-5 text-slate-500 dark:text-slate-400">{item.detail}</p>}
         </div>
@@ -372,7 +379,7 @@ export function DashboardActionCard({
           : 'bg-slate-900/7 text-slate-700 dark:bg-white/10 dark:text-slate-200';
 
   return (
-    <div className="group rounded-xl bg-slate-50/80 p-4 transition-all duration-200 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-1 dark:bg-slate-950/35">
+    <div className="group rounded-xl bg-slate-50/55 p-4 transition-all duration-200 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-1 dark:bg-neutral-900/70">
       <div className="flex items-start gap-4">
         {Icon && (
           <span className={cx('inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl', toneClass)}>
@@ -393,12 +400,12 @@ export function DashboardLoading() {
   return (
     <DashboardWorkspace>
       <div role="status" aria-label="Loading dashboard" className="space-y-6 motion-safe:animate-pulse">
-        <div className="h-8 w-48 rounded-lg bg-slate-200 dark:bg-slate-800" />
-        <div className="h-4 w-2/3 rounded bg-slate-200 dark:bg-slate-800" />
+        <div className="h-8 w-48 rounded-lg bg-slate-200 dark:bg-neutral-800" />
+        <div className="h-4 w-2/3 rounded bg-slate-200 dark:bg-neutral-800" />
         <div className="grid gap-5 sm:grid-cols-3">
-          {[0, 1, 2].map(item => <div key={item} className="h-32 rounded-2xl bg-slate-200/60 dark:bg-slate-800/60" />)}
+          {[0, 1, 2].map(item => <div key={item} className="h-32 rounded-2xl bg-slate-200/60 dark:bg-neutral-800/60" />)}
         </div>
-        <div className="h-72 rounded-2xl bg-slate-200/60 dark:bg-slate-800/60" />
+        <div className="h-72 rounded-2xl bg-slate-200/60 dark:bg-neutral-800/60" />
       </div>
     </DashboardWorkspace>
   );

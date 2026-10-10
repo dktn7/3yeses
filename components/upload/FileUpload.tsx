@@ -7,6 +7,7 @@ import { upload as imagekitUpload } from '@imagekit/next';
 
 interface FileUploadProps {
   onUploadComplete?: (urls: string[]) => void;
+  autoComplete?: boolean;
   accept?: 'image' | 'video' | 'audio' | 'all';
   maxFiles?: number;
   maxSizeMB?: number;
@@ -33,6 +34,7 @@ interface UploadFile {
 
 export default function FileUpload({
   onUploadComplete,
+  autoComplete = false,
   accept = 'all',
   maxFiles = 10,
   maxSizeMB = 100,
@@ -42,6 +44,7 @@ export default function FileUpload({
   const [files, setFiles] = useState<UploadFile[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const selectionIdRef = useRef(0);
 
   const getAcceptedTypes = () => {
     switch (accept) {
@@ -120,6 +123,7 @@ export default function FileUpload({
 
   function handleFiles(selectedFiles: FileList | null) {
     if (!selectedFiles) return;
+    const selectionId = ++selectionIdRef.current;
 
     const newFiles: UploadFile[] = [];
 
@@ -147,22 +151,14 @@ export default function FileUpload({
       newFiles.push(uploadFile);
     }
 
-    setFiles((prev) => {
-      const startIndex = prev.length;
-      const updated = [...prev, ...newFiles];
-
-      // Auto-upload valid files
-      newFiles.forEach((uploadFile, idx) => {
-        if (uploadFile.status === 'pending') {
-          void uploadSingleFile(startIndex + idx, uploadFile);
-        }
-      });
-
-      return updated;
+    const startIndex = multiple ? files.length : 0;
+    setFiles((prev) => multiple ? [...prev, ...newFiles] : newFiles);
+    newFiles.forEach((uploadFile, idx) => {
+      if (uploadFile.status === 'pending') void uploadSingleFile(startIndex + idx, uploadFile, selectionId);
     });
   }
 
-  const uploadSingleFile = async (index: number, uploadFile: UploadFile) => {
+  const uploadSingleFile = async (index: number, uploadFile: UploadFile, selectionId: number) => {
     try {
       // Update status to uploading
       setFiles((prev) => {
@@ -188,6 +184,7 @@ export default function FileUpload({
           if (event.type === 'progress' && event.loaded != null && event.total != null) {
             const progress = Math.round((event.loaded / event.total) * 100);
             setFiles((prev) => {
+              if (!multiple && selectionId !== selectionIdRef.current) return prev;
               const updated = [...prev];
               updated[index] = { ...updated[index], progress };
               return updated;
@@ -199,6 +196,7 @@ export default function FileUpload({
       // Upload succeeded — response contains url, fileId, name, etc.
       const imageKitUrl = response.url;
       const imageKitFileId = response.fileId;
+      if (!multiple && selectionId !== selectionIdRef.current) return;
 
       setFiles((prev) => {
         const updated = [...prev];
@@ -211,7 +209,9 @@ export default function FileUpload({
         };
         return updated;
       });
+      if (autoComplete && imageKitUrl) onUploadComplete?.([imageKitUrl]);
     } catch (error) {
+      if (!multiple && selectionId !== selectionIdRef.current) return;
       console.error('ImageKit upload error:', error);
       setFiles((prev) => {
         const updated = [...prev];
@@ -226,6 +226,7 @@ export default function FileUpload({
   };
 
   const removeFile = (index: number) => {
+    if (!multiple) selectionIdRef.current += 1;
     setFiles((prev) => {
       const updated = [...prev];
       if (updated[index].preview) {
@@ -258,6 +259,7 @@ export default function FileUpload({
 
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     handleFiles(e.target.files);
+    e.target.value = '';
   };
 
   const handleComplete = () => {
@@ -281,9 +283,9 @@ export default function FileUpload({
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         onClick={handleClick}
-        className={`relative border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
+        className={`relative cursor-pointer rounded-lg border-2 border-dashed p-5 text-center transition-colors ${
           isDragging
-            ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
+            ? 'border-[color:var(--brand-primary)] bg-[color:var(--brand-primary)]/5'
             : 'border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500'
         }`}
       >
@@ -296,12 +298,12 @@ export default function FileUpload({
           className="hidden"
         />
 
-        <Upload className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-        <p className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">
-          Drop files here or click to browse
+        <Upload className="mx-auto mb-3 h-8 w-8 text-[color:var(--brand-primary)]" />
+        <p className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-200">
+          {accept === 'image' && !multiple ? 'Choose a photo or drop it here' : 'Drop files here or click to browse'}
         </p>
         <p className="text-sm text-gray-500 dark:text-gray-400">
-          {accept === 'all' ? 'Images, videos, or audio files' : `${accept} files only`} • Max {maxSizeMB}MB • Up to {maxFiles} files
+          {accept === 'all' ? 'Images, videos, or audio files' : `${accept[0].toUpperCase()}${accept.slice(1)} files only`} • Max {maxSizeMB}MB{multiple ? ` • Up to ${maxFiles} files` : ''}
         </p>
       </div>
 
@@ -316,7 +318,7 @@ export default function FileUpload({
             {files.map((uploadFile, index) => (
               <div
                 key={index}
-                className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg"
+                className="flex items-center gap-4 rounded-lg bg-gray-50 p-4 dark:bg-neutral-800"
               >
                 {/* Icon/Preview */}
                 <div className="flex-shrink-0">
@@ -349,7 +351,7 @@ export default function FileUpload({
                   {uploadFile.status === 'uploading' && (
                     <div className="mt-2 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                       <div
-                        className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                        className="h-2 rounded-full bg-[color:var(--brand-primary)] transition-all duration-300"
                         style={{ width: `${uploadFile.progress}%` }}
                       />
                     </div>
@@ -366,7 +368,7 @@ export default function FileUpload({
                 {/* Status Icon */}
                 <div className="flex-shrink-0">
                   {uploadFile.status === 'uploading' && (
-                    <Loader2 className="w-5 h-5 text-blue-600 animate-spin" />
+                    <Loader2 className="w-5 h-5 animate-spin text-[color:var(--brand-primary)]" />
                   )}
                   {uploadFile.status === 'success' && (
                     <CheckCircle2 className="w-5 h-5 text-green-600" />
@@ -381,6 +383,8 @@ export default function FileUpload({
 
                 {/* Remove Button */}
                 <button
+                  type="button"
+                  aria-label={`Remove ${uploadFile.file.name}`}
                   onClick={(e) => {
                     e.stopPropagation();
                     removeFile(index);
@@ -394,10 +398,11 @@ export default function FileUpload({
           </div>
 
           {/* Complete Button */}
-          {allComplete && successCount > 0 && (
+          {!autoComplete && allComplete && successCount > 0 && (
             <button
+              type="button"
               onClick={handleComplete}
-              className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+              className="w-full rounded-lg bg-[color:var(--brand-primary)] px-4 py-2 font-medium text-white transition-colors"
             >
               Complete Upload ({successCount} file{successCount !== 1 ? 's' : ''})
             </button>

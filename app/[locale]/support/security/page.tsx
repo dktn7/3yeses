@@ -30,7 +30,7 @@ export default function SecurityHelpPage() {
         },
         {
           q: 'How do I report inappropriate content?',
-          a: 'Click the flag icon on any profile or portfolio item to submit a report. You can flag content from the media overlay (when viewing portfolio items) or from profile pages. Include a brief description of the issue. Our moderation team reviews all reports within 24 hours and may remove content or suspend accounts that violate our terms.',
+          a: 'Click the flag icon on any profile or media item to submit a report. You can flag content from the media overlay or from profile pages. Include a brief description of the issue. Our moderation team reviews all reports within 24 hours and may remove content or suspend accounts that violate our terms.',
         },
         {
           q: 'Can I make my profile private?',
@@ -38,7 +38,7 @@ export default function SecurityHelpPage() {
         },
         {
           q: 'How do I download or delete my data?',
-          a: 'You can request a copy of your personal data or delete your entire account from Dashboard → Settings → Account. We comply with GDPR and applicable data protection regulations. Account deletion removes all your data, including profile, portfolio, comments, likes, and analytics.',
+          a: 'You can request a copy of your personal data or delete your entire account from Dashboard → Settings → Account. We comply with GDPR and applicable data protection regulations. Account deletion removes all your data, including profile, media, comments, likes, and analytics.',
         },
       ]}
       guides={[
@@ -52,7 +52,7 @@ export default function SecurityHelpPage() {
         },
         {
           title: 'Reporting and moderation',
-          content: 'We take content moderation seriously. The flag/report system is available on all portfolio items and profiles via the media overlay and profile pages. Reports are reviewed by our team. Accounts with repeated violations may be warned, suspended, or permanently removed depending on severity.',
+          content: 'We take content moderation seriously. The flag/report system is available on all media items and profiles via the media overlay and profile pages. Reports are reviewed by our team. Accounts with repeated violations may be warned, suspended, or permanently removed depending on severity.',
         },
       ]}
     />

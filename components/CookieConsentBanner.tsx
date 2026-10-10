@@ -242,7 +242,7 @@ const CookieConsentBanner = () => {
                   <div className="flex items-center justify-between p-4 rounded-lg bg-gray-50 dark:bg-gray-700">
                     <div className="flex-1">
                       <label htmlFor="marketing" className="font-semibold text-gray-900 dark:text-white block mb-1">Marketing</label>
-                      <p className="text-xs text-gray-600 dark:text-gray-400">Show you relevant casting opportunities and talent</p>
+                      <p className="text-xs text-gray-600 dark:text-gray-400">Show you relevant talent profiles and media</p>
                     </div>
                     <input
                       type="checkbox"
@@ -261,7 +261,7 @@ const CookieConsentBanner = () => {
                   3YESES is a platform connecting talented individuals with the World. 
                 </p>
                 <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                  We use cookies to enhance your browsing experience, personalize content, show you relevant talent profiles and casting opportunities, and analyze our traffic. By clicking "Save Preferences", you consent to our use of cookies according to your selections.
+                  We use cookies to enhance your browsing experience, personalise content, show you relevant talent profiles and media, and analyse our traffic. By clicking "Save Preferences", you consent to our use of cookies according to your selections.
                 </p>
               </div>
             )}

@@ -15,7 +15,7 @@ const fs = require('fs');
   for (let attempt = 0; attempt < 3; attempt += 1) {
    const isDark = await page.evaluate(() => document.documentElement.classList.contains('dark'));
    if (isDark === wantDark) return;
-   await page.getByRole('button',{name:'Toggle theme'}).click();
+   await page.getByRole('banner').getByRole('button',{name:'Toggle theme'}).click();
    await page.waitForTimeout(150);
   }
   await page.waitForFunction((dark) => document.documentElement.classList.contains('dark') === dark, wantDark, {timeout:10000});

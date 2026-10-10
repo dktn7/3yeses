@@ -25,5 +25,8 @@ jobs:
       - name: Run linter
         run: npm run lint
 
+      - name: Validate dashboard translations
+        run: npm run locale:check-dashboard
+
       - name: Build
         run: npm run build

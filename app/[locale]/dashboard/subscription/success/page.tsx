@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import { CheckCircle, Loader2, ReceiptText, ShieldAlert } from 'lucide-react';
 import {
@@ -17,6 +17,7 @@ import { buildLocalizedPath } from '@/lib/locale-path';
 
 export default function SubscriptionSuccessPage() {
   const locale = useLocale();
+  const t = useTranslations('dashboard.subscriptionSuccess');
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -49,8 +50,8 @@ export default function SubscriptionSuccessPage() {
         <DashboardPanel>
           <div className="flex min-h-[20rem] flex-col items-center justify-center text-center">
             <Loader2 className="mb-4 h-10 w-10 animate-spin text-[color:var(--brand-primary)]" />
-            <h1 className="text-xl font-semibold text-slate-950 dark:text-white">Processing your subscription</h1>
-            <p className="mt-2 max-w-md text-sm leading-6 text-slate-600 dark:text-slate-300">We are confirming the checkout session and updating your account access.</p>
+            <h1 className="text-xl font-semibold text-slate-950 dark:text-white">{t('processing')}</h1>
+            <p className="mt-2 max-w-md text-sm leading-6 text-slate-600 dark:text-slate-300">{t('processingDescription')}</p>
           </div>
         </DashboardPanel>
       </DashboardWorkspace>
@@ -62,15 +63,15 @@ export default function SubscriptionSuccessPage() {
       <DashboardWorkspace>
         <DashboardHeader
           icon={ShieldAlert}
-          title="Subscription needs review"
-          description="We could not verify this checkout session. If you were charged, contact support and include your account email."
-          actions={<DashboardButton href={buildLocalizedPath(locale, '/dashboard/subscription')}>Back to subscription</DashboardButton>}
+          title={t('needsReview')}
+          description={t('needsReviewDescription')}
+          actions={<DashboardButton href={buildLocalizedPath(locale, '/dashboard/subscription')}>{t('backToSubscription')}</DashboardButton>}
         />
         <EmptyState
           icon={ReceiptText}
-          title="Your subscription isn’t confirmed yet"
-          description="Payment updates can take a moment. Check your subscription status before trying another payment."
-          action={<DashboardButton href={buildLocalizedPath(locale, '/support/submit-ticket')} variant="secondary">Contact support</DashboardButton>}
+          title={t('notConfirmed')}
+          description={t('notConfirmedDescription')}
+          action={<DashboardButton href={buildLocalizedPath(locale, '/support/submit-ticket')} variant="secondary">{t('contactSupport')}</DashboardButton>}
         />
       </DashboardWorkspace>
     );
@@ -80,12 +81,12 @@ export default function SubscriptionSuccessPage() {
     <DashboardWorkspace>
       <DashboardHeader
         icon={CheckCircle}
-        title="Standard Access is active"
-        description="Your subscription has been activated. Use the dashboard to finish your profile, publish media, and track discovery."
+        title={t('activeTitle')}
+        description={t('activeDescription')}
         actions={
           <>
-            <DashboardButton href={buildLocalizedPath(locale, '/dashboard/overview')}>Go to dashboard</DashboardButton>
-            <DashboardButton href={buildLocalizedPath(locale, '/dashboard/profile')} variant="secondary">Update profile</DashboardButton>
+            <DashboardButton href={buildLocalizedPath(locale, '/dashboard/overview')}>{t('goToDashboard')}</DashboardButton>
+            <DashboardButton href={buildLocalizedPath(locale, '/dashboard/profile')} variant="secondary">{t('updateProfile')}</DashboardButton>
           </>
         }
       />
@@ -93,20 +94,20 @@ export default function SubscriptionSuccessPage() {
       <DashboardPanel>
         <DashboardStatRow
           items={[
-            { label: 'Profile', value: 'Full', detail: 'Customization enabled' },
-            { label: 'Portfolio', value: 'Open', detail: 'Media uploads available' },
-            { label: 'Discovery', value: 'Priority', detail: 'Search ranking benefits' },
-            { label: 'Billing', value: 'Active', detail: 'Ledger updated by Stripe' },
+            { label: t('profile'), value: t('full'), detail: t('customizationEnabled') },
+            { label: t('portfolio'), value: t('open'), detail: t('mediaUploadsAvailable') },
+            { label: t('discovery'), value: t('priority'), detail: t('searchRankingBenefits') },
+            { label: t('billing'), value: t('active'), detail: t('ledgerUpdated') },
           ]}
         />
       </DashboardPanel>
 
       <DashboardActionCard
         icon={ReceiptText}
-        title="Review your billing ledger"
-        description="Payment history and subscription status live in the billing workspace, with receipts listed from newest to oldest."
+        title={t('reviewLedger')}
+        description={t('ledgerDescription')}
         tone="accent"
-        action={<DashboardButton href={buildLocalizedPath(locale, '/dashboard/billing')} variant="secondary">Open billing</DashboardButton>}
+        action={<DashboardButton href={buildLocalizedPath(locale, '/dashboard/billing')} variant="secondary">{t('openBilling')}</DashboardButton>}
       />
     </DashboardWorkspace>
   );

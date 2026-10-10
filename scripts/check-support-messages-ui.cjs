@@ -99,21 +99,19 @@ const fs = require('fs');
     return route.fulfill({ json: inbox });
   });
 
-  await page.goto(`${base}/en-gb/support`, { waitUntil: 'domcontentloaded' });
-  await page.getByRole('button').filter({ hasText: /^T$/ }).click();
-  await page.getByRole('button', { name: /Messages/i }).waitFor();
-  await page.getByRole('button', { name: /Messages/i }).click();
-  await page.waitForURL('**/en-gb/dashboard/messages');
-  await page.getByRole('heading', { name: 'Messages' }).waitFor();
+  await page.goto(`${base}/en-gb/dashboard/messages`, { waitUntil: 'domcontentloaded' });
+  await page.getByRole('heading', { name: 'Inbox', exact: true }).waitFor();
+  await page.getByRole('tab', { name: /Updates/i }).click();
   await page.getByText('Scheduled maintenance').waitFor();
+  await page.getByRole('tab', { name: /Conversations/i }).click();
   await page.getByRole('heading', { name: 'Billing question' }).waitFor();
   await page.getByText('Could you confirm the invoice number?').nth(1).waitFor();
 
-  await page.getByPlaceholder('Reply to support').fill('The invoice number is INV-1042.');
+  await page.getByLabel('Your reply').fill('The invoice number is INV-1042.');
   await page.getByRole('button', { name: 'Reply' }).click();
 
-  await page.getByRole('button', { name: 'New support message' }).click();
-  await page.getByPlaceholder('Subject').fill('Profile help');
+  await page.getByRole('button', { name: 'New support conversation' }).click();
+  await page.getByLabel('Subject').fill('Profile help');
   await page.getByPlaceholder('Tell us what you need help with.').fill('Please check whether my profile is ready for review.');
   await page.getByRole('button', { name: 'Send to support' }).click();
 

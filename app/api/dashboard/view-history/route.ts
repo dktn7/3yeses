@@ -12,6 +12,14 @@ export async function GET(req: NextRequest) {
 
     const userId = authResult.user.userId;
     const prisma = getPrisma();
+    const requestedTimeZone = req.nextUrl.searchParams.get('timeZone') || 'UTC';
+    let timeZone = 'UTC';
+    try {
+      new Intl.DateTimeFormat('en-CA', { timeZone: requestedTimeZone }).format();
+      timeZone = requestedTimeZone;
+    } catch {
+      // Keep the endpoint deterministic if a browser sends an invalid zone.
+    }
 
     // Get all viewed talent profiles for the user
     const viewedProfiles = await prisma.profileView.findMany({
@@ -50,7 +58,8 @@ export async function GET(req: NextRequest) {
     });
 
     // Transform to match expected format
-    const talents = viewedProfiles.map(view => ({
+    const historyEntries = viewedProfiles.map(view => ({
+      viewId: view.id,
       id: (view.talentProfile as any).userId ?? view.talentProfile.userId,
       name: view.talentProfile.user.name || 'Unknown',
       location: view.talentProfile.location || 'Unknown',
@@ -64,10 +73,26 @@ export async function GET(req: NextRequest) {
         id: p.id,
         title: p.title,
         mediaUrl: p.mediaUrl,
-        type: p.type as unknown as string,
+        type: String(p.type || 'IMAGE').toUpperCase(),
         thumbnail: p.thumbnail || undefined,
-      }))
+      })),
+      viewedDay: new Intl.DateTimeFormat('en-CA', {
+        timeZone,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      }).format(view.createdAt),
     }));
+
+    // Keep the latest visit for each talent on each viewer-local calendar day.
+    // Analytics still receives every raw ProfileView event separately.
+    const seenDays = new Set<string>();
+    const talents = historyEntries.filter((entry) => {
+      const key = `${entry.id}:${entry.viewedDay}`;
+      if (seenDays.has(key)) return false;
+      seenDays.add(key);
+      return true;
+    });
 
     return NextResponse.json({
       success: true,
