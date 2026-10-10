@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getPrisma } from '@/lib/prisma';
 import AuthService from '@/lib/auth/auth-service';
-import { cookies } from 'next/headers';
 import { createAuditLog } from '@/lib/admin/audit';
 
 export async function POST(request: NextRequest) {
@@ -69,26 +68,8 @@ export async function POST(request: NextRequest) {
 
     const refreshToken = await AuthService.generateRefreshToken({ userId: user.id });
 
-    // Set HTTP-only cookies
-    const cookieStore = await cookies();
-    const cookieOptions = {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax' as const,
-      path: '/',
-    };
-
-    cookieStore.set('accessToken', accessToken, {
-      ...cookieOptions,
-      maxAge: rememberMe ? 7 * 24 * 60 * 60 : 24 * 60 * 60,
-    });
-
-    cookieStore.set('refreshToken', refreshToken, {
-      ...cookieOptions,
-      maxAge: rememberMe ? 30 * 24 * 60 * 60 : 7 * 24 * 60 * 60,
-    });
-
-    return NextResponse.json({
+    // Set HTTP-only cookies on the outgoing response.
+    const response = NextResponse.json({
       success: true,
       user: {
         id: user.id,
@@ -98,6 +79,25 @@ export async function POST(request: NextRequest) {
       },
       accessToken,
     });
+
+    const cookieOptions = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax' as const,
+      path: '/',
+    };
+
+    response.cookies.set('accessToken', accessToken, {
+      ...cookieOptions,
+      maxAge: rememberMe ? 7 * 24 * 60 * 60 : 24 * 60 * 60,
+    });
+
+    response.cookies.set('refreshToken', refreshToken, {
+      ...cookieOptions,
+      maxAge: rememberMe ? 30 * 24 * 60 * 60 : 7 * 24 * 60 * 60,
+    });
+
+    return response;
 
   } catch (error) {
     console.error('Admin login error:', error);

@@ -65,6 +65,7 @@ interface SystemMetrics {
 }
 
 const fetcher = (url: string) => fetch(url).then(res => res.json());
+const LIVE_REFRESH_INTERVAL = 30 * 1000; // 30 seconds
 
 function formatUptime(seconds: number): string {
   const days = Math.floor(seconds / 86400);
@@ -95,7 +96,7 @@ export default function SystemDashboardPage() {
     `/api/admin/system/metrics?range=${range}`,
     fetcher,
     {
-      refreshInterval: isLive ? 5000 : 0,
+      refreshInterval: isLive ? LIVE_REFRESH_INTERVAL : 0,
       revalidateOnFocus: false
     }
   );

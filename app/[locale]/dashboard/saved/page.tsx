@@ -1,183 +1,274 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import { useEffect, useMemo, useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import LoadingSpinner from '@/components/LoadingSpinner';
-import FeaturedTalentCard from '@/components/FeaturedTalentCard';
-import { Heart, ArrowLeft, Filter } from 'lucide-react';
+import { ArrowLeft, Filter, Heart, Layers3 } from 'lucide-react';
 import Link from 'next/link';
-import { normalizeLocale } from '@/lib/locale-path';
-import { buildLocalizedPath } from '@/lib/locale-path';
+import FeaturedTalentCard from '@/components/FeaturedTalentCard';
+import {
+  DashboardButton,
+  DashboardLoadError,
+  DashboardLoading,
+  DashboardPage,
+  EmptyState,
+  SegmentedControl,
+} from '@/components/dashboard/DashboardPrimitives';
+import { buildLocalizedPath, normalizeLocale } from '@/lib/locale-path';
+
+interface MediaItem {
+  id: string;
+  title: string;
+  mediaUrl?: string;
+  url?: string;
+  type: 'IMAGE' | 'VIDEO' | 'AUDIO';
+  thumbnail?: string;
+}
 
 interface SavedTalent {
   id: string;
   name: string;
-  category?: string;
+  category?: string | null;
   categoryId?: string | null;
   location: string;
   imageUrl?: string;
-  savedAt: Date;
-  mediaItems?: Array<{ id: string; title?: string; url: string; type: string; thumbnail?: string }>;
+  savedAt: string;
+  mediaItems?: MediaItem[];
+}
+
+interface Category {
+  id: string;
+  name: string;
+}
+
+type LoadStatus = 'loading' | 'ready' | 'error';
+
+const collectionLayout = [
+  'lg:col-span-7',
+  'lg:col-span-5',
+  'lg:col-span-4',
+  'lg:col-span-4',
+  'lg:col-span-4',
+];
+
+function getTalentAvatar(talent: SavedTalent) {
+  if (talent.imageUrl) return talent.imageUrl;
+  const media = talent.mediaItems || [];
+  return media.find((item) => item.thumbnail)?.thumbnail
+    || media.find((item) => item.type === 'IMAGE')?.mediaUrl
+    || media.find((item) => item.type === 'IMAGE')?.url
+    || '';
+}
+
+function formatSavedDate(value: string, locale: string) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '';
+  return new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short', year: 'numeric' }).format(date);
 }
 
 export default function SavedTalentsPage() {
-  const [loading, setLoading] = useState(true);
+  const [status, setStatus] = useState<LoadStatus>('loading');
   const [savedTalents, setSavedTalents] = useState<SavedTalent[]>([]);
-  const [filter, setFilter] = useState<string>('all');
+  const [filter, setFilter] = useState('all');
+  const [loadAttempt, setLoadAttempt] = useState(0);
+  const [categories, setCategories] = useState<Category[]>([]);
   const router = useRouter();
   const t = useTranslations();
   const pathname = usePathname();
   const locale = normalizeLocale(typeof pathname === 'string' ? pathname.split('/')[1] || 'en-gb' : 'en-gb');
-  const [categories, setCategories] = useState<Array<{ id: string; name: string }>>([]);
 
   useEffect(() => {
-    // load categories for filter dropdown
+    const controller = new AbortController();
+
     const loadCategories = async () => {
       try {
-        const res = await fetch('/api/categories');
-        if (res.ok) {
-          const json = await res.json().catch(() => ({}));
-          const list = Array.isArray(json) ? json : (json.categories || json.data || []);
-          setCategories(list.map((c: any) => ({ id: c.id, name: c.name })) || []);
+        const response = await fetch('/api/categories', { signal: controller.signal });
+        if (!response.ok) return;
+        const json = await response.json() as Category[] | { categories?: Category[]; data?: Category[] };
+        const list = Array.isArray(json) ? json : json.categories || json.data || [];
+        setCategories(list.map(({ id, name }) => ({ id, name })));
+      } catch (error) {
+        if (!(error instanceof DOMException && error.name === 'AbortError')) {
+          console.error('Failed to load categories:', error);
         }
-      } catch (err) {
-        console.error('Failed to load categories:', err);
       }
     };
+
     loadCategories();
+    return () => controller.abort();
+  }, []);
+
+  useEffect(() => {
+    const controller = new AbortController();
 
     const loadSavedTalents = async () => {
+      setStatus('loading');
       try {
         const response = await fetch('/api/auth/verify', {
           credentials: 'include',
+          signal: controller.signal,
         });
 
-        if (response.ok) {
-          const data = await response.json();
-          if (data.success) {
-            // Fetch actual saved talents from API
-            const savedRes = await fetch('/api/dashboard/saved-talents', { 
-              credentials: 'include' 
-            });
-            if (savedRes.ok) {
-              const savedData = await savedRes.json();
-              setSavedTalents(savedData.talents || []);
-            }
-          } else {
-            router.push('/auth/signin');
-          }
-        } else {
-          router.push('/auth/signin');
+        if (!response.ok) {
+          router.replace(buildLocalizedPath(locale, '/auth/signin'));
+          return;
         }
+
+        const data = await response.json();
+        if (!data.success) {
+          router.replace(buildLocalizedPath(locale, '/auth/signin'));
+          return;
+        }
+
+        const savedResponse = await fetch('/api/dashboard/saved-talents', {
+          credentials: 'include',
+          signal: controller.signal,
+        });
+        if (!savedResponse.ok) throw new Error('Saved talent unavailable');
+
+        const savedData = await savedResponse.json();
+        setSavedTalents(savedData.talents || []);
+        setStatus('ready');
       } catch (error) {
-        console.error('Failed to load saved talents:', error);
-      } finally {
-        setLoading(false);
+        if (!(error instanceof DOMException && error.name === 'AbortError')) {
+          setStatus('error');
+        }
       }
     };
 
     loadSavedTalents();
-  }, [router]);
+    return () => controller.abort();
+  }, [router, loadAttempt, locale]);
 
-  const filteredTalents = filter === 'all'
-    ? savedTalents
-    : savedTalents.filter(t => (t.categoryId || '') === filter);
+  const filteredTalents = useMemo(
+    () => filter === 'all' ? savedTalents : savedTalents.filter((talent) => (talent.categoryId || '') === filter),
+    [filter, savedTalents],
+  );
 
-  if (loading) {
-    return <LoadingSpinner />;
-  }
+  const filterOptions = useMemo(() => [
+    { value: 'all', label: t('dashboard.allCategories'), count: savedTalents.length },
+    ...categories.slice(0, 5).map((category) => ({
+      value: category.id,
+      label: category.name,
+      count: savedTalents.filter((talent) => (talent.categoryId || '') === category.id).length,
+    })),
+  ], [categories, savedTalents, t]);
+
+  if (status === 'loading') return <DashboardLoading />;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <Link
-            href={buildLocalizedPath(locale, '/dashboard/overview')}
-            className="inline-flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 mb-4"
-          >
-            <ArrowLeft className="h-5 w-5" />
-            <span>{t('dashboard.backToDashboard')}</span>
-          </Link>
-          
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <div className="bg-red-100 dark:bg-red-900/20 p-3 rounded-xl">
-                <Heart className="h-8 w-8 text-red-600 dark:text-red-400 fill-red-600 dark:fill-red-400" />
-              </div>
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                  {t('dashboard.savedTalents')}
-                </h1>
-                <p className="text-gray-600 dark:text-gray-400 mt-1">
-                  {savedTalents.length} {t('dashboard.talentsSaved')}
-                </p>
-              </div>
-            </div>
+    <DashboardPage className="space-y-8">
+      <Link
+        href={buildLocalizedPath(locale, '/dashboard/overview')}
+        className="inline-flex min-h-10 items-center gap-2 rounded-lg text-sm font-semibold text-slate-600 transition-colors hover:text-[color:var(--brand-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--brand-ring)] dark:text-slate-300"
+      >
+        <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+        <span>{t('dashboard.backToDashboard')}</span>
+      </Link>
 
-            {/* Filter dropdown */}
-            <div className="flex items-center space-x-2">
-              <Filter className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-              <select
-                value={filter}
-                onChange={(e) => setFilter(e.target.value)}
-                className="bg-light-surface dark:bg-dark-surface border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-blue dark:focus:ring-accent-red"
-              >
-                <option value="all">{t('dashboard.allCategories')}</option>
-                {categories.map((c) => (
-                  <option key={c.id} value={c.id}>{c.name}</option>
-                ))}
-              </select>
-            </div>
-          </div>
+      <header className="grid gap-8 border-y border-slate-200/80 py-8 dark:border-white/10 lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-end">
+        <div className="min-w-0">
+          <p className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-[color:var(--brand-primary)]">
+            <Heart className="h-4 w-4" aria-hidden="true" />
+            Personal collection
+          </p>
+          <h1 className="mt-3 max-w-3xl text-4xl font-semibold text-slate-950 sm:text-5xl dark:text-white">
+            {t('dashboard.savedTalents')}
+          </h1>
+          <p className="mt-4 max-w-2xl text-base leading-7 text-slate-600 dark:text-slate-300">
+            Keep the people whose work you want to return to close, arranged as your own evolving collection.
+          </p>
         </div>
+        <div className="border-l-2 border-[color:var(--brand-primary)] pl-5">
+          <p className="tabular-nums text-5xl font-semibold text-slate-950 dark:text-white">
+            {String(savedTalents.length).padStart(2, '0')}
+          </p>
+          <p className="mt-2 text-sm font-medium text-slate-500 dark:text-slate-400">
+            {t('dashboard.talentsSaved')}
+          </p>
+        </div>
+      </header>
 
-        {/* Talents Grid */}
-        {filteredTalents.length === 0 ? (
-          <div className="bg-light-surface dark:bg-dark-surface rounded-xl shadow-sm p-12 text-center">
-            <Heart className="h-16 w-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-              {t('dashboard.noSavedTalents')}
-            </h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
-              {t('dashboard.startSavingTalents')}
-            </p>
-            <Link
-              href={buildLocalizedPath(locale, '/talents')}
-              className="inline-block bg-primary-blue hover:bg-primary-blue/90 dark:bg-accent-red dark:hover:bg-accent-red/90 text-white px-6 py-2 rounded-lg font-medium transition-colors"
-            >
-              {t('dashboard.browseTalents')}
-            </Link>
+      <section aria-label="Collection filters" className="flex flex-col gap-4 border-b border-slate-200/80 pb-6 dark:border-white/10">
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
+            <Layers3 className="h-4 w-4 text-[color:var(--brand-primary)]" aria-hidden="true" />
+            Collection index
           </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filteredTalents.map((talent) => {
-              const adapted = {
-                id: talent.id,
-                user: { name: talent.name },
-                avatarUrl: (talent as any).imageUrl || '',
-                category: { name: talent.category || '' },
-                skills: (talent as any).skills || [],
-                featuredSkills: (talent as any).featuredSkills || undefined,
-              } as any;
+          <span className="text-xs tabular-nums text-slate-500 dark:text-slate-400">
+            {filteredTalents.length} shown
+          </span>
+        </div>
+        <div className="hidden sm:block">
+          <SegmentedControl value={filter} onChange={setFilter} options={filterOptions} />
+        </div>
+        <label className="flex items-center gap-3 sm:hidden">
+          <Filter className="h-4 w-4 shrink-0 text-slate-500 dark:text-slate-400" aria-hidden="true" />
+          <span className="sr-only">Filter saved talent by category</span>
+          <select
+            value={filter}
+            onChange={(event) => setFilter(event.target.value)}
+            className="min-h-11 w-full rounded-lg border border-slate-200 bg-light-surface px-3 text-sm font-semibold text-slate-900 outline-none focus:ring-2 focus:ring-[color:var(--brand-ring)] dark:border-slate-700 dark:bg-dark-surface dark:text-white"
+          >
+            <option value="all">{t('dashboard.allCategories')}</option>
+            {categories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}
+          </select>
+        </label>
+      </section>
 
-              return (
+      {status === 'error' ? (
+        <DashboardLoadError onRetry={() => setLoadAttempt((value) => value + 1)} />
+      ) : filteredTalents.length === 0 ? (
+        <EmptyState
+          icon={Heart}
+          title={filter === 'all' ? t('dashboard.noSavedTalents') : 'No saved talent in this category'}
+          description={filter === 'all' ? t('dashboard.startSavingTalents') : 'Try another category or return to your full collection.'}
+          action={filter === 'all'
+            ? <DashboardButton href={buildLocalizedPath(locale, '/hub')}>{t('dashboard.browseTalents')}</DashboardButton>
+            : <DashboardButton onClick={() => setFilter('all')}>View all saved talent</DashboardButton>}
+        />
+      ) : (
+        <section aria-label="Saved talent collection" className="grid gap-x-6 gap-y-10 md:grid-cols-2 lg:grid-cols-12">
+          {filteredTalents.map((talent, index) => {
+            const mediaItems = talent.mediaItems || [];
+            const adaptedTalent = {
+              id: talent.id,
+              user: { name: talent.name },
+              avatarUrl: getTalentAvatar(talent),
+              category: { name: talent.category || '' },
+              skills: [] as string[],
+            };
+
+            return (
+              <article
+                key={talent.id}
+                className={`${collectionLayout[index % collectionLayout.length]} min-w-0 [&_.hub-card]:max-w-none`}
+              >
+                <div className="mb-3 flex items-end justify-between gap-4 border-b border-slate-200/80 pb-3 dark:border-white/10">
+                  <div className="min-w-0">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[color:var(--brand-primary)]">
+                      Collection {String(index + 1).padStart(2, '0')}
+                    </p>
+                    <p className="mt-1 truncate text-sm font-semibold text-slate-900 dark:text-white">
+                      {talent.location || 'Location not set'}
+                    </p>
+                  </div>
+                  <time className="shrink-0 text-xs text-slate-500 dark:text-slate-400" dateTime={talent.savedAt}>
+                    {formatSavedDate(talent.savedAt, locale)}
+                  </time>
+                </div>
                 <FeaturedTalentCard
-                  key={talent.id}
-                  talent={adapted}
-                  mediaItems={(talent as any).mediaItems || []}
-                  onMediaClick={(item: any) => {
-                    const idTo = item?.talentProfile?.id || talent.id;
-                    router.push(`/talent/${idTo}`);
-                  }}
-                  onProfileClick={(p: any) => router.push(`/talent/${p.userId ?? p.id}`)}
+                  talent={adaptedTalent}
+                  mediaItems={mediaItems}
+                  priority={index === 0}
+                  onMediaClick={() => router.push(buildLocalizedPath(locale, `/talent/${talent.id}`))}
+                  onProfileClick={(profile) => router.push(buildLocalizedPath(locale, `/talent/${profile.id}`))}
                 />
-              );
-            })}
-          </div>
-        )}
-      </div>
-    </div>
+              </article>
+            );
+          })}
+        </section>
+      )}
+    </DashboardPage>
   );
 }

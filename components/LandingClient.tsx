@@ -586,7 +586,7 @@ export default function LandingClient({ t = (k: any) => k, locale = 'en-gb' }: {
                     })()}
                     <button
                       type="button"
-                      aria-label="Use my location"
+                      aria-label={t('useMyLocation')}
                       className="absolute right-1.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-[var(--brand-primary)]/10 flex items-center justify-center hover:bg-[var(--brand-primary)]/20 transition-colors duration-300"
                       onClick={async () => {
                         if (navigator.geolocation) {

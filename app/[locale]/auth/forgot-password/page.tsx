@@ -7,6 +7,7 @@ import { MdEmail, MdCheckCircle } from 'react-icons/md';
 
 export default function ForgotPasswordPage() {
   const t = useTranslations('Auth.forgotPassword');
+  const tNav = useTranslations('Navigation');
   const locale = useLocale();
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
@@ -60,18 +61,18 @@ export default function ForgotPasswordPage() {
           <ol className="flex items-center space-x-2 text-gray-600 dark:text-gray-400">
             <li>
               <Link href="/" className="hover:text-blue-600 dark:hover:text-red-300 transition-colors">
-                Home
+                {tNav('home')}
               </Link>
             </li>
             <li className="flex items-center">
               <span className="mx-2">/</span>
               <Link href="/auth/signin" className="hover:text-blue-600 dark:hover:text-red-300 transition-colors">
-                Sign In
+                {t('signIn')}
               </Link>
             </li>
             <li className="flex items-center">
               <span className="mx-2">/</span>
-              <span className="text-gray-900 dark:text-gray-100 font-medium">Forgot Password</span>
+              <span className="text-gray-900 dark:text-gray-100 font-medium">{t('title')}</span>
             </li>
           </ol>
         </nav>
@@ -133,7 +134,7 @@ export default function ForgotPasswordPage() {
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                       </svg>
-                      Sending...
+                      {t('sending')}
                     </span>
                   ) : (
                     t('submit')
@@ -147,7 +148,7 @@ export default function ForgotPasswordPage() {
                   href="/auth/signin"
                   className="text-sm font-medium text-primary-blue hover:text-accent-blue dark:text-accent-red dark:hover:text-red-300 transition-colors"
                 >
-                  ← Back to Sign In
+                  {t('backToSignIn')}
                 </Link>
               </div>
             </>
@@ -171,7 +172,7 @@ export default function ForgotPasswordPage() {
                   href="/auth/signin"
                   className="inline-block px-6 py-3 bg-gradient-to-r from-primary-blue to-accent-blue dark:from-accent-red dark:to-primary-red hover:opacity-95 text-white font-medium rounded-lg transition-all shadow-lg hover:shadow-xl"
                 >
-                  Back to Sign In
+                  {t('backToSignInButton')}
                 </Link>
               </div>
             </>
@@ -181,12 +182,12 @@ export default function ForgotPasswordPage() {
         {/* Footer Note */}
         <div className="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
           <p>
-            Remember your password?{' '}
+            {t('rememberPasswordPrompt')}{' '}
             <Link
               href="/auth/signin"
               className="font-medium text-primary-blue hover:text-accent-blue dark:text-accent-red dark:hover:text-red-300 transition-colors"
             >
-              Sign in
+              {t('signIn')}
             </Link>
           </p>
         </div>

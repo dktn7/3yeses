@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
+import { randomUUID } from 'crypto';
 import { promisify } from 'util';
 import { exec as _exec } from 'child_process';
 const exec = promisify(_exec);
@@ -33,7 +34,7 @@ async function ensureUser(email, name, password, role = 'TALENT') {
   const existing = await prisma.user.findUnique({ where: { email } });
   if (existing) return existing;
   const hash = await bcrypt.hash(password, 10);
-  return prisma.user.create({ data: { email, name, password: hash, role, emailVerified: new Date() } });
+  return prisma.user.create({ data: { id: randomUUID(), email, name, password: hash, role, emailVerified: new Date() } });
 }
 
 async function main() {
@@ -88,6 +89,7 @@ async function main() {
 
       const user = await prisma.user.create({
         data: {
+          id: randomUUID(),
           name: `${firstName} ${lastName}`,
           email,
           password: passwordHash,

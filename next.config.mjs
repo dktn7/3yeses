@@ -4,6 +4,7 @@ import './lib/tracing.js'; // Initialize tracing at the start of the application
 const withNextIntl = nextIntlPlugin('./i18n.ts');
 
 const nextConfig = {
+    distDir: process.env.NEXT_DIST_DIR || '.next',
     // Optimize images
     images: {
         remotePatterns: [

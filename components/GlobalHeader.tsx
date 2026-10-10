@@ -8,6 +8,7 @@ import DynamicHeader from '@/components/DynamicHeader';
 
 export default function GlobalHeader() {
   const pathname = usePathname();
+  if (pathname?.split('/')[2] === 'dashboard') return null;
   
   // Hide the global header for admin routes
   if (pathname?.startsWith('/admin') || pathname?.startsWith('/auth/admin-login') || pathname?.startsWith('/admin-login')) {

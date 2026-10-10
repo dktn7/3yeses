@@ -40,6 +40,7 @@ export default function AdminLoginPage() {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify(formData),
       })
 
@@ -57,7 +58,7 @@ export default function AdminLoginPage() {
             router.push('/admin')
         }, 500)
       } else {
-        setError(data.message || 'Authentication failed. Please check your credentials.')
+        setError(data.error || data.message || 'Authentication failed. Please check your credentials.')
       }
     } catch {
       setError('Connection failed. Please check your network.')

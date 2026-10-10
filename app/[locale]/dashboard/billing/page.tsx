@@ -1,27 +1,52 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useTranslations } from 'next-intl';
-import LoadingSpinner from '@/components/LoadingSpinner';
-import { CreditCard, Calendar, CheckCircle, XCircle, Clock, Receipt } from 'lucide-react';
+import { useLocale, useTranslations } from 'next-intl';
+import {
+  CalendarDays,
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
+  Clock3,
+  CreditCard,
+  Receipt,
+  RotateCcw,
+  ShieldCheck,
+  XCircle,
+} from 'lucide-react';
+import {
+  DashboardButton,
+  DashboardHeader,
+  DashboardLoading,
+  DashboardPanel,
+  DashboardWorkspace,
+  EmptyState,
+  PanelHeading,
+  StatusPill,
+} from '@/components/dashboard/DashboardPrimitives';
+import { InvoiceDownloadButton } from '@/components/dashboard/InvoiceDownloadButton';
+import { BillingPortalButton } from '@/components/dashboard/BillingPortalButton';
+import { buildLocalizedPath } from '@/lib/locale-path';
+
+type PaymentStatus = 'PENDING' | 'SUCCEEDED' | 'FAILED' | 'REFUNDED';
 
 interface Payment {
   id: string;
   amount: number;
   currency: string;
-  status: 'PENDING' | 'SUCCEEDED' | 'FAILED' | 'REFUNDED';
+  status: PaymentStatus;
   createdAt: string;
-  stripeInvoiceId?: string;
+  stripeInvoiceId?: string | null;
 }
 
 interface Subscription {
   id: string;
   plan: string;
   status: string;
-  currentPeriodStart: Date | null;
-  currentPeriodEnd: Date | null;
-  stripeSubscriptionId?: string;
+  currentPeriodStart: string | null;
+  currentPeriodEnd: string | null;
+  cancelAt?: string | null;
 }
 
 interface BillingData {
@@ -35,204 +60,289 @@ interface BillingData {
   };
 }
 
+const statusTone: Record<PaymentStatus, 'success' | 'danger' | 'warning' | 'brand'> = {
+  SUCCEEDED: 'success',
+  FAILED: 'danger',
+  PENDING: 'warning',
+  REFUNDED: 'brand',
+};
+
+function formatStatus(status: string) {
+  return status.replaceAll('_', ' ').toLowerCase();
+}
+
+function PaymentStatusIcon({ status }: { status: PaymentStatus }) {
+  const className = 'h-5 w-5';
+
+  if (status === 'SUCCEEDED') return <CheckCircle2 className={`${className} text-emerald-600 dark:text-emerald-300`} aria-hidden="true" />;
+  if (status === 'FAILED') return <XCircle className={`${className} text-red-600 dark:text-red-300`} aria-hidden="true" />;
+  if (status === 'REFUNDED') return <RotateCcw className={`${className} text-[color:var(--brand-primary)]`} aria-hidden="true" />;
+  return <Clock3 className={`${className} text-amber-600 dark:text-amber-300`} aria-hidden="true" />;
+}
+
 export default function BillingPage() {
   const router = useRouter();
+  const locale = useLocale();
   const t = useTranslations('dashboard.billing');
+  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [billingData, setBillingData] = useState<BillingData | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchBillingData = useCallback(async () => {
+  const fetchBillingData = useCallback(async (requestedPage: number, signal?: AbortSignal) => {
+    setError(null);
+    setLoading(true);
+
     try {
-      const response = await fetch('/api/payments/history', {
+      const response = await fetch(`/api/payments/history?page=${requestedPage}&limit=10`, {
         credentials: 'include',
+        signal,
       });
 
       if (response.ok) {
-        const data = await response.json();
+        const data: BillingData = await response.json();
         setBillingData(data);
       } else if (response.status === 401) {
-        window.location.href = '/auth/signin';
+        window.location.href = buildLocalizedPath(locale, '/auth/signin');
       } else {
         setError(t('failedToLoad'));
       }
-    } catch (error) {
-      console.error('Failed to fetch billing data:', error);
+    } catch (fetchError) {
+      if (fetchError instanceof DOMException && fetchError.name === 'AbortError') return;
+      console.error('Failed to fetch billing data:', fetchError);
       setError(t('errorLoading'));
     } finally {
-      setLoading(false);
+      if (!signal?.aborted) setLoading(false);
     }
-  }, [t]);
+  }, [locale, t]);
 
   useEffect(() => {
-    fetchBillingData();
-  }, [fetchBillingData]);
+    const controller = new AbortController();
+    void fetchBillingData(page, controller.signal);
+    return () => controller.abort();
+  }, [fetchBillingData, page]);
 
   const formatCurrency = (amount: number, currency: string) => {
-    return new Intl.NumberFormat('en-GB', {
+    return new Intl.NumberFormat(locale, {
       style: 'currency',
       currency: currency.toUpperCase(),
-    }).format(amount / 100); // Assuming amount is in minor units (cents/pence)
+    }).format(amount / 100);
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-GB', {
+    return new Date(dateString).toLocaleDateString(locale, {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
     });
   };
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'SUCCEEDED':
-        return <CheckCircle className="w-5 h-5 text-green-500" />;
-      case 'FAILED':
-        return <XCircle className="w-5 h-5 text-red-500" />;
-      case 'PENDING':
-        return <Clock className="w-5 h-5 text-yellow-500" />;
-      case 'REFUNDED':
-        return <Receipt className="w-5 h-5 text-blue-500" />;
-      default:
-        return <Clock className="w-5 h-5 text-gray-500" />;
-    }
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'SUCCEEDED':
-        return 'text-green-700 bg-green-100 dark:bg-green-900/20 dark:text-green-300';
-      case 'FAILED':
-        return 'text-red-700 bg-red-100 dark:bg-red-900/20 dark:text-red-300';
-      case 'PENDING':
-        return 'text-yellow-700 bg-yellow-100 dark:bg-yellow-900/20 dark:text-yellow-300';
-      case 'REFUNDED':
-        return 'text-blue-700 bg-blue-100 dark:bg-red-900/20 dark:text-red-300';
-      default:
-        return 'text-gray-700 bg-gray-100 dark:bg-gray-900/20 dark:text-gray-300';
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <LoadingSpinner />
-      </div>
-    );
-  }
+  if (loading) return <DashboardLoading />;
 
   if (error) {
     return (
-      <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
-        <p className="text-red-800 dark:text-red-300">{error}</p>
-      </div>
+      <DashboardWorkspace>
+        <DashboardHeader icon={Receipt} title={t('title')} description={t('description')} />
+        <DashboardPanel>
+          <div className="flex items-start gap-4" role="alert">
+            <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-red-100 text-red-700 dark:bg-red-950/40 dark:text-red-300">
+              <XCircle className="h-5 w-5" aria-hidden="true" />
+            </span>
+            <div>
+              <p className="text-sm font-semibold text-red-700 dark:text-red-300">{error}</p>
+              <DashboardButton onClick={() => void fetchBillingData(page)} variant="secondary" className="mt-4">
+                <RotateCcw className="h-4 w-4" aria-hidden="true" />
+                Try again
+              </DashboardButton>
+            </div>
+          </div>
+        </DashboardPanel>
+      </DashboardWorkspace>
     );
   }
 
+  const subscription = billingData?.subscription;
+  const paymentCount = billingData?.pagination.total ?? 0;
+  const isEnding = Boolean(subscription?.cancelAt);
+
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="bg-light-surface dark:bg-dark-surface rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{t('title')}</h1>
-        <p className="mt-2 text-gray-600 dark:text-gray-400">
-          {t('subtitle')}
-        </p>
-      </div>
-
-      {/* Current Subscription */}
-      {billingData?.subscription && (
-        <div className="bg-light-surface dark:bg-dark-surface rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-            <CreditCard className="w-5 h-5" />
-            {t('currentSubscription')}
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400">{t('plan')}</p>
-              <p className="font-semibold text-gray-900 dark:text-white capitalize">
-                {billingData.subscription.plan.toLowerCase()}
-              </p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400">{t('status')}</p>
-              <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(billingData.subscription.status)}`}>
-                {billingData.subscription.status.toLowerCase()}
-              </span>
-            </div>
-            <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400">{t('currentPeriod')}</p>
-              <p className="font-semibold text-gray-900 dark:text-white">
-                {billingData.subscription.currentPeriodStart && billingData.subscription.currentPeriodEnd
-                  ? `${formatDate(billingData.subscription.currentPeriodStart.toString())} - ${formatDate(billingData.subscription.currentPeriodEnd.toString())}`
-                  : t('na')
-                }
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-4">
-            <button
-              onClick={() => router.push('/dashboard/subscription')}
-              className="px-4 py-2 bg-primary-blue dark:bg-accent-red text-white rounded-lg hover:opacity-90 transition-opacity"
-            >
+    <DashboardWorkspace>
+      <DashboardHeader
+        icon={Receipt}
+        title={t('title')}
+        description={t('description')}
+          actions={
+          <div className="flex flex-wrap items-center justify-end gap-2">
+            <BillingPortalButton label={t('updatePaymentDetails')} />
+            <DashboardButton onClick={() => router.push(buildLocalizedPath(locale, '/dashboard/subscription'))}>
               {t('manageSubscription')}
-            </button>
+              <ChevronRight className="h-4 w-4" aria-hidden="true" />
+            </DashboardButton>
           </div>
-        </div>
-      )}
+          }
+      />
 
-      {/* Payment History */}
-      <div className="bg-light-surface dark:bg-dark-surface rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-          <Receipt className="w-5 h-5" />
-          {t('paymentHistory')}
-        </h2>
+      <DashboardPanel className="overflow-hidden">
+        <PanelHeading
+          title={t('currentSubscription')}
+          description={t('currentDescription')}
+        />
 
-        {billingData?.payments && billingData.payments.length > 0 ? (
-          <div className="space-y-4">
-            {billingData.payments.map((payment) => (
-              <div key={payment.id} className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                <div className="flex items-center gap-4">
-                  {getStatusIcon(payment.status)}
+        {subscription ? (
+          <div className="grid gap-6 lg:grid-cols-[minmax(0,1.25fr)_minmax(320px,0.75fr)] lg:items-stretch">
+            <div className="relative overflow-hidden rounded-2xl bg-[color:var(--brand-primary)] px-5 py-6 text-white sm:px-7 sm:py-7">
+              <div className="relative flex h-full flex-col justify-between gap-8">
+                <div className="flex items-start justify-between gap-4">
                   <div>
-                    <p className="font-semibold text-gray-900 dark:text-white">
-                      {formatCurrency(payment.amount, payment.currency)}
-                    </p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2">
-                      <Calendar className="w-4 h-4" />
-                      {formatDate(payment.createdAt)}
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/70">{t('accountAccess')}</p>
+                    <p className="mt-3 text-2xl font-semibold capitalize tracking-tight sm:text-3xl">
+                      {formatStatus(subscription.plan)}
                     </p>
                   </div>
-                </div>
-                <div className="text-right">
-                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(payment.status)}`}>
-                    {payment.status.toLowerCase()}
+                  <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/12 ring-1 ring-inset ring-white/15">
+                    <ShieldCheck className="h-6 w-6" aria-hidden="true" />
                   </span>
-                  {payment.stripeInvoiceId && (
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                      {t('invoice')} {payment.stripeInvoiceId}
-                    </p>
-                  )}
+                </div>
+
+                <div>
+                  <p className="text-sm font-medium text-white/70">{isEnding ? t('accessUntil') : t('currentAccessPeriod')}</p>
+                  <p className="mt-1 text-base font-semibold">
+                    {subscription.currentPeriodEnd ? formatDate(subscription.currentPeriodEnd) : t('na')}
+                  </p>
                 </div>
               </div>
-            ))}
+            </div>
 
-            {billingData.pagination.pages > 1 && (
-              <div className="flex justify-center mt-6">
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  {t('showingPage', { page: billingData.pagination.page, pages: billingData.pagination.pages, total: billingData.pagination.total })}
-                </p>
+            <dl className="divide-y divide-slate-200/70 rounded-2xl bg-slate-50/70 px-5 dark:divide-slate-800/70 dark:bg-slate-950/35">
+              <div className="flex items-center justify-between gap-4 py-5">
+                <dt className="text-sm text-slate-500 dark:text-slate-400">{t('status')}</dt>
+                <dd>
+                  <StatusPill tone={isEnding ? 'warning' : subscription.status === 'ACTIVE' ? 'success' : 'brand'}>
+                    {isEnding ? t('endingThisPeriod') : formatStatus(subscription.status)}
+                  </StatusPill>
+                </dd>
               </div>
-            )}
+              <div className="flex items-start justify-between gap-4 py-5">
+                <dt className="text-sm text-slate-500 dark:text-slate-400">{t('currentPeriod')}</dt>
+                <dd className="text-right text-sm font-semibold leading-6 text-slate-950 dark:text-white">
+                  {subscription.currentPeriodStart && subscription.currentPeriodEnd ? (
+                    <>
+                      <span className="block">{formatDate(subscription.currentPeriodStart)}</span>
+                      <span className="block text-slate-400 dark:text-slate-500">{t('to')}</span>
+                      <span className="block">{formatDate(subscription.currentPeriodEnd)}</span>
+                    </>
+                  ) : t('na')}
+                </dd>
+              </div>
+            </dl>
           </div>
         ) : (
-          <div className="text-center py-8">
-            <Receipt className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-500 dark:text-gray-400">{t('noPaymentHistory')}</p>
-          </div>
+          <EmptyState
+            icon={ShieldCheck}
+            title={t('noPaidAccess')}
+            description={t('noPaidAccessDescription')}
+            action={(
+              <DashboardButton onClick={() => router.push(buildLocalizedPath(locale, '/dashboard/subscription'))} variant="secondary">
+                {t('viewAccessOptions')}
+                <ChevronRight className="h-4 w-4" aria-hidden="true" />
+              </DashboardButton>
+            )}
+          />
         )}
-      </div>
-    </div>
+      </DashboardPanel>
+
+      <DashboardPanel>
+        <PanelHeading
+          title={t('paymentHistory')}
+          description={t('historyDescription')}
+          actions={
+            <span className="text-sm font-semibold tabular-nums text-slate-500 dark:text-slate-400">
+              {paymentCount} {paymentCount === 1 ? t('payment') : t('payments')}
+            </span>
+          }
+        />
+
+        {billingData?.payments.length ? (
+          <>
+            <ol className="divide-y divide-slate-200/70 dark:divide-slate-800/70" aria-label={t('paymentHistory')}>
+              {billingData.payments.map((payment) => (
+                <li key={payment.id} className="grid gap-4 py-5 first:pt-1 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
+                  <div className="flex min-w-0 items-center gap-4">
+                    <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-slate-100 dark:bg-slate-900">
+                      <PaymentStatusIcon status={payment.status} />
+                    </span>
+                    <div className="min-w-0">
+                      <p className="font-mono text-lg font-semibold tabular-nums text-slate-950 dark:text-white">
+                        {formatCurrency(payment.amount, payment.currency)}
+                      </p>
+                      <p className="mt-1 flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+                        <CalendarDays className="h-4 w-4 shrink-0" aria-hidden="true" />
+                        <time dateTime={payment.createdAt}>{formatDate(payment.createdAt)}</time>
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between gap-4 pl-[3.75rem] sm:block sm:pl-0 sm:text-right">
+                    <StatusPill tone={statusTone[payment.status]}>{formatStatus(payment.status)}</StatusPill>
+                    {payment.stripeInvoiceId && (
+                      <div className="mt-2 flex items-center justify-end gap-3">
+                        <p className="hidden truncate font-mono text-[11px] text-slate-500 dark:text-slate-400 sm:block sm:max-w-56" title={payment.stripeInvoiceId}>
+                          {t('invoice')} {payment.stripeInvoiceId}
+                        </p>
+                        <InvoiceDownloadButton paymentId={payment.id} invoiceId={payment.stripeInvoiceId} label={t('downloadInvoice')} />
+                      </div>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ol>
+
+            {billingData.pagination.pages > 1 && (
+              <nav className="mt-2 flex flex-col gap-3 border-t border-slate-200/70 pt-5 dark:border-slate-800/70 sm:flex-row sm:items-center sm:justify-between" aria-label="Payment history pages">
+                <p className="text-sm text-slate-500 dark:text-slate-400">
+                  {t('showingPage', {
+                    page: billingData.pagination.page,
+                    pages: billingData.pagination.pages,
+                    total: billingData.pagination.total,
+                  })}
+                </p>
+                <div className="flex gap-2">
+                  <DashboardButton
+                    variant="secondary"
+                    onClick={() => setPage((current) => Math.max(1, current - 1))}
+                    disabled={billingData.pagination.page <= 1}
+                    aria-label="Previous payment page"
+                  >
+                    <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+                    Previous
+                  </DashboardButton>
+                  <DashboardButton
+                    variant="secondary"
+                    onClick={() => setPage((current) => Math.min(billingData.pagination.pages, current + 1))}
+                    disabled={billingData.pagination.page >= billingData.pagination.pages}
+                    aria-label="Next payment page"
+                  >
+                    Next
+                    <ChevronRight className="h-4 w-4" aria-hidden="true" />
+                  </DashboardButton>
+                </div>
+              </nav>
+            )}
+          </>
+        ) : (
+          <EmptyState
+            icon={Receipt}
+            title="No payment activity yet"
+            description="Nothing has been charged to this account. Completed, pending, failed, or refunded payments will appear here when recorded."
+            action={!subscription ? (
+              <DashboardButton onClick={() => router.push(buildLocalizedPath(locale, '/dashboard/subscription'))} variant="secondary">
+                Review access options
+                <ChevronRight className="h-4 w-4" aria-hidden="true" />
+              </DashboardButton>
+            ) : undefined}
+          />
+        )}
+      </DashboardPanel>
+    </DashboardWorkspace>
   );
 }

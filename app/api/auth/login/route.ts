@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getPrisma } from '@/lib/prisma';
 import AuthService from '@/lib/auth/auth-service';
-import { cookies } from 'next/headers';
 
 export async function POST(request: NextRequest) {
   const prisma = getPrisma();
@@ -90,27 +89,8 @@ export async function POST(request: NextRequest) {
       userId: user.id,
     });
 
-    // Set HTTP-only cookies for tokens
-    const cookieStore = await cookies();
-    const cookieOptions = {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax' as const,
-      path: '/',
-    };
-
-    cookieStore.set('accessToken', accessToken, {
-      ...cookieOptions,
-      maxAge: rememberMe ? 7 * 24 * 60 * 60 : 24 * 60 * 60, // 7 days or 24 hours
-    });
-
-    cookieStore.set('refreshToken', refreshToken, {
-      ...cookieOptions,
-      maxAge: rememberMe ? 30 * 24 * 60 * 60 : 7 * 24 * 60 * 60, // 30 days or 7 days
-    });
-
-    // Return user data
-    return NextResponse.json({
+    // Set HTTP-only cookies on the actual response so the browser persists them.
+    const response = NextResponse.json({
       success: true,
       user: {
         id: user.id,
@@ -125,8 +105,27 @@ export async function POST(request: NextRequest) {
             }
           : null,
       },
-      accessToken, // Also return in body for client-side storage if needed
+      accessToken, // Also returned for non-cookie clients
     });
+
+    const cookieOptions = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax' as const,
+      path: '/',
+    };
+
+    response.cookies.set('accessToken', accessToken, {
+      ...cookieOptions,
+      maxAge: rememberMe ? 7 * 24 * 60 * 60 : 24 * 60 * 60, // 7 days or 24 hours
+    });
+
+    response.cookies.set('refreshToken', refreshToken, {
+      ...cookieOptions,
+      maxAge: rememberMe ? 30 * 24 * 60 * 60 : 7 * 24 * 60 * 60, // 30 days or 7 days
+    });
+
+    return response;
 
   } catch (error) {
     console.error('Login error:', error);

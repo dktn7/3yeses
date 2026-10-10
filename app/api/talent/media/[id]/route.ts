@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { authenticateUser } from '@/lib/auth/middleware';
+import imagekit from '@/lib/upload/imagekit-config';
 
 // Ensure only the owner of the media (talent profile's user) can edit/delete
 import { NextRequest } from 'next/server';
@@ -70,10 +71,24 @@ export async function DELETE(req: NextRequest, context: any) {
     const id = resolvedParams?.id;
     if (!id) return NextResponse.json({ success: false, error: 'Missing id' }, { status: 400 });
 
-    const owns = await isOwner(userId, id);
-    if (!owns) return NextResponse.json({ success: false, error: 'Forbidden' }, { status: 403 });
+    const item = await prisma.portfolioItem.findUnique({
+      where: { id },
+      select: { imagekitFileId: true, talentProfile: { select: { userId: true } } },
+    });
+    if (!item || item.talentProfile?.userId !== userId) {
+      return NextResponse.json({ success: false, error: 'Forbidden' }, { status: 403 });
+    }
 
     await prisma.portfolioItem.delete({ where: { id } });
+
+    if (item.imagekitFileId) {
+      try {
+        await imagekit.files.delete(item.imagekitFileId);
+      } catch (error) {
+        console.error('Failed to delete media from ImageKit:', error);
+      }
+    }
+
     return NextResponse.json({ success: true });
   } catch (err: any) {
     return NextResponse.json({ success: false, error: err?.message || 'Delete failed' }, { status: 500 });

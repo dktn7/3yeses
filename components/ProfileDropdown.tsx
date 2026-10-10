@@ -15,7 +15,8 @@ import {
   Activity,
   LayoutDashboard,
   Users,
-  FileText
+  FileText,
+  MessageSquare
 } from 'lucide-react';
 
 interface UserData {
@@ -32,6 +33,7 @@ interface MenuItem {
   href: string | null;
   separator: boolean;
   action?: () => void;
+  badge?: string;
 }
 
 interface ProfileDropdownProps {
@@ -43,6 +45,7 @@ export default function ProfileDropdown({ user, onLogout }: Readonly<ProfileDrop
   const [isOpen, setIsOpen] = useState(false);
   const [profileCompletion, setProfileCompletion] = useState<number | null>(null);
   const [missingFields, setMissingFields] = useState<string[]>([]);
+  const [messageSummary, setMessageSummary] = useState<{ announcements: number; open: number } | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const pathname = usePathname();
@@ -64,6 +67,26 @@ export default function ProfileDropdown({ user, onLogout }: Readonly<ProfileDrop
     };
     fetchCompletion();
   }, []);
+
+  useEffect(() => {
+    if (!user || user.role === 'ADMIN') return;
+
+    const fetchMessageSummary = async () => {
+      try {
+        const response = await fetch('/api/messages', { credentials: 'include' });
+        if (!response.ok) return;
+        const data = await response.json();
+        setMessageSummary({
+          announcements: data.counts?.announcements || 0,
+          open: data.counts?.open || 0,
+        });
+      } catch (error) {
+        console.error('Error fetching message summary:', error);
+      }
+    };
+
+    fetchMessageSummary();
+  }, [user]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -132,6 +155,15 @@ export default function ProfileDropdown({ user, onLogout }: Readonly<ProfileDrop
       separator: true,
     },
     {
+      icon: MessageSquare,
+      label: 'Messages',
+      href: `/dashboard/messages`,
+      separator: false,
+      badge: messageSummary && (messageSummary.open > 0 || messageSummary.announcements > 0)
+        ? `${messageSummary.open + messageSummary.announcements}`
+        : undefined,
+    },
+    {
       icon: Settings,
       label: 'Settings',
       href: `/dashboard/settings`,
@@ -191,6 +223,8 @@ export default function ProfileDropdown({ user, onLogout }: Readonly<ProfileDrop
       {/* Profile Avatar Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
+        aria-label="Open account menu"
+        aria-expanded={isOpen}
         className="flex items-center space-x-2 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
         <div className="relative">
@@ -325,9 +359,14 @@ export default function ProfileDropdown({ user, onLogout }: Readonly<ProfileDrop
                 >
                   <item.icon size={16} className="text-gray-600 dark:text-gray-400" />
                   <span className="text-gray-900 dark:text-white">{item.label}</span>
-                  <span className="ml-auto text-gray-400">
-                    {item.label !== 'Logout' && '›'}
-                  </span>
+                  {item.badge && (
+                    <span className="ml-auto inline-flex min-w-5 items-center justify-center rounded-full bg-blue-600 px-1.5 py-0.5 text-xs font-semibold text-white dark:bg-red-600">
+                      {item.badge}
+                    </span>
+                  )}
+                  {!item.badge && item.label !== 'Logout' && (
+                    <span className="ml-auto text-gray-400">›</span>
+                  )}
                 </button>
                 {item.separator && (
                   <hr className="my-1 border-gray-200 dark:border-gray-700" />

@@ -44,7 +44,7 @@ export default function QuickActionsBar() {
       id: 'analytics',
       label: 'Analytics',
       icon: <BarChart3 className="h-5 w-5" />,
-      href: buildLocalizedPath(locale, '/dashboard/insights'),
+      href: buildLocalizedPath(locale, '/dashboard/analytics'),
       color: 'bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700',
     },
   ];

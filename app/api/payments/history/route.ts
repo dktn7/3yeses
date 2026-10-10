@@ -37,7 +37,7 @@ export async function GET(req: NextRequest) {
     const subscription = await prisma.subscription.findFirst({
       where: {
         userId,
-        status: { in: ['ACTIVE', 'TRIALING'] },
+        status: { not: 'CANCELED' },
       },
       orderBy: { createdAt: 'desc' },
     });

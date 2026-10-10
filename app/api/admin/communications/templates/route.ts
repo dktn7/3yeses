@@ -47,6 +47,18 @@ const SYSTEM_TEMPLATES = [
     variables: ['verificationUrl', 'email'],
   },
   {
+    id: 'password-change-code',
+    name: 'Password Change Verification Code',
+    subject: 'Your 3YESES password change code',
+    preheaderText: 'Use this one-time code to confirm your password change.',
+    body: `<div style="margin-bottom:10px;"><span style="display:inline-block;background:#eff6ff;color:#1d4ed8;font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:5px 12px;border-radius:100px;" class="dark-card">Account security</span></div>
+<h2 style="color:#020617;margin:0 0 10px 0;font-size:33px;font-weight:700;line-height:1.15;font-family:Georgia,'Times New Roman',serif;" class="dark-heading">Confirm your password change</h2>
+<p style="color:#475569;margin:0 0 22px 0;font-size:15px;line-height:1.75;" class="dark-text">Use this one-time code to confirm the password change requested from your 3YESES account.</p>
+<div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:22px;text-align:center;margin:0 0 22px 0;" class="dark-card dark-border"><p style="margin:0 0 8px 0;font-size:11px;color:#1d4ed8;letter-spacing:1px;text-transform:uppercase;font-weight:800;">Verification code</p><p style="margin:0;color:#172554;font-size:34px;letter-spacing:8px;font-weight:800;font-family:'Courier New',monospace;" class="dark-heading">{{code}}</p></div>
+<p style="color:#64748b;margin:0;font-size:13px;line-height:1.65;" class="dark-subtle">This code expires in 10 minutes and can be used once. If you did not request this, change your password through the account recovery flow and contact support.</p>`,
+    variables: ['code', 'email'],
+  },
+  {
     id: 'password-reset',
     name: 'Password Reset',
     subject: 'Reset your 3YESES password — secure link inside',

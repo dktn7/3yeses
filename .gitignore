@@ -15,6 +15,7 @@
 
 # next.js
 /.next/
+/.next-dashboard-review/
 /out/
 
 # production
@@ -52,3 +53,14 @@ next-env.d.ts
 !playwright.config.js
 
 /lib/generated/prisma
+
+# local dashboard QA output
+/.next-*/
+/graphify-out/
+/test-results-*/
+/test-results-*.png
+/test-results-*.pdf
+/test-results/**/*.png
+/test-results/**/*.pdf
+/test-results/**/*.log
+/*.log

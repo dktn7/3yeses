@@ -45,7 +45,7 @@ export default async function RootLayout({
                   <GlobalHeader />
 
                   {/* Main Content Area - pt-16 offsets the fixed h-16 GlobalHeader */}
-                  <div className="min-h-screen flex flex-col pt-16">
+                  <div className="site-content min-h-screen flex flex-col pt-16">
                     {children}
                   </div>
                 </div>

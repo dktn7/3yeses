@@ -12,10 +12,6 @@ export async function verifyAdminAuth(request: NextRequest) {
     // Get access token from cookies (use next/headers to be consistent with API routes)
     const cookieStore = await cookies();
     const accessToken = cookieStore.get('accessToken')?.value;
-    // Debug logging: show whether cookie was found (temporary)
-    // eslint-disable-next-line no-console
-    console.log('verifyAdminAuth - accessToken present:', !!accessToken);
-
     if (!accessToken) {
       return NextResponse.json(
         { error: 'Unauthorized. Admin access required.' },
@@ -23,11 +19,7 @@ export async function verifyAdminAuth(request: NextRequest) {
       );
     }
 
-    // Verify token and get user data
     const decoded = await AuthService.verifyJWT(accessToken);
-    // Debug logging: show decoded token (temporary)
-    // eslint-disable-next-line no-console
-    console.log('verifyAdminAuth - decoded token:', decoded);
 
     if (!decoded) {
       return NextResponse.json(
@@ -36,8 +28,13 @@ export async function verifyAdminAuth(request: NextRequest) {
       );
     }
 
-    // Check for ADMIN role
-    if (decoded.role !== 'ADMIN') {
+    // Re-read the role so a demoted admin token cannot mutate privileged data
+    // for the remainder of its access-token lifetime.
+    const currentUser = await prisma.user.findUnique({
+      where: { id: decoded.userId },
+      select: { role: true },
+    });
+    if (currentUser?.role !== 'ADMIN') {
       return NextResponse.json(
         { error: 'Forbidden. Admin privileges required.' },
         { status: 403 }

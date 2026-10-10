@@ -35,6 +35,25 @@ export default function DropdownPanel({
     return () => setMounted(false)
   }, [])
 
+  const getClampedLeft = React.useCallback((anchorLeft: number, anchorRight: number, panelWidth: number) => {
+    const viewportPadding = 8
+    const viewportLeft = window.scrollX + viewportPadding
+    const viewportRight = window.scrollX + window.innerWidth - panelWidth - viewportPadding
+
+    if (panelWidth <= 0) return anchorLeft
+    if (viewportRight <= viewportLeft) return viewportLeft
+
+    let nextLeft = anchorLeft
+
+    // Prefer aligning to the anchor's left edge, but if that would overflow
+    // the viewport, flip the panel to the left side of the anchor.
+    if (nextLeft > viewportRight) {
+      nextLeft = anchorRight - panelWidth
+    }
+
+    return Math.min(Math.max(nextLeft, viewportLeft), viewportRight)
+  }, [])
+
   // Synchronously compute initial position before first paint so the portal
   // never renders without absolute coordinates (prevents layout flash / "pop").
   React.useLayoutEffect(() => {
@@ -42,18 +61,31 @@ export default function DropdownPanel({
     const anchor = anchorRef?.current
     if (!anchor) return
     const rect = anchor.getBoundingClientRect()
-    const initial = { left: rect.left + window.scrollX, top: rect.bottom + window.scrollY, width: rect.width }
+    const initial = {
+      left: getClampedLeft(
+        rect.left + window.scrollX,
+        rect.right + window.scrollX,
+        panelRef.current?.offsetWidth || rect.width,
+      ),
+      top: rect.bottom + window.scrollY,
+      width: rect.width,
+    }
     lastPosRef.current = initial
     setPos(initial)
-  }, [portal, anchorRef])
+  }, [portal, anchorRef, getClampedLeft])
 
   // Compute bounding rect and update state only when changed. Use RAF to batch updates.
   const computePos = React.useCallback(() => {
     const anchor = anchorRef?.current
     if (!anchor) return null
     const rect = anchor.getBoundingClientRect()
-    return { left: rect.left + window.scrollX, top: rect.bottom + window.scrollY, width: rect.width }
-  }, [anchorRef])
+    const panelWidth = panelRef.current?.offsetWidth || rect.width
+    return {
+      left: getClampedLeft(rect.left + window.scrollX, rect.right + window.scrollX, panelWidth),
+      top: rect.bottom + window.scrollY,
+      width: rect.width,
+    }
+  }, [anchorRef, getClampedLeft])
 
   const applyIfChanged = React.useCallback((newPos: { left: number; top: number; width?: number } | null) => {
     const last = lastPosRef.current

@@ -56,11 +56,14 @@
     "types/**/*.d.ts",
     "types/**/*.ts",
     ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts"
+    ".next/dev/types/**/*.ts",
+    ".next-feature-3003/types/**/*.ts",
+    ".next-feature-3003/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",
     "diffs_feb1_2026",
-    ".next"
+    ".next",
+    ".next-dashboard-review"
   ]
 }

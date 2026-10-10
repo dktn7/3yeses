@@ -29,6 +29,7 @@ export async function POST(req: NextRequest) {
         userId: decoded.userId,
         status: { in: ['ACTIVE', 'TRIALING'] },
       },
+      orderBy: { createdAt: 'desc' },
     });
 
     if (!subscription) {

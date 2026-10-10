@@ -119,7 +119,7 @@ export function AuthProvider({ children }: Readonly<{ children: ReactNode }>) {
 
         const userData: User = {
           id: data.user.id,
-          name: `${data.user.firstName} ${data.user.lastName}`.trim(),
+          name: data.user.name || `${data.user.firstName || ''} ${data.user.lastName || ''}`.trim() || data.user.email,
           email: data.user.email,
           role: normalizedRole,
           profileComplete: data.user.profileComplete || false,

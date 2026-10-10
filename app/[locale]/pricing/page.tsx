@@ -294,7 +294,7 @@ export default function PricingPage() {
                       <div className="flex items-center justify-center gap-3 mb-2" aria-hidden="true">
                         <span className="text-sm text-[color-mix(in_srgb,var(--foreground)_46%,transparent)] line-through">{originalPrice}</span>
                         {percent ? (
-                          <span className="percent-badge">{percent}% Off</span>
+                          <span className="percent-badge">{t('aria.percentOff', { percent })}</span>
                         ) : (
                           <span className="inline-block text-xs font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 px-2 py-0.5 rounded-full">
                             {t('saveAmount', { amount: computedSavings })}
@@ -370,7 +370,7 @@ export default function PricingPage() {
         {/* ── What you unlock section ── */}
         <div className="rounded-[2rem] marketing-panel border border-white/50 dark:border-white/10 shadow-xl shadow-gray-900/5 dark:shadow-black/20 p-8 md:p-14 text-center">
           <h2 className="marketing-hero-title text-3xl sm:text-4xl font-extrabold mb-4 tracking-tight">
-            <span className="sr-only">What&apos;s waiting for you</span>
+            <span className="sr-only">{t('aria.waitingForYou')}</span>
             <div className="flex items-center justify-center gap-8">
               <div className="flex flex-col items-center text-[var(--foreground)]">
                 <UserCheck className="w-10 h-10 marketing-accent-text" />

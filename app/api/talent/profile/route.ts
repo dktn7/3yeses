@@ -16,6 +16,7 @@ export async function GET(req: NextRequest) {
         profileSettings: true,
         category: true,
         subcategory: true,
+        languages: true,
         workHistory: {
           orderBy: { startDate: 'desc' }
         }
@@ -123,6 +124,21 @@ export async function PUT(req: NextRequest) {
       where: { userId },
     });
 
+    const normalizedLanguages: Array<{ name: string; proficiency: any }> = Array.isArray(languages)
+      ? languages.flatMap((lang: string | { name?: string; proficiency?: string }) => {
+          const rawName = typeof lang === 'string' ? lang : lang.name;
+          const name = rawName?.trim();
+          if (!name) return [];
+          return [{
+            name,
+            proficiency: (typeof lang === 'string' ? 'FLUENT' : lang.proficiency || 'FLUENT') as any,
+          }];
+        })
+      : [];
+    const normalizedExperienceLevel = experienceLevel === null || experienceLevel === undefined || experienceLevel === ''
+      ? null
+      : String(experienceLevel);
+
     let profile;
 
     if (name) {
@@ -140,7 +156,7 @@ export async function PUT(req: NextRequest) {
           performerTitle,
           bio,
           location,
-          experienceLevel,
+          experienceLevel: normalizedExperienceLevel,
           dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
           gender,
           genderOther,
@@ -169,10 +185,7 @@ export async function PUT(req: NextRequest) {
           ...(Array.isArray(languages) ? {
             languages: {
               deleteMany: {},
-              create: languages.map((lang: { name: string; proficiency: string }) => ({
-                name: lang.name,
-                proficiency: (lang.proficiency || 'FLUENT') as any,
-              } as any)),
+              create: normalizedLanguages,
             },
           } : {}),
           workHistory: {
@@ -198,7 +211,7 @@ export async function PUT(req: NextRequest) {
           performerTitle,
           bio,
           location,
-          experienceLevel,
+          experienceLevel: normalizedExperienceLevel,
           dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
           gender,
           genderOther,
@@ -226,10 +239,7 @@ export async function PUT(req: NextRequest) {
           contentBackground,
           ...(Array.isArray(languages) ? {
             languages: {
-              create: languages.map((lang: string) => ({
-                name: lang,
-                proficiency: 'FLUENT' as const,
-              })),
+              create: normalizedLanguages,
             },
           } : {}),
           workHistory: {

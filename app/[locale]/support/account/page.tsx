@@ -31,7 +31,7 @@ export default function AccountHelpPage() {
         },
         {
           q: 'What is the profile completion ring?',
-          a: 'Your Dashboard shows a circular progress ring indicating how complete your profile is. Complete all sections — photo, bio, category, skills, at least one portfolio item — to reach 100%. Higher completeness improves your search ranking and helps visitors trust your profile.',
+          a: 'Your Dashboard shows a circular progress ring indicating how complete your profile is. Complete all sections — photo, bio, category, skills, and at least one media item — to reach 100%. Higher completeness improves your visibility and helps visitors trust your profile.',
         },
         {
           q: 'I forgot my password — how do I reset it?',
@@ -39,7 +39,7 @@ export default function AccountHelpPage() {
         },
         {
           q: 'Can I delete my account?',
-          a: 'Yes. Go to Dashboard → Settings → Account and click "Delete Account". This permanently removes your profile, portfolio items, comments, analytics, and all associated data. Your Stripe subscription is also cancelled immediately.',
+          a: 'Yes. Go to Dashboard → Settings → Account and click "Delete Account". This permanently removes your profile, media, comments, analytics, and all associated data. Your Stripe subscription is also cancelled immediately.',
         },
       ]}
       guides={[

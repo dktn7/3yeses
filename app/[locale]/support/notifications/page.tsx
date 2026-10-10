@@ -18,11 +18,11 @@ export default function NotificationsHelpPage() {
       faqs={[
         {
           q: 'What notifications will I receive?',
-          a: 'You can receive notifications for: new comments on your portfolio items, replies to your comments, likes on your portfolio, profile views, new followers, subscription updates, and support ticket replies. Each type can be individually toggled on or off from your settings.',
+          a: 'You can receive notifications for: new comments on your media, replies to your comments, likes on your media, profile views, new followers, subscription updates, and support ticket replies. Each type can be individually toggled on or off from your settings.',
         },
         {
           q: 'How do I manage notification preferences?',
-          a: 'Go to Dashboard → Settings → Notifications. You\'ll see individual toggles for each notification type: new comments, comment replies, portfolio likes, profile views, and new followers. Essential account notifications (password resets, billing alerts) cannot be disabled.',
+          a: 'Go to Dashboard → Settings → Notifications. You\'ll see individual toggles for each notification type: new comments, comment replies, media likes, profile views, and new followers. Essential account notifications (password resets, billing alerts) cannot be disabled.',
         },
         {
           q: 'I\'m not receiving any emails — what should I do?',
@@ -34,13 +34,13 @@ export default function NotificationsHelpPage() {
         },
         {
           q: 'Do I get notified about comments and @mentions?',
-          a: 'Yes. When someone comments on your portfolio items or @mentions you in a comment, you receive a notification (if enabled). Comment notifications include the commenter\'s name and the item they commented on, linking directly to the media overlay.',
+          a: 'Yes. When someone comments on your media or @mentions you in a comment, you receive a notification (if enabled). Comment notifications include the commenter\'s name and the item they commented on, linking directly to the media overlay.',
         },
       ]}
       guides={[
         {
           title: 'Notification types explained',
-          content: 'Comment notifications alert you when someone comments on your work or replies to your comments. Like notifications tell you when portfolio items receive likes. Profile view notifications summarise who has viewed your profile. Follower notifications inform you when someone new follows your profile.',
+          content: 'Comment notifications alert you when someone comments on your work or replies to your comments. Like notifications tell you when media receives likes. Profile view notifications summarise who has viewed your profile. Follower notifications inform you when someone new follows your profile.',
         },
         {
           title: 'Recommended settings',

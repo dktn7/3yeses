@@ -11,7 +11,7 @@ import { AdminModeToggle } from '@/components/admin/AdminModeToggle';
 import AdminProvider from '@/components/admin/AdminProvider';
 import { QueryProvider } from '@/components/QueryProvider';
 
-const BADGE_POLL_INTERVAL = 60_000; // 60 seconds
+const BADGE_POLL_INTERVAL = 5 * 60 * 1000; // 5 minutes
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
@@ -31,7 +31,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  // Fetch count on mount + poll every 60s
+  // Fetch count on mount + poll periodically for non-critical badge updates.
   useEffect(() => {
     fetchUnreadCount();
     pollRef.current = setInterval(fetchUnreadCount, BADGE_POLL_INTERVAL);

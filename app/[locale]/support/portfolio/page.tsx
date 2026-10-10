@@ -17,8 +17,8 @@ export default function PortfolioHelpPage() {
       ticketCategory="Portfolio & Media"
       faqs={[
         {
-          q: 'How do I upload portfolio items?',
-          a: 'Go to Dashboard → Portfolio and click "Add Item". The upload wizard walks you through 4 steps: choose a type (image, video, audio, or link), upload the file or paste a URL, add a title and description, then review and confirm. Files can be up to 50 MB each.',
+          q: 'How do I add media?',
+          a: 'Go to Dashboard → Gallery and click "Add media". The upload wizard walks you through 4 steps: choose a type (image, video, audio, or link), upload the file or paste a URL, add a title and description, then review and confirm. Files can be up to 50 MB each.',
         },
         {
           q: 'What file types can I upload?',
@@ -26,15 +26,15 @@ export default function PortfolioHelpPage() {
         },
         {
           q: 'Is there a limit on how many items I can upload?',
-          a: 'No — with an active Standard subscription you get unlimited uploads across all media types. Upload as many photos, videos, and audio clips as you need to showcase your work.',
+          a: 'No — with an active Standard subscription you get unlimited uploads across all media types. Upload as many photos, videos, and audio clips as you need to build a strong public presence.',
         },
         {
-          q: 'How do visitors view my portfolio?',
-          a: 'Your portfolio appears as a gallery grid on your profile. Clicking any item opens the media overlay — a full-screen viewer where visitors can browse items, watch videos (with an integrated player), listen to audio, leave comments, @mention other users, like items, share them, or flag inappropriate content. Keyboard navigation is supported (arrow keys to browse, Escape to close).',
+          q: 'How do visitors view my media?',
+          a: 'Your media appears in the gallery on your profile. Clicking any item opens the media overlay — a full-screen viewer where visitors can browse items, watch videos (with an integrated player), listen to audio, leave comments, @mention other users, like items, share them, or flag inappropriate content. Keyboard navigation is supported (arrow keys to browse, Escape to close).',
         },
         {
           q: 'Can I set a custom video thumbnail?',
-          a: 'Yes — when uploading a video, you can pick a thumbnail from any frame of the video. This thumbnail is shown on your portfolio grid and in search results. You can change it later from the portfolio editor.',
+          a: 'Yes — when uploading a video, you can pick a thumbnail from any frame of the video. This thumbnail is shown in your media gallery and in discovery results. You can change it later from the gallery editor.',
         },
         {
           q: 'My upload failed — what should I do?',
@@ -43,12 +43,12 @@ export default function PortfolioHelpPage() {
       ]}
       guides={[
         {
-          title: 'Building a standout portfolio',
+          title: 'Building a standout media presence',
           content: 'Quality over quantity. Lead with your best work — a professional headshot, a polished showreel, or a demo track. Visitors typically view the first 3–5 items, so make them count. Add descriptive titles so visitors understand the context of each piece.',
         },
         {
           title: 'Using the media overlay',
-          content: 'When someone clicks a portfolio item, the media overlay opens with a full-screen view. Videos play inline with controls. Audio tracks have a built-in player. Visitors can comment, like, and share directly from the overlay. This is where most engagement happens, so strong media makes a difference.',
+          content: 'When someone clicks a media item, the media overlay opens with a full-screen view. Videos play inline with controls. Audio tracks have a built-in player. Visitors can comment, like, and share directly from the overlay. This is where most engagement happens, so strong media makes a difference.',
         },
         {
           title: 'Embedding external videos',
